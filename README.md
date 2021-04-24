@@ -26,7 +26,7 @@ If you have [entr(1)][entr] installed you may use it to run all tests whenever a
 file is changed using:
 
 ```bash
-$ find spec/ src/ -name '*.lua' | entr make test
+$ make watch
 ```
 
 ## Github actions
