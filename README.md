@@ -43,5 +43,5 @@ branch and also on Pull Request.
 [plenary]: https://github.com/nvim-lua/plenary.nvim
 [matcher_combinators]: https://github.com/m00qek/matcher_combinators.lua
 
-[integration-badge]: https://github.com/m00qek/library-template.lua/actions/workflows/integration.yml/badge.svg
-[integration-runs]: https://github.com/m00qek/library-template.lua/actions/workflows/integration.yml
+[integration-badge]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml/badge.svg
+[integration-runs]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml
