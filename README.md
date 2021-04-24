@@ -2,7 +2,7 @@ plugin-template.nvim
 ===
 [![Integration][integration-badge]][integration-runs]
 
-A template to create plugins written in [Lua][lua]
+A template to create Neovim plugins written in [Lua][lua]
 
 ## Using
 
