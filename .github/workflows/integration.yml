@@ -1,0 +1,41 @@
+name: Integration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: rhysd/action-setup-vim@v1
+      with:
+        neovim: true
+        version: nightly
+
+    - name: Setup ‘lua’
+      uses: leafo/gh-actions-lua@v8
+      with:
+        luaVersion: "5.1.5"
+
+    - name: Setup ‘luarocks’
+      uses: leafo/gh-actions-luarocks@v4
+
+    - name: Install dependencies
+      run: |
+        luarocks install luacheck
+        make prepare
+
+    - name: Run linter
+      run: luacheck lua/ spec/
+
+    - name: Run tests
+      run: make test
