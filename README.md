@@ -15,7 +15,8 @@ You'll need to install [Lua][lua] and [LuaRocks][luarocks] to run the linter.
 
 This uses [busted][busted], [luassert][luassert] (both through
 [plenary.nvim][plenary]) and [matcher_combinators][matcher_combinators] to 
-define tests in `spec/` directory.
+define tests in `spec/` directory. These dependencies are required only to run
+tests, that´s why they are installed as git submodules.
 To run them just execute
 
 ```bash
