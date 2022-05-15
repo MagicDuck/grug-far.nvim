@@ -2,7 +2,7 @@ name: Integration
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, alpha ]
   pull_request:
     branches: [ main ]
 
@@ -36,10 +36,10 @@ jobs:
     - name: Install dependencies
       run: |
         luarocks install luacheck
-        make prepare
+        make -C ./test test
 
     - name: Run linter
-      run: luacheck lua/ spec/
+      run: luacheck lua/ test/spec/
 
     - name: Run tests
-      run: make test
+      run: make -C ./test test
