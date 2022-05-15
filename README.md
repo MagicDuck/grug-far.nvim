@@ -6,8 +6,8 @@ A template to create Neovim plugins written in [Lua][lua]
 
 ## Using
 
-Clone/download it locally and change the references to `my_plugin`, `my_module`
-accordingly to your new plugin name.
+Clone/download it locally and change the references to `my_awesome_plugin`, 
+`my_cool_module` accordingly to your new plugin name.
 
 You'll need to install [Lua][lua] and [LuaRocks][luarocks] to run the linter.
 
