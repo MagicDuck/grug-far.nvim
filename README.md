@@ -15,19 +15,19 @@ You'll need to install [Lua][lua] and [LuaRocks][luarocks] to run the linter.
 
 This uses [busted][busted], [luassert][luassert] (both through
 [plenary.nvim][plenary]) and [matcher_combinators][matcher_combinators] to
-define tests in `spec/` directory. These dependencies are required only to run
+define tests in `test/spec/` directory. These dependencies are required only to run
 tests, that´s why they are installed as git submodules.
 To run them just execute
 
 ```bash
-$ make test
+$ make -C ./test test
 ```
 
 If you have [entr(1)][entr] installed you may use it to run all tests whenever a
 file is changed using:
 
 ```bash
-$ make watch
+$ make -C ./test watch
 ```
 
 ## Github actions
