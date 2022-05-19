@@ -2,7 +2,7 @@
 
 [![Integration][integration-badge]][integration-runs]
 
-A template to create Neovim plugins written in [Lua][lua]
+A template to create Neovim plugins written in [Lua][lua].
 
 ## Using
 
@@ -15,8 +15,8 @@ You'll need to install [Lua][lua] and [LuaRocks][luarocks] to run the linter.
 
 This uses [busted][busted], [luassert][luassert] (both through
 [plenary.nvim][plenary]) and [matcher_combinators][matcher_combinators] to
-define tests in `test/spec/` directory. These dependencies are required only to run
-tests, that´s why they are installed as git submodules.
+define tests in `test/spec/` directory. These dependencies are required only to
+run tests, that's why they are installed as git submodules.
 To run them just execute
 
 ```bash
@@ -30,11 +30,17 @@ file is changed using:
 $ make -C ./test watch
 ```
 
+In both commands you myght specify a single spec to test/watch using:
+
+```bash
+$ make -C ./test test SPEC=spec/my_awesome_plugin/my_cool_module_spec.lua
+```
+
 ## Github actions
 
 An Action will run all the tests and the linter on every commit on the main
-branch and also on Pull Request. Tests will be run using [stable and nightly][neovim-test-versions]
-versions of Neovim.
+branch and also on Pull Request. Tests will be run using 
+[stable and nightly][neovim-test-versions] versions of Neovim.
 
 [lua]: https://www.lua.org/
 [entr]: https://eradman.com/entrproject/
@@ -45,4 +51,4 @@ versions of Neovim.
 [matcher_combinators]: https://github.com/m00qek/matcher_combinators.lua
 [integration-badge]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml/badge.svg
 [integration-runs]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml
-[neovim-test-versions]: https://github.com/m00qek/plugin-template.nvim/blob/main/.github/workflows/integration.yml#L17
+[neovim-test-versions]: .github/workflows/integration.yml#L17
