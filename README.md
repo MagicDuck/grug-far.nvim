@@ -17,23 +17,34 @@ This uses [busted][busted], [luassert][luassert] (both through
 [plenary.nvim][plenary]) and [matcher_combinators][matcher_combinators] to
 define tests in `test/spec/` directory. These dependencies are required only to
 run tests, that's why they are installed as git submodules.
-To run them just execute
+
+Make sure your shell is in the `./test` directory or, if it is in the root directory,
+replace `make` by `make -C ./test` in the commands below.
+
+To init the dependencies run
 
 ```bash
-$ make -C ./test test
+$ make prepare
+```
+
+To run all tests just execute
+
+```bash
+$ make test
 ```
 
 If you have [entr(1)][entr] installed you may use it to run all tests whenever a
 file is changed using:
 
 ```bash
-$ make -C ./test watch
+$ make watch
 ```
 
 In both commands you myght specify a single spec to test/watch using:
 
 ```bash
-$ make -C ./test test SPEC=spec/my_awesome_plugin/my_cool_module_spec.lua
+$ make test SPEC=spec/my_awesome_plugin/my_cool_module_spec.lua
+$ make watch SPEC=spec/my_awesome_plugin/my_cool_module_spec.lua
 ```
 
 ## Github actions
