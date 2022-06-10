@@ -18,7 +18,7 @@ function my_awesome_plugin.setup(options)
 
    -- do here any startup your plugin needs, like creating commands and
    -- mappings that depend on values passed in options
-   vim.api.nvim_create_user_command("MyPluginGreet", my_awesome_plugin.greet, {})
+   vim.api.nvim_create_user_command("MyAwesomePluginGreet", my_awesome_plugin.greet, {})
 end
 
 function my_awesome_plugin.is_configured()

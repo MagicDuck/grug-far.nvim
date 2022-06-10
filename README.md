@@ -7,7 +7,8 @@ A template to create Neovim plugins written in [Lua][lua].
 ## Using
 
 Clone/download it locally and change the references to `my_awesome_plugin`, 
-`my_cool_module` accordingly to your new plugin name.
+`my_cool_module` accordingly to your new plugin name. Don't forget to edit the
+[help][help] file accordingly.
 
 You'll need to install [Lua][lua] and [LuaRocks][luarocks] to run the linter.
 
@@ -63,3 +64,4 @@ branch and also on Pull Request. Tests will be run using
 [integration-badge]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml/badge.svg
 [integration-runs]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml
 [neovim-test-versions]: .github/workflows/integration.yml#L17
+[help]: doc/my-awesome-plugin.txt

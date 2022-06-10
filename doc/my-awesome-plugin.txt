@@ -1,0 +1,78 @@
+*my-awesome-plugin.txt*  An awesome plugin that greets you :)
+
+==============================================================================
+CONTENTS                                          *my-awesome-plugin-contents*
+
+    1. Introduction ......................... |my-awesome-plugin-introduction|
+    2. Setup ................................ |my-awesome-plugin-setup|
+    3. Commands ............................. |my-awesome-plugin-commands|
+    4. API .................................. |my-awesome-plugin-api|
+
+==============================================================================
+1. INTRODUCTION                               *my-awesome-plugin-introduction*
+
+my-awesome-plugin makes Neovim, your favorite text editor, capable of greeting
+you. See bellow how it works:
+
+                +--------------+              +--------------+
+                |              |              |              |
+                |              |              |              |
+                |              |              |              |
+                |    Hello     | -----------> |  [your-name] |
+                |              |              |              |
+                |              |              |              |
+                +--------------+              +--------------+
+
+==============================================================================
+2. SETUP                                             *my-awesome-plugin-setup*
+
+Make sure to add to call the setup function with the proper configuration on
+your `init` file.
+
+If you use `init.vim`: >
+
+    lua require('my_awesome_plugin').setup { name = 'Alexander, The Great'}
+
+
+Or, if you use `init.lua`: >
+
+    require('my_awesome_plugin').setup { name = 'Alexander, The Great'}
+
+==============================================================================
+3. COMMANDS                                       *my-awesome-plugin-commands*
+
+:MyAwesomePluginGenericGreet                     *MyAwesomePluginGenericGreet*
+
+Shows a generic greet message.
+
+:MyAwesomePluginGreet                                   *MyAwesomePluginGreet*
+
+Shows a personalized, accordingly to the setup configuration, greet message.
+
+==============================================================================
+4. API                                                 *my-awesome-plugin-api*
+
+
+my_awesome_plugin.setup({config})                  *my_awesome_plugin.setup()*
+        Configures this plugin. Currently supported configuration variables
+        are:
+        • `name`: a string to be used in the greet message
+
+        Parameters: ~
+            {config}(required, table) Table of values; keys are as listed
+                above. Accept defaults by omitting the relevant key.
+
+my_awesome_plugin.is_configured()          *my_awesome_plugin.is_configured()*
+        Tell if the plugin is configured.
+        Return: ~
+            true/false
+
+my_awesome_plugin.greet()                          *my_awesome_plugin.greet()*
+        Show a greeting message. If the plugin was previously configured with
+        |my_awesome_plugin.setup()|, show a personalized message.
+
+my_awesome_plugin.generic_greet()          *my_awesome_plugin.generic_greet()*
+        Show a generic greeting message.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:noet:
