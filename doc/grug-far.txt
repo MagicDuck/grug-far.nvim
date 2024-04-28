@@ -31,12 +31,12 @@ your `init` file.
 
 If you use `init.vim`: >
 
-    lua require('my_awesome_plugin').setup { name = 'Alexander, The Great'}
+    lua require('grug-far').setup { name = 'Alexander, The Great'}
 
 
 Or, if you use `init.lua`: >
 
-    require('my_awesome_plugin').setup { name = 'Alexander, The Great'}
+    require('grug-far').setup { name = 'Alexander, The Great'}
 
 ==============================================================================
 3. COMMANDS                                       *my-awesome-plugin-commands*
@@ -53,7 +53,7 @@ Shows a personalized, accordingly to the setup configuration, greet message.
 4. API                                                 *my-awesome-plugin-api*
 
 
-my_awesome_plugin.setup({config})                  *my_awesome_plugin.setup()*
+grug-far.setup({config})                  *grug-far.setup()*
         Configures this plugin. Currently supported configuration variables
         are:
         • `name`: a string to be used in the greet message
@@ -62,16 +62,16 @@ my_awesome_plugin.setup({config})                  *my_awesome_plugin.setup()*
             {config}(required, table) Table of values; keys are as listed
                 above. Accept defaults by omitting the relevant key.
 
-my_awesome_plugin.is_configured()          *my_awesome_plugin.is_configured()*
+grug-far.is_configured()          *grug-far.is_configured()*
         Tell if the plugin is configured.
         Return: ~
             true/false
 
-my_awesome_plugin.greet()                          *my_awesome_plugin.greet()*
+grug-far.greet()                          *grug-far.greet()*
         Show a greeting message. If the plugin was previously configured with
-        |my_awesome_plugin.setup()|, show a personalized message.
+        |grug-far.setup()|, show a personalized message.
 
-my_awesome_plugin.generic_greet()          *my_awesome_plugin.generic_greet()*
+grug-far.generic_greet()          *grug-far.generic_greet()*
         Show a generic greeting message.
 
 ==============================================================================

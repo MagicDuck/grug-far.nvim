@@ -1,12 +1,11 @@
-# plugin-template.nvim
+# grug-far.nvim
 
-[![Integration][integration-badge]][integration-runs]
-
-A template to create Neovim plugins written in [Lua][lua].
+simple find and replace
 
 ## Using
 
-Clone/download it locally and change the references to `my_awesome_plugin`, 
+TODO: update
+Clone/download it locally and change the references to `grug-far`, 
 `my_cool_module` accordingly to your new plugin name. Don't forget to edit the
 [help][help] file accordingly.
 
@@ -44,8 +43,8 @@ $ make watch
 In both commands you myght specify a single spec to test/watch using:
 
 ```bash
-$ make test SPEC=spec/my_awesome_plugin/my_cool_module_spec.lua
-$ make watch SPEC=spec/my_awesome_plugin/my_cool_module_spec.lua
+$ make test SPEC=spec/grug-far/my_cool_module_spec.lua
+$ make watch SPEC=spec/grug-far/my_cool_module_spec.lua
 ```
 
 ## Github actions
