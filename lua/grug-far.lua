@@ -4,7 +4,9 @@ local M = {}
 
 local function with_defaults(options)
   return {
-    name = options.name or "John Doe"
+    resultsHeader = options.resultsHeader or "Results:",
+    -- TODO (sbadragan): remove?
+    resultsHeaderHighlight = options.resultsHeaderHighlight or "Comment"
   }
 end
 
@@ -48,12 +50,65 @@ local function renderHelp(params)
   end
 end
 
+local function str_starts_with(str, start)
+  return str:sub(1, #start) == start
+end
+
+local function getResultsHeaderRow(buf, lines)
+  for i = 1, #lines do
+    if str_starts_with(lines[i], M.options.resultsHeader) then
+      return i - 1
+    end
+  end
+
+  return -1
+end
+
+local function renderResults(params)
+  local buf = params.buf
+  local minLineNr = params.minLineNr
+
+  -- TODO (sbadragan): not sure if this would be performance issue in large buffers....
+  -- local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  -- local resultsHeaderRow = getResultsHeaderRow(buf, lines)
+  -- if resultsHeaderRow < 0 then
+  --   vim.api.nvim_buf_set_lines(buf, resultsHeaderRow, resultsHeaderRow, false, { M.options.resultsHeader })
+  --   resultsHeaderRow = #lines
+  --   vim.api.nvim_buf_add_highlight(buf, M.namespace, M.options.resultsHeaderHighlight, resultsHeaderRow, 0, -1)
+  -- end
+
+  local headerRow = unpack(M.extmarkIds.results_header and
+    vim.api.nvim_buf_get_extmark_by_id(buf, M.namespace, M.extmarkIds.results_header, {}) or {})
+  local newHeaderRow = nil
+  if headerRow == nil or headerRow < minLineNr then
+    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+    for _ = #lines, minLineNr do
+      vim.api.nvim_buf_set_lines(buf, -1, -1, false, { "" })
+    end
+
+    newHeaderRow = minLineNr
+  end
+
+  if newHeaderRow ~= nil then
+    M.extmarkIds.results_header = vim.api.nvim_buf_set_extmark(buf, M.namespace, newHeaderRow, 0, {
+      id = M.extmarkIds.results_header,
+      end_row = newHeaderRow,
+      end_col = 0,
+      virt_lines = {
+        { { "  ------------------------------", 'SpecialComment' } },
+      },
+      virt_lines_leftcol = true,
+      virt_lines_above = false,
+      right_gravity = false
+    })
+  end
+end
+
 local function renderInput(params)
   local buf = params.buf
   local lineNr = params.lineNr
   local extmarkName = params.extmarkName
   local label_virt_lines = params.label_virt_lines
-  local placeholder_virt_text = params.placeholder_virt_text
 
   local line = unpack(vim.api.nvim_buf_get_lines(buf, lineNr, lineNr + 1, false))
   if line == nil then
@@ -113,6 +168,10 @@ local function onBufferChange(params)
     label_virt_lines = {
       { { "  Flags", 'DiagnosticInfo' } },
     },
+  })
+  renderResults({
+    buf = buf,
+    minLineNr = 6,
   })
 end
 
