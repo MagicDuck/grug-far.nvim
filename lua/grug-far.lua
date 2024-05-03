@@ -26,9 +26,8 @@ function M.is_configured()
   return M.options ~= nil
 end
 
-function onBufferChange(params)
+local function renderHelp(params)
   local buf = params.buf
-
   local helpLine = unpack(vim.api.nvim_buf_get_lines(buf, 0, 1, false))
   if #helpLine ~= 0 then
     vim.api.nvim_buf_set_lines(buf, 0, 0, false, { "" })
@@ -47,6 +46,69 @@ function onBufferChange(params)
       virt_text_pos = 'overlay'
     })
   end
+end
+
+local function renderInput(params)
+  local buf = params.buf
+  local lineNr = params.lineNr
+
+  local line = unpack(vim.api.nvim_buf_get_lines(buf, lineNr, lineNr + 1, false))
+  if line == nil then
+    vim.api.nvim_buf_set_lines(buf, lineNr, lineNr, false, { "" })
+  end
+
+  -- TODO (sbadragan): could add some overlay marks with help text, ex for files **/*.js
+  local extmarkPos = M.extmarkIds[params.extmarkName] and
+    vim.api.nvim_buf_get_extmark_by_id(buf, M.namespace, M.extmarkIds[params.extmarkName], {}) or {}
+  if extmarkPos[1] ~= lineNr then
+    M.extmarkIds[params.extmarkName] = vim.api.nvim_buf_set_extmark(buf, M.namespace, lineNr, 0, {
+      id = M.extmarkIds[params.extmarkName],
+      end_row = lineNr,
+      end_col = 0,
+      virt_lines = params.virt_lines,
+      virt_lines_leftcol = true,
+      virt_lines_above = true,
+      right_gravity = false
+    })
+  end
+end
+
+local function onBufferChange(params)
+  local buf = params.buf
+
+  renderHelp({ buf = buf })
+  renderInput({
+    buf = buf,
+    lineNr = 1,
+    extmarkName = "search",
+    virt_lines = {
+      { { "  Search", 'DiagnosticInfo' } },
+    },
+  })
+  renderInput({
+    buf = buf,
+    lineNr = 2,
+    extmarkName = "replace",
+    virt_lines = {
+      { { "  Replace", 'DiagnosticInfo' } },
+    },
+  })
+  renderInput({
+    buf = buf,
+    lineNr = 3,
+    extmarkName = "files_filter",
+    virt_lines = {
+      { { " 󱪣 Files", 'DiagnosticInfo' } },
+    },
+  })
+  renderInput({
+    buf = buf,
+    lineNr = 4,
+    extmarkName = "flags",
+    virt_lines = {
+      { { "  Flags", 'DiagnosticInfo' } },
+    },
+  })
 end
 
 -- public API
