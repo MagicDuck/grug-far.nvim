@@ -76,21 +76,6 @@ local function renderInput(params)
       })
     end
   end
-
-  if placeholder_virt_text then
-    local placeholderExtmarkName = extmarkName .. "_placeholder"
-    local placeholderExtmarkPos = M.extmarkIds[placeholderExtmarkName] and
-      vim.api.nvim_buf_get_extmark_by_id(buf, M.namespace, M.extmarkIds[placeholderExtmarkName], {}) or {}
-    if placeholderExtmarkPos[1] ~= lineNr then
-      M.extmarkIds[placeholderExtmarkName] = vim.api.nvim_buf_set_extmark(buf, M.namespace, lineNr, 0, {
-        id = M.extmarkIds[placeholderExtmarkName],
-        end_row = lineNr,
-        end_col = 0,
-        virt_text = placeholder_virt_text,
-        virt_text_pos = 'overlay'
-      })
-    end
-  end
 end
 
 local function onBufferChange(params)
@@ -104,9 +89,6 @@ local function onBufferChange(params)
     label_virt_lines = {
       { { "  Search", 'DiagnosticInfo' } },
     },
-    placeholder_virt_text = {
-      { "...", 'Comment' }
-    }
   })
   renderInput({
     buf = buf,
@@ -115,9 +97,6 @@ local function onBufferChange(params)
     label_virt_lines = {
       { { "  Replace", 'DiagnosticInfo' } },
     },
-    placeholder_virt_text = {
-      { "ex: bob", 'Comment' }
-    }
   })
   renderInput({
     buf = buf,
@@ -126,9 +105,6 @@ local function onBufferChange(params)
     label_virt_lines = {
       { { " 󱪣 Files", 'DiagnosticInfo' } },
     },
-    placeholder_virt_text = {
-      { "ex: **/*.{js,jsx}", 'Comment' }
-    }
   })
   renderInput({
     buf = buf,
