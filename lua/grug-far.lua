@@ -41,7 +41,7 @@ local function renderHelp(params)
       end_row = 0,
       end_col = 0,
       virt_text = {
-        { "Press g? for help", 'DiagnosticInfo' }
+        { "Press g? for help", 'Comment' }
       },
       virt_text_pos = 'overlay'
     })
@@ -51,25 +51,45 @@ end
 local function renderInput(params)
   local buf = params.buf
   local lineNr = params.lineNr
+  local extmarkName = params.extmarkName
+  local label_virt_lines = params.label_virt_lines
+  local placeholder_virt_text = params.placeholder_virt_text
 
   local line = unpack(vim.api.nvim_buf_get_lines(buf, lineNr, lineNr + 1, false))
   if line == nil then
     vim.api.nvim_buf_set_lines(buf, lineNr, lineNr, false, { "" })
   end
 
-  -- TODO (sbadragan): could add some overlay marks with help text, ex for files **/*.js
-  local extmarkPos = M.extmarkIds[params.extmarkName] and
-    vim.api.nvim_buf_get_extmark_by_id(buf, M.namespace, M.extmarkIds[params.extmarkName], {}) or {}
-  if extmarkPos[1] ~= lineNr then
-    M.extmarkIds[params.extmarkName] = vim.api.nvim_buf_set_extmark(buf, M.namespace, lineNr, 0, {
-      id = M.extmarkIds[params.extmarkName],
-      end_row = lineNr,
-      end_col = 0,
-      virt_lines = params.virt_lines,
-      virt_lines_leftcol = true,
-      virt_lines_above = true,
-      right_gravity = false
-    })
+  if label_virt_lines then
+    local labelExtmarkName = extmarkName .. "_label"
+    local labelExtmarkPos = M.extmarkIds[labelExtmarkName] and
+      vim.api.nvim_buf_get_extmark_by_id(buf, M.namespace, M.extmarkIds[labelExtmarkName], {}) or {}
+    if labelExtmarkPos[1] ~= lineNr then
+      M.extmarkIds[labelExtmarkName] = vim.api.nvim_buf_set_extmark(buf, M.namespace, lineNr, 0, {
+        id = M.extmarkIds[labelExtmarkName],
+        end_row = lineNr,
+        end_col = 0,
+        virt_lines = label_virt_lines,
+        virt_lines_leftcol = true,
+        virt_lines_above = true,
+        right_gravity = false
+      })
+    end
+  end
+
+  if placeholder_virt_text then
+    local placeholderExtmarkName = extmarkName .. "_placeholder"
+    local placeholderExtmarkPos = M.extmarkIds[placeholderExtmarkName] and
+      vim.api.nvim_buf_get_extmark_by_id(buf, M.namespace, M.extmarkIds[placeholderExtmarkName], {}) or {}
+    if placeholderExtmarkPos[1] ~= lineNr then
+      M.extmarkIds[placeholderExtmarkName] = vim.api.nvim_buf_set_extmark(buf, M.namespace, lineNr, 0, {
+        id = M.extmarkIds[placeholderExtmarkName],
+        end_row = lineNr,
+        end_col = 0,
+        virt_text = placeholder_virt_text,
+        virt_text_pos = 'overlay'
+      })
+    end
   end
 end
 
@@ -81,31 +101,40 @@ local function onBufferChange(params)
     buf = buf,
     lineNr = 1,
     extmarkName = "search",
-    virt_lines = {
+    label_virt_lines = {
       { { "  Search", 'DiagnosticInfo' } },
     },
+    placeholder_virt_text = {
+      { "...", 'Comment' }
+    }
   })
   renderInput({
     buf = buf,
     lineNr = 2,
     extmarkName = "replace",
-    virt_lines = {
+    label_virt_lines = {
       { { "  Replace", 'DiagnosticInfo' } },
     },
+    placeholder_virt_text = {
+      { "ex: bob", 'Comment' }
+    }
   })
   renderInput({
     buf = buf,
     lineNr = 3,
     extmarkName = "files_filter",
-    virt_lines = {
+    label_virt_lines = {
       { { " 󱪣 Files", 'DiagnosticInfo' } },
     },
+    placeholder_virt_text = {
+      { "ex: **/*.{js,jsx}", 'Comment' }
+    }
   })
   renderInput({
     buf = buf,
     lineNr = 4,
     extmarkName = "flags",
-    virt_lines = {
+    label_virt_lines = {
       { { "  Flags", 'DiagnosticInfo' } },
     },
   })
