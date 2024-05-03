@@ -28,6 +28,7 @@ function M.is_configured()
   return M.options ~= nil
 end
 
+-- TODO (sbadragan): implemment g?
 local function renderHelp(params)
   local buf = params.buf
   local helpLine = unpack(vim.api.nvim_buf_get_lines(buf, 0, 1, false))
@@ -50,32 +51,9 @@ local function renderHelp(params)
   end
 end
 
-local function str_starts_with(str, start)
-  return str:sub(1, #start) == start
-end
-
-local function getResultsHeaderRow(buf, lines)
-  for i = 1, #lines do
-    if str_starts_with(lines[i], M.options.resultsHeader) then
-      return i - 1
-    end
-  end
-
-  return -1
-end
-
 local function renderResults(params)
   local buf = params.buf
   local minLineNr = params.minLineNr
-
-  -- TODO (sbadragan): not sure if this would be performance issue in large buffers....
-  -- local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-  -- local resultsHeaderRow = getResultsHeaderRow(buf, lines)
-  -- if resultsHeaderRow < 0 then
-  --   vim.api.nvim_buf_set_lines(buf, resultsHeaderRow, resultsHeaderRow, false, { M.options.resultsHeader })
-  --   resultsHeaderRow = #lines
-  --   vim.api.nvim_buf_add_highlight(buf, M.namespace, M.options.resultsHeaderHighlight, resultsHeaderRow, 0, -1)
-  -- end
 
   local headerRow = unpack(M.extmarkIds.results_header and
     vim.api.nvim_buf_get_extmark_by_id(buf, M.namespace, M.extmarkIds.results_header, {}) or {})
@@ -89,13 +67,16 @@ local function renderResults(params)
     newHeaderRow = minLineNr
   end
 
+  -- TODO (sbadragan): maybe show some sort of search status in the virt lines ?
+  -- like a clock or a checkmark when replacment has been done?
+  -- show some sort of total ?
   if newHeaderRow ~= nil then
     M.extmarkIds.results_header = vim.api.nvim_buf_set_extmark(buf, M.namespace, newHeaderRow, 0, {
       id = M.extmarkIds.results_header,
       end_row = newHeaderRow,
       end_col = 0,
       virt_lines = {
-        { { "  ------------------------------", 'SpecialComment' } },
+        { { " 󱎸 ──────────────────────────────────────────────────────────", 'SpecialComment' } },
       },
       virt_lines_leftcol = true,
       virt_lines_above = false,
@@ -192,46 +173,6 @@ function M.grugFar()
     buffer = buf,
     callback = onBufferChange
   })
-
-  -- add lines
-  -- vim.api.nvim_buf_set_lines(buf, 0, 0, false, {
-  --   "", -- search
-  --   "", -- replace
-  --   ""  -- flags
-  -- })
-  -- add virtual text
-  -- vim.api.nvim_buf_set_extmark(buf, M.namespace, 0, 0, {
-  --   end_row = 0,
-  --   end_col = 0,
-  --   virt_text = {
-  --     { " --help", 'DiagnosticInfo' }
-  --   },
-  --   virt_text_pos = 'overlay'
-  -- })
-  -- vim.api.nvim_buf_set_extmark(buf, M.namespace, 1, 0, {
-  --   end_row = 1,
-  --   end_col = 0,
-  --   virt_lines = {
-  --     { { "  Search", 'DiagnosticInfo' } },
-  --   },
-  --   virt_lines_leftcol = true,
-  --   virt_lines_above = true,
-  --   right_gravity = false
-  -- })
-  -- vim.api.nvim_buf_set_extmark(buf, M.namespace, 2, 0, {
-  --   end_row = 2,
-  --   end_col = 0,
-  --   -- TODO (sbadragan): create our own highlight group?
-  --   -- virt_lines = { { { "  Search" }, "Comment" } }
-  --   -- virt_text_pos = "eol"
-  --   virt_lines = {
-  --     { { "  Replace", 'DiagnosticInfo' } },
-  --   },
-  --   virt_lines_leftcol = true,
-  --   virt_lines_above = true,
-  --   right_gravity = false
-  -- })
-  -- TODO (sbadragan): update marks on TextChanged, TextChangedI
 
   -- TODO (sbadragan): remove
   -- try to keep all the heavy logic on pure functions/modules that do not
