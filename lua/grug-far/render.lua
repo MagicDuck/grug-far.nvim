@@ -22,7 +22,10 @@ local function render(params, context)
     lineNr = 2,
     extmarkName = "replace",
     label_virt_lines = {
-      { { "  Replace", 'DiagnosticInfo' } },
+      {
+        { "  Replace           ", 'DiagnosticInfo' },
+        { "ex: foobar    ${1}_foo    $$MY_ENV_VAR ", 'SpecialComment' }
+      },
     },
   }, context)
 
@@ -32,8 +35,8 @@ local function render(params, context)
     extmarkName = "files_glob",
     label_virt_lines = {
       {
-        { " 󱪣 Files Filter   ", 'DiagnosticInfo' },
-        { "ex(1): *.lua  ex(2) *.{css,js}  ex(3) **/docs/*.md", 'SpecialComment' }
+        { " 󱪣 Files Filter      ", 'DiagnosticInfo' },
+        { "ex: *.lua     *.{css,js}    **/docs/*.md", 'SpecialComment' }
       },
     },
   }, context))
@@ -44,15 +47,15 @@ local function render(params, context)
     extmarkName = "flags",
     label_virt_lines = {
       {
-        { "  Flags   ", 'DiagnosticInfo' },
-        { "ex: --hidden --ignore-case --multiline --invert-match", 'SpecialComment' }
+        { "  Flags             ", 'DiagnosticInfo' },
+        { "ex: --hidden (-.) --ignore-case (-i) --multiline (-U) --invert-match (-v)", 'SpecialComment' }
       },
     },
   }, context))
 
   renderResults({
     buf = buf,
-    minLineNr = 6,
+    minLineNr = 8,
     inputs = inputs
   }, context)
 end

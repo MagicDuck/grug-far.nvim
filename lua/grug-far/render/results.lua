@@ -87,6 +87,7 @@ local function renderResults(params, context)
     headerRow = minLineNr
   end
 
+  -- TODO (sbadragan): results can move past header when pressing backspace, not sure we can do anything about it
   renderHeader(buf, context, headerRow)
 
   if vim.deep_equal(inputs, lastInputs) then
