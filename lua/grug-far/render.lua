@@ -31,7 +31,10 @@ local function render(params, context)
     lineNr = 3,
     extmarkName = "files_glob",
     label_virt_lines = {
-      { { " 󱪣 Files Glob", 'DiagnosticInfo' } },
+      {
+        { " 󱪣 Files Filter   ", 'DiagnosticInfo' },
+        { "ex(1): *.lua  ex(2) *.{css,js}  ex(3) **/docs/*.md", 'SpecialComment' }
+      },
     },
   }, context))
 
@@ -40,7 +43,10 @@ local function render(params, context)
     lineNr = 4,
     extmarkName = "flags",
     label_virt_lines = {
-      { { "  Flags", 'DiagnosticInfo' } },
+      {
+        { "  Flags   ", 'DiagnosticInfo' },
+        { "ex: --hidden --ignore-case --multiline --invert-match", 'SpecialComment' }
+      },
     },
   }, context))
 
