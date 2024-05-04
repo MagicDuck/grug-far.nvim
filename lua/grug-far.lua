@@ -29,7 +29,9 @@ local function createContext()
     options = options,
     namespace = namespace,
     extmarkIds = {},
-    state = {}
+    state = {
+      isFirstRender = true
+    }
   }
 end
 
@@ -53,8 +55,8 @@ function M.grug_far()
   local function onBufferChange(params)
     render({ buf = params.buf }, context)
 
-    if not context.state.hasRendered then
-      context.state.hasRendered = true
+    if context.state.isFirstRender then
+      context.state.isFirstRender = false
       vim.api.nvim_win_set_cursor(win, { 2, 0 })
     end
   end

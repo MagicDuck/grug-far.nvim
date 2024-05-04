@@ -45,10 +45,9 @@ local function getInitialStatus()
   return { status = nil }
 end
 
-local status = getInitialStatus()
 local function renderHeader(buf, context, headerRow, newStatus)
   if newStatus then
-    status = newStatus
+    context.state.status = newStatus
   end
 
   -- TODO (sbadragan): maybe show some sort of search status in the virt lines ?
@@ -59,7 +58,8 @@ local function renderHeader(buf, context, headerRow, newStatus)
     end_row = headerRow,
     end_col = 0,
     virt_lines = {
-      { { " 󱎸 ─────────────────────────────────────────────────────────────────────────────── " .. getStatusText(status), 'SpecialComment' } },
+      { { " 󱎸 ─────────────────────────────────────────────────────────────────────────────── "
+      .. getStatusText(context.state.status), 'SpecialComment' } },
     },
     virt_lines_leftcol = true,
     virt_lines_above = true,
@@ -67,14 +67,17 @@ local function renderHeader(buf, context, headerRow, newStatus)
   })
 end
 
--- TODO (sbadragan): these state things need to go into a per invocation context
-local asyncRenderResultList = nil
-local lastInputs = nil
-local lastErrorLine = nil
 local function renderResults(params, context)
   local buf = params.buf
   local minLineNr = params.minLineNr
   local inputs = params.inputs
+
+  if context.state.isFirstRender then
+    context.state.asyncRenderResultList = utils.debounce(renderResultList, context.options.debounceMs)
+    context.state.lastErrorLine = nil
+    context.state.lastInputs = nil
+    context.state.status = getInitialStatus()
+  end
 
   local headerRow = unpack(context.extmarkIds.results_header and
     vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, context.extmarkIds.results_header, {}) or {})
@@ -90,10 +93,10 @@ local function renderResults(params, context)
 
   renderHeader(buf, context, headerRow)
 
-  if vim.deep_equal(inputs, lastInputs) then
+  if vim.deep_equal(inputs, context.state.lastInputs) then
     return
   end
-  lastInputs = inputs
+  context.state.lastInputs = inputs
 
   local function updateStatus(newStatus)
     renderHeader(buf, context, headerRow, newStatus)
@@ -102,17 +105,20 @@ local function renderResults(params, context)
   -- TODO (sbadragan): print actual rg command being executed for clarity
   -- TODO (sbadragan): figure out how to "commit" the replacement
   -- TODO (sbadragan): highlight the results properly
-  asyncRenderResultList = asyncRenderResultList or utils.debounce(renderResultList, context.options.debounceMs)
-  asyncRenderResultList({
+  context.state.asyncRenderResultList({
     inputs = inputs,
     on_start = function()
       updateStatus(#inputs.search > 0 and { status = 'fetching_chunk', chunk = 1 } or getInitialStatus())
       -- remove all lines after heading
       vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
-      lastErrorLine = headerRow + 1
+      context.state.lastErrorLine = headerRow + 1
     end,
     on_fetch_chunk = function(chunk_lines)
-      updateStatus({ status = 'fetching_chunk', chunk = status.chunk and status.chunk + 1 or 2 })
+      updateStatus({
+        status = 'fetching_chunk',
+        chunk = context.state.status.chunk and context.state.status.chunk + 1 or
+          2
+      })
       -- TODO (sbadragan): might need some sort of wrapper
       vim.api.nvim_buf_set_lines(buf, -1, -1, false, chunk_lines)
     end,
@@ -120,6 +126,7 @@ local function renderResults(params, context)
       updateStatus({ status = 'error' })
       local err_lines = vim.split(err, '\n')
 
+      local lastErrorLine = context.state.lastErrorLine
       vim.api.nvim_buf_set_lines(buf, lastErrorLine, lastErrorLine, false, err_lines)
 
       for i = lastErrorLine, lastErrorLine + #err_lines do
