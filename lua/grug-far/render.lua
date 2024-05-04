@@ -26,23 +26,23 @@ local function render(params, context)
     },
   }, context)
 
-  inputs.filesGlob = renderInput({
+  inputs.filesGlob = vim.trim(renderInput({
     buf = buf,
     lineNr = 3,
     extmarkName = "files_glob",
     label_virt_lines = {
       { { " 󱪣 Files Glob", 'DiagnosticInfo' } },
     },
-  }, context)
+  }, context))
 
-  inputs.flags = renderInput({
+  inputs.flags = vim.trim(renderInput({
     buf = buf,
     lineNr = 4,
     extmarkName = "flags",
     label_virt_lines = {
       { { "  Flags", 'DiagnosticInfo' } },
     },
-  }, context)
+  }, context))
 
   renderResults({
     buf = buf,

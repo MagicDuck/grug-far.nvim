@@ -82,10 +82,12 @@ local function renderResults(params, context)
     end,
     on_error = function(err)
       -- TODO (sbadragan): update some sort of status?
-      -- print out the err?
-      -- TODO (sbadragan): highlight error
       local err_lines = vim.split(err, '\n')
       vim.api.nvim_buf_set_lines(buf, headerRow, headerRow, false, err_lines)
+
+      for i = headerRow, headerRow + #err_lines do
+        vim.api.nvim_buf_add_highlight(buf, context.namespace, 'DiagnosticError', i, 0, -1)
+      end
     end,
     on_finish = function()
       -- TODO (sbadragan): update some sort of status?

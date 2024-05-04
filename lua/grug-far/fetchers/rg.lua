@@ -20,9 +20,16 @@ local function rgFetchResults(params)
       table.insert(args, '--replace=' .. inputs.replacement)
     end
     table.insert(args, '--heading')
+    -- json_decode({expr})
     -- table.insert(args, '--json')
-    if #vim.trim(inputs.filesGlob) > 0 then
+    if #inputs.filesGlob > 0 then
       table.insert(args, '--glob=' .. inputs.filesGlob)
+    end
+
+    if #inputs.flags then
+      for flag in string.gmatch(inputs.flags, "%S+") do
+        table.insert(args, flag)
+      end
     end
   end
 
