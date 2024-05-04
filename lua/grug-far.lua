@@ -18,6 +18,7 @@ function M.setup(options)
   -- function/module makes it easier to reason about all possible changes
   M.options = with_defaults(options or {})
 
+  -- TODO (sbadragan): should these be just top level things?
   M.namespace = vim.api.nvim_create_namespace('grug-far.nvim')
   M.extmarkIds = {}
 
@@ -51,6 +52,50 @@ local function renderHelp(params)
   end
 end
 
+-- TODO (sbadragan): move to another module
+local uv = vim.loop
+local function setTimeout(callback, timeout)
+  local timer = uv.new_timer()
+  timer:start(timeout, 0, function()
+    timer:stop()
+    timer:close()
+    vim.schedule(callback)
+  end)
+  return timer
+end
+
+local function clearTimeout(timer)
+  if timer and not timer:is_closing() then
+    timer:stop()
+    timer:close()
+  end
+end
+
+local function debounce(callback, timeout)
+  local timer
+  return function(params)
+    clearTimeout(timer)
+    timer = setTimeout(function()
+      callback(params)
+    end, timeout)
+  end
+end
+
+local function renderResultList(params)
+  params.on_start()
+
+  local inputs = params.inputs
+
+  -- TODO (sbadragan): use uv.spawn() to spawn rg process with
+  -- rg local --replace=bob --context=1 --heading --json --glob='*.md' ./
+  params.on_fetch_chunk("------- dummy results")
+  params.on_fetch_chunk("------- more results")
+  P(vim.inspect(inputs))
+end
+
+-- TODO (sbadragan): make debounce timeout configurable
+local asyncRenderResultList = debounce(renderResultList, 500)
+
 local function renderResults(params)
   local buf = params.buf
   local minLineNr = params.minLineNr
@@ -79,10 +124,25 @@ local function renderResults(params)
         { { " 󱎸 ──────────────────────────────────────────────────────────", 'SpecialComment' } },
       },
       virt_lines_leftcol = true,
-      virt_lines_above = false,
+      virt_lines_above = true,
       right_gravity = false
     })
   end
+
+  -- TODO (sbadragan): need to figure out params
+  asyncRenderResultList({
+    inputs = params.inputs,
+    on_start = function()
+      -- remove all lines after heading
+      P(newHeaderRow)
+      vim.api.nvim_buf_set_lines(buf, newHeaderRow or headerRow, -1, false, {})
+    end,
+    on_fetch_chunk = function(chunk)
+      P(chunk)
+      -- TODO (sbadragan): might need some sort of wrapper
+      vim.api.nvim_buf_set_lines(buf, -1, -1, false, { chunk })
+    end
+  })
 end
 
 local function renderInput(params)
@@ -112,13 +172,16 @@ local function renderInput(params)
       })
     end
   end
+
+  return line or ""
 end
 
 local function onBufferChange(params)
   local buf = params.buf
+  local inputs = {}
 
   renderHelp({ buf = buf })
-  renderInput({
+  inputs.search = renderInput({
     buf = buf,
     lineNr = 1,
     extmarkName = "search",
@@ -126,7 +189,7 @@ local function onBufferChange(params)
       { { "  Search", 'DiagnosticInfo' } },
     },
   })
-  renderInput({
+  inputs.replacement = renderInput({
     buf = buf,
     lineNr = 2,
     extmarkName = "replace",
@@ -134,15 +197,15 @@ local function onBufferChange(params)
       { { "  Replace", 'DiagnosticInfo' } },
     },
   })
-  renderInput({
+  inputs.filesGlob = renderInput({
     buf = buf,
     lineNr = 3,
-    extmarkName = "files_filter",
+    extmarkName = "files_glob",
     label_virt_lines = {
-      { { " 󱪣 Files", 'DiagnosticInfo' } },
+      { { " 󱪣 Files Glob", 'DiagnosticInfo' } },
     },
   })
-  renderInput({
+  inputs.flags = renderInput({
     buf = buf,
     lineNr = 4,
     extmarkName = "flags",
@@ -153,6 +216,7 @@ local function onBufferChange(params)
   renderResults({
     buf = buf,
     minLineNr = 6,
+    inputs = inputs
   })
 end
 
