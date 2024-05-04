@@ -5,14 +5,13 @@ local function renderResultList(params)
   local on_start = params.on_start
   local on_fetch_chunk = params.on_fetch_chunk
   local inputs = params.inputs
+  local context = params.context
 
   on_start()
-
-  -- TODO (sbadragan): use uv.spawn() to spawn rg process with
-  -- rg local --replace=bob --context=1 --heading --json --glob='*.md' ./
-  on_fetch_chunk("------- dummy results")
-  on_fetch_chunk("------- more results")
-  P(vim.inspect(inputs))
+  context.options.fetchResults({
+    inputs = inputs,
+    on_fetch_chunk = on_fetch_chunk,
+  })
 end
 
 local function renderResults(params, context)
@@ -61,7 +60,8 @@ local function renderResults(params, context)
       P(chunk)
       -- TODO (sbadragan): might need some sort of wrapper
       vim.api.nvim_buf_set_lines(buf, -1, -1, false, { chunk })
-    end
+    end,
+    context = context
   })
 end
 

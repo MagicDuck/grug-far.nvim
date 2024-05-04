@@ -1,11 +1,13 @@
 local render = require("grug-far/render")
+local rgFetchResults = require("grug-far/fetchers/rg")
 
 local M = {}
 
 local function with_defaults(options)
-  return {
-    debounceMs = options.debounceMs or 500
-  }
+  return vim.tbl_extend('force', {
+    debounceMs = 500,
+    fetchResults = rgFetchResults
+  }, options)
 end
 
 local context = nil
