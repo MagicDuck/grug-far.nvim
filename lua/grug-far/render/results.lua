@@ -1,19 +1,33 @@
 local utils = require('grug-far/utils')
-local asyncRenderResultList = nil
 
+local abortFetch = nil
 local function renderResultList(params)
   local on_start = params.on_start
-  local on_fetch_chunk = params.on_fetch_chunk
+  local on_fetch_chunk = vim.schedule_wrap(params.on_fetch_chunk)
+  local on_finish = vim.schedule_wrap(params.on_finish)
+  local on_error = vim.schedule_wrap(params.on_error)
   local inputs = params.inputs
   local context = params.context
 
+  if abortFetch then
+    abortFetch();
+    abortFetch = nil
+  end
+
   on_start()
-  context.options.fetchResults({
+  abortFetch = context.options.fetchResults({
     inputs = inputs,
     on_fetch_chunk = on_fetch_chunk,
+    on_finish = function()
+      abortFetch = nil
+      on_finish()
+    end,
+    on_error = on_error
   })
 end
 
+local asyncRenderResultList = nil
+local lastInputs = nil
 local function renderResults(params, context)
   local buf = params.buf
   local minLineNr = params.minLineNr
@@ -47,19 +61,35 @@ local function renderResults(params, context)
       right_gravity = false
     })
   end
+  headerRow = newHeaderRow or headerRow
+
+  if vim.deep_equal(inputs, lastInputs) then
+    return
+  end
+  lastInputs = inputs
 
   asyncRenderResultList = asyncRenderResultList or utils.debounce(renderResultList, context.options.debounceMs)
   asyncRenderResultList({
     inputs = inputs,
     on_start = function()
       -- remove all lines after heading
-      P(newHeaderRow)
-      vim.api.nvim_buf_set_lines(buf, newHeaderRow or headerRow, -1, false, {})
+      vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, {})
     end,
-    on_fetch_chunk = function(chunk)
-      P(chunk)
+    on_fetch_chunk = function(chunk_lines)
+      -- P(chunk)
       -- TODO (sbadragan): might need some sort of wrapper
-      vim.api.nvim_buf_set_lines(buf, -1, -1, false, { chunk })
+      vim.api.nvim_buf_set_lines(buf, -1, -1, false, chunk_lines)
+    end,
+    on_error = function(err)
+      -- TODO (sbadragan): update some sort of status?
+      -- print out the err?
+      -- TODO (sbadragan): highlight error
+      local err_lines = vim.split(err, '\n')
+      vim.api.nvim_buf_set_lines(buf, headerRow, headerRow, false, err_lines)
+    end,
+    on_finish = function()
+      -- TODO (sbadragan): update some sort of status?
+      P('finished')
     end,
     context = context
   })
