@@ -15,6 +15,9 @@ local function render(params, context)
     label_virt_lines = {
       { { "  Search", 'DiagnosticInfo' } },
     },
+    placeholder_virt_text = {
+      { "ex: foo    foo([a-z0-9]*)    fun\\(", 'SpecialComment' }
+    },
   }, context)
 
   inputs.replacement = renderInput({
@@ -22,10 +25,10 @@ local function render(params, context)
     lineNr = 2,
     extmarkName = "replace",
     label_virt_lines = {
-      {
-        { "  Replace           ", 'DiagnosticInfo' },
-        { "ex: foobar    ${1}_foo    $$MY_ENV_VAR ", 'SpecialComment' }
-      },
+      { { "  Replace           ", 'DiagnosticInfo' } },
+    },
+    placeholder_virt_text = {
+      { "ex: bar    ${1}_foo    $$MY_ENV_VAR ", 'SpecialComment' },
     },
   }, context)
 
@@ -34,10 +37,10 @@ local function render(params, context)
     lineNr = 3,
     extmarkName = "files_glob",
     label_virt_lines = {
-      {
-        { " 󱪣 Files Filter      ", 'DiagnosticInfo' },
-        { "ex: *.lua     *.{css,js}    **/docs/*.md", 'SpecialComment' }
-      },
+      { { " 󱪣 Files Filter      ", 'DiagnosticInfo' } },
+    },
+    placeholder_virt_text = {
+      { "ex: *.lua     *.{css,js}    **/docs/*.md", 'SpecialComment' }
     },
   }, context))
 
@@ -46,16 +49,16 @@ local function render(params, context)
     lineNr = 4,
     extmarkName = "flags",
     label_virt_lines = {
-      {
-        { "  Flags             ", 'DiagnosticInfo' },
-        { "ex: --hidden (-.) --ignore-case (-i) --multiline (-U) --invert-match (-v)", 'SpecialComment' }
-      },
+      { { "  Flags             ", 'DiagnosticInfo' } },
+    },
+    placeholder_virt_text = {
+      { "ex: --hidden (-.) --ignore-case (-i) --multiline (-U)", 'SpecialComment' }
     },
   }, context))
 
   renderResults({
     buf = buf,
-    minLineNr = 5,
+    minLineNr = 6,
     inputs = inputs
   }, context)
 end
