@@ -37,9 +37,6 @@ local function rgFetchResults(params)
     return
   end
 
-  print('---spawning')
-  P(args)
-
   local stdout = uv.new_pipe()
   local stderr = uv.new_pipe()
 
@@ -53,15 +50,15 @@ local function rgFetchResults(params)
     cwd = vim.fn.getcwd(),
     args = args
   }, function(code, signal)
-    print("exit code", code)
-    print("exit signal", signal)
     stdout:close()
     stderr:close()
     handle:close()
-    on_finish();
+    local isSuccess = code == 0
+    on_finish(isSuccess);
   end)
 
   local on_abort = function()
+    -- TODO (sbadragan): remove?
     P('killed proc')
     stdout:close()
     stderr:close()
@@ -69,9 +66,6 @@ local function rgFetchResults(params)
   end
 
   uv.read_start(stdout, function(err, data)
-    P('stdout')
-    P(data)
-    P(err)
     if err then
       on_error('rg fetcher: error reading from rg stdout!')
       return
@@ -83,10 +77,6 @@ local function rgFetchResults(params)
   end)
 
   uv.read_start(stderr, function(err, data)
-    P('stderr')
-    P(data)
-    P(err)
-
     if err then
       on_error('rg fetcher: error reading from rg stderr!')
       return
