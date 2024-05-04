@@ -59,7 +59,7 @@ local function renderHeader(buf, context, headerRow, newStatus)
     end_row = headerRow,
     end_col = 0,
     virt_lines = {
-      { { " 󱎸 ────────────────────────────────────────────────────────── " .. getStatusText(status), 'SpecialComment' } },
+      { { " 󱎸 ─────────────────────────────────────────────────────────────────────────────── " .. getStatusText(status), 'SpecialComment' } },
     },
     virt_lines_leftcol = true,
     virt_lines_above = true,
@@ -67,6 +67,7 @@ local function renderHeader(buf, context, headerRow, newStatus)
   })
 end
 
+-- TODO (sbadragan): these state things need to go into a per invocation context
 local asyncRenderResultList = nil
 local lastInputs = nil
 local lastErrorLine = nil
@@ -87,7 +88,6 @@ local function renderResults(params, context)
     headerRow = minLineNr
   end
 
-  -- TODO (sbadragan): results can move past header when pressing backspace, not sure we can do anything about it
   renderHeader(buf, context, headerRow)
 
   if vim.deep_equal(inputs, lastInputs) then
@@ -99,14 +99,17 @@ local function renderResults(params, context)
     renderHeader(buf, context, headerRow, newStatus)
   end
 
+  -- TODO (sbadragan): print actual rg command being executed for clarity
+  -- TODO (sbadragan): figure out how to "commit" the replacement
+  -- TODO (sbadragan): highlight the results properly
   asyncRenderResultList = asyncRenderResultList or utils.debounce(renderResultList, context.options.debounceMs)
   asyncRenderResultList({
     inputs = inputs,
     on_start = function()
       updateStatus(#inputs.search > 0 and { status = 'fetching_chunk', chunk = 1 } or getInitialStatus())
       -- remove all lines after heading
-      vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, {})
-      lastErrorLine = headerRow
+      vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
+      lastErrorLine = headerRow + 1
     end,
     on_fetch_chunk = function(chunk_lines)
       updateStatus({ status = 'fetching_chunk', chunk = status.chunk and status.chunk + 1 or 2 })

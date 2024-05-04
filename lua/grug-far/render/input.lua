@@ -4,6 +4,7 @@ local function renderInput(params, context)
   local extmarkName = params.extmarkName
   local label_virt_lines = params.label_virt_lines
 
+  -- TODO (sbadragan): render placeholder help text only when line empty
   local line = unpack(vim.api.nvim_buf_get_lines(buf, lineNr, lineNr + 1, false))
   if line == nil then
     vim.api.nvim_buf_set_lines(buf, lineNr, lineNr, false, { "" })

@@ -55,7 +55,7 @@ local function render(params, context)
 
   renderResults({
     buf = buf,
-    minLineNr = 8,
+    minLineNr = 5,
     inputs = inputs
   }, context)
 end
