@@ -4,10 +4,15 @@ local rgFetchResults = require("grug-far/fetchers/rg")
 local M = {}
 
 local function with_defaults(options)
-  return vim.tbl_extend('force', {
+  return vim.tbl_deep_extend('force', {
     debounceMs = 500,
     -- TODO (sbadragan): make not configurable
-    fetchResults = rgFetchResults
+    fetchResults = rgFetchResults,
+    highlights = {
+      resultsMatch = '@diff.delta',
+      resultsPath = '@string.special.path',
+      resultsLineNo = 'Number'
+    }
   }, options)
 end
 

@@ -113,7 +113,7 @@ local function renderResults(params, context)
       vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
       context.state.lastErrorLine = headerRow + 1
     end,
-    on_fetch_chunk = function(chunk_lines)
+    on_fetch_chunk = function(data)
       updateStatus({
         status = 'fetching_chunk',
         chunk = context.state.status.chunk and context.state.status.chunk + 1 or
@@ -122,7 +122,23 @@ local function renderResults(params, context)
 
       -- write colorized output to buffer
       local lastline = vim.api.nvim_buf_line_count(buf)
-      context.baleia.buf_set_lines(buf, lastline, lastline, false, chunk_lines)
+      -- TODO (sbadragan): remmmove?
+      -- context.baleia.buf_set_lines(buf, lastline, lastline, false, chunk_lines)
+      vim.api.nvim_buf_set_lines(buf, lastline, lastline, false, data.lines)
+
+      -- TODO (sbadragan): refactor to func
+      local hlGroups = context.options.highlights
+      for i = 1, #data.highlights do
+        local highlight = data.highlights[i]
+        local hlGroup = hlGroups[highlight.hl]
+        if hlGroup then
+          for j = highlight.start_line, highlight.end_line do
+            vim.api.nvim_buf_add_highlight(buf, context.namespace, hlGroup, lastline + j,
+              j == highlight.start_line and highlight.start_col or 0,
+              j == highlight.end_line and highlight.end_col or -1)
+          end
+        end
+      end
     end,
     on_error = function(err)
       updateStatus({ status = 'error' })

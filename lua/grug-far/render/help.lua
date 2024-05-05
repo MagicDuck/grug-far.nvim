@@ -15,7 +15,8 @@ local function renderHelp(params, context)
       end_row = 0,
       end_col = 0,
       virt_text = {
-        { "Apply Replace: <c-enter> | To Quickfix List: <c-q> | Help: g?", 'WarningMsg' }
+        -- TODO (sbadragan): configure hl
+        { "Apply Replace: <c-enter> | To Quickfix List: <c-q> | Help: g?", 'helpHeadline' }
       },
       virt_text_pos = 'overlay'
     })

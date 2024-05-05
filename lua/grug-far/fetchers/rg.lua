@@ -1,8 +1,86 @@
 local uv = vim.loop
 
+local ansi_color_ending = '[0m'
+local rg_colors = {
+  match = {
+    rgb = '0,0,0',
+    ansi = '[38;2;0;0;0m',
+    hl = 'resultsMatch'
+  },
+  path = {
+    rgb = '0,0,1',
+    ansi = '[38;2;0;0;1m',
+    hl = 'resultsPath'
+  },
+  line = {
+    rgb = '0,0,2',
+    ansi = '[38;2;0;0;2m',
+    hl = 'resultsLineNo'
+  },
+}
+local token_types = {
+  color = 1,
+  color_ending = 2,
+  newline = 3
+}
+
 local function process_data_chunk(data)
-  -- TODO (sbadragan): implement
-  return vim.split(data, '\n')
+  local tokens = {}
+  local i
+  local j
+
+  for _, color in pairs(rg_colors) do
+    i = 0
+    j = 0
+    while true do
+      i, j = string.find(data, color.ansi, i + 1, true)
+      if i == nil then break end
+      table.insert(tokens, { type = token_types.color, hl = color.hl, start = i, fin = j })
+    end
+  end
+
+  i = 0
+  j = 0
+  while true do
+    i, j = string.find(data, ansi_color_ending, i + 1, true)
+    if i == nil then break end
+    table.insert(tokens, { type = token_types.color_ending, start = i, fin = j })
+  end
+
+  i = 0
+  j = 0
+  while true do
+    i, j = string.find(data, "\n", i + 1, true)
+    if i == nil then break end
+    table.insert(tokens, { type = token_types.newline, start = i, fin = j })
+  end
+
+  table.sort(tokens, function(a, b) return a.start < b.start end)
+
+  i = 1
+  local token
+  local line = ""
+  local highlight = nil
+  local lines = {}
+  local highlights = {}
+  for k = 1, #tokens do
+    token = tokens[k]
+    line = line .. string.sub(data, i, token.start - 1)
+    i = token.fin + 1
+    if token.type == token_types.newline then
+      table.insert(lines, line)
+      line = ""
+    elseif token.type == token_types.color then
+      highlight = { hl = token.hl, start_line = #lines, start_col = #line }
+    elseif token.type == token_types.color_ending and highlight then
+      highlight.end_line = #lines
+      highlight.end_col = #line
+      table.insert(highlights, highlight)
+      highlight = nil
+    end
+  end
+
+  return { lines = lines, highlights = highlights }
 end
 
 local function rgFetchResults(params)
@@ -34,7 +112,12 @@ local function rgFetchResults(params)
 
     -- colors so that we can show nicer output
     table.insert(args, '--color=ansi')
-    table.insert(args, '--colors=match:bg:0,128,255')
+    for k, v in pairs(rg_colors) do
+      table.insert(args, '--colors=' .. k .. ':none')
+      table.insert(args, '--colors=' .. k .. ':fg:' .. v.rgb)
+    end
+
+    table.insert(args, '--line-number')
   end
 
   if not args then
@@ -63,7 +146,6 @@ local function rgFetchResults(params)
 
   local on_abort = function()
     -- TODO (sbadragan): remove?
-    P('killed proc')
     stdout:close()
     stderr:close()
     uv.kill(pid, 'sigkill')
