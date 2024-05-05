@@ -20,11 +20,11 @@ local function renderResultsHeader(buf, context, headerRow)
     context.state.status = { status = nil }
   end
 
-  -- TODO (sbadragan): show some sort of total matches?
   context.extmarkIds.results_header = vim.api.nvim_buf_set_extmark(buf, context.namespace, headerRow, 0, {
     id = context.extmarkIds.results_header,
     end_row = headerRow,
     end_col = 0,
+    -- TODO (sbadragan): make all these highlights configurable
     virt_lines = {
       { { " 󱎸 ─────────────────────────────────────────────────────────────────────────────── "
       .. getStatusText(context.state.status), 'SpecialComment' } },
