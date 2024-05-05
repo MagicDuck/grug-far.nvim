@@ -45,7 +45,7 @@ local function bufAppendResultsChunk(buf, context, data)
   end
 end
 
-local function bufAppendErrorChunk(buf, context, headerRow, error)
+local function bufAppendErrorChunk(buf, context, error)
   local lastErrorLine = context.state.lastErrorLine
 
   local err_lines = vim.split(error, '\n')
@@ -59,8 +59,23 @@ local function bufAppendErrorChunk(buf, context, headerRow, error)
 end
 
 local function renderResultsList(buf, context, inputs, headerRow)
-  local function updateStatus(newStatus)
-    renderResultsHeader(buf, context, headerRow, newStatus)
+  local function updateStatus(newStatus, stats)
+    context.state.status = newStatus
+    if newStatus.status == 'progress' then
+      if newStatus.count == 0 or not context.state.stats then
+        context.state.stats = { matches = 0, files = 0 }
+      end
+      if stats then
+        context.state.stats = {
+          matches = context.state.stats.matches + stats.matches,
+          files = context.state.stats.files + stats.files
+        }
+      end
+    elseif newStatus.status ~= 'success' then
+      context.state.stats = nil
+    end
+
+    renderResultsHeader(buf, context, headerRow)
   end
 
   -- TODO (sbadragan): figure out how to "commit" the replacement
@@ -70,22 +85,23 @@ local function renderResultsList(buf, context, inputs, headerRow)
     inputs = inputs,
     on_start = function()
       updateStatus(#inputs.search > 0
-        and { status = 'progress', count = 1 } or { status = nil })
+        and { status = 'progress', count = 0 } or { status = nil })
       -- remove all lines after heading and add one blank line
       vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
       context.state.lastErrorLine = headerRow + 1
+      context.state.stats = nil
     end,
     on_fetch_chunk = function(data)
       local status = context.state.status
       updateStatus({
         status = 'progress',
         count = status.count and status.count + 1 or 2
-      })
+      }, data.stats)
       bufAppendResultsChunk(buf, context, data)
     end,
     on_error = function(error)
       updateStatus({ status = 'error' })
-      bufAppendErrorChunk(buf, context, headerRow, error)
+      bufAppendErrorChunk(buf, context, error)
     end,
     on_finish = function(isSuccess)
       updateStatus({ status = isSuccess and 'success' or 'error' })

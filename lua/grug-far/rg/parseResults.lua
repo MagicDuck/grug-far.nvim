@@ -6,18 +6,24 @@ local token_types = {
   newline = 3
 }
 
-local function parseResults(data)
+local function getTokens(data)
   local tokens = {}
   local i
   local j
 
-  for _, color in pairs(colors.rg_colors) do
+  for name, color in pairs(colors.rg_colors) do
     i = 0
     j = 0
     while true do
       i, j = string.find(data, color.ansi, i + 1, true)
       if i == nil then break end
-      table.insert(tokens, { type = token_types.color, hl = color.hl, start = i, fin = j })
+      table.insert(tokens, {
+        type = token_types.color,
+        hl = color.hl,
+        name = name,
+        start = i,
+        fin = j
+      })
     end
   end
 
@@ -39,7 +45,31 @@ local function parseResults(data)
 
   table.sort(tokens, function(a, b) return a.start < b.start end)
 
-  i = 1
+  return tokens
+end
+
+local function getStats(tokens)
+  local stats = { matches = 0, files = 0 }
+  for k = 1, #tokens do
+    local token = tokens[k]
+    if token.type == token_types.color then
+      if token.name == 'match' then
+        stats.matches = stats.matches + 1
+      end
+      if token.name == 'path' then
+        stats.files = stats.files + 1
+      end
+    end
+  end
+
+  return stats
+end
+
+
+local function parseResults(data)
+  local tokens = getTokens(data)
+
+  local i = 1
   local line = ""
   local highlight = nil
   local lines = {}
@@ -64,7 +94,7 @@ local function parseResults(data)
     table.insert(lines, string.sub(data, i, #data))
   end
 
-  return { lines = lines, highlights = highlights }
+  return { lines = lines, highlights = highlights, stats = getStats(tokens) }
 end
 
 return parseResults
