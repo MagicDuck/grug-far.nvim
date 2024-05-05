@@ -1,4 +1,3 @@
-local utils = require('grug-far/utils')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local renderResultsList = require('grug-far/render/resultsList')
 

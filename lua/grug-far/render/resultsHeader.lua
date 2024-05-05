@@ -1,14 +1,15 @@
-local chunk_progress_icons = {
+local progress_icons = {
   '󱑖 ', '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 '
 }
 
+-- TODO (sbadragan): make configurable
 local function getStatusText(s)
   if s.status == 'error' then
     return ' '
   elseif s.status == 'success' then
     return ' '
-  elseif s.status == 'fetching_chunk' then
-    return chunk_progress_icons[(s.chunk % #chunk_progress_icons) + 1]
+  elseif s.status == 'progress' then
+    return progress_icons[(s.count % #progress_icons) + 1]
   end
 
   return ''

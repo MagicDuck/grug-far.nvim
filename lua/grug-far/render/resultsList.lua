@@ -70,7 +70,7 @@ local function renderResultsList(buf, context, inputs, headerRow)
     inputs = inputs,
     on_start = function()
       updateStatus(#inputs.search > 0
-        and { status = 'fetching_chunk', chunk = 1 } or { status = nil })
+        and { status = 'progress', count = 1 } or { status = nil })
       -- remove all lines after heading and add one blank line
       vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
       context.state.lastErrorLine = headerRow + 1
@@ -78,8 +78,8 @@ local function renderResultsList(buf, context, inputs, headerRow)
     on_fetch_chunk = function(data)
       local status = context.state.status
       updateStatus({
-        status = 'fetching_chunk',
-        chunk = status.chunk and status.chunk + 1 or 2
+        status = 'progress',
+        count = status.count and status.count + 1 or 2
       })
       bufAppendResultsChunk(buf, context, data)
     end,
