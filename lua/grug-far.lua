@@ -1,13 +1,10 @@
 local render = require("grug-far/render")
-local rgFetchResults = require("grug-far/fetchers/rg")
 
 local M = {}
 
 local function with_defaults(options)
   return vim.tbl_deep_extend('force', {
     debounceMs = 500,
-    -- TODO (sbadragan): make not configurable
-    fetchResults = rgFetchResults,
     highlights = {
       resultsMatch = '@diff.delta',
       resultsPath = '@string.special.path',

@@ -1,4 +1,5 @@
 local utils = require('grug-far/utils')
+local fetchResults = require('grug-far/rg/fetchResults')
 
 local abortFetch = nil
 local function renderResultList(params)
@@ -7,7 +8,6 @@ local function renderResultList(params)
   local on_finish = vim.schedule_wrap(params.on_finish)
   local on_error = vim.schedule_wrap(params.on_error)
   local inputs = params.inputs
-  local context = params.context
 
   if abortFetch then
     abortFetch();
@@ -15,7 +15,7 @@ local function renderResultList(params)
   end
 
   on_start()
-  abortFetch = context.options.fetchResults({
+  abortFetch = fetchResults({
     inputs = inputs,
     on_fetch_chunk = on_fetch_chunk,
     on_finish = function(isSuccess)
