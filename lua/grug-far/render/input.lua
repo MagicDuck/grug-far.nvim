@@ -1,9 +1,12 @@
+local opts = require('grug-far/opts')
+
 local function renderInput(params, context)
   local buf = params.buf
   local lineNr = params.lineNr
   local extmarkName = params.extmarkName
   local label = params.label
   local placeholder = params.placeholder
+  local icon = opts.getIcon(params.icon, context) or ''
 
   local line = unpack(vim.api.nvim_buf_get_lines(buf, lineNr, lineNr + 1, false))
   if line == nil then
@@ -18,7 +21,7 @@ local function renderInput(params, context)
       end_row = lineNr,
       end_col = 0,
       virt_lines = {
-        { { label, context.options.highlights.inputLabel } },
+        { { ' ' .. icon .. label, context.options.highlights.inputLabel } },
       },
       virt_lines_leftcol = true,
       virt_lines_above = true,

@@ -12,7 +12,8 @@ local function render(params, context)
     buf = buf,
     lineNr = 1,
     extmarkName = "search",
-    label = "  Search:",
+    icon = 'searchInput',
+    label = "Search:",
     placeholder = "ex: foo    foo([a-z0-9]*)    fun\\(",
   }, context)
 
@@ -20,7 +21,8 @@ local function render(params, context)
     buf = buf,
     lineNr = 2,
     extmarkName = "replace",
-    label = "  Replace:",
+    icon = 'replaceInput',
+    label = "Replace:",
     placeholder = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
   }, context)
 
@@ -28,7 +30,8 @@ local function render(params, context)
     buf = buf,
     lineNr = 3,
     extmarkName = "files_glob",
-    label = " 󱪣 Files Filter:",
+    icon = 'filesFilterInput',
+    label = "Files Filter:",
     placeholder = "ex: *.lua     *.{css,js}    **/docs/*.md",
   }, context))
 
@@ -36,7 +39,8 @@ local function render(params, context)
     buf = buf,
     lineNr = 4,
     extmarkName = "flags",
-    label = "  Flags:",
+    icon = 'flagsInput',
+    label = "Flags:",
     placeholder = "ex: --hidden (-.) --ignore-case (-i) --multiline (-U)",
   }, context))
 

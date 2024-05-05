@@ -27,8 +27,28 @@ function M.with_defaults(options)
       resultsPath = '@string.special.path',
       resultsLineNo = 'Number',
       resultsLineColumn = 'Number',
+    },
+
+    -- icons for UI, default ones depend on nerdfont
+    icons = {
+      -- whether to show icons
+      enabled = true,
+
+      searchInput = ' ',
+      replaceInput = ' ',
+      filesFilterInput = ' ',
+      flagsInput = '󰮚 ',
     }
   }, options)
+end
+
+function M.getIcon(iconName, context)
+  local icons = context.options.icons
+  if not icons.enabled then
+    return nil
+  end
+
+  return icons[iconName]
 end
 
 return M
