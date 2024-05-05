@@ -50,9 +50,7 @@ local function renderHeader(buf, context, headerRow, newStatus)
     context.state.status = newStatus
   end
 
-  -- TODO (sbadragan): maybe show some sort of search status in the virt lines ?
-  -- like a clock or a checkmark when replacment has been done?
-  -- show some sort of total ?
+  -- TODO (sbadragan): show some sort of total matches?
   context.extmarkIds.results_header = vim.api.nvim_buf_set_extmark(buf, context.namespace, headerRow, 0, {
     id = context.extmarkIds.results_header,
     end_row = headerRow,
@@ -65,6 +63,26 @@ local function renderHeader(buf, context, headerRow, newStatus)
     virt_lines_above = true,
     right_gravity = false
   })
+end
+
+local function writeDataChunk(buf, context, data)
+  -- write colorized output to buffer
+  local lastline = vim.api.nvim_buf_line_count(buf)
+  vim.api.nvim_buf_set_lines(buf, lastline, lastline, false, data.lines)
+
+  -- TODO (sbadragan): refactor to func
+  local hlGroups = context.options.highlights
+  for i = 1, #data.highlights do
+    local highlight = data.highlights[i]
+    local hlGroup = hlGroups[highlight.hl]
+    if hlGroup then
+      for j = highlight.start_line, highlight.end_line do
+        vim.api.nvim_buf_add_highlight(buf, context.namespace, hlGroup, lastline + j,
+          j == highlight.start_line and highlight.start_col or 0,
+          j == highlight.end_line and highlight.end_col or -1)
+      end
+    end
+  end
 end
 
 local function renderResults(params, context)
@@ -102,9 +120,7 @@ local function renderResults(params, context)
     renderHeader(buf, context, headerRow, newStatus)
   end
 
-  -- TODO (sbadragan): print actual rg command being executed for clarity
   -- TODO (sbadragan): figure out how to "commit" the replacement
-  -- TODO (sbadragan): highlight the results properly
   context.state.asyncRenderResultList({
     inputs = inputs,
     on_start = function()
@@ -119,24 +135,7 @@ local function renderResults(params, context)
         chunk = context.state.status.chunk and context.state.status.chunk + 1 or
           2
       })
-
-      -- write colorized output to buffer
-      local lastline = vim.api.nvim_buf_line_count(buf)
-      vim.api.nvim_buf_set_lines(buf, lastline, lastline, false, data.lines)
-
-      -- TODO (sbadragan): refactor to func
-      local hlGroups = context.options.highlights
-      for i = 1, #data.highlights do
-        local highlight = data.highlights[i]
-        local hlGroup = hlGroups[highlight.hl]
-        if hlGroup then
-          for j = highlight.start_line, highlight.end_line do
-            vim.api.nvim_buf_add_highlight(buf, context.namespace, hlGroup, lastline + j,
-              j == highlight.start_line and highlight.start_col or 0,
-              j == highlight.end_line and highlight.end_col or -1)
-          end
-        end
-      end
+      writeDataChunk(buf, context, data)
     end,
     on_error = function(err)
       updateStatus({ status = 'error' })
