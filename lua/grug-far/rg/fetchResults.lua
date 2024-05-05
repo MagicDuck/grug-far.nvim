@@ -7,10 +7,10 @@ local function fetchResults(params)
   local on_finish = params.on_finish
   local on_error = params.on_error
   local inputs = params.inputs
+  local options = params.options
 
-  -- TODO (sbadragan): minimum search ?
   -- if yes control from higher level and only send here wehn > minsize
-  local args = getArgs(inputs)
+  local args = getArgs(inputs, options)
   if not args then
     return
   end

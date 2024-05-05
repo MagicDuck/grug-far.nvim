@@ -18,6 +18,7 @@ local function asyncFetchResultList(params)
   on_start()
   context.state.abortFetch = fetchResults({
     inputs = inputs,
+    options = context.options,
     on_fetch_chunk = on_fetch_chunk,
     on_finish = function(isSuccess)
       context.state.abortFetch = nil
@@ -59,6 +60,10 @@ local function bufAppendErrorChunk(buf, context, error)
 end
 
 local function renderResultsList(buf, context, inputs, headerRow)
+  if #inputs.search < (context.options.minSearchChars or 1) then
+    return
+  end
+
   local function updateStatus(newStatus, stats)
     context.state.status = newStatus
     if newStatus.status == 'progress' then
@@ -78,14 +83,12 @@ local function renderResultsList(buf, context, inputs, headerRow)
     renderResultsHeader(buf, context, headerRow)
   end
 
-  -- TODO (sbadragan): figure out how to "commit" the replacement
   context.state.asyncFetchResultList = context.state.asyncFetchResultList or
     utils.debounce(asyncFetchResultList, context.options.debounceMs)
   context.state.asyncFetchResultList({
     inputs = inputs,
     on_start = function()
-      updateStatus(#inputs.search > 0
-        and { status = 'progress', count = 0 } or { status = nil })
+      updateStatus({ status = 'progress', count = 0 })
       -- remove all lines after heading and add one blank line
       vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
       context.state.lastErrorLine = headerRow + 1

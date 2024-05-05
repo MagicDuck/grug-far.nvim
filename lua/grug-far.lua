@@ -1,25 +1,13 @@
 local render = require("grug-far/render")
+local opts = require("grug-far/opts")
 
 local M = {}
-
-local function with_defaults(options)
-  return vim.tbl_deep_extend('force', {
-    debounceMs = 500,
-    highlights = {
-      resultsMatch = '@diff.delta',
-      resultsPath = '@string.special.path',
-      resultsLineNo = 'Number',
-      resultsLineColumn = 'Number',
-      helpHeader = 'WarningMsg'
-    }
-  }, options)
-end
 
 local options = nil
 local namespace = nil
 -- TODO (sbadragan): do we need some sort of health check?
-function M.setup(opts)
-  options = with_defaults(opts or {})
+function M.setup(user_opts)
+  options = opts.with_defaults(user_opts or {})
   namespace = vim.api.nvim_create_namespace('grug-far.nvim')
   vim.api.nvim_create_user_command("GrugFar", M.grug_far, {})
 end

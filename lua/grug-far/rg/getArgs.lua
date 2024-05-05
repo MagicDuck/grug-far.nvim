@@ -1,8 +1,8 @@
 local colors = require('grug-far/rg/colors')
 
-local function getArgs(inputs)
+local function getArgs(inputs, options)
   local args = nil
-  if #inputs.search == 0 then
+  if #inputs.search < (options.minSearchChars or 1) then
     return nil
   end
 
@@ -26,10 +26,15 @@ local function getArgs(inputs)
     table.insert(args, '--colors=' .. k .. ':fg:' .. v.rgb)
   end
 
-  -- TODO (sbadragan): add option for extra rg args, or maybe just show number?
+  local extraRgArgs = options.extraRgArgs and vim.trim(options.extraRgArgs) or ''
+  if #extraRgArgs > 0 then
+    for arg in string.gmatch(extraRgArgs, "%S+") do
+      table.insert(args, arg)
+    end
+  end
 
   -- user provided flags should come last
-  if #inputs.flags then
+  if #inputs.flags > 0 then
     for flag in string.gmatch(inputs.flags, "%S+") do
       table.insert(args, flag)
     end
