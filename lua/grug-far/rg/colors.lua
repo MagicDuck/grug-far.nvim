@@ -16,6 +16,11 @@ M.rg_colors = {
     ansi = '[38;2;0;0;2m',
     hl = 'resultsLineNo'
   },
+  column = {
+    rgb = '0,0,3',
+    ansi = '[38;2;0;0;3m',
+    hl = 'resultsLineColumn'
+  },
 }
 
 return M

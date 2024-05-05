@@ -2,8 +2,6 @@ local colors = require('grug-far/rg/colors')
 
 local function getArgs(inputs)
   local args = nil
-  -- TODO (sbadragan): minimum search ?
-  -- if yes control from higher level and only send here wehn > minsize
   if #inputs.search == 0 then
     return nil
   end
@@ -18,6 +16,8 @@ local function getArgs(inputs)
   end
 
   table.insert(args, '--heading')
+  table.insert(args, '--line-number')
+  table.insert(args, '--column')
 
   -- colors so that we can show nicer output
   table.insert(args, '--color=ansi')

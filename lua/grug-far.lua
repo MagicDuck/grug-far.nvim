@@ -9,6 +9,7 @@ local function with_defaults(options)
       resultsMatch = '@diff.delta',
       resultsPath = '@string.special.path',
       resultsLineNo = 'Number',
+      resultsLineColumn = 'Number',
       helpHeader = 'WarningMsg'
     }
   }, options)
