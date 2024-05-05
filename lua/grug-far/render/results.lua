@@ -119,8 +119,10 @@ local function renderResults(params, context)
         chunk = context.state.status.chunk and context.state.status.chunk + 1 or
           2
       })
-      -- TODO (sbadragan): might need some sort of wrapper
-      vim.api.nvim_buf_set_lines(buf, -1, -1, false, chunk_lines)
+
+      -- write colorized output to buffer
+      local lastline = vim.api.nvim_buf_line_count(buf)
+      context.baleia.buf_set_lines(buf, lastline, lastline, false, chunk_lines)
     end,
     on_error = function(err)
       updateStatus({ status = 'error' })

@@ -13,11 +13,15 @@ end
 
 local options = nil
 local namespace = nil
+local baleia = nil
 -- TODO (sbadragan): do we need some sort of health check?
 function M.setup(opts)
   options = with_defaults(opts or {})
   namespace = vim.api.nvim_create_namespace('grug-far.nvim')
   vim.api.nvim_create_user_command("GrugFar", M.grug_far, {})
+
+  -- TODO (sbadragan): do something if baleia is not available
+  baleia = require('baleia').setup({})
 end
 
 local function is_configured()
@@ -29,6 +33,7 @@ local function createContext()
     options = options,
     namespace = namespace,
     extmarkIds = {},
+    baleia = baleia,
     state = {
       isFirstRender = true
     }
@@ -65,6 +70,20 @@ function M.grug_far()
     buffer = buf,
     callback = onBufferChange
   })
+
+  -- TODO (sbadragan): just a test of writing a file, it worked
+  -- The idea is to process files with rg --passthrough -N <search> -r <replace> <filepath>
+  -- then get the output and write it out to the file using libuv
+  -- local f = io.open(
+  --   './reactUi/src/pages/IncidentManagement/IncidentDetails/components/PanelDisplayComponents/useIncidentPanelToggle.js',
+  --   'w+')
+  -- if f then
+  --   f:write("stuff")
+  --   f:close()
+  -- end
+
+  -- TODO (sbadragan): to colorize, use rg --color=ansi then baleia? or parse colors yourself...
+  -- https://github.com/m00qek/baleia.nvim sh
 end
 
 return M

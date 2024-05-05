@@ -31,6 +31,10 @@ local function rgFetchResults(params)
         table.insert(args, flag)
       end
     end
+
+    -- colors so that we can show nicer output
+    table.insert(args, '--color=ansi')
+    table.insert(args, '--colors=match:bg:0,128,255')
   end
 
   if not args then
