@@ -18,15 +18,11 @@ end
 
 local options = nil
 local namespace = nil
-local baleia = nil
 -- TODO (sbadragan): do we need some sort of health check?
 function M.setup(opts)
   options = with_defaults(opts or {})
   namespace = vim.api.nvim_create_namespace('grug-far.nvim')
   vim.api.nvim_create_user_command("GrugFar", M.grug_far, {})
-
-  -- TODO (sbadragan): do something if baleia is not available
-  baleia = require('baleia').setup({})
 end
 
 local function is_configured()
@@ -38,7 +34,6 @@ local function createContext()
     options = options,
     namespace = namespace,
     extmarkIds = {},
-    baleia = baleia,
     state = {
       isFirstRender = true
     }
@@ -86,9 +81,6 @@ function M.grug_far()
   --   f:write("stuff")
   --   f:close()
   -- end
-
-  -- TODO (sbadragan): to colorize, use rg --color=ansi then baleia? or parse colors yourself...
-  -- https://github.com/m00qek/baleia.nvim sh
 end
 
 return M

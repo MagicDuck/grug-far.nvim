@@ -122,8 +122,6 @@ local function renderResults(params, context)
 
       -- write colorized output to buffer
       local lastline = vim.api.nvim_buf_line_count(buf)
-      -- TODO (sbadragan): remmmove?
-      -- context.baleia.buf_set_lines(buf, lastline, lastline, false, chunk_lines)
       vim.api.nvim_buf_set_lines(buf, lastline, lastline, false, data.lines)
 
       -- TODO (sbadragan): refactor to func
