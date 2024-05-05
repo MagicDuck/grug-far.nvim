@@ -117,7 +117,8 @@ local function rgFetchResults(params)
       table.insert(args, '--colors=' .. k .. ':fg:' .. v.rgb)
     end
 
-    table.insert(args, '--line-number')
+    -- TODO (sbadragan): add option for extra rg args, or maybe just show number?
+    -- table.insert(args, '--line-number')
   end
 
   if not args then
@@ -127,10 +128,6 @@ local function rgFetchResults(params)
   local stdout = uv.new_pipe()
   local stderr = uv.new_pipe()
 
-  -- TODO (sbadragan): proper spawn
-  -- rg local --replace=bob --context=1 --heading --json --glob='*.md' ./
-  -- TODO (sbadragan): just rg?
-  -- local _, pid = uv.spawn("/opt/homebrew/bin/rg", {
   local handle, pid
   handle, pid = uv.spawn("rg", {
     stdio = { nil, stdout, stderr },
@@ -145,9 +142,9 @@ local function rgFetchResults(params)
   end)
 
   local on_abort = function()
-    -- TODO (sbadragan): remove?
     stdout:close()
     stderr:close()
+    handle:close()
     uv.kill(pid, 'sigkill')
   end
 
