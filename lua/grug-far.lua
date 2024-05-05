@@ -11,7 +11,8 @@ local function with_defaults(options)
     highlights = {
       resultsMatch = '@diff.delta',
       resultsPath = '@string.special.path',
-      resultsLineNo = 'Number'
+      resultsLineNo = 'Number',
+      helpHeader = 'WarningMsg'
     }
   }, options)
 end

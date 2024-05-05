@@ -15,7 +15,7 @@ local function renderHelp(params, context)
       end_row = 0,
       end_col = 0,
       virt_text = {
-        { "Apply Replace: <c-enter> | To Quickfix List: <c-q> | Help: g?", 'WarningMsg' }
+        { "Apply Replace: <c-enter> | To Quickfix List: <c-q> | Help: g?", context.options.highlights.helpHeader }
       },
       virt_text_pos = 'overlay'
     })
