@@ -16,11 +16,17 @@ function M.with_defaults(options)
 
     -- highlight groups for various parts of the UI
     highlights = {
+      helpHeader = 'WarningMsg',
+
+      inputLabel = 'Identifier',
+      inputPlaceholder = 'Comment',
+
+      resultsHeader = 'Comment',
+      resultsStats = 'Comment',
       resultsMatch = '@diff.delta',
       resultsPath = '@string.special.path',
       resultsLineNo = 'Number',
       resultsLineColumn = 'Number',
-      helpHeader = 'WarningMsg'
     }
   }, options)
 end

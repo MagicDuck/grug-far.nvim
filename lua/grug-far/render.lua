@@ -12,48 +12,32 @@ local function render(params, context)
     buf = buf,
     lineNr = 1,
     extmarkName = "search",
-    label_virt_lines = {
-      { { "  Search", 'Identifier' } },
-    },
-    placeholder_virt_text = {
-      { "ex: foo    foo([a-z0-9]*)    fun\\(", 'Comment' }
-    },
+    label = "  Search:",
+    placeholder = "ex: foo    foo([a-z0-9]*)    fun\\(",
   }, context)
 
   inputs.replacement = renderInput({
     buf = buf,
     lineNr = 2,
     extmarkName = "replace",
-    label_virt_lines = {
-      { { "  Replace           ", 'Identifier' } },
-    },
-    placeholder_virt_text = {
-      { "ex: bar    ${1}_foo    $$MY_ENV_VAR ", 'Comment' },
-    },
+    label = "  Replace:",
+    placeholder = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
   }, context)
 
   inputs.filesGlob = vim.trim(renderInput({
     buf = buf,
     lineNr = 3,
     extmarkName = "files_glob",
-    label_virt_lines = {
-      { { " 󱪣 Files Filter      ", 'Identifier' } },
-    },
-    placeholder_virt_text = {
-      { "ex: *.lua     *.{css,js}    **/docs/*.md", 'Comment' }
-    },
+    label = " 󱪣 Files Filter:",
+    placeholder = "ex: *.lua     *.{css,js}    **/docs/*.md",
   }, context))
 
   inputs.flags = vim.trim(renderInput({
     buf = buf,
     lineNr = 4,
     extmarkName = "flags",
-    label_virt_lines = {
-      { { "  Flags             ", 'Identifier' } },
-    },
-    placeholder_virt_text = {
-      { "ex: --hidden (-.) --ignore-case (-i) --multiline (-U)", 'Comment' }
-    },
+    label = "  Flags:",
+    placeholder = "ex: --hidden (-.) --ignore-case (-i) --multiline (-U)",
   }, context))
 
   renderResults({

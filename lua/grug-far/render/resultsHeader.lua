@@ -27,7 +27,7 @@ local function renderResultsHeader(buf, context, headerRow)
     -- TODO (sbadragan): make all these highlights configurable
     virt_lines = {
       { { " 󱎸 ─────────────────────────────────────────────────────────────────────────────── "
-      .. getStatusText(context.state.status), 'SpecialComment' } },
+      .. getStatusText(context.state.status), context.options.highlights.resultsHeader } },
     },
     virt_lines_leftcol = true,
     virt_lines_above = true,
@@ -41,7 +41,7 @@ local function renderResultsHeader(buf, context, headerRow)
       end_row = headerRow,
       end_col = 0,
       virt_lines = {
-        { { ' ' .. stats.matches .. ' matches in ' .. stats.files .. ' files' .. ' ', 'SpecialComment' } },
+        { { ' ' .. stats.matches .. ' matches in ' .. stats.files .. ' files' .. ' ', context.options.highlights.resultsStats } },
       },
       virt_lines_leftcol = true,
       virt_lines_above = true,
