@@ -27,7 +27,6 @@ local function getArgs(inputs)
   end
 
   -- TODO (sbadragan): add option for extra rg args, or maybe just show number?
-  -- table.insert(args, '--line-number')
 
   -- user provided flags should come last
   if #inputs.flags then
