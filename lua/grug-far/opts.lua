@@ -38,6 +38,16 @@ function M.with_defaults(options)
       replaceInput = ' ',
       filesFilterInput = ' ',
       flagsInput = '󰮚 ',
+
+      -- bit of a stretch of the icon concept, but it makes it configurable
+      resultsSeparatorLine = '',
+
+      resultsStatusReady = '󱩾 ',
+      resultsStatusError = ' ',
+      resultsStatusSuccess = '󰗡 ',
+      resultsStatusProgressSeq = {
+        '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
+      }
     }
   }, options)
 end

@@ -1,18 +1,27 @@
-local progress_icons = {
-  '󱑖 ', '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 '
-}
+local opts = require('grug-far/opts')
 
--- TODO (sbadragan): make configurable
-local function getStatusText(s)
+local function getStatusText(context)
+  local s = context.state.status
   if s.status == 'error' then
-    return ' '
+    return opts.getIcon('resultsStatusError', context)
   elseif s.status == 'success' then
-    return ' '
+    return opts.getIcon('resultsStatusSuccess', context)
   elseif s.status == 'progress' then
-    return progress_icons[(s.count % #progress_icons) + 1]
+    local progress_icons = opts.getIcon('resultsStatusProgressSeq', context)
+    if progress_icons then
+      return progress_icons[(s.count % #progress_icons) + 1]
+    else
+      return ''
+    end
   end
 
-  return ''
+  return opts.getIcon('resultsStatusReady', context)
+end
+
+local DEFAULT_SEPARATOR = '-----------------------------------------------------'
+local function getSeparator(context)
+  local separatorLine = opts.getIcon('resultsSeparatorLine', context) or DEFAULT_SEPARATOR
+  return ' ' .. (getStatusText(context) or '') .. ' ' .. separatorLine
 end
 
 local function renderResultsHeader(buf, context, headerRow)
@@ -24,10 +33,8 @@ local function renderResultsHeader(buf, context, headerRow)
     id = context.extmarkIds.results_header,
     end_row = headerRow,
     end_col = 0,
-    -- TODO (sbadragan): make all these highlights configurable
     virt_lines = {
-      { { " 󱎸 ─────────────────────────────────────────────────────────────────────────────── "
-      .. getStatusText(context.state.status), context.options.highlights.resultsHeader } },
+      { { getSeparator(context), context.options.highlights.resultsHeader } },
     },
     virt_lines_leftcol = true,
     virt_lines_above = true,
