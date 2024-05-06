@@ -5,10 +5,10 @@ local uv = vim.loop
 local function fetchResults(params)
   local on_fetch_chunk = params.on_fetch_chunk
   local on_finish = params.on_finish
-  local on_error = params.on_error
   local inputs = params.inputs
   local options = params.options
   local isAborted = false
+  local errorMessage = ''
 
   local args = getArgs(inputs, options)
   if not args then
@@ -28,8 +28,8 @@ local function fetchResults(params)
     stdout:close()
     stderr:close()
     handle:close()
-    local isSuccess = code == 0
-    on_finish(isSuccess and 'success' or 'error');
+    local isSuccess = code == 0 and #errorMessage == 0
+    on_finish(isSuccess and 'success' or 'error', errorMessage);
   end)
 
   local on_abort = function()
@@ -46,7 +46,7 @@ local function fetchResults(params)
     end
 
     if err then
-      on_error('rg fetcher: error reading from rg stdout!')
+      errorMessage = errorMessage .. '\nrg fetcher: error reading from rg stdout!'
       return
     end
 
@@ -61,12 +61,12 @@ local function fetchResults(params)
     end
 
     if err then
-      on_error('rg fetcher: error reading from rg stderr!')
+      errorMessage = errorMessage .. '\nrg fetcher: error reading from rg stderr!'
       return
     end
 
     if data then
-      on_error(data)
+      errorMessage = errorMessage .. data
     end
   end)
 

@@ -6,7 +6,6 @@ local function asyncFetchResultList(params)
   local on_start = params.on_start
   local on_fetch_chunk = vim.schedule_wrap(params.on_fetch_chunk)
   local on_finish = vim.schedule_wrap(params.on_finish)
-  local on_error = vim.schedule_wrap(params.on_error)
   local inputs = params.inputs
   local context = params.context
 
@@ -20,11 +19,10 @@ local function asyncFetchResultList(params)
     inputs = inputs,
     options = context.options,
     on_fetch_chunk = on_fetch_chunk,
-    on_finish = function(isSuccess)
+    on_finish = function(status, errorMessage)
       context.state.abortFetch = nil
-      on_finish(isSuccess)
+      on_finish(status, errorMessage)
     end,
-    on_error = on_error
   })
 end
 
@@ -47,16 +45,14 @@ local function bufAppendResultsChunk(buf, context, data)
 end
 
 local function bufAppendErrorChunk(buf, context, error)
-  local lastErrorLine = context.state.lastErrorLine
+  local startLine = context.state.headerRow + 1
 
   local err_lines = vim.split(error, '\n')
-  vim.api.nvim_buf_set_lines(buf, lastErrorLine, lastErrorLine, false, err_lines)
+  vim.api.nvim_buf_set_lines(buf, startLine, startLine, false, err_lines)
 
-  for i = lastErrorLine, lastErrorLine + #err_lines do
+  for i = startLine, startLine + #err_lines do
     vim.api.nvim_buf_add_highlight(buf, context.namespace, 'DiagnosticError', i, 0, -1)
   end
-
-  context.state.lastErrorLine = lastErrorLine + #err_lines
 end
 
 local function renderResultsList(buf, context, inputs)
@@ -74,7 +70,6 @@ local function renderResultsList(buf, context, inputs)
       -- remove all lines after heading and add one blank line
       local headerRow = state.headerRow
       vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
-      state.lastErrorLine = headerRow + 1
     end,
     on_fetch_chunk = function(data)
       state.status = 'progress'
@@ -87,17 +82,14 @@ local function renderResultsList(buf, context, inputs)
 
       bufAppendResultsChunk(buf, context, data)
     end,
-    on_error = function(error)
-      state.status = 'error'
-      state.progressCount = nil
-      state.stats = nil
-      renderResultsHeader(buf, context)
-
-      bufAppendErrorChunk(buf, context, error)
-    end,
-    on_finish = function(status)
+    on_finish = function(status, errorMessage)
       state.status = status
       state.progressCount = nil
+      if status == 'error' then
+        state.stats = nil
+        bufAppendErrorChunk(buf, context, errorMessage)
+      end
+
       renderResultsHeader(buf, context)
     end,
     context = context
