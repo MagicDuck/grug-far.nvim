@@ -1,5 +1,3 @@
-local colors = require('grug-far/rg/colors')
-
 -- TODO (sbadragan): might need to disable some flags, like:
 -- --no-include-zero --no-byte-offset
 -- --hyperlink-format=none
@@ -51,12 +49,6 @@ local function getArgs(inputs, options)
 
   if #inputs.filesGlob > 0 then
     table.insert(args, '--glob=' .. inputs.filesGlob)
-  end
-
-  table.insert(args, '--color=ansi')
-  for k, v in pairs(colors.rg_colors) do
-    table.insert(args, '--colors=' .. k .. ':none')
-    table.insert(args, '--colors=' .. k .. ':fg:' .. v.rgb)
   end
 
   return args

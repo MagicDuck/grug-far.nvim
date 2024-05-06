@@ -41,7 +41,7 @@ local function renderResultsHeader(buf, context)
   })
 
   local stats = context.state.stats
-  if stats then
+  if stats and stats.matches > 0 then
     context.extmarkIds.results_stats = vim.api.nvim_buf_set_extmark(buf, context.namespace, headerRow, 0, {
       id = context.extmarkIds.results_stats,
       end_row = headerRow,
