@@ -1,15 +1,16 @@
 local opts = require('grug-far/opts')
 
 local function getStatusText(context)
-  local s = context.state.status
-  if s.status == 'error' then
+  local status = context.state.status
+  if status == 'error' then
     return opts.getIcon('resultsStatusError', context)
-  elseif s.status == 'success' then
+  elseif status == 'success' then
     return opts.getIcon('resultsStatusSuccess', context)
-  elseif s.status == 'progress' then
+  elseif status == 'progress' then
     local progress_icons = opts.getIcon('resultsStatusProgressSeq', context)
     if progress_icons then
-      return progress_icons[(s.count % #progress_icons) + 1]
+      local progressCount = context.state.progressCount or 0
+      return progress_icons[(progressCount % #progress_icons) + 1]
     else
       return ''
     end
@@ -26,10 +27,6 @@ end
 
 local function renderResultsHeader(buf, context)
   local headerRow = context.state.headerRow
-
-  if not context.state.status then
-    context.state.status = { status = nil }
-  end
 
   context.extmarkIds.results_header = vim.api.nvim_buf_set_extmark(buf, context.namespace, headerRow, 0, {
     id = context.extmarkIds.results_header,

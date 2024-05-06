@@ -60,56 +60,45 @@ local function bufAppendErrorChunk(buf, context, error)
 end
 
 local function renderResultsList(buf, context, inputs)
-  local headerRow = context.state.headerRow
-
-  -- TODO (sbadragan): this should somehow be outside, possibly in another file
-  -- so that it can be called by actions
-  -- TODO (sbadragan): possibly we should split off stats
-  -- so maybe functions like updateStatus, updateStats, updateCurrentAction
-  local function updateStatus(newStatus, stats)
-    context.state.status = newStatus
-    if newStatus.status == 'progress' then
-      if newStatus.count == 0 or not context.state.stats then
-        context.state.stats = { matches = 0, files = 0 }
-      end
-      if stats then
-        context.state.stats = {
-          matches = context.state.stats.matches + stats.matches,
-          files = context.state.stats.files + stats.files
-        }
-      end
-    elseif newStatus.status ~= 'success' then
-      context.state.stats = nil
-    end
-
-    renderResultsHeader(buf, context)
-  end
-
-  context.state.asyncFetchResultList = context.state.asyncFetchResultList or
+  local state = context.state
+  state.asyncFetchResultList = state.asyncFetchResultList or
     utils.debounce(asyncFetchResultList, context.options.debounceMs)
-  context.state.asyncFetchResultList({
+  state.asyncFetchResultList({
     inputs = inputs,
     on_start = function()
-      updateStatus({ status = 'progress', count = 0 })
+      state.status = 'progress'
+      state.progressCount = 0
+      state.stats = { matches = 0, files = 0 }
+      renderResultsHeader(buf, context)
+
       -- remove all lines after heading and add one blank line
+      local headerRow = state.headerRow
       vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
-      context.state.lastErrorLine = headerRow + 1
-      context.state.stats = nil
+      state.lastErrorLine = headerRow + 1
     end,
     on_fetch_chunk = function(data)
-      local status = context.state.status
-      updateStatus({
-        status = 'progress',
-        count = status.count and status.count + 1 or 2
-      }, data.stats)
+      state.status = 'progress'
+      state.progressCount = state.progressCount + 1
+      state.stats = {
+        matches = state.stats.matches + data.stats.matches,
+        files = state.stats.files + data.stats.files
+      }
+      renderResultsHeader(buf, context)
+
       bufAppendResultsChunk(buf, context, data)
     end,
     on_error = function(error)
-      updateStatus({ status = 'error' })
+      state.status = 'error'
+      state.progressCount = nil
+      state.stats = nil
+      renderResultsHeader(buf, context)
+
       bufAppendErrorChunk(buf, context, error)
     end,
     on_finish = function(status)
-      updateStatus({ status = status })
+      state.status = status
+      state.progressCount = nil
+      renderResultsHeader(buf, context)
     end,
     context = context
   })
