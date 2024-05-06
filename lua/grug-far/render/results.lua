@@ -23,9 +23,9 @@ local function renderResults(params, context)
   local minLineNr = params.minLineNr
   local inputs = params.inputs
 
-  local headerRow = ensureMinLineNr(buf, context, minLineNr)
+  context.state.headerRow = ensureMinLineNr(buf, context, minLineNr)
 
-  renderResultsHeader(buf, context, headerRow)
+  renderResultsHeader(buf, context)
 
   -- only re-render list when inputs have changed
   if vim.deep_equal(inputs, context.state.lastInputs) then
@@ -33,7 +33,7 @@ local function renderResults(params, context)
   end
   context.state.lastInputs = inputs
 
-  renderResultsList(buf, context, inputs, headerRow)
+  renderResultsList(buf, context, inputs)
 end
 
 return renderResults

@@ -35,6 +35,7 @@ function M.grug_far()
 
   local context = createContext();
 
+  -- TODO (sbadragan): refactor out?
   -- create split window
   vim.cmd('vsplit')
   local win = vim.api.nvim_get_current_win()
@@ -42,6 +43,17 @@ function M.grug_far()
   -- vim.api.nvim_win_set_option(win, 'number', false)
   -- vim.api.nvim_win_set_option(win, 'relativenumber', false)
   local buf = vim.api.nvim_create_buf(true, true)
+
+  -- TODO (sbadragan): refactor, create a separate "actions" that executes stuff
+  -- with actiohns/replace, actions/quickfix, actions/quit
+  -- create a mappings.lua thing that does the mapping to actions based on opts
+  -- the actions can call renderResultsHeader or some sort of updateStatus to update stuff
+  -- local replace = require('grug-far/rg/replace')
+  -- vim.api.nvim_buf_set_keymap(buf, 'n', '<c-enter>', '',
+  --   { noremap = true, desc = 'apply replacements', callback = replace })
+  -- vim.api.nvim_buf_set_keymap(buf, 'i', '<c-enter>', '',
+  --   { noremap = true, desc = 'apply replacements', callback = replace })
+
   -- TODO (sbadragan): update with search?
   vim.api.nvim_buf_set_name(buf, 'Grug Find and Replace')
   vim.api.nvim_win_set_buf(win, buf)

@@ -24,7 +24,9 @@ local function getSeparator(context)
   return ' ' .. (getStatusText(context) or '') .. ' ' .. separatorLine
 end
 
-local function renderResultsHeader(buf, context, headerRow)
+local function renderResultsHeader(buf, context)
+  local headerRow = context.state.headerRow
+
   if not context.state.status then
     context.state.status = { status = nil }
   end

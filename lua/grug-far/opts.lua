@@ -1,55 +1,61 @@
 local M = {}
 
-function M.with_defaults(options)
-  return vim.tbl_deep_extend('force', {
-    -- debounce milliseconds for issuing search while user is typing
-    -- prevents excesive searching
-    debounceMs = 500,
+local defaultOptions = {
+  -- debounce milliseconds for issuing search while user is typing
+  -- prevents excesive searching
+  debounceMs = 500,
 
-    -- minimum number of chars which will cause a search to happen
-    -- prevents performance issues in larger dirs
-    minSearchChars = 2,
+  -- minimum number of chars which will cause a search to happen
+  -- prevents performance issues in larger dirs
+  minSearchChars = 2,
 
-    -- extra args that you always want to pass to rg
-    -- like for example if you always want context lines around matches
-    extraRgArgs = '',
+  -- extra args that you always want to pass to rg
+  -- like for example if you always want context lines around matches
+  extraRgArgs = '',
 
-    -- highlight groups for various parts of the UI
-    highlights = {
-      helpHeader = 'WarningMsg',
+  -- highlight groups for various parts of the UI
+  highlights = {
+    helpHeader = 'WarningMsg',
 
-      inputLabel = 'Identifier',
-      inputPlaceholder = 'Comment',
+    inputLabel = 'Identifier',
+    inputPlaceholder = 'Comment',
 
-      resultsHeader = 'Comment',
-      resultsStats = 'Comment',
-      resultsMatch = '@diff.delta',
-      resultsPath = '@string.special.path',
-      resultsLineNo = 'Number',
-      resultsLineColumn = 'Number',
-    },
+    resultsHeader = 'Comment',
+    resultsStats = 'Comment',
+    resultsMatch = '@diff.delta',
+    resultsPath = '@string.special.path',
+    resultsLineNo = 'Number',
+    resultsLineColumn = 'Number',
+  },
 
-    -- icons for UI, default ones depend on nerdfont
-    icons = {
-      -- whether to show icons
-      enabled = true,
+  -- icons for UI, default ones depend on nerdfont
+  icons = {
+    -- whether to show icons
+    enabled = true,
 
-      searchInput = ' ',
-      replaceInput = ' ',
-      filesFilterInput = ' ',
-      flagsInput = '󰮚 ',
+    searchInput = ' ',
+    replaceInput = ' ',
+    filesFilterInput = ' ',
+    flagsInput = '󰮚 ',
 
-      -- bit of a stretch of the icon concept, but it makes it configurable
-      resultsSeparatorLine = '',
+    -- bit of a stretch of the icon concept, but it makes it configurable
+    resultsSeparatorLine = '',
 
-      resultsStatusReady = '󱩾 ',
-      resultsStatusError = ' ',
-      resultsStatusSuccess = '󰗡 ',
-      resultsStatusProgressSeq = {
-        '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
-      }
+    resultsStatusReady = '󱩾 ',
+    resultsStatusError = ' ',
+    resultsStatusSuccess = '󰗡 ',
+    resultsStatusProgressSeq = {
+      '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
     }
-  }, options)
+  }
+}
+
+function M.with_defaults(options)
+  local newOptions = vim.tbl_deep_extend('force', defaultOptions, options)
+  newOptions.icons.resultsStatusProgressSeq = options.icons and options.icons.resultsStatusProgressSeq or
+    defaultOptions.icons.resultsStatusProgressSeq
+
+  return newOptions
 end
 
 function M.getIcon(iconName, context)

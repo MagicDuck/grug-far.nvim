@@ -59,7 +59,13 @@ local function bufAppendErrorChunk(buf, context, error)
   context.state.lastErrorLine = lastErrorLine + #err_lines
 end
 
-local function renderResultsList(buf, context, inputs, headerRow)
+local function renderResultsList(buf, context, inputs)
+  local headerRow = context.state.headerRow
+
+  -- TODO (sbadragan): this should somehow be outside, possibly in another file
+  -- so that it can be called by actions
+  -- TODO (sbadragan): possibly we should split off stats
+  -- so maybe functions like updateStatus, updateStats, updateCurrentAction
   local function updateStatus(newStatus, stats)
     context.state.status = newStatus
     if newStatus.status == 'progress' then
@@ -76,7 +82,7 @@ local function renderResultsList(buf, context, inputs, headerRow)
       context.state.stats = nil
     end
 
-    renderResultsHeader(buf, context, headerRow)
+    renderResultsHeader(buf, context)
   end
 
   context.state.asyncFetchResultList = context.state.asyncFetchResultList or

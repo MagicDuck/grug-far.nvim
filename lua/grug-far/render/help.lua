@@ -1,5 +1,3 @@
--- TODO (sbadragan): implemment g? or simply do a header with mappings like lazygit:
--- Replace: <c-enter> | Help: g? | To Quickfix List: <c-q>
 local function renderHelp(params, context)
   local buf = params.buf
   local helpLine = unpack(vim.api.nvim_buf_get_lines(buf, 0, 1, false))
@@ -15,7 +13,7 @@ local function renderHelp(params, context)
       end_row = 0,
       end_col = 0,
       virt_text = {
-        { "Apply Replace: <c-enter> | To Quickfix List: <c-q> | Help: g?", context.options.highlights.helpHeader }
+        { "Apply Replace: <c-enter> | To Quickfix List: <c-q> | Close: <c-x> | Help: g?", context.options.highlights.helpHeader }
       },
       virt_text_pos = 'overlay'
     })
