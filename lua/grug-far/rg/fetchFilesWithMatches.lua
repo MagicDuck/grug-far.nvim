@@ -16,7 +16,7 @@ local function fetchFilesWithMatches(params)
   return fetchWithRg({
     args = args,
     on_fetch_chunk = function(data)
-      local lines = vim.fn.split(data, "\n")
+      local lines = vim.split(data, "\n")
       for i = 1, #lines do
         table.insert(filesWithMatches, lines[i])
       end

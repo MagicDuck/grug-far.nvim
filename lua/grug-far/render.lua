@@ -4,7 +4,7 @@ local renderResults = require('grug-far/render/results')
 
 local function render(params, context)
   local buf = params.buf
-  local inputs = {}
+  local inputs = context.state.inputs
 
   renderHelp({ buf = buf }, context)
 

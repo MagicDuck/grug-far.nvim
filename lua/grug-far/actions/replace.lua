@@ -1,5 +1,17 @@
+local fetchFilesWithMatches = require('grug-far/rg/fetchFilesWithMatches')
+
 local function replace(buf, context)
-  P('sttufff----------')
+  local abort = fetchFilesWithMatches({
+    inputs = context.state.inputs,
+    options = context.options,
+    on_fetch_chunk = function(files)
+      P(files)
+    end,
+    on_finish = function()
+
+    end
+  })
+
   -- TODO (sbadragan): just a test of writing a file, it worked
   -- The idea is to process files with rg --passthrough -N <search> -r <replace> <filepath>
   -- then get the output and write it out to the file using libuv

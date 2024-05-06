@@ -22,7 +22,8 @@ local function createContext()
     namespace = namespace,
     extmarkIds = {},
     state = {
-      isFirstRender = true
+      isFirstRender = true,
+      inputs = {}
     }
   }
 end

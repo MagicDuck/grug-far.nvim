@@ -1,4 +1,3 @@
-local parseResults = require('grug-far/rg/parseResults')
 local uv = vim.loop
 
 local function fetchWithRg(params)

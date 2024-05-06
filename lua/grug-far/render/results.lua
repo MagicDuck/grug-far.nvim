@@ -31,7 +31,7 @@ local function renderResults(params, context)
   if vim.deep_equal(inputs, context.state.lastInputs) then
     return
   end
-  context.state.lastInputs = inputs
+  context.state.lastInputs = vim.deepcopy(inputs)
 
   renderResultsList(buf, context, inputs)
 end
