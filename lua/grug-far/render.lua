@@ -17,6 +17,8 @@ local function render(params, context)
     placeholder = "ex: foo    foo([a-z0-9]*)    fun\\(",
   }, context)
 
+  vim.api.nvim_buf_set_name(buf, 'Grug FAR' .. (#inputs.search > 0 and ': ' .. inputs.search or ''))
+
   inputs.replacement = renderInput({
     buf = buf,
     lineNr = 2,

@@ -1,4 +1,5 @@
 local render = require("grug-far/render")
+local replaceAction = require("grug-far/actions/replace")
 
 local M = {}
 
@@ -10,21 +11,11 @@ local function setBufKeymap(buf, modes, desc, lhs, callback)
   end
 end
 
-local function setupKeymap(buf, options)
-  local keymaps = options.keymaps
+local function setupKeymap(buf, context)
+  local keymaps = context.options.keymaps
   if keymaps.replace then
     setBufKeymap(buf, 'niv', 'Grug Far: apply replacements', keymaps.replace, function()
-      P('sttufff----------')
-      -- TODO (sbadragan): just a test of writing a file, it worked
-      -- The idea is to process files with rg --passthrough -N <search> -r <replace> <filepath>
-      -- then get the output and write it out to the file using libuv
-      -- local f = io.open(
-      --   './reactUi/src/pages/IncidentManagement/IncidentDetails/components/PanelDisplayComponents/useIncidentPanelToggle.js',
-      --   'w+')
-      -- if f then
-      --   f:write("stuff")
-      --   f:close()
-      -- end
+      replaceAction(buf, context)
     end)
   end
 end
@@ -47,20 +38,11 @@ end
 
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
-  -- TODO (sbadragan): update with search?
-  vim.api.nvim_buf_set_name(buf, 'Grug Find and Replace')
-  setupKeymap(buf, context.options)
+  setupKeymap(buf, context)
+  setupRenderer(win, buf, context)
 
   vim.api.nvim_win_set_buf(win, buf)
   vim.cmd('startinsert!')
-
-  setupRenderer(win, buf, context)
-
-  -- TODO (sbadragan): refactor, create a separate "actions" that executes stuff
-  -- with actiohns/replace, actions/quickfix, actions/quit
-  -- create a mappings.lua thing that does the mapping to actions based on opts
-  -- the actions can call renderResultsHeader or some sort of updateStatus to update stuff
-  -- local replace = require('grug-far/rg/replace')
 
   return buf
 end
