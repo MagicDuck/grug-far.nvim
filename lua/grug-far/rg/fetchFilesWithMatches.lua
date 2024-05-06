@@ -6,7 +6,7 @@ local fetchWithRg = require('grug-far/rg/fetchWithRg')
 -- and set nomodifiable for buffer
 -- need to call this with proper params from somewhere
 local function fetchFilesWithMatches(params)
-  local filesWithMatches = {}
+  local filesWithMatches = ""
 
   local args = getArgs(params.inputs, params.options)
   if args then
@@ -16,13 +16,16 @@ local function fetchFilesWithMatches(params)
   return fetchWithRg({
     args = args,
     on_fetch_chunk = function(data)
-      local lines = vim.split(data, "\n")
-      for i = 1, #lines do
-        table.insert(filesWithMatches, lines[i])
-      end
-      params.on_fetch_chunk(lines)
+      filesWithMatches = filesWithMatches .. data
+      params.on_fetch_chunk(data)
     end,
-    on_finish = params.on_finish
+    on_finish = function(status, errorMessage)
+      local lines = vim.split(filesWithMatches, "\n")
+      local files = vim.tbl_filter(function(f)
+        return #f > 0
+      end, lines)
+      params.on_finish(status, errorMessage, files)
+    end
   })
 end
 

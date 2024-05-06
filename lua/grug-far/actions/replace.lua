@@ -4,11 +4,10 @@ local function replace(buf, context)
   local abort = fetchFilesWithMatches({
     inputs = context.state.inputs,
     options = context.options,
-    on_fetch_chunk = function(files)
-      P(files)
+    on_fetch_chunk = function()
     end,
-    on_finish = function()
-
+    on_finish = function(status, errorMessage, files)
+      P(files)
     end
   })
 
