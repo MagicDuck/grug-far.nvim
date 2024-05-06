@@ -38,7 +38,11 @@ function M.grug_far()
   -- create split window
   vim.cmd('vsplit')
   local win = vim.api.nvim_get_current_win()
+  -- TODO (sbadragan): make this configurable?
+  -- vim.api.nvim_win_set_option(win, 'number', false)
+  -- vim.api.nvim_win_set_option(win, 'relativenumber', false)
   local buf = vim.api.nvim_create_buf(true, true)
+  -- TODO (sbadragan): update with search?
   vim.api.nvim_buf_set_name(buf, 'Grug Find and Replace')
   vim.api.nvim_win_set_buf(win, buf)
   vim.cmd('startinsert!')

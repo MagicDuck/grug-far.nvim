@@ -8,10 +8,11 @@ local function fetchResults(params)
   local on_error = params.on_error
   local inputs = params.inputs
   local options = params.options
+  local isAborted = false
 
-  -- if yes control from higher level and only send here wehn > minsize
   local args = getArgs(inputs, options)
   if not args then
+    on_finish(nil)
     return
   end
 
@@ -28,10 +29,11 @@ local function fetchResults(params)
     stderr:close()
     handle:close()
     local isSuccess = code == 0
-    on_finish(isSuccess);
+    on_finish(isSuccess and 'success' or 'error');
   end)
 
   local on_abort = function()
+    isAborted = true
     stdout:close()
     stderr:close()
     handle:close()
@@ -39,6 +41,10 @@ local function fetchResults(params)
   end
 
   uv.read_start(stdout, function(err, data)
+    if isAborted then
+      return
+    end
+
     if err then
       on_error('rg fetcher: error reading from rg stdout!')
       return
@@ -50,6 +56,10 @@ local function fetchResults(params)
   end)
 
   uv.read_start(stderr, function(err, data)
+    if isAborted then
+      return
+    end
+
     if err then
       on_error('rg fetcher: error reading from rg stderr!')
       return

@@ -15,7 +15,7 @@ local function asyncFetchResultList(params)
     context.state.abortFetch = nil
   end
 
-  on_start()
+  vim.schedule(on_start)
   context.state.abortFetch = fetchResults({
     inputs = inputs,
     options = context.options,
@@ -60,10 +60,6 @@ local function bufAppendErrorChunk(buf, context, error)
 end
 
 local function renderResultsList(buf, context, inputs, headerRow)
-  if #inputs.search < (context.options.minSearchChars or 1) then
-    return
-  end
-
   local function updateStatus(newStatus, stats)
     context.state.status = newStatus
     if newStatus.status == 'progress' then
@@ -106,8 +102,8 @@ local function renderResultsList(buf, context, inputs, headerRow)
       updateStatus({ status = 'error' })
       bufAppendErrorChunk(buf, context, error)
     end,
-    on_finish = function(isSuccess)
-      updateStatus({ status = isSuccess and 'success' or 'error' })
+    on_finish = function(status)
+      updateStatus({ status = status })
     end,
     context = context
   })
