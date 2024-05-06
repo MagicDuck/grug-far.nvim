@@ -1,5 +1,5 @@
-local render = require("grug-far/render")
 local opts = require("grug-far/opts")
+local farBuffer = require("grug-far/farBuffer")
 
 local M = {}
 
@@ -27,63 +27,26 @@ local function createContext()
   }
 end
 
+local function createWindow()
+  vim.cmd('vsplit')
+  local win = vim.api.nvim_get_current_win()
+
+  -- TODO (sbadragan): make this configurable?
+  -- vim.api.nvim_win_set_option(win, 'number', false)
+  -- vim.api.nvim_win_set_option(win, 'relativenumber', false)
+
+  return win
+end
+
 function M.grug_far()
   if not is_configured() then
     print('Please call require("grug-far").setup(...) before executing require("grug-far").grug_far(...)!')
     return
   end
 
-  local context = createContext();
-
-  -- TODO (sbadragan): refactor out?
-  -- create split window
-  vim.cmd('vsplit')
-  local win = vim.api.nvim_get_current_win()
-  -- TODO (sbadragan): make this configurable?
-  -- vim.api.nvim_win_set_option(win, 'number', false)
-  -- vim.api.nvim_win_set_option(win, 'relativenumber', false)
-  local buf = vim.api.nvim_create_buf(true, true)
-
-  -- TODO (sbadragan): refactor, create a separate "actions" that executes stuff
-  -- with actiohns/replace, actions/quickfix, actions/quit
-  -- create a mappings.lua thing that does the mapping to actions based on opts
-  -- the actions can call renderResultsHeader or some sort of updateStatus to update stuff
-  -- local replace = require('grug-far/rg/replace')
-  -- vim.api.nvim_buf_set_keymap(buf, 'n', '<c-enter>', '',
-  --   { noremap = true, desc = 'apply replacements', callback = replace })
-  -- vim.api.nvim_buf_set_keymap(buf, 'i', '<c-enter>', '',
-  --   { noremap = true, desc = 'apply replacements', callback = replace })
-
-  -- TODO (sbadragan): update with search?
-  vim.api.nvim_buf_set_name(buf, 'Grug Find and Replace')
-  vim.api.nvim_win_set_buf(win, buf)
-  vim.cmd('startinsert!')
-
-  -- setup renderer
-  local function onBufferChange(params)
-    render({ buf = params.buf }, context)
-
-    if context.state.isFirstRender then
-      context.state.isFirstRender = false
-      vim.api.nvim_win_set_cursor(win, { 2, 0 })
-    end
-  end
-
-  vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
-    buffer = buf,
-    callback = onBufferChange
-  })
-
-  -- TODO (sbadragan): just a test of writing a file, it worked
-  -- The idea is to process files with rg --passthrough -N <search> -r <replace> <filepath>
-  -- then get the output and write it out to the file using libuv
-  -- local f = io.open(
-  --   './reactUi/src/pages/IncidentManagement/IncidentDetails/components/PanelDisplayComponents/useIncidentPanelToggle.js',
-  --   'w+')
-  -- if f then
-  --   f:write("stuff")
-  --   f:close()
-  -- end
+  local context = createContext()
+  local win = createWindow()
+  farBuffer.createBuffer(win, context)
 end
 
 return M

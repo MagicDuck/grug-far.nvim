@@ -8,7 +8,6 @@ local fetchWithRg = require('grug-far/rg/fetchWithRg')
 local function fetchFilesWithMatches(params)
   local filesWithMatches = {}
 
-  -- TODO (sbadragan): no color
   local args = getArgs(params.inputs, params.options)
   if args then
     table.insert(args, '--files-with-matches')

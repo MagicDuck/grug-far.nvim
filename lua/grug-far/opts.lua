@@ -14,6 +14,7 @@ local defaultOptions = {
   extraRgArgs = '',
 
   -- highlight groups for various parts of the UI
+  -- TODO (sbadragan): we should have our own highlights that are linked to the below
   highlights = {
     helpHeader = 'WarningMsg',
 
@@ -47,6 +48,10 @@ local defaultOptions = {
     resultsStatusProgressSeq = {
       '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
     }
+  },
+
+  keymaps = {
+    replace = '<c-enter>',
   }
 }
 
