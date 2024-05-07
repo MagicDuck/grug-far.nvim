@@ -43,7 +43,7 @@ local function search(params)
       state.progressCount = nil
       if status == 'error' then
         state.stats = nil
-        resultsList.appendError(buf, context, errorMessage)
+        resultsList.setError(buf, context, errorMessage)
       end
 
       renderResultsHeader(buf, context)

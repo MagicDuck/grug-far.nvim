@@ -18,10 +18,12 @@ function M.appendResultsChunk(buf, context, data)
   end
 end
 
-function M.appendError(buf, context, error)
+function M.setError(buf, context, error)
+  M.clear(buf, context)
+
   local startLine = context.state.headerRow + 1
 
-  local err_lines = vim.split(error, '\n')
+  local err_lines = vim.split((error and #error > 0) and error or 'Unexpected error!', '\n')
   vim.api.nvim_buf_set_lines(buf, startLine, startLine, false, err_lines)
 
   for i = startLine, startLine + #err_lines do

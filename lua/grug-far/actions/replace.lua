@@ -121,10 +121,12 @@ local function replace(params)
   end)
 
   local reportError = function(errorMessage)
+    vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+
     state.status = 'error'
     state.progressCount = nil
     state.actionMessage = getActionMessage(errorMessage)
-    resultsList.appendError(buf, context, errorMessage)
+    resultsList.setError(buf, context, errorMessage)
     renderResultsHeader(buf, context)
   end
 

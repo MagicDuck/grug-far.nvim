@@ -24,6 +24,10 @@ local function fetchWithRg(params)
     stdout:close()
     stderr:close()
     handle:close()
+
+    if code > 0 and #errorMessage == 0 then
+      errorMessage = 'no matches'
+    end
     local isSuccess = code == 0 and #errorMessage == 0
     on_finish(isSuccess and 'success' or 'error', errorMessage);
   end)
