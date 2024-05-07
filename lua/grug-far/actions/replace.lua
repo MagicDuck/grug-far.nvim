@@ -3,17 +3,6 @@ local fetchReplacedFileContent = require('grug-far/rg/fetchReplacedFileContent')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 
--- TODO (sbadragan): just a test of writing a file, it worked
--- The idea is to process files with rg --passthrough -N <search> -r <replace> <filepath>
--- then get the output and write it out to the file using libuv
--- local f = io.open(
---   './reactUi/src/pages/IncidentManagement/IncidentDetails/components/PanelDisplayComponents/useIncidentPanelToggle.js',
---   'w+')
--- if f then
---   f:write("stuff")
---   f:close()
--- end
-
 local function replaceInFile(params)
   local context = params.context
   local state = context.state
@@ -36,9 +25,9 @@ local function replaceInFile(params)
         return
       end
 
-      local _, err = file_handle:write(content)
-      if err then
-        on_done(err)
+      local h = file_handle:write(content)
+      if not h then
+        on_done('Cound not write to file: ' .. file)
         return
       end
 
@@ -74,6 +63,7 @@ local function replaceInMatchedFiles(params)
     on_finish_all('success')
   end
 
+
   -- TODO (sbadragan): make it do multiple in parallel
   local function replaceInFileAtIndex(index)
     replaceInFile({
@@ -90,7 +80,7 @@ local function replaceInMatchedFiles(params)
         if (index < #files) then
           replaceInFileAtIndex(index + 1)
         else
-          on_finish_all(errorMessages and 'error' or 'success', errorMessages)
+          on_finish_all(#errorMessages > 0 and 'error' or 'success', errorMessages)
         end
       end
     })
