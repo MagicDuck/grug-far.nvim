@@ -1,5 +1,6 @@
+local utils = require('grug-far/utils')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
-local renderResultsList = require('grug-far/render/resultsList')
+local search = require('grug-far/actions/search')
 
 -- ensure a minimum line number so that we don't overlap inputs
 local function ensureMinLineNr(buf, context, minLineNr)
@@ -22,18 +23,21 @@ local function renderResults(params, context)
   local buf = params.buf
   local minLineNr = params.minLineNr
   local inputs = params.inputs
+  local state = context.state
 
   context.state.headerRow = ensureMinLineNr(buf, context, minLineNr)
 
   renderResultsHeader(buf, context)
 
-  -- only re-render list when inputs have changed
-  if vim.deep_equal(inputs, context.state.lastInputs) then
+  -- only re-issue search when inputs have changed
+  if vim.deep_equal(inputs, state.lastInputs) then
     return
   end
-  context.state.lastInputs = vim.deepcopy(inputs)
+  state.lastInputs = vim.deepcopy(inputs)
 
-  renderResultsList(buf, context, inputs)
+  state.debouncedSearch = state.debouncedSearch or
+    utils.debounce(search, context.options.debounceMs)
+  state.debouncedSearch({ buf = buf, context = context })
 end
 
 return renderResults

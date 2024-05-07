@@ -1,33 +1,6 @@
-local utils = require('grug-far/utils')
-local renderResultsHeader = require('grug-far/render/resultsHeader')
-local fetchResults = require('grug-far/rg/fetchResults')
+local M = {}
 
--- TODO (sbadragan): this should be in actions
-local function asyncFetchResultList(params)
-  local on_start = params.on_start
-  local on_fetch_chunk = vim.schedule_wrap(params.on_fetch_chunk)
-  local on_finish = vim.schedule_wrap(params.on_finish)
-  local inputs = params.inputs
-  local context = params.context
-
-  if context.state.abortFetch then
-    context.state.abortFetch();
-    context.state.abortFetch = nil
-  end
-
-  vim.schedule(on_start)
-  context.state.abortFetch = fetchResults({
-    inputs = inputs,
-    options = context.options,
-    on_fetch_chunk = on_fetch_chunk,
-    on_finish = function(status, errorMessage)
-      context.state.abortFetch = nil
-      on_finish(status, errorMessage)
-    end,
-  })
-end
-
-local function bufAppendResultsChunk(buf, context, data)
+function M.appendResultsChunk(buf, context, data)
   local lastline = vim.api.nvim_buf_line_count(buf)
   vim.api.nvim_buf_set_lines(buf, lastline, lastline, false, data.lines)
 
@@ -45,7 +18,7 @@ local function bufAppendResultsChunk(buf, context, data)
   end
 end
 
-local function bufAppendErrorChunk(buf, context, error)
+function M.appendError(buf, context, error)
   local startLine = context.state.headerRow + 1
 
   local err_lines = vim.split(error, '\n')
@@ -56,45 +29,4 @@ local function bufAppendErrorChunk(buf, context, error)
   end
 end
 
-local function renderResultsList(buf, context, inputs)
-  local state = context.state
-  state.asyncFetchResultList = state.asyncFetchResultList or
-    utils.debounce(asyncFetchResultList, context.options.debounceMs)
-  state.asyncFetchResultList({
-    inputs = inputs,
-    on_start = function()
-      state.status = 'progress'
-      state.progressCount = 0
-      state.stats = { matches = 0, files = 0 }
-      renderResultsHeader(buf, context)
-
-      -- remove all lines after heading and add one blank line
-      local headerRow = state.headerRow
-      vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
-    end,
-    on_fetch_chunk = function(data)
-      state.status = 'progress'
-      state.progressCount = state.progressCount + 1
-      state.stats = {
-        matches = state.stats.matches + data.stats.matches,
-        files = state.stats.files + data.stats.files
-      }
-      renderResultsHeader(buf, context)
-
-      bufAppendResultsChunk(buf, context, data)
-    end,
-    on_finish = function(status, errorMessage)
-      state.status = status
-      state.progressCount = nil
-      if status == 'error' then
-        state.stats = nil
-        bufAppendErrorChunk(buf, context, errorMessage)
-      end
-
-      renderResultsHeader(buf, context)
-    end,
-    context = context
-  })
-end
-
-return renderResultsList
+return M
