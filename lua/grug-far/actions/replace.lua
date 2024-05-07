@@ -2,6 +2,7 @@ local fetchFilesWithMatches = require('grug-far/rg/fetchFilesWithMatches')
 local fetchReplacedFileContent = require('grug-far/rg/fetchReplacedFileContent')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
+local uv = vim.loop
 
 local function replaceInFile(params)
   local context = params.context
@@ -41,19 +42,24 @@ end
 
 local function replaceInMatchedFiles(params)
   local context = params.context
-  local files = params.files
+  local files = vim.deepcopy(params.files)
   local reportProgress = params.reportProgress
   local on_finish = params.on_finish
+  local engagedWorkers = 0
   local errorMessages = ''
 
-  if #files == 0 then
-    on_finish('success')
-  end
+  local function replaceNextFile()
+    local file = table.remove(files)
+    if file == nil then
+      if engagedWorkers == 0 then
+        on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
+      end
+      return
+    end
 
-  -- TODO (sbadragan): make it do multiple in parallel
-  local function replaceInFileAtIndex(index)
+    engagedWorkers = engagedWorkers + 1
     replaceInFile({
-      file = files[index],
+      file = file,
       context = context,
       on_done = vim.schedule_wrap(function(err)
         if err then
@@ -61,28 +67,26 @@ local function replaceInMatchedFiles(params)
           errorMessages = errorMessages .. '\n' .. err
         end
 
-        reportProgress(index)
-
-        if (index < #files) then
-          replaceInFileAtIndex(index + 1)
-        else
-          on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
-        end
+        reportProgress()
+        engagedWorkers = engagedWorkers - 1
+        replaceNextFile()
       end)
     })
   end
 
-  replaceInFileAtIndex(1)
+  for _ = 1, context.options.maxWorkers do
+    replaceNextFile()
+  end
 end
 
-local function getActionMessage(err, count, total)
+local function getActionMessage(err, count, total, time)
   local msg = 'applying replacements'
   if err then
     return msg .. ' failed!'
   end
 
   if count == total and total ~= 0 then
-    return msg .. ' completed!'
+    return msg .. ' completed in ' .. time .. 'ms!'
   end
 
   return msg .. ' ' .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
@@ -94,6 +98,7 @@ local function replace(params)
   local state = context.state
   local filesCount = 0
   local filesTotal = 0
+  local startTime = uv.now()
 
   -- initiate replace in UI
   vim.schedule(function()
@@ -140,8 +145,9 @@ local function replace(params)
 
     state.status = status
     state.progressCount = nil
+    local time = uv.now() - startTime
     -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-    state.actionMessage = getActionMessage(nil, filesCount, filesCount)
+    state.actionMessage = getActionMessage(nil, filesCount, filesCount, time)
     renderResultsHeader(buf, context)
   end)
 

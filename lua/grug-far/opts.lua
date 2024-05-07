@@ -54,6 +54,9 @@ local defaultOptions = {
     resultsActionMessage = '  '
   },
 
+  -- max number of parallel replacements tasks
+  maxWorkers = 4,
+
   keymaps = {
     replace = '<c-enter>',
   }
