@@ -69,7 +69,7 @@ local function replaceInMatchedFiles(params)
     replaceInFile({
       file = files[index],
       context = context,
-      on_done = function(err)
+      on_done = vim.schedule_wrap(function(err)
         if err then
           -- optimistically try to continue
           errorMessages = errorMessages .. '\n' .. err
@@ -82,7 +82,7 @@ local function replaceInMatchedFiles(params)
         else
           on_finish_all(#errorMessages > 0 and 'error' or 'success', errorMessages)
         end
-      end
+      end)
     })
   end
 
