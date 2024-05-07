@@ -29,4 +29,10 @@ function M.appendError(buf, context, error)
   end
 end
 
+function M.clear(buf, context)
+  -- remove all lines after heading and add one blank line
+  local headerRow = context.state.headerRow
+  vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
+end
+
 return M

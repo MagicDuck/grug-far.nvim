@@ -1,5 +1,5 @@
 local render = require("grug-far/render")
-local replaceAction = require("grug-far/actions/replace")
+local replace = require("grug-far/actions/replace")
 
 local M = {}
 
@@ -15,7 +15,7 @@ local function setupKeymap(buf, context)
   local keymaps = context.options.keymaps
   if keymaps.replace then
     setBufKeymap(buf, 'niv', 'Grug Far: apply replacements', keymaps.replace, function()
-      replaceAction(buf, context)
+      replace({ buf = buf, context = context })
     end)
   end
 end

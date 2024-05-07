@@ -12,15 +12,13 @@ local function search(params)
     state.abortSearch = nil
   end
 
+  -- initiate search in UI
   vim.schedule(function()
     state.status = 'progress'
     state.progressCount = 0
     state.stats = { matches = 0, files = 0 }
     renderResultsHeader(buf, context)
-
-    -- remove all lines after heading and add one blank line
-    local headerRow = state.headerRow
-    vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
+    resultsList.clear(buf, context)
   end)
 
   state.abortSearch = fetchResults({
