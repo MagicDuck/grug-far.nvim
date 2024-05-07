@@ -2,6 +2,7 @@ local utils = require('grug-far/utils')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local fetchResults = require('grug-far/rg/fetchResults')
 
+-- TODO (sbadragan): this should be in actions
 local function asyncFetchResultList(params)
   local on_start = params.on_start
   local on_fetch_chunk = vim.schedule_wrap(params.on_fetch_chunk)
