@@ -40,29 +40,15 @@ local function replaceInFile(params)
 end
 
 local function replaceInMatchedFiles(params)
-  local buf = params.buf
   local context = params.context
-  local state = context.state
   local files = params.files
   local reportProgress = params.reportProgress
-  local reportError = params.reportError
+  local on_finish = params.on_finish
   local errorMessages = ''
 
-  local on_finish_all = vim.schedule_wrap(function(status, errorMessage)
-    if status == 'error' then
-      reportError(errorMessage)
-      return
-    end
-
-    state.status = status
-    state.progressCount = nil
-    renderResultsHeader(buf, context)
-  end)
-
   if #files == 0 then
-    on_finish_all('success')
+    on_finish('success')
   end
-
 
   -- TODO (sbadragan): make it do multiple in parallel
   local function replaceInFileAtIndex(index)
@@ -80,7 +66,7 @@ local function replaceInMatchedFiles(params)
         if (index < #files) then
           replaceInFileAtIndex(index + 1)
         else
-          on_finish_all(#errorMessages > 0 and 'error' or 'success', errorMessages)
+          on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
         end
       end)
     })
@@ -89,39 +75,76 @@ local function replaceInMatchedFiles(params)
   replaceInFileAtIndex(1)
 end
 
--- TODO (sbadragan): need to figure where to show this in the UI, aborting, etc
--- possibly in the results list header, show "Applying changes, buffer not modifiable meanwhile"
--- and set nomodifiable for buffer
--- need to call this with proper params from somewhere
+local function getActionMessage(err, count, total)
+  local msg = 'applying replacements'
+  if err then
+    return msg .. ' failed!'
+  end
+
+  if count == total and total ~= 0 then
+    return msg .. ' completed!'
+  end
+
+  -- TODO (sbadragan): make buf not modifiable
+  return msg .. ' ' .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
+end
+
 local function replace(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
+  local filesCount = 0
+  local filesTotal = 0
 
   -- initiate replace in UI
   vim.schedule(function()
     state.status = 'progress'
     state.progressCount = 0
+    state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
     renderResultsHeader(buf, context)
   end)
 
-  local reportProgress = vim.schedule_wrap(function()
+  local reportMatchingFilesUpdate = vim.schedule_wrap(function(files)
     state.status = 'progress'
     state.progressCount = state.progressCount + 1
+    filesTotal = filesTotal + #files
+    state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
+    renderResultsHeader(buf, context)
+  end)
+
+  local reportReplacedFilesUpdate = vim.schedule_wrap(function()
+    state.status = 'progress'
+    state.progressCount = state.progressCount + 1
+    filesCount = filesCount + 1
+    state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
     renderResultsHeader(buf, context)
   end)
 
   local reportError = function(errorMessage)
     state.status = 'error'
     state.progressCount = nil
+    state.actionMessage = getActionMessage(errorMessage)
     resultsList.appendError(buf, context, errorMessage)
     renderResultsHeader(buf, context)
   end
 
+  local on_finish_all = vim.schedule_wrap(function(status, errorMessage)
+    if status == 'error' then
+      reportError(errorMessage)
+      return
+    end
+
+    state.status = status
+    state.progressCount = nil
+    -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
+    state.actionMessage = getActionMessage(nil, filesCount, filesCount)
+    renderResultsHeader(buf, context)
+  end)
+
   fetchFilesWithMatches({
     inputs = context.state.inputs,
     options = context.options,
-    on_fetch_chunk = reportProgress,
+    on_fetch_chunk = reportMatchingFilesUpdate,
     on_finish = vim.schedule_wrap(function(status, errorMessage, files)
       if status == 'error' then
         reportError(errorMessage)
@@ -129,11 +152,11 @@ local function replace(params)
       end
 
       replaceInMatchedFiles({
-        buf = buf,
         files = files,
         context = context,
-        reportProgress = reportProgress,
-        reportError = reportError
+        reportProgress = reportReplacedFilesUpdate,
+        reportError = reportError,
+        on_finish = on_finish_all
       })
     end)
   })

@@ -23,6 +23,8 @@ local defaultOptions = {
 
     resultsHeader = 'Comment',
     resultsStats = 'Comment',
+    resultsActionMessage = 'ModeMsg',
+    resultsActionMessageError = 'WarningMsg',
     resultsMatch = '@diff.delta',
     resultsPath = '@string.special.path',
     resultsLineNo = 'Number',
@@ -40,14 +42,17 @@ local defaultOptions = {
     flagsInput = '󰮚 ',
 
     -- bit of a stretch of the icon concept, but it makes it configurable
+    -- TODO (sbadragan): move it out???
     resultsSeparatorLine = '',
 
     resultsStatusReady = '󱩾 ',
     resultsStatusError = ' ',
     resultsStatusSuccess = '󰗡 ',
+    -- TODO (sbadragan): move it out?
     resultsStatusProgressSeq = {
       '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
-    }
+    },
+    resultsActionMessage = '  '
   },
 
   keymaps = {
