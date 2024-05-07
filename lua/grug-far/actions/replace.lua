@@ -85,7 +85,6 @@ local function getActionMessage(err, count, total)
     return msg .. ' completed!'
   end
 
-  -- TODO (sbadragan): make buf not modifiable
   return msg .. ' ' .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
@@ -98,6 +97,7 @@ local function replace(params)
 
   -- initiate replace in UI
   vim.schedule(function()
+    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
     state.status = 'progress'
     state.progressCount = 0
     state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
@@ -129,6 +129,8 @@ local function replace(params)
   end
 
   local on_finish_all = vim.schedule_wrap(function(status, errorMessage)
+    vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+
     if status == 'error' then
       reportError(errorMessage)
       return

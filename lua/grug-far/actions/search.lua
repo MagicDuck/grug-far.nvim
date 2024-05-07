@@ -17,6 +17,7 @@ local function search(params)
     state.status = 'progress'
     state.progressCount = 0
     state.stats = { matches = 0, files = 0 }
+    state.actionMessage = nil
     renderResultsHeader(buf, context)
     resultsList.clear(buf, context)
   end)
