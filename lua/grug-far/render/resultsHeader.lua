@@ -31,18 +31,14 @@ local function renderInfoLine(buf, context, headerRow)
   local stats = context.state.stats
   if stats and stats.matches > 0 then
     table.insert(virt_lines,
-      { { ' ' .. stats.matches .. ' matches in ' .. stats.files .. ' files' .. ' ', context.options.highlights
-        .resultsStats } })
+      { { ' ' .. stats.matches .. ' matches in ' .. stats.files .. ' files' .. ' ', context.options.highlights.resultsStats } })
   end
 
   local actionMessage = context.state.actionMessage
-  local status = context.state.status
   if actionMessage then
     local icon = opts.getIcon('resultsActionMessage', context) or ' '
     table.insert(virt_lines,
-      { { icon .. '' .. actionMessage, status == 'error' and context.options.highlights
-      .resultsActionMessageError
-      or context.options.highlights.resultsActionMessage } })
+      { { icon .. actionMessage, context.options.highlights.resultsActionMessage } })
   end
 
   if #virt_lines > 0 then

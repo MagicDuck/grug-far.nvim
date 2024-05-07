@@ -24,7 +24,6 @@ local defaultOptions = {
     resultsHeader = 'Comment',
     resultsStats = 'Comment',
     resultsActionMessage = 'ModeMsg',
-    resultsActionMessageError = 'WarningMsg',
     resultsMatch = '@diff.delta',
     resultsPath = '@string.special.path',
     resultsLineNo = 'Number',
