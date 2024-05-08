@@ -80,7 +80,7 @@ local function replaceInMatchedFiles(params)
 end
 
 local function getActionMessage(err, count, total, time)
-  local msg = 'applying replacements'
+  local msg = 'replace '
   if err then
     return msg .. ' failed!'
   end
