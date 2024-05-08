@@ -20,6 +20,10 @@ local defaultOptions = {
   -- turn this off if you still like to see the line numbers
   disableBufferLineNumbers = true,
 
+  -- maximum number of search chars to show in buffer and quickfix list titles
+  -- zero disables showing it
+  maxSearchCharsInTitles = 30,
+
   -- icons for UI, default ones depend on nerdfont
   icons = {
     -- whether to show icons
@@ -45,7 +49,8 @@ local defaultOptions = {
   },
 
   keymaps = {
-    replace = '<c-enter>',
+    replace = '<C-enter>',
+    qflist = '<C-q>'
   }
 }
 

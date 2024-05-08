@@ -12,6 +12,26 @@ function M.appendResultsChunk(buf, context, data)
         j == highlight.end_line and highlight.end_col or -1)
     end
   end
+
+  local resultsLocations = context.state.resultsLocations
+  local lastLocation = resultsLocations[#resultsLocations]
+  for i = 1, #data.highlights do
+    local highlight = data.highlights[i]
+    local hl = highlight.hl
+    local line = data.lines[highlight.start_line + 1]
+
+    -- TODO (sbadragan): these could be number comparisons?
+    if hl == 'GrugFarResultsPath' then
+      lastLocation = { filename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1) }
+      table.insert(resultsLocations, lastLocation)
+    elseif hl == 'GrugFarResultsLineNo' then
+      -- omit ending ':'
+      lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
+    elseif hl == 'GrugFarResultsLineColumn' then
+      -- omit ending ':'
+      lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
+    end
+  end
 end
 
 function M.setError(buf, context, error)
@@ -31,6 +51,8 @@ function M.clear(buf, context)
   -- remove all lines after heading and add one blank line
   local headerRow = context.state.headerRow
   vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
+
+  context.state.resultsLocations = {}
 end
 
 return M

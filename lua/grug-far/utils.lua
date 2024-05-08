@@ -45,4 +45,11 @@ function M.strFindLast(str, substr)
   return i, j
 end
 
+function M.strEllideAfter(str, n, prefix)
+  if n == 0 then
+    return ''
+  end
+  return (prefix or '') .. (#str > n and string.sub(str, 1, n) .. '...' or str)
+end
+
 return M

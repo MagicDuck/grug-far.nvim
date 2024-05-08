@@ -1,6 +1,7 @@
 local renderHelp = require('grug-far/render/help')
 local renderInput = require('grug-far/render/input')
 local renderResults = require('grug-far/render/results')
+local utils = require('grug-far/utils')
 
 local function render(params, context)
   local buf = params.buf
@@ -17,7 +18,8 @@ local function render(params, context)
     placeholder = "ex: foo    foo([a-z0-9]*)    fun\\(",
   }, context)
 
-  vim.api.nvim_buf_set_name(buf, 'Grug FAR' .. (#inputs.search > 0 and ': ' .. inputs.search or ''))
+  vim.api.nvim_buf_set_name(buf,
+    'Grug FAR' .. utils.strEllideAfter(inputs.search, context.options.maxSearchCharsInTitles, ': '))
 
   inputs.replacement = renderInput({
     buf = buf,
