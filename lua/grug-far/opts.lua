@@ -20,23 +20,6 @@ local defaultOptions = {
   -- turn this off if you still like to see the line numbers
   disableBufferLineNumbers = true,
 
-  -- highlight groups for various parts of the UI
-  -- TODO (sbadragan): we should have our own highlights that are linked to the below
-  highlights = {
-    helpHeader = 'WarningMsg',
-
-    inputLabel = 'Identifier',
-    inputPlaceholder = 'Comment',
-
-    resultsHeader = 'Comment',
-    resultsStats = 'Comment',
-    resultsActionMessage = 'ModeMsg',
-    resultsMatch = '@diff.delta',
-    resultsPath = '@string.special.path',
-    resultsLineNo = 'Number',
-    resultsLineColumn = 'Number',
-  },
-
   -- icons for UI, default ones depend on nerdfont
   icons = {
     -- whether to show icons
