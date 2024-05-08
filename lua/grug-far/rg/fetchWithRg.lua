@@ -1,3 +1,4 @@
+local utils = require('grug-far/utils')
 local uv = vim.loop
 
 local function fetchWithRg(params)
@@ -40,6 +41,7 @@ local function fetchWithRg(params)
     uv.kill(pid, 'sigkill')
   end
 
+  local lastLine = ''
   uv.read_start(stdout, function(err, data)
     if isAborted then
       return
@@ -51,7 +53,21 @@ local function fetchWithRg(params)
     end
 
     if data then
-      on_fetch_chunk(data)
+      -- large outputs can cause the last line to be truncated
+      -- save it and prepend to next chunk
+      local chunkData = lastLine .. data
+      local i = utils.strFindLast(chunkData, "\n")
+      if i then
+        chunkData = string.sub(chunkData, 1, i)
+        lastLine = string.sub(chunkData, i + 1, -1)
+        on_fetch_chunk(chunkData)
+      else
+        lastLine = chunkData
+      end
+    else
+      if #lastLine > 0 then
+        on_fetch_chunk(lastLine)
+      end
     end
   end)
 

@@ -28,4 +28,21 @@ function M.debounce(callback, timeout)
   end
 end
 
+function M.strFindLast(str, substr)
+  local i = 0
+  local j = nil
+  while true do
+    local i2, j2 = string.find(str, substr, i + 1, true)
+    if i2 == nil then break end
+    i = i2
+    j = j2
+  end
+
+  if j == nil then
+    return nil, nil
+  end
+
+  return i, j
+end
+
 return M
