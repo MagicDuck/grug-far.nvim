@@ -38,7 +38,7 @@ local function setupRenderer(win, buf, context)
 
     if context.state.isFirstRender then
       context.state.isFirstRender = false
-      vim.api.nvim_win_set_cursor(win, { 2, 0 })
+      vim.api.nvim_win_set_cursor(win, { 3, 0 })
     end
   end
 
