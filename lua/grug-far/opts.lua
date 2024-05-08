@@ -9,9 +9,16 @@ local defaultOptions = {
   -- prevents performance issues in larger dirs
   minSearchChars = 2,
 
+  -- max number of parallel replacements tasks
+  maxWorkers = 4,
+
   -- extra args that you always want to pass to rg
   -- like for example if you always want context lines around matches
   extraRgArgs = '',
+
+  -- buffer line numbers + match line numbers can get a bit visually overwhelming
+  -- turn this off if you still like to see the line numbers
+  disableBufferLineNumbers = true,
 
   -- highlight groups for various parts of the UI
   -- TODO (sbadragan): we should have our own highlights that are linked to the below
@@ -53,9 +60,6 @@ local defaultOptions = {
     },
     resultsActionMessage = '  '
   },
-
-  -- max number of parallel replacements tasks
-  maxWorkers = 4,
 
   keymaps = {
     replace = '<c-enter>',

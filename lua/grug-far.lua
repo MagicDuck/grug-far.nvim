@@ -28,13 +28,14 @@ local function createContext()
   }
 end
 
-local function createWindow()
+local function createWindow(context)
   vim.cmd('vsplit')
   local win = vim.api.nvim_get_current_win()
 
-  -- TODO (sbadragan): make this configurable?
-  -- vim.api.nvim_win_set_option(win, 'number', false)
-  -- vim.api.nvim_win_set_option(win, 'relativenumber', false)
+  if context.options.disableBufferLineNumbers then
+    vim.api.nvim_win_set_option(win, 'number', false)
+    vim.api.nvim_win_set_option(win, 'relativenumber', false)
+  end
 
   return win
 end
@@ -46,7 +47,7 @@ function M.grug_far()
   end
 
   local context = createContext()
-  local win = createWindow()
+  local win = createWindow(context)
   farBuffer.createBuffer(win, context)
 end
 
