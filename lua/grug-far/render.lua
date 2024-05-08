@@ -23,6 +23,7 @@ local function ensureTopEmptyLines(buf, count)
 end
 
 local TOP_EMPTY_LINES = 2
+local BEFORE_RESULTS_LINES = 2
 
 local function render(params, context)
   local buf = params.buf
@@ -75,7 +76,7 @@ local function render(params, context)
     placeholder = "ex: --hidden (-.) --ignore-case (-i) --multiline (-U)",
   }, context))
 
-  lineNr = lineNr + 2
+  lineNr = lineNr + BEFORE_RESULTS_LINES
   renderResults({
     buf = buf,
     minLineNr = lineNr,
