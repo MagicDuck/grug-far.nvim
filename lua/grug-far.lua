@@ -6,7 +6,6 @@ local M = {}
 
 local options = nil
 local namespace = nil
--- TODO (sbadragan): do we need some sort of health check?
 function M.setup(user_opts)
   options = opts.with_defaults(user_opts or {})
   namespace = vim.api.nvim_create_namespace('grug-far.nvim')

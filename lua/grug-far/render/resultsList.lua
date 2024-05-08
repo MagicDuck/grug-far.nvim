@@ -20,7 +20,6 @@ function M.appendResultsChunk(buf, context, data)
     local hl = highlight.hl
     local line = data.lines[highlight.start_line + 1]
 
-    -- TODO (sbadragan): these could be number comparisons?
     if hl == 'GrugFarResultsPath' then
       lastLocation = { filename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1) }
       table.insert(resultsLocations, lastLocation)
