@@ -21,7 +21,7 @@ local function renderInput(params, context)
       end_row = lineNr,
       end_col = 0,
       virt_lines = {
-        { { ' ' .. icon .. label, context.options.highlights.inputLabel } },
+        { { ' ' .. icon .. label, 'GrugFarInputLabel' } },
       },
       virt_lines_leftcol = true,
       virt_lines_above = true,
@@ -37,7 +37,7 @@ local function renderInput(params, context)
         end_row = lineNr,
         end_col = 0,
         virt_text = {
-          { placeholder, context.options.highlights.inputPlaceholder },
+          { placeholder, 'GrugFarInputPlaceholder' },
         },
         virt_text_pos = 'overlay'
       })

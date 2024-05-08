@@ -30,14 +30,14 @@ local function renderInfoLine(buf, context, headerRow)
   local stats = context.state.stats
   if stats and stats.matches > 0 then
     table.insert(virt_lines,
-      { { ' ' .. stats.matches .. ' matches in ' .. stats.files .. ' files' .. ' ', context.options.highlights.resultsStats } })
+      { { ' ' .. stats.matches .. ' matches in ' .. stats.files .. ' files' .. ' ', 'GrugFarResultsStats' } })
   end
 
   local actionMessage = context.state.actionMessage
   if actionMessage then
     local icon = opts.getIcon('resultsActionMessage', context) or ' '
     table.insert(virt_lines,
-      { { icon .. actionMessage, context.options.highlights.resultsActionMessage } })
+      { { icon .. actionMessage, 'GrugFarResultsActionMessage' } })
   end
 
   if #virt_lines > 0 then
@@ -64,7 +64,7 @@ local function renderResultsHeader(buf, context)
     end_row = headerRow,
     end_col = 0,
     virt_lines = {
-      { { getSeparator(context), context.options.highlights.resultsHeader } },
+      { { getSeparator(context), 'GrugFarResultsHeader' } },
     },
     virt_lines_leftcol = true,
     virt_lines_above = true,
