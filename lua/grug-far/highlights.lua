@@ -1,7 +1,7 @@
 local M = {}
 
 local highlights = {
-  GrugFarHelpHeader = { default = true, link = 'WarningMsg' },
+  GrugFarHelpHeader = { default = true, link = 'ModeMsg' },
 
   GrugFarInputLabel = { default = true, link = 'Identifier' },
   GrugFarInputPlaceholder = { default = true, link = 'Comment' },
