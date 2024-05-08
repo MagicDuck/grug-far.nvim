@@ -51,6 +51,7 @@ local defaultOptions = {
   keymaps = {
     replace = '<C-enter>',
     qflist = '<C-q>',
+    gotoLocation = '<enter>',
     close = '<C-x>'
   }
 }

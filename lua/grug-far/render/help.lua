@@ -10,7 +10,14 @@ local function renderHelp(params, context)
       end_row = 0,
       end_col = 0,
       virt_text = {
-        { 'Replace: ' .. keymaps.replace .. ' | ' .. ' Open in Quickfix List: ' .. keymaps.qflist .. ' | ' .. ' Close: ' .. keymaps.close, 'GrugFarHelpHeader' }
+        {
+          'Replace: ' .. keymaps.replace
+          .. ' | Quickfix List: ' .. keymaps.qflist
+          .. ' | Goto Location: ' .. keymaps.gotoLocation
+          .. ' | Close: ' .. keymaps.close,
+
+          'GrugFarHelpHeader'
+        }
       },
       virt_text_pos = 'overlay'
     })

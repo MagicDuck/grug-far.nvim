@@ -1,4 +1,4 @@
-local function close(params)
+local function close()
   vim.cmd('bdelete')
 end
 
