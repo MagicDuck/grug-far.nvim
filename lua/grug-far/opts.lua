@@ -50,7 +50,8 @@ local defaultOptions = {
 
   keymaps = {
     replace = '<C-enter>',
-    qflist = '<C-q>'
+    qflist = '<C-q>',
+    close = '<C-x>'
   }
 }
 

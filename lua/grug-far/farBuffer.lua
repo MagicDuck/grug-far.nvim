@@ -1,6 +1,7 @@
 local render = require("grug-far/render")
 local replace = require("grug-far/actions/replace")
 local qflist = require("grug-far/actions/qflist")
+local close = require("grug-far/actions/close")
 
 local M = {}
 
@@ -22,6 +23,11 @@ local function setupKeymap(buf, context)
   if keymaps.qflist then
     setBufKeymap(buf, 'niv', 'Grug Far: send results to quickfix list', keymaps.qflist, function()
       qflist({ context = context })
+    end)
+  end
+  if keymaps.close then
+    setBufKeymap(buf, 'niv', 'Grug Far: close', keymaps.close, function()
+      close()
     end)
   end
 end
