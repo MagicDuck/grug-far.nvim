@@ -1,6 +1,7 @@
 local render = require("grug-far/render")
 local replace = require("grug-far/actions/replace")
 local qflist = require("grug-far/actions/qflist")
+local gotoLocation = require("grug-far/actions/gotoLocation")
 local close = require("grug-far/actions/close")
 
 local M = {}
@@ -13,7 +14,7 @@ local function setBufKeymap(buf, modes, desc, lhs, callback)
   end
 end
 
-local function setupKeymap(buf, context)
+local function setupKeymap(win, buf, context)
   local keymaps = context.options.keymaps
   if keymaps.replace then
     setBufKeymap(buf, 'ni', 'Grug Far: apply replacements', keymaps.replace, function()
@@ -26,8 +27,8 @@ local function setupKeymap(buf, context)
     end)
   end
   if keymaps.gotoLocation then
-    setBufKeymap(buf, 'n', 'Grug Far: go to location', keymaps.qflist, function()
-      qflist({ buf = buf, context = context })
+    setBufKeymap(buf, 'n', 'Grug Far: go to location', keymaps.gotoLocation, function()
+      gotoLocation({ win = win, buf = buf, context = context })
     end)
   end
   if keymaps.close then
@@ -55,7 +56,7 @@ end
 
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
-  setupKeymap(buf, context)
+  setupKeymap(win, buf, context)
   setupRenderer(win, buf, context)
 
   vim.api.nvim_win_set_buf(win, buf)

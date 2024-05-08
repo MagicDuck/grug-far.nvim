@@ -17,47 +17,42 @@ function M.appendResultsChunk(buf, context, data)
 
   -- compute result locations based on highlights and add location marks
   -- those are used for actions like quickfix list and go to location
-  local resultsLocations = context.state.resultsLocations
-  local resultLocationByExtmarkId = context.state.resultLocationByExtmarkId
-  local lastLocation = resultsLocations[#resultsLocations]
+  local state = context.state
+  local resultLocationByExtmarkId = state.resultLocationByExtmarkId
+  local resultsLocations = state.resultsLocations
+  local lastLocation = nil
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
     local hl = highlight.hl
     local line = data.lines[highlight.start_line + 1]
 
     if hl == 'GrugFarResultsPath' then
-      lastLocation = { filename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1) }
-      table.insert(resultsLocations, lastLocation)
+      state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
 
       local markId = vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, lastline + highlight.start_line, 0, {})
-      resultLocationByExtmarkId[markId] = { filename = lastLocation.filename }
+      resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl == 'GrugFarResultsLineNo' then
       -- omit ending ':'
-      lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
-    elseif hl == 'GrugFarResultsLineColumn' and not lastLocation.col then
-      -- omit ending ':', use first match on that line
-      lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
-
+      lastLocation = { filename = state.resultsLastFilename }
+      table.insert(resultsLocations, lastLocation)
       local markId = vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, lastline + highlight.start_line, 0, {})
       resultLocationByExtmarkId[markId] = lastLocation
+
+      lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
+    elseif hl == 'GrugFarResultsLineColumn' and lastLocation and not lastLocation.col then
+      -- omit ending ':', use first match on that line
+      lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
     end
   end
 end
 
 -- note: row is zero-based
-function M.getClosestResultLocation(row, buf, context)
-  local currentRow = row
-  while currentRow > context.state.headerRow do
-    local marks = vim.api.nvim_buf_get_extmarks(buf, context.locationsNamespace,
-      { currentRow, 0 }, { currentRow, 0 }, { limit = 1 })
-    if #marks > 0 then
-      local mark = marks[1]
-      local location = context.state.resultLocationByExmarkId[mark.extmark_id]
-      if location then
-        return location
-      end
-    end
-    currentRow = currentRow - 1
+function M.getResultLocation(row, buf, context)
+  local marks = vim.api.nvim_buf_get_extmarks(buf, context.locationsNamespace,
+    { row, 0 }, { row, 0 }, { limit = 1 })
+  if #marks > 0 then
+    local markId = unpack(marks[1])
+    return context.state.resultLocationByExtmarkId[markId]
   end
 
   return nil
@@ -84,6 +79,7 @@ function M.clear(buf, context)
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLocations = {}
+  context.state.resultsLastFilename = nil
 end
 
 return M
