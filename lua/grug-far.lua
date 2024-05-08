@@ -5,10 +5,8 @@ local farBuffer = require("grug-far/farBuffer")
 local M = {}
 
 local options = nil
-local namespace = nil
 function M.setup(user_opts)
   options = opts.with_defaults(user_opts or {})
-  namespace = vim.api.nvim_create_namespace('grug-far.nvim')
   highlights.setup()
   vim.api.nvim_create_user_command("GrugFar", M.grug_far, {})
 end
@@ -20,7 +18,7 @@ end
 local function createContext()
   return {
     options = options,
-    namespace = namespace,
+    namespace = vim.api.nvim_create_namespace(''),
     extmarkIds = {},
     state = {
       isFirstRender = true,
