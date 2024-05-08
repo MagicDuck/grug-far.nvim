@@ -47,18 +47,18 @@ local defaultOptions = {
     filesFilterInput = ' ',
     flagsInput = '󰮚 ',
 
-    -- bit of a stretch of the icon concept, but it makes it configurable
-    -- TODO (sbadragan): move it out???
-    resultsSeparatorLine = '',
-
     resultsStatusReady = '󱩾 ',
     resultsStatusError = ' ',
     resultsStatusSuccess = '󰗡 ',
-    -- TODO (sbadragan): move it out?
-    resultsStatusProgressSeq = {
-      '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
-    },
     resultsActionMessage = '  '
+  },
+
+  -- separator between inputs and results, default depends on nerdfont
+  resultsSeparatorLine = '',
+
+  -- spinner states, default depends on nerdfont, set to nil to disable
+  spinnerStates = {
+    '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
   },
 
   keymaps = {

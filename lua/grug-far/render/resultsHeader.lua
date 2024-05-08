@@ -7,10 +7,10 @@ local function getStatusText(context)
   elseif status == 'success' then
     return opts.getIcon('resultsStatusSuccess', context)
   elseif status == 'progress' then
-    local progress_icons = opts.getIcon('resultsStatusProgressSeq', context)
-    if progress_icons then
+    local spinnerStates = context.options.spinnerStates
+    if spinnerStates then
       local progressCount = context.state.progressCount or 0
-      return progress_icons[(progressCount % #progress_icons) + 1]
+      return spinnerStates[(progressCount % #spinnerStates) + 1]
     else
       return ''
     end
@@ -19,9 +19,8 @@ local function getStatusText(context)
   return opts.getIcon('resultsStatusReady', context)
 end
 
-local DEFAULT_SEPARATOR = '-----------------------------------------------------'
 local function getSeparator(context)
-  local separatorLine = opts.getIcon('resultsSeparatorLine', context) or DEFAULT_SEPARATOR
+  local separatorLine = context.options.resultsSeparatorLine
   return ' ' .. (getStatusText(context) or '') .. ' ' .. separatorLine
 end
 
