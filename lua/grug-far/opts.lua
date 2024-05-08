@@ -41,7 +41,7 @@ local defaultOptions = {
   },
 
   -- separator between inputs and results, default depends on nerdfont
-  resultsSeparatorLine = '',
+  resultsSeparatorLineChar = '',
 
   -- spinner states, default depends on nerdfont, set to nil to disable
   spinnerStates = {

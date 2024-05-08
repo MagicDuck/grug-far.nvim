@@ -20,7 +20,8 @@ local function getStatusText(context)
 end
 
 local function getSeparator(context)
-  local separatorLine = context.options.resultsSeparatorLine
+  -- note: use a large number to ensure it's always > window width
+  local separatorLine = context.options.resultsSeparatorLineChar:rep(400)
   return ' ' .. (getStatusText(context) or '') .. ' ' .. separatorLine
 end
 
