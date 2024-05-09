@@ -147,7 +147,8 @@ local function replace(params)
     state.progressCount = nil
     local time = uv.now() - startTime
     -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-    state.actionMessage = getActionMessage(nil, filesCount, filesCount, time)
+    state.actionMessage = status == nil and 'replace cannot work with current arguments!' or
+      getActionMessage(nil, filesCount, filesCount, time)
     renderResultsHeader(buf, context)
   end)
 
@@ -156,8 +157,8 @@ local function replace(params)
     options = context.options,
     on_fetch_chunk = reportMatchingFilesUpdate,
     on_finish = vim.schedule_wrap(function(status, errorMessage, files)
-      if status == 'error' then
-        reportError(errorMessage)
+      if not status or status == 'error' then
+        on_finish_all(status, errorMessage)
         return
       end
 
