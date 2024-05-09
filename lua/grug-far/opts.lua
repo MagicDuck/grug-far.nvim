@@ -63,7 +63,7 @@ local defaultOptions = {
     search = "ex: foo    foo([a-z0-9]*)    fun\\(",
     replacement = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
     filesGlob = "ex: *.lua     *.{css,js}    **/docs/*.md",
-    flags = "ex: --hidden (-.) --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
+    flags = "ex: --help --hidden (-.) --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
   }
 }
 

@@ -1,66 +1,75 @@
 # grug-far.nvim
 
-simple find and replace
+brain-dead simple to use **F**ind **A**nd **R**eplace plugin for neovim
 
-## Using
+image here
 
-TODO: update
-Clone/download it locally and change the references to `grug-far`, 
-`my_cool_module` accordingly to your new plugin name. Don't forget to edit the
-[help][help] file accordingly.
+## 🤔 Philosophy
 
-You'll need to install [Lua][lua] and [LuaRocks][luarocks] to run the linter.
+1. *strives for reduced mental overhead.* All actions you can take are in your face. As much help as possible is in your face (some configurable). Grug often forget how to do capture groups or which flag does what.
+2. *transparency.* Does not try to hide away `rg` and shows error messages from it which are actually quite friendly when you mess up your regex. You can gradually learn `rg` flags or use existing knowledge from running it in the CLI. You can even input the `--help` flag to see the full `rg` help. Grug like!
+3. *reuse muscle memory.* Does not try to block any type of buffer edits, such as deleting lines, etc. It's very easy to get such things wrong and when you do, Grug becomes unable to modify text in the middle of writing a large regex. Grug mad!! Only ensures graceful recovery in order to preserve basic UI integrity (possible due to the magic of extmarks). Recovery should be simple undo away. 
+4. *uniformity*: only uses one tool, `rg`, and does not combine with other tools like `sed`. One should not have to worry about compatibility differences when writing regexes. Additionally it opens the door to use to many fancy `rg` flags such as different regex engine that would not be possible in a mixed environment. Replacement is achieved by running `rg --passthrough` on each file with configurable number of parallel workers.
 
-## Testing
+## ✨ Features
 
-This uses [busted][busted], [luassert][luassert] (both through
-[plenary.nvim][plenary]) and [matcher_combinators][matcher_combinators] to
-define tests in `test/spec/` directory. These dependencies are required only to
-run tests, that's why they are installed as git submodules.
+- Search using the **full power** of `rg`
+- Replace using almost the **full power** of `rg`. Some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
+- Open search results in quickfix list
+- Goto file/line/column of match when pressing `<Enter>` (configurable) on lines in the results output.
 
-Make sure your shell is in the `./test` directory or, if it is in the root directory,
-replace `make` by `make -C ./test` in the commands below.
+## ⚡️ Requirements
 
-To init the dependencies run
+- Neovim >= **0.9.0** (might work with lower versions)
+- [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep)
+- a [Nerd Font](https://www.nerdfonts.com/) **_(optional)_**
 
-```bash
-$ make prepare
+Run `:checkhealth grug-far` if you see unexpected issues.
+
+## 📦 Installation
+
+Using [lazy.nvim][lazy]:
+```lua
+  {
+    'MagicDuck/grug-far.nvim',
+    config = function()
+      require('grug-far').setup({
+        ...
+      });
+    end
+  },
+
 ```
 
-To run all tests just execute
+## ⚙️ Configuration
 
-```bash
-$ make test
-```
+**grug-far.nvim** comes with the following:
+- [default options][opts] 
+- [highlights][highlights]
 
-If you have [entr(1)][entr] installed you may use it to run all tests whenever a
-file is changed using:
+## 🚀 Usage
 
-```bash
-$ make watch
-```
+You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command.
+Since it's *just a buffer*, you can edit in it as you see fit. The UI will try to guide
+you along and recover gracefully if you do things like `ggVGd` (delete all lines).
+Ultimately it leaves the power in your hands, and in any case recovery is just a few `u` taps away.
 
-In both commands you myght specify a single spec to test/watch using:
+Search and replace to your heart's desire. You can create multiple such buffers with potentially
+different searches, which will reflect in each buffer's title (configurable). The buffers should
+be visible in the buffers list if you need to toggle to them. When you are done, it is recommended
+to close the buffer with the configured keybinding (see Configuration section above) or just `:bd`
+in order to save on resources as some search results can be quite beefy in size.
 
-```bash
-$ make test SPEC=spec/grug-far/my_cool_module_spec.lua
-$ make watch SPEC=spec/grug-far/my_cool_module_spec.lua
-```
+## 📦 Similar Plugins / Inspiration
 
-## Github actions
+- [nvim-spectre][spectre]
+- [telescope.nvim][telescope]: lifted `rg` healthcheck from there :P
+- [lazy.nvim][lazy]: used their beautiful `README.md` as a template
 
-An Action will run all the tests and the linter on every commit on the main
-branch and also on Pull Request. Tests will be run using 
-[stable and nightly][neovim-test-versions] versions of Neovim.
-
-[lua]: https://www.lua.org/
-[entr]: https://eradman.com/entrproject/
-[luarocks]: https://luarocks.org/
-[busted]: https://olivinelabs.com/busted/
-[luassert]: https://github.com/Olivine-Labs/luassert
-[plenary]: https://github.com/nvim-lua/plenary.nvim
-[matcher_combinators]: https://github.com/m00qek/matcher_combinators.lua
-[integration-badge]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml/badge.svg
-[integration-runs]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml
-[neovim-test-versions]: .github/workflows/integration.yml#L17
 [help]: doc/my-awesome-plugin.txt
+[opts]: lua/grug-far/opts.lua
+[highlights]: lua/grug-far/highlights.lua
+[lazy]: https://github.com/folke/lazy.nvim
+[spectre]: https://github.com/nvim-pack/nvim-spectre
+[telescope]: https://github.com/nvim-telescope/telescope.nvim
+[blacklistedReplaceFlags]: lua/grug-far/rg/blacklistedReplaceFlags.lua 
