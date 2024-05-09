@@ -19,6 +19,9 @@ Grug find! Grug replace! Grug happy!
 #### Replacing:
 <img width="100%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/c204caad-849c-47fc-89a3-99415fb7e4a9">
 
+#### Rg teaching you it's ways
+<img width="1250" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/2db66778-6920-4376-9f8f-7016cc698853">
+
 #### Help:
 <img width="100%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/05e2108f-28b0-4e26-9c65-79eeedd394a3">
 
