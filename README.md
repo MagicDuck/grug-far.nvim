@@ -2,7 +2,7 @@
 
 brain-dead simple to use **F**ind **A**nd **R**eplace plugin for neovim
 
-![image](https://github.com/MagicDuck/grug-far.nvim/assets/95201/02e9ae3a-746a-4c70-ab23-ac676da3ee69)
+<img width="613" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/eca87bba-997f-4d13-b5a9-2944eeed5418">
 
 
 ## 🤔 Philosophy
