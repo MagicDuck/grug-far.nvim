@@ -1,4 +1,5 @@
 local getArgs = require('grug-far/rg/getArgs')
+local blacklistedReplaceFlags = require('grug-far/rg/blacklistedReplaceFlags')
 local fetchWithRg = require('grug-far/rg/fetchWithRg')
 
 local function fetchReplacedFileContent(params)
@@ -10,7 +11,7 @@ local function fetchReplacedFileContent(params)
     '--no-heading',
     '--no-filename',
     params.file,
-  })
+  }, blacklistedReplaceFlags)
 
   local content = ''
   return fetchWithRg({

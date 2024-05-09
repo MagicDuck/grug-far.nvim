@@ -1,9 +1,16 @@
 local M = {}
 
+local function setBufLines(buf, start, ending, strict_indexing, replacement)
+  local isModifiable = vim.api.nvim_buf_get_option(buf, 'modifiable')
+  vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+  vim.api.nvim_buf_set_lines(buf, start, ending, strict_indexing, replacement)
+  vim.api.nvim_buf_set_option(buf, 'modifiable', isModifiable)
+end
+
 function M.appendResultsChunk(buf, context, data)
   -- add text
   local lastline = vim.api.nvim_buf_line_count(buf)
-  vim.api.nvim_buf_set_lines(buf, lastline, lastline, false, data.lines)
+  setBufLines(buf, lastline, lastline, false, data.lines)
 
   -- add highlights
   for i = 1, #data.highlights do
@@ -64,7 +71,7 @@ function M.setError(buf, context, error)
   local startLine = context.state.headerRow + 1
 
   local err_lines = vim.split((error and #error > 0) and error or 'Unexpected error!', '\n')
-  vim.api.nvim_buf_set_lines(buf, startLine, startLine, false, err_lines)
+  setBufLines(buf, startLine, startLine, false, err_lines)
 
   for i = startLine, startLine + #err_lines do
     vim.api.nvim_buf_add_highlight(buf, context.namespace, 'DiagnosticError', i, 0, -1)
@@ -74,7 +81,7 @@ end
 function M.clear(buf, context)
   -- remove all lines after heading and add one blank line
   local headerRow = context.state.headerRow
-  vim.api.nvim_buf_set_lines(buf, headerRow, -1, false, { "" })
+  setBufLines(buf, headerRow, -1, false, { "" })
 
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}

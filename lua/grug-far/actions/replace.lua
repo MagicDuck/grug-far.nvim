@@ -82,14 +82,14 @@ end
 local function getActionMessage(err, count, total, time)
   local msg = 'replace '
   if err then
-    return msg .. ' failed!'
+    return msg .. 'failed!'
   end
 
   if count == total and total ~= 0 then
-    return msg .. ' completed in ' .. time .. 'ms!'
+    return msg .. 'completed in ' .. time .. 'ms!'
   end
 
-  return msg .. ' ' .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
+  return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
 local function replace(params)
@@ -129,13 +129,12 @@ local function replace(params)
     vim.api.nvim_buf_set_option(buf, 'modifiable', true)
 
     state.status = 'error'
-    state.progressCount = nil
     state.actionMessage = getActionMessage(errorMessage)
     resultsList.setError(buf, context, errorMessage)
     renderResultsHeader(buf, context)
   end
 
-  local on_finish_all = vim.schedule_wrap(function(status, errorMessage)
+  local on_finish_all = vim.schedule_wrap(function(status, errorMessage, customActionMessage)
     vim.api.nvim_buf_set_option(buf, 'modifiable', true)
 
     if status == 'error' then
@@ -144,20 +143,27 @@ local function replace(params)
     end
 
     state.status = status
-    state.progressCount = nil
     local time = uv.now() - startTime
     -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-    state.actionMessage = status == nil and 'replace cannot work with current arguments!' or
+    state.actionMessage = status == nil and customActionMessage or
       getActionMessage(nil, filesCount, filesCount, time)
     renderResultsHeader(buf, context)
   end)
+
+  if #state.inputs.search == 0 or #state.inputs.replacement == 0 then
+    on_finish_all(nil, nil, 'replace cannot work due to missing search/replacement inputs!')
+    return
+  end
 
   fetchFilesWithMatches({
     inputs = context.state.inputs,
     options = context.options,
     on_fetch_chunk = reportMatchingFilesUpdate,
     on_finish = vim.schedule_wrap(function(status, errorMessage, files)
-      if not status or status == 'error' then
+      if not status then
+        on_finish_all(nil, nil, 'replace cannot work due to improper flags! (blacklisted because of undesirable results)')
+        return
+      elseif status == 'error' then
         on_finish_all(status, errorMessage)
         return
       end

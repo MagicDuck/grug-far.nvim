@@ -73,7 +73,8 @@ local function render(params, context)
     extmarkName = "flags",
     icon = 'flagsInput',
     label = "Flags:",
-    placeholder = "ex: --hidden (-.) --ignore-case (-i) --multiline (-U)",
+    -- TODO (sbadragan): make those configurable
+    placeholder = "ex: --hidden (-.) --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
   }, context))
 
   lineNr = lineNr + BEFORE_RESULTS_LINES

@@ -40,7 +40,6 @@ local function search(params)
       state.abortSearch = nil
 
       state.status = status
-      state.progressCount = nil
       if status == 'error' then
         state.stats = nil
         resultsList.setError(buf, context, errorMessage)

@@ -1,4 +1,5 @@
 local getArgs = require('grug-far/rg/getArgs')
+local blacklistedReplaceFlags = require('grug-far/rg/blacklistedReplaceFlags')
 local fetchWithRg = require('grug-far/rg/fetchWithRg')
 
 local function fetchFilesWithMatches(params)
@@ -6,7 +7,7 @@ local function fetchFilesWithMatches(params)
 
   local args = getArgs(params.inputs, params.options, {
     '--files-with-matches'
-  })
+  }, blacklistedReplaceFlags)
 
   return fetchWithRg({
     args = args,

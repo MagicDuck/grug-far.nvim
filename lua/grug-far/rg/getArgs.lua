@@ -1,16 +1,23 @@
--- TODO (sbadragan): might need to disable some flags, like:
--- --no-include-zero --no-byte-offset
--- --hyperlink-format=none
--- --max-columns=0
--- --no-max-columns-preview --no-trim
--- blacklist: --help --quiet
--- Hmmm, there are just too many things that could completely screw it up ... I think we need a whitelist of useful
--- flags that we allow the user to pass, otherwise replacing would not work
-local function isValidArg(arg)
+local function isProperFlag(arg)
   return vim.startswith(arg, '-') and arg ~= '--'
 end
 
-local function getArgs(inputs, options, extraArgs)
+local function isBlacklistedFlag(flag, blacklistedFlags)
+  if not blacklistedFlags then
+    return false
+  end
+
+  for i = 1, #blacklistedFlags do
+    local badFlag = blacklistedFlags[i]
+    if flag == badFlag or vim.startswith(flag, badFlag .. ' ') or vim.startswith(flag, badFlag .. '=') then
+      return true
+    end
+  end
+
+  return false
+end
+
+local function getArgs(inputs, options, extraArgs, blacklistedFlags)
   local args = nil
   if #inputs.search < (options.minSearchChars or 1) then
     return nil
@@ -26,7 +33,10 @@ local function getArgs(inputs, options, extraArgs)
   local extraUserArgs = options.extraRgArgs and vim.trim(options.extraRgArgs) or ''
   if #extraUserArgs > 0 then
     for arg in string.gmatch(extraUserArgs, "%S+") do
-      if isValidArg(arg) then
+      if isBlacklistedFlag(arg, blacklistedFlags) then
+        return nil
+      end
+      if isProperFlag(arg) then
         table.insert(args, arg)
       end
     end
@@ -34,7 +44,10 @@ local function getArgs(inputs, options, extraArgs)
 
   if #inputs.flags > 0 then
     for flag in string.gmatch(inputs.flags, "%S+") do
-      if isValidArg(flag) then
+      if isBlacklistedFlag(flag, blacklistedFlags) then
+        return nil
+      end
+      if isProperFlag(flag) then
         table.insert(args, flag)
       end
     end
