@@ -24,6 +24,21 @@ local defaultOptions = {
   -- zero disables showing it
   maxSearchCharsInTitles = 30,
 
+  keymaps = {
+    replace = '<C-enter>',
+    qflist = '<C-q>',
+    gotoLocation = '<enter>',
+    close = '<C-x>'
+  },
+
+  -- separator between inputs and results, default depends on nerdfont
+  resultsSeparatorLineChar = '',
+
+  -- spinner states, default depends on nerdfont, set to nil to disable
+  spinnerStates = {
+    '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
+  },
+
   -- icons for UI, default ones depend on nerdfont
   icons = {
     -- whether to show icons
@@ -40,19 +55,15 @@ local defaultOptions = {
     resultsActionMessage = '  '
   },
 
-  -- separator between inputs and results, default depends on nerdfont
-  resultsSeparatorLineChar = '',
+  -- placeholders to show in inpuut areas when they are empty, set
+  placeholders = {
+    -- whether to show placeholders
+    enabled = true,
 
-  -- spinner states, default depends on nerdfont, set to nil to disable
-  spinnerStates = {
-    '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
-  },
-
-  keymaps = {
-    replace = '<C-enter>',
-    qflist = '<C-q>',
-    gotoLocation = '<enter>',
-    close = '<C-x>'
+    search = "ex: foo    foo([a-z0-9]*)    fun\\(",
+    replacement = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
+    filesGlob = "ex: *.lua     *.{css,js}    **/docs/*.md",
+    flags = "ex: --hidden (-.) --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
   }
 }
 

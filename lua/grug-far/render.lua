@@ -28,6 +28,7 @@ local BEFORE_RESULTS_LINES = 2
 local function render(params, context)
   local buf = params.buf
   local inputs = context.state.inputs
+  local placeholders = context.options.placeholders
 
   local lineNr = 0
   ensureTopEmptyLines(buf, TOP_EMPTY_LINES)
@@ -40,7 +41,7 @@ local function render(params, context)
     extmarkName = "search",
     icon = 'searchInput',
     label = "Search:",
-    placeholder = "ex: foo    foo([a-z0-9]*)    fun\\(",
+    placeholder = placeholders.enabled and placeholders.search
   }, context)
 
   vim.api.nvim_buf_set_name(buf,
@@ -53,7 +54,7 @@ local function render(params, context)
     extmarkName = "replace",
     icon = 'replaceInput',
     label = "Replace:",
-    placeholder = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
+    placeholder = placeholders.enabled and placeholders.replacement
   }, context)
 
   lineNr = lineNr + 1
@@ -63,7 +64,7 @@ local function render(params, context)
     extmarkName = "files_glob",
     icon = 'filesFilterInput',
     label = "Files Filter:",
-    placeholder = "ex: *.lua     *.{css,js}    **/docs/*.md",
+    placeholder = placeholders.enabled and placeholders.filesGlob
   }, context))
 
   lineNr = lineNr + 1
@@ -73,8 +74,7 @@ local function render(params, context)
     extmarkName = "flags",
     icon = 'flagsInput',
     label = "Flags:",
-    -- TODO (sbadragan): make those configurable
-    placeholder = "ex: --hidden (-.) --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
+    placeholder = placeholders.enabled and placeholders.flags
   }, context))
 
   lineNr = lineNr + BEFORE_RESULTS_LINES
