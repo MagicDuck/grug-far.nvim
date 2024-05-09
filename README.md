@@ -43,7 +43,7 @@ Using [lazy.nvim][lazy]:
     'MagicDuck/grug-far.nvim',
     config = function()
       require('grug-far').setup({
-        ...
+        ... options, see Configuration section below ...
       });
     end
   },
