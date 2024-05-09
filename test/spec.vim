@@ -9,4 +9,4 @@ lua require('matcher_combinators.luassert')
 
 " configuring the plugin
 runtime plugin/grug-far.lua
-lua require('grug-far').setup({ name = 'Jane Doe' })
+lua require('grug-far').setup({})
