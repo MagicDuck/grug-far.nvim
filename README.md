@@ -1,15 +1,17 @@
 # grug-far.nvim
 
-brain-dead simple to use **F**ind **A**nd **R**eplace plugin for neovim
+**F**ind **A**nd **R**eplace plugin for neovim
 
 <img width="500" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/770900e2-36c6-488c-9117-5fcb514454cb">
+
+Grug find! Grug replace! Grug happy!
 
 ## ✨ Features
 
 - Search using the **full power** of `rg`
 - Replace using almost the **full power** of `rg`. Some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
 - Open search results in quickfix list
-- Goto file/line/column of match when pressing `<Enter>` (configurable) on lines in the results output.
+- Goto file/line/column of match when pressing `<Enter>` in normal mode on lines in the results output (keybind configurable).
 
 #### Searching:
 <img width="100%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/b664f77c-6e12-4a4a-a179-ada2da204039">
