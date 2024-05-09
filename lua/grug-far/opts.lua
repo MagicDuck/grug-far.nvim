@@ -3,7 +3,7 @@ local M = {}
 local defaultOptions = {
   -- debounce milliseconds for issuing search while user is typing
   -- prevents excesive searching
-  debounceMs = 700,
+  debounceMs = 500,
 
   -- minimum number of chars which will cause a search to happen
   -- prevents performance issues in larger dirs
