@@ -40,6 +40,7 @@ local defaultOptions = {
   },
 
   -- icons for UI, default ones depend on nerdfont
+  -- set individul ones to nil to disable, or set enabled = false for complete disable
   icons = {
     -- whether to show icons
     enabled = true,
@@ -55,7 +56,8 @@ local defaultOptions = {
     resultsActionMessage = '  '
   },
 
-  -- placeholders to show in inpuut areas when they are empty, set
+  -- placeholders to show in inpuut areas when they are empty
+  -- set individul ones to nil to disable, or set enabled = false for complete disable
   placeholders = {
     -- whether to show placeholders
     enabled = true,
