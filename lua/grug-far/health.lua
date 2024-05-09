@@ -45,7 +45,8 @@ function M.check()
       if not installed then
         local err_msg = ("%s: not found."):format(package.name)
         if package.optional then
-          vim.health.report_warn(("%s %s"):format(err_msg, ("Install %s for extended capabilities"):format(package.url)))
+          vim.health.report_warn(("%s %s"):format(err_msg,
+            ("Install %s for extended capabilities"):format(package.url)))
         else
           vim.health.report_error(
             ("%s %s"):format(
@@ -62,4 +63,3 @@ function M.check()
 end
 
 return M
-

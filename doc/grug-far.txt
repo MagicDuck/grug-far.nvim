@@ -11,17 +11,7 @@ CONTENTS                                          *grug-far-contents*
 ==============================================================================
 1. INTRODUCTION                               *grug-far-introduction*
 
-grug-far makes Neovim, your favorite text editor, capable of greeting
-you. See bellow how it works:
-
-                +--------------+              +--------------+
-                |              |              |              |
-                |              |              |              |
-                |              |              |              |
-                |    Hello     | -----------> |  [your-name] |
-                |              |              |              |
-                |              |              |              |
-                +--------------+              +--------------+
+grug-far adds search/replace using rg functionality to neovim. 
 
 ==============================================================================
 2. SETUP                                             *grug-far-setup*
@@ -29,7 +19,7 @@ you. See bellow how it works:
 Make sure to add to call the setup function with the proper configuration in
 your `init` file.
 
-    require('grug-far').setup { name = 'Alexander, The Great'}
+    require('grug-far').setup({ ... })
 
 ==============================================================================
 3. COMMANDS                                       *grug-far-commands*

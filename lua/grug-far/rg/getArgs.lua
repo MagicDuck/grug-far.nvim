@@ -14,12 +14,11 @@ local function isBlacklistedFlag(flag, blacklistedFlags)
 end
 
 local function getArgs(inputs, options, extraArgs, blacklistedFlags)
-  local args = nil
   if #inputs.search < (options.minSearchChars or 1) then
     return nil
   end
 
-  args = {}
+  local args = {}
 
   -- user overrides
   local blacklisted = {}

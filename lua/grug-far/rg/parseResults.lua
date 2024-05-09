@@ -13,7 +13,6 @@ local function getTokens(data)
 
   for name, color in pairs(colors.rg_colors) do
     i = 0
-    j = 0
     while true do
       i, j = string.find(data, color.ansi, i + 1, true)
       if i == nil then break end
@@ -28,7 +27,6 @@ local function getTokens(data)
   end
 
   i = 0
-  j = 0
   while true do
     i, j = string.find(data, colors.ansi_color_ending, i + 1, true)
     if i == nil then break end
@@ -36,7 +34,6 @@ local function getTokens(data)
   end
 
   i = 0
-  j = 0
   while true do
     i, j = string.find(data, "\n", i + 1, true)
     if i == nil then break end
