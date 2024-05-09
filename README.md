@@ -2,17 +2,7 @@
 
 brain-dead simple to use **F**ind **A**nd **R**eplace plugin for neovim
 
-<img width="400" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/770900e2-36c6-488c-9117-5fcb514454cb">
-
-#### Searching:
-<img width="40%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/b664f77c-6e12-4a4a-a179-ada2da204039">
-
-#### Replacing:
-<img width="40%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/c204caad-849c-47fc-89a3-99415fb7e4a9">
-
-#### Help:
-<img width="40%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/05e2108f-28b0-4e26-9c65-79eeedd394a3">
-
+<img width="500" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/770900e2-36c6-488c-9117-5fcb514454cb">
 
 ## 🤔 Philosophy
 
@@ -27,6 +17,15 @@ brain-dead simple to use **F**ind **A**nd **R**eplace plugin for neovim
 - Replace using almost the **full power** of `rg`. Some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
 - Open search results in quickfix list
 - Goto file/line/column of match when pressing `<Enter>` (configurable) on lines in the results output.
+
+#### Searching:
+<img width="80%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/b664f77c-6e12-4a4a-a179-ada2da204039">
+
+#### Replacing:
+<img width="80%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/c204caad-849c-47fc-89a3-99415fb7e4a9">
+
+#### Help:
+<img width="80%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/05e2108f-28b0-4e26-9c65-79eeedd394a3">
 
 ## ⚡️ Requirements
 
