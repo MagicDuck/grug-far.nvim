@@ -58,7 +58,8 @@ Using [lazy.nvim][lazy]:
 
 ## 🚀 Usage
 
-You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command.
+You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command. But possibly
+best to map a keybind to it for easy triggering.
 Since it's *just a buffer*, you can edit in it as you see fit. The UI will try to guide
 you along and recover gracefully if you do things like `ggVGd` (delete all lines).
 Ultimately it leaves the power in your hands, and in any case recovery is just a few `u` taps away.
