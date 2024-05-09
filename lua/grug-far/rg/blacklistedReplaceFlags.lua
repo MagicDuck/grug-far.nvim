@@ -1,15 +1,34 @@
--- TODO (sbadragan): might need to disable some flags, like:
--- --no-include-zero --no-byte-offset
--- --hyperlink-format=none
--- --max-columns=0
--- --no-max-columns-preview --no-trim
--- blacklist: --help --quiet
--- Hmmm, there are just too many things that could completely screw it up ... I think we need a whitelist of useful
--- flags that we allow the user to pass, otherwise replacing would not work
+-- those are flags that would result in unexpected output when generating replaced file contents
 return {
   '--pre',
   '--pre-glob',
-  '--search-zip', '-z',
-
-  '--help'
+  '-z', '--search-zip',
+  '-m', '--max-count',
+  '--null-data',
+  '--stop-on-nonmatch',
+  '-a', '--text',
+  '--binary',
+  ' -L', '--follow',
+  '-b', '--byte-offset',
+  '--line-buffered',
+  '-M', '--max-columns',
+  '--max-columns-preview',
+  '-0', '--null',
+  '-o', '--only-matching',
+  '-q', '--quiet',
+  '--trim',
+  '--vimgrep',
+  '-c', '--count',
+  '--count-matches',
+  '--json',
+  '--debug',
+  '--no-ignore-messages',
+  '--stats',
+  '--trace',
+  '--files',
+  '--generate',
+  '--pcre2-version',
+  '--type-list',
+  '-V', '--version',
+  '-h', '--help'
 }

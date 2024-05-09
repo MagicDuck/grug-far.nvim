@@ -159,9 +159,11 @@ local function replace(params)
     inputs = context.state.inputs,
     options = context.options,
     on_fetch_chunk = reportMatchingFilesUpdate,
-    on_finish = vim.schedule_wrap(function(status, errorMessage, files)
+    on_finish = vim.schedule_wrap(function(status, errorMessage, files, blacklistedArgs)
       if not status then
-        on_finish_all(nil, nil, 'replace cannot work due to improper flags! (blacklisted because of undesirable results)')
+        on_finish_all(nil, nil,
+          blacklistedArgs and 'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', ') or
+          'replace aborted!')
         return
       elseif status == 'error' then
         on_finish_all(status, errorMessage)

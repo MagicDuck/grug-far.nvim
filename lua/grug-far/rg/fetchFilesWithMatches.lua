@@ -5,8 +5,9 @@ local fetchWithRg = require('grug-far/rg/fetchWithRg')
 local function fetchFilesWithMatches(params)
   local filesWithMatches = {}
 
-  local args = getArgs(params.inputs, params.options, {
-    '--files-with-matches'
+  local args, blacklistedArgs = getArgs(params.inputs, params.options, {
+    '--files-with-matches',
+    '--color=never',
   }, blacklistedReplaceFlags)
 
   return fetchWithRg({
@@ -21,7 +22,7 @@ local function fetchFilesWithMatches(params)
       params.on_fetch_chunk(lines)
     end,
     on_finish = function(status, errorMessage)
-      params.on_finish(status, errorMessage, filesWithMatches)
+      params.on_finish(status, errorMessage, filesWithMatches, blacklistedArgs)
     end
   })
 end

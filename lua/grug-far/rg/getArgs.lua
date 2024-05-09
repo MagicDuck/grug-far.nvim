@@ -1,7 +1,3 @@
-local function isProperFlag(arg)
-  return vim.startswith(arg, '-') and arg ~= '--'
-end
-
 local function isBlacklistedFlag(flag, blacklistedFlags)
   if not blacklistedFlags then
     return false
@@ -25,18 +21,14 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags)
 
   args = {}
 
-  -- user overridable args
-  table.insert(args, '--line-number')
-  table.insert(args, '--column')
-
   -- user overrides
+  local blacklisted = {}
   local extraUserArgs = options.extraRgArgs and vim.trim(options.extraRgArgs) or ''
   if #extraUserArgs > 0 then
     for arg in string.gmatch(extraUserArgs, "%S+") do
       if isBlacklistedFlag(arg, blacklistedFlags) then
-        return nil
-      end
-      if isProperFlag(arg) then
+        table.insert(blacklisted, arg)
+      else
         table.insert(args, arg)
       end
     end
@@ -45,16 +37,24 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags)
   if #inputs.flags > 0 then
     for flag in string.gmatch(inputs.flags, "%S+") do
       if isBlacklistedFlag(flag, blacklistedFlags) then
-        return nil
-      end
-      if isProperFlag(flag) then
+        table.insert(blacklisted, flag)
+      else
         table.insert(args, flag)
       end
     end
   end
 
+  if #blacklisted > 0 then
+    return nil, blacklisted
+  end
+
   -- required args
+  table.insert(args, '--line-number')
   table.insert(args, '--heading')
+  table.insert(args, '--column')
+  table.insert(args, '--field-match-separator=:')
+  table.insert(args, '--hyperlink-format=none')
+  table.insert(args, '--block-buffered')
 
   if #inputs.replacement > 0 then
     table.insert(args, '--replace=' .. inputs.replacement)
@@ -70,7 +70,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags)
 
   table.insert(args, '--regexp=' .. inputs.search)
 
-  return args
+  return args, nil
 end
 
 return getArgs
