@@ -10,22 +10,22 @@ local function isValidArg(arg)
   return vim.startswith(arg, '-') and arg ~= '--'
 end
 
-local function getArgs(inputs, options)
+local function getArgs(inputs, options, extraArgs)
   local args = nil
   if #inputs.search < (options.minSearchChars or 1) then
     return nil
   end
 
-  args = { inputs.search }
+  args = {}
 
   -- user overridable args
   table.insert(args, '--line-number')
   table.insert(args, '--column')
 
   -- user overrides
-  local extraRgArgs = options.extraRgArgs and vim.trim(options.extraRgArgs) or ''
-  if #extraRgArgs > 0 then
-    for arg in string.gmatch(extraRgArgs, "%S+") do
+  local extraUserArgs = options.extraRgArgs and vim.trim(options.extraRgArgs) or ''
+  if #extraUserArgs > 0 then
+    for arg in string.gmatch(extraUserArgs, "%S+") do
       if isValidArg(arg) then
         table.insert(args, arg)
       end
@@ -50,6 +50,12 @@ local function getArgs(inputs, options)
   if #inputs.filesGlob > 0 then
     table.insert(args, '--glob=' .. inputs.filesGlob)
   end
+
+  for i = 1, #extraArgs do
+    table.insert(args, extraArgs[i])
+  end
+
+  table.insert(args, '--regexp=' .. inputs.search)
 
   return args
 end

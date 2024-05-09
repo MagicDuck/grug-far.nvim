@@ -2,17 +2,15 @@ local getArgs = require('grug-far/rg/getArgs')
 local fetchWithRg = require('grug-far/rg/fetchWithRg')
 
 local function fetchReplacedFileContent(params)
-  local args = getArgs(params.inputs, params.options)
-  if args then
-    table.insert(args, '--passthrough')
-    table.insert(args, '--no-line-number')
-    table.insert(args, '--no-column')
-    table.insert(args, '--color=never')
-    table.insert(args, '--no-heading')
-    table.insert(args, '--no-filename')
-
-    table.insert(args, params.file)
-  end
+  local args = getArgs(params.inputs, params.options, {
+    '--passthrough',
+    '--no-line-number',
+    '--no-column',
+    '--color=never',
+    '--no-heading',
+    '--no-filename',
+    params.file,
+  })
 
   local content = ''
   return fetchWithRg({

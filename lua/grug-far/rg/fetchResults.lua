@@ -4,15 +4,13 @@ local getArgs = require('grug-far/rg/getArgs')
 local colors = require('grug-far/rg/colors')
 
 local function fetchResults(params)
-  local args = getArgs(params.inputs, params.options)
-
-  if args then
-    table.insert(args, '--color=ansi')
-    for k, v in pairs(colors.rg_colors) do
-      table.insert(args, '--colors=' .. k .. ':none')
-      table.insert(args, '--colors=' .. k .. ':fg:' .. v.rgb)
-    end
+  local extraArgs = { '--color=ansi' }
+  for k, v in pairs(colors.rg_colors) do
+    table.insert(extraArgs, '--colors=' .. k .. ':none')
+    table.insert(extraArgs, '--colors=' .. k .. ':fg:' .. v.rgb)
   end
+
+  local args = getArgs(params.inputs, params.options, extraArgs)
 
   return fetchWithRg({
     args = args,
