@@ -16,22 +16,22 @@ end
 
 local function setupKeymap(win, buf, context)
   local keymaps = context.options.keymaps
-  if keymaps.replace then
+  if #keymaps.replace > 0 then
     setBufKeymap(buf, 'ni', 'Grug Far: apply replacements', keymaps.replace, function()
       replace({ buf = buf, context = context })
     end)
   end
-  if keymaps.qflist then
+  if #keymaps.qflist > 0 then
     setBufKeymap(buf, 'ni', 'Grug Far: send results to quickfix list', keymaps.qflist, function()
       qflist({ context = context })
     end)
   end
-  if keymaps.gotoLocation then
+  if #keymaps.gotoLocation > 0 then
     setBufKeymap(buf, 'n', 'Grug Far: go to location', keymaps.gotoLocation, function()
       gotoLocation({ win = win, buf = buf, context = context })
     end)
   end
-  if keymaps.close then
+  if #keymaps.close > 0 then
     setBufKeymap(buf, 'niv', 'Grug Far: close', keymaps.close, function()
       close()
     end)

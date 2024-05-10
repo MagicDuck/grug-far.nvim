@@ -24,6 +24,8 @@ local defaultOptions = {
   -- zero disables showing it
   maxSearchCharsInTitles = 30,
 
+  -- shortcuts for the actions you see at the top of the buffer
+  -- set to '' to unset. Unset mappings will be removed from the help header
   keymaps = {
     replace = '<C-enter>',
     qflist = '<C-q>',
@@ -34,13 +36,13 @@ local defaultOptions = {
   -- separator between inputs and results, default depends on nerdfont
   resultsSeparatorLineChar = '',
 
-  -- spinner states, default depends on nerdfont, set to nil to disable
+  -- spinner states, default depends on nerdfont, set to false to disable
   spinnerStates = {
     '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
   },
 
   -- icons for UI, default ones depend on nerdfont
-  -- set individul ones to nil to disable, or set enabled = false for complete disable
+  -- set individul ones to '' to disable, or set enabled = false for complete disable
   icons = {
     -- whether to show icons
     enabled = true,
@@ -57,7 +59,7 @@ local defaultOptions = {
   },
 
   -- placeholders to show in inpuut areas when they are empty
-  -- set individul ones to nil to disable, or set enabled = false for complete disable
+  -- set individul ones to '' to disable, or set enabled = false for complete disable
   placeholders = {
     -- whether to show placeholders
     enabled = true,

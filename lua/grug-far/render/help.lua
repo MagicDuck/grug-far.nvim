@@ -1,3 +1,7 @@
+local function printMapping(prefix, lhs)
+  return #lhs > 0 and prefix .. lhs or nil
+end
+
 local function renderHelp(params, context)
   local buf = params.buf
 
@@ -11,10 +15,12 @@ local function renderHelp(params, context)
       end_col = 0,
       virt_text = {
         {
-          'Replace: ' .. keymaps.replace
-          .. ' | Quickfix List: ' .. keymaps.qflist
-          .. ' | Goto Location: ' .. keymaps.gotoLocation
-          .. ' | Close: ' .. keymaps.close,
+          vim.fn.join(vim.tbl_filter(function(m) return m end, {
+            printMapping('Replace: ', keymaps.replace),
+            printMapping('Quickfix List: ', keymaps.qflist),
+            printMapping('Goto Location: ', keymaps.gotoLocation),
+            printMapping('Close: ', keymaps.close),
+          }), ' | '),
 
           'GrugFarHelpHeader'
         }
