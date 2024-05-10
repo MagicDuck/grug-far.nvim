@@ -10,7 +10,7 @@ local function setBufKeymap(buf, modes, desc, lhs, callback)
   for i = 1, #modes do
     local mode = modes:sub(i, i)
     vim.api.nvim_buf_set_keymap(buf, mode, lhs, '',
-      { noremap = true, desc = desc, callback = callback })
+      { noremap = true, desc = desc, callback = callback, nowait = true })
   end
 end
 
