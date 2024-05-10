@@ -38,14 +38,9 @@ local function setupKeymap(win, buf, context)
   end
 end
 
-local function setupRenderer(win, buf, context)
+local function setupRenderer(buf, context)
   local function onBufferChange(params)
     render({ buf = params.buf }, context)
-
-    if context.state.isFirstRender then
-      context.state.isFirstRender = false
-      vim.api.nvim_win_set_cursor(win, { 3, 0 })
-    end
   end
 
   vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
@@ -57,7 +52,11 @@ end
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
   setupKeymap(win, buf, context)
-  setupRenderer(win, buf, context)
+  setupRenderer(buf, context)
+  vim.schedule(function()
+    render({ buf = buf }, context)
+    vim.api.nvim_win_set_cursor(win, { 3, 0 })
+  end)
 
   vim.api.nvim_win_set_buf(win, buf)
   vim.cmd('startinsert!')
