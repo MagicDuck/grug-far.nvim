@@ -37,7 +37,7 @@ local check_binary_installed = function(package)
 end
 
 function M.check()
-  vim.health.report_start("Checking external dependencies")
+  vim.health.start("Checking external dependencies")
 
   for _, dep in pairs(dependencies) do
     for _, package in ipairs(dep.package) do
@@ -45,10 +45,10 @@ function M.check()
       if not installed then
         local err_msg = ("%s: not found."):format(package.name)
         if package.optional then
-          vim.health.report_warn(("%s %s"):format(err_msg,
+          vim.health.warn(("%s %s"):format(err_msg,
             ("Install %s for extended capabilities"):format(package.url)))
         else
-          vim.health.report_error(
+          vim.health.error(
             ("%s %s"):format(
               err_msg,
               ("`GrugFar` will not function without %s installed."):format(package.url)
@@ -56,7 +56,7 @@ function M.check()
           )
         end
       else
-        vim.health.report_ok(("%s: found %s"):format(package.name, version))
+        vim.health.ok(("%s: found %s"):format(package.name, version))
       end
     end
   end
