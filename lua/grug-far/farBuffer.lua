@@ -60,7 +60,9 @@ end
 
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
+  vim.api.nvim_buf_set_option(buf, 'filetype', 'grug-far')
   bufCount = bufCount
+
   setupKeymap(buf, context)
   setupRenderer(buf, context)
   vim.schedule(function()
