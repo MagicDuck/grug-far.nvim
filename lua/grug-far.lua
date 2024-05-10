@@ -46,6 +46,18 @@ local function createWindow(context)
   return win
 end
 
+local function setupCleanup(buf, context)
+  local function onBufDelete()
+    vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
+    vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
+  end
+
+  vim.api.nvim_create_autocmd({ 'BufDelete' }, {
+    buffer = buf,
+    callback = onBufDelete
+  })
+end
+
 function M.grug_far()
   if not is_configured() then
     print('Please call require("grug-far").setup(...) before executing require("grug-far").grug_far(...)!')
@@ -54,7 +66,8 @@ function M.grug_far()
 
   local context = createContext()
   local win = createWindow(context)
-  farBuffer.createBuffer(win, context)
+  local buf = farBuffer.createBuffer(win, context)
+  setupCleanup(buf, context)
 end
 
 return M
