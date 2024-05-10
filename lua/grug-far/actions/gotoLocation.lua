@@ -1,11 +1,10 @@
 local resultsList = require('grug-far/render/resultsList')
 
 local function gotoLocation(params)
-  local win = params.win
   local buf = params.buf
   local context = params.context
 
-  local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
+  local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
   local location = resultsList.getResultLocation(cursor_row - 1, buf, context)
   if not location then
     return

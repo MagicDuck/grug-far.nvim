@@ -84,7 +84,6 @@ in order to save on resources as some search results can be quite beefy in size.
 - [lazy.nvim][lazy]: used their beautiful `README.md` as a template
 - [plugin-template.nvim][neovim-plugin-template]: super handy template, this plugin is based on it! 
 
-[help]: doc/my-awesome-plugin.txt
 [opts]: lua/grug-far/opts.lua
 [highlights]: lua/grug-far/highlights.lua
 [lazy]: https://github.com/folke/lazy.nvim

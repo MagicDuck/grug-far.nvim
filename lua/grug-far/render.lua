@@ -1,7 +1,6 @@
 local renderHelp = require('grug-far/render/help')
 local renderInput = require('grug-far/render/input')
 local renderResults = require('grug-far/render/results')
-local utils = require('grug-far/utils')
 
 local function ensureTopEmptyLines(buf, count)
   local lines = vim.api.nvim_buf_get_lines(buf, 0, count, false)
@@ -43,9 +42,6 @@ local function render(params, context)
     label = "Search:",
     placeholder = placeholders.enabled and placeholders.search
   }, context)
-
-  vim.api.nvim_buf_set_name(buf,
-    'Grug FAR' .. utils.strEllideAfter(inputs.search, context.options.maxSearchCharsInTitles, ': '))
 
   lineNr = lineNr + 1
   inputs.replacement = renderInput({
