@@ -77,6 +77,9 @@ be visible in the buffers list if you need to toggle to them. When you are done,
 to close the buffer with the configured keybinding (see Configuration section above) or just `:bd`
 in order to save on resources as some search results can be quite beefy in size.
 
+Note that *grug-far.nvim* buffers will have `filetype=grug-far` if you need filter/exclude them in
+any situations.
+
 ## 📦 Similar Plugins / Inspiration
 
 - [nvim-spectre][spectre]: the OG find and replace in a buffer plugin, great inspiration!
