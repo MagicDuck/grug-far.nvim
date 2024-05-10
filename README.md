@@ -82,6 +82,7 @@ in order to save on resources as some search results can be quite beefy in size.
 - [nvim-spectre][spectre]
 - [telescope.nvim][telescope]: lifted `rg` healthcheck from there :P
 - [lazy.nvim][lazy]: used their beautiful `README.md` as a template
+- [plugin-template.nvim][neovim-plugin-template]: super handy template, this plugin is based on it! 
 
 [help]: doc/my-awesome-plugin.txt
 [opts]: lua/grug-far/opts.lua
@@ -90,3 +91,4 @@ in order to save on resources as some search results can be quite beefy in size.
 [spectre]: https://github.com/nvim-pack/nvim-spectre
 [telescope]: https://github.com/nvim-telescope/telescope.nvim
 [blacklistedReplaceFlags]: lua/grug-far/rg/blacklistedReplaceFlags.lua 
+[neovim-plugin-template]: https://github.com/m00qek/plugin-template.nvim/tree/main
