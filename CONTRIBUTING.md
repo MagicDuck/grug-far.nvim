@@ -44,15 +44,6 @@ $ make test SPEC=spec/grug-far/my_cool_module_spec.lua
 $ make watch SPEC=spec/grug-far/my_cool_module_spec.lua
 ```
 
-## Doc generation
-Needs [lemmy-help][lemmy-help]
-```bash
-cargo install lemmy-help --features=cli
-```
-```bash
-lemmy-help lua/grug-far.lua lua/grug-far/opts.lua > doc/grug-far-generated.txt
-```
-
 ## Github actions
 
 An Action will run all the tests and the linter on every commit on the main
@@ -69,4 +60,3 @@ branch and also on Pull Request. Tests will be run using
 [integration-badge]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml/badge.svg
 [integration-runs]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml
 [neovim-test-versions]: .github/workflows/integration.yml#L17
-[lemmy-help]: https://github.com/numToStr/lemmy-help/tree/master

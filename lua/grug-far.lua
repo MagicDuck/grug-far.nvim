@@ -2,10 +2,6 @@ local opts = require("grug-far/opts")
 local highlights = require("grug-far/highlights")
 local farBuffer = require("grug-far/farBuffer")
 
----@brief [[
---- grug-far adds search/replace using rg functionality to neovim.
----@brief ]]
-
 local M = {}
 
 local options = nil
