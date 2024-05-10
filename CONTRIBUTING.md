@@ -60,4 +60,3 @@ branch and also on Pull Request. Tests will be run using
 [integration-badge]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml/badge.svg
 [integration-runs]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml
 [neovim-test-versions]: .github/workflows/integration.yml#L17
-[help]: doc/my-awesome-plugin.txt

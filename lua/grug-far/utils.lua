@@ -46,7 +46,7 @@ function M.strFindLast(str, substr)
 end
 
 function M.strEllideAfter(str, n, prefix)
-  if n == 0 then
+  if n == 0 or #str == 0 then
     return ''
   end
   return (prefix or '') .. (#str > n and string.sub(str, 1, n) .. '...' or str)

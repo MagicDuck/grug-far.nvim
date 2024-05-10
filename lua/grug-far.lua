@@ -17,8 +17,11 @@ local function is_configured()
   return options ~= nil
 end
 
+local contextCount = 0
 local function createContext()
+  contextCount = contextCount + 1
   return {
+    count = contextCount,
     options = options,
     namespace = namespace,
     locationsNamespace = vim.api.nvim_create_namespace(''),
