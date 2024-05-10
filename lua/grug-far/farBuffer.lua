@@ -39,7 +39,6 @@ local function setupKeymap(buf, context)
   end
 end
 
-local bufCount = 0
 local function updateBufName(buf, context)
   vim.api.nvim_buf_set_name(buf,
     'Grug FAR - ' ..
@@ -61,7 +60,7 @@ end
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
   vim.api.nvim_buf_set_option(buf, 'filetype', 'grug-far')
-  bufCount = bufCount
+  vim.api.nvim_win_set_buf(win, buf)
 
   setupKeymap(buf, context)
   setupRenderer(buf, context)
@@ -70,10 +69,8 @@ function M.createBuffer(win, context)
     updateBufName(buf, context)
 
     vim.api.nvim_win_set_cursor(win, { 3, 0 })
+    vim.cmd('startinsert!')
   end)
-
-  vim.api.nvim_win_set_buf(win, buf)
-  vim.cmd('startinsert!')
 
   return buf
 end
