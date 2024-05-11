@@ -59,8 +59,8 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags)
     table.insert(args, '--replace=' .. inputs.replacement)
   end
 
-  if #inputs.filesGlob > 0 then
-    table.insert(args, '--glob=' .. inputs.filesGlob)
+  if #inputs.filesFilter > 0 then
+    table.insert(args, '--glob=' .. inputs.filesFilter)
   end
 
   for i = 1, #extraArgs do

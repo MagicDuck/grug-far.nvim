@@ -53,13 +53,13 @@ local function render(buf, context)
   }, context)
 
   lineNr = lineNr + 1
-  inputs.filesGlob = vim.trim(renderInput({
+  inputs.filesFilter = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
     extmarkName = "files_glob",
     icon = 'filesFilterInput',
     label = "Files Filter:",
-    placeholder = placeholders.enabled and placeholders.filesGlob
+    placeholder = placeholders.enabled and placeholders.filesFilter
   }, context))
 
   lineNr = lineNr + 1

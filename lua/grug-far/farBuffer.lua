@@ -54,7 +54,7 @@ function M.createBuffer(win, context)
   setupKeymap(buf, context)
 
   local debouncedSearch = utils.debounce(search, context.options.debounceMs)
-  local function debouncedSearchOnChange(buf, context)
+  local function debouncedSearchOnChange()
     -- only re-issue search when inputs have changed
     local state = context.state
     if vim.deep_equal(state.inputs, state.lastInputs) then
@@ -68,7 +68,7 @@ function M.createBuffer(win, context)
   local function handleBufferChange()
     render(buf, context)
     updateBufName(buf, context)
-    debouncedSearchOnChange(buf, context)
+    debouncedSearchOnChange()
   end
 
   -- set up re-render on change
@@ -79,12 +79,25 @@ function M.createBuffer(win, context)
 
   -- do the initial render
   vim.schedule(function()
-    handleBufferChange()
+    render(buf, context)
+
+    local prefills = context.options.prefills
+    vim.api.nvim_buf_set_lines(buf, 2, 6, true, {
+      prefills.search,
+      prefills.replacement,
+      prefills.filesFilter,
+      prefills.flags,
+    })
+
+    updateBufName(buf, context)
 
     vim.api.nvim_win_set_cursor(win, { context.options.startCursorRow, 0 })
     if context.options.startInInsertMode then
       vim.cmd('startinsert!')
     end
+
+    -- launch a search in case there are prefills
+    debouncedSearchOnChange()
   end)
 
   return buf
