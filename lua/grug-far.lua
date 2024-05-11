@@ -4,21 +4,21 @@ local farBuffer = require("grug-far/farBuffer")
 
 local M = {}
 
-local options = nil
+local globalOptions = nil
 local namespace = nil
-function M.setup(user_opts)
-  options = opts.with_defaults(user_opts or {})
+function M.setup(options)
+  globalOptions = opts.with_defaults(options or {}, opts.defaultOptions)
   namespace = vim.api.nvim_create_namespace('grug-far')
   highlights.setup()
   vim.api.nvim_create_user_command("GrugFar", M.grug_far, {})
 end
 
 local function is_configured()
-  return options ~= nil
+  return globalOptions ~= nil
 end
 
 local contextCount = 0
-local function createContext()
+local function createContext(options)
   contextCount = contextCount + 1
   return {
     count = contextCount,
@@ -57,13 +57,13 @@ local function setupCleanup(buf, context)
   })
 end
 
-function M.grug_far()
+function M.grug_far(options)
   if not is_configured() then
     print('Please call require("grug-far").setup(...) before executing require("grug-far").grug_far(...)!')
     return
   end
 
-  local context = createContext()
+  local context = createContext(opts.with_defaults(options or {}, globalOptions))
   local win = createWindow(context)
   local buf = farBuffer.createBuffer(win, context)
   setupCleanup(buf, context)
