@@ -159,6 +159,8 @@ local function syncLocations(params)
     state.actionMessage = getActionMessage(errorMessage)
     resultsList.setError(buf, context, errorMessage)
     renderResultsHeader(buf, context)
+
+    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.ERROR)
   end
 
   local on_finish_all = vim.schedule_wrap(function(status, errorMessage, customActionMessage)
@@ -175,6 +177,8 @@ local function syncLocations(params)
     state.actionMessage = status == nil and customActionMessage or
       getActionMessage(nil, changesCount, changesCount, time)
     renderResultsHeader(buf, context)
+
+    vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
   end)
 
   syncChangedLines({
