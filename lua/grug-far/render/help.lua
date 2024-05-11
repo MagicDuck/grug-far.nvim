@@ -18,7 +18,7 @@ local function renderHelp(params, context)
           vim.fn.join(vim.tbl_filter(function(m) return m end, {
             printMapping('Replace: ', keymaps.replace),
             printMapping('Quickfix List: ', keymaps.qflist),
-            printMapping('Goto Location: ', keymaps.gotoLocation),
+            printMapping('Goto Location: n_', keymaps.gotoLocation),
             printMapping('Sync Edits: ', keymaps.syncLocations),
             printMapping('Close: ', keymaps.close),
           }), ' | '),
