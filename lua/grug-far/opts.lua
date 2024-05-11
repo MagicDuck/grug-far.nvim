@@ -37,7 +37,7 @@ M.defaultOptions = {
     replace = '<C-enter>',
     qflist = '<C-q>',
     gotoLocation = '<enter>',
-    syncLocations = '=',
+    syncLocations = '<C-i>',
     close = '<C-x>'
   },
 
