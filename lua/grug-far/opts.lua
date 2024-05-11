@@ -28,6 +28,9 @@ local defaultOptions = {
   -- set to false for normal mode
   startInInsertMode = true,
 
+  -- row in the window to position the cursor at at start
+  startCursorRow = { 3, 0 },
+
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' to unset. Unset mappings will be removed from the help header
   keymaps = {
@@ -77,8 +80,8 @@ local defaultOptions = {
 
 function M.with_defaults(options)
   local newOptions = vim.tbl_deep_extend('force', defaultOptions, options)
-  newOptions.icons.resultsStatusProgressSeq = options.icons and options.icons.resultsStatusProgressSeq or
-    defaultOptions.icons.resultsStatusProgressSeq
+  -- special cases where option is a table that should be overriden as a whole
+  newOptions.spinnerStates = options.spinnerStates or defaultOptions.spinnerStates
 
   return newOptions
 end
