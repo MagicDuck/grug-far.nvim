@@ -105,6 +105,7 @@ local function syncLocations(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
+  local startTime = uv.now()
 
   local extmarks = vim.api.nvim_buf_get_extmarks(0, context.locationsNamespace, 0, -1, {})
   local changedLines = {}
@@ -128,12 +129,14 @@ local function syncLocations(params)
   end
 
   if #changedLines == 0 then
+    state.actionMessage = 'no changes to sync!'
+    renderResultsHeader(buf, context)
+    vim.notify('grug-far: no changes to sync!', vim.log.levels.INFO)
     return
   end
 
   local changesCount = 0
   local changesTotal = #changedLines
-  local startTime = uv.now()
 
   -- initiate sync in UI
   vim.schedule(function()
