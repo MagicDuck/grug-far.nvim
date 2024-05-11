@@ -1,6 +1,6 @@
 local M = {}
 
-local defaultOptions = {
+M.defaultOptions = {
   -- debounce milliseconds for issuing search while user is typing
   -- prevents excesive searching
   debounceMs = 500,
@@ -65,7 +65,7 @@ local defaultOptions = {
     resultsActionMessage = '  '
   },
 
-  -- placeholders to show in inpuut areas when they are empty
+  -- placeholders to show in input areas when they are empty
   -- set individul ones to '' to disable, or set enabled = false for complete disable
   placeholders = {
     -- whether to show placeholders
@@ -75,13 +75,27 @@ local defaultOptions = {
     replacement = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
     filesGlob = "ex: *.lua     *.{css,js}    **/docs/*.md",
     flags = "ex: --help --hidden (-.) --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
+  },
+
+  -- strings to auto-fill in each input area at start
+  -- those are not necessarily useful as global defaults but quite useful as overrides
+  -- when lauching through the lua api. For example, this is how you would lauch grug-far.nvim
+  -- with the currennt word under the curos as the search string
+  --
+  -- require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
+  --
+  prefills = {
+    search = "",
+    replacement = "",
+    filesGlob = "",
+    flags = ""
   }
 }
 
-function M.with_defaults(options)
-  local newOptions = vim.tbl_deep_extend('force', defaultOptions, options)
+function M.with_defaults(options, defaults)
+  local newOptions = vim.tbl_deep_extend('force', defaults, options)
   -- special cases where option is a table that should be overriden as a whole
-  newOptions.spinnerStates = options.spinnerStates or defaultOptions.spinnerStates
+  newOptions.spinnerStates = options.spinnerStates or defaults.spinnerStates
 
   return newOptions
 end
