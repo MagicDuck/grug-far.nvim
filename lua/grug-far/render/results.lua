@@ -1,6 +1,4 @@
-local utils = require('grug-far/utils')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
-local search = require('grug-far/actions/search')
 
 -- ensure a minimum line number so that we don't overlap inputs
 local function ensureMinLineNr(buf, context, minLineNr)
