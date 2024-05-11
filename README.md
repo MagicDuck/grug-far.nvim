@@ -77,7 +77,7 @@ different searches, which will reflect in each buffer's title (configurable). Th
 be visible in the buffers list if you need to toggle to them.
 
 It is also possible to make edits to lines in the results section and have them synced to their
-originating file lines. Simply make your changes on multiple lines and press `<C-i>` (by default).
+originating file lines. Simply make your changes on multiple lines and press `<C-s>` (by default).
 
 When you are done, it is recommended to close the buffer with the configured keybinding 
 (see Configuration section above) or just `:bd` in order to save on resources as some search results
