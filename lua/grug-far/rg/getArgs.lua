@@ -52,7 +52,6 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags)
   table.insert(args, '--heading')
   table.insert(args, '--column')
   table.insert(args, '--field-match-separator=:')
-  table.insert(args, '--hyperlink-format=none')
   table.insert(args, '--block-buffered')
 
   if #inputs.replacement > 0 then
