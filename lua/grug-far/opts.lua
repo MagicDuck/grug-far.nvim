@@ -29,7 +29,7 @@ M.defaultOptions = {
   startInInsertMode = true,
 
   -- row in the window to position the cursor at at start
-  startCursorRow = { 3, 0 },
+  startCursorRow = 3,
 
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' to unset. Unset mappings will be removed from the help header

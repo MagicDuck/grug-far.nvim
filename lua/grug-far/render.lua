@@ -24,8 +24,7 @@ end
 local TOP_EMPTY_LINES = 2
 local BEFORE_RESULTS_LINES = 2
 
-local function render(params, context)
-  local buf = params.buf
+local function render(buf, context)
   local inputs = context.state.inputs
   local placeholders = context.options.placeholders
 
@@ -77,7 +76,6 @@ local function render(params, context)
   renderResults({
     buf = buf,
     minLineNr = lineNr,
-    inputs = inputs
   }, context)
 end
 
