@@ -33,12 +33,19 @@ M.defaultOptions = {
 
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' to unset. Unset mappings will be removed from the help header
+  -- They are all mappings for both insert and normal mode except for gotoLocation
+  -- which is normal mode only. The distinction is mostly due to how they tend to
+  -- be used and due to my brain short-circuiting while writing this :P.
+  -- Would be good to improve this in the future if there is enough of a need.
   keymaps = {
+    -- normal and insert mode
     replace = '<C-enter>',
     qflist = '<C-q>',
-    gotoLocation = '<enter>',
     syncLocations = '<C-i>',
-    close = '<C-x>'
+    close = '<C-x>',
+
+    -- normal mode only
+    gotoLocation = '<enter>',
   },
 
   -- separator between inputs and results, default depends on nerdfont
