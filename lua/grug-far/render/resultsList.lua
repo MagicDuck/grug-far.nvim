@@ -51,6 +51,8 @@ function M.appendResultsChunk(buf, context, data)
     elseif hl == 'GrugFarResultsLineColumn' and lastLocation and not lastLocation.col then
       -- omit ending ':', use first match on that line
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
+      lastLocation.rgResultLine = line
+      lastLocation.rgColEndIndex = highlight.end_col
     end
   end
 end

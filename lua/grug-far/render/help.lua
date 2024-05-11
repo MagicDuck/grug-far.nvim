@@ -19,6 +19,7 @@ local function renderHelp(params, context)
             printMapping('Replace: ', keymaps.replace),
             printMapping('Quickfix List: ', keymaps.qflist),
             printMapping('Goto Location: ', keymaps.gotoLocation),
+            printMapping('Sync Locations: ', keymaps.syncLocations),
             printMapping('Close: ', keymaps.close),
           }), ' | '),
 
