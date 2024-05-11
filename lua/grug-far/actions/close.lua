@@ -1,5 +1,5 @@
 local function close()
-  vim.cmd('bdelete')
+  vim.cmd('stopinsert | bdelete')
 end
 
 return close
