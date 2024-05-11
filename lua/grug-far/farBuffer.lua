@@ -52,11 +52,34 @@ local function updateBufName(buf, context)
     context.count .. utils.strEllideAfter(context.state.inputs.search, context.options.maxSearchCharsInTitles, ': '))
 end
 
+local function setupGlobalOptOverrides(buf)
+  local originalBackspaceOpt = vim.opt.backspace:get()
+  local function onBufEnter()
+    -- this prevents backspacing over eol when clearing an input line
+    -- for a better user experience
+    originalBackspaceOpt = vim.opt.backspace:get()
+    vim.opt.backspace:remove('eol')
+  end
+  local function onBufLeave()
+    vim.opt.backspace = originalBackspaceOpt
+  end
+
+  vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+    buffer = buf,
+    callback = onBufEnter
+  })
+  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    buffer = buf,
+    callback = onBufLeave
+  })
+end
+
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
   vim.api.nvim_buf_set_option(buf, 'filetype', 'grug-far')
   vim.api.nvim_win_set_buf(win, buf)
 
+  setupGlobalOptOverrides(buf)
   setupKeymap(buf, context)
 
   local debouncedSearch = utils.debounce(search, context.options.debounceMs)
