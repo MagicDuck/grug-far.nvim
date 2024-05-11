@@ -27,7 +27,6 @@ local function createContext()
     locationsNamespace = vim.api.nvim_create_namespace(''),
     extmarkIds = {},
     state = {
-      isFirstRender = true,
       inputs = {}
     }
   }
