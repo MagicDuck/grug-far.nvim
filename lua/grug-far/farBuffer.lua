@@ -20,7 +20,6 @@ end
 local function setupKeymap(buf, context)
   local keymaps = context.options.keymaps
   if #keymaps.replace > 0 then
-    -- TODO (sbadragan): should modes be configurable?
     setBufKeymap(buf, 'ni', 'Grug Far: apply replacements', keymaps.replace, function()
       replace({ buf = buf, context = context })
     end)
