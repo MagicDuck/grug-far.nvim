@@ -85,7 +85,7 @@ local function getActionMessage(err, count, total, time)
     return msg .. 'failed!'
   end
 
-  if count == total and total ~= 0 then
+  if count == total and total ~= 0 and time then
     return msg .. 'completed in ' .. time .. 'ms!'
   end
 
