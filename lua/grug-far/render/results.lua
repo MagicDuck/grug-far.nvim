@@ -22,22 +22,10 @@ end
 local function renderResults(params, context)
   local buf = params.buf
   local minLineNr = params.minLineNr
-  local inputs = params.inputs
-  local state = context.state
 
   context.state.headerRow = ensureMinLineNr(buf, context, minLineNr)
 
   renderResultsHeader(buf, context)
-
-  -- only re-issue search when inputs have changed
-  if vim.deep_equal(inputs, state.lastInputs) then
-    return
-  end
-  state.lastInputs = vim.deepcopy(inputs)
-
-  state.debouncedSearch = state.debouncedSearch or
-    utils.debounce(search, context.options.debounceMs)
-  state.debouncedSearch({ buf = buf, context = context })
 end
 
 return renderResults

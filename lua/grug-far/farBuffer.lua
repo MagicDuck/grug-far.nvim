@@ -1,4 +1,5 @@
 local render = require("grug-far/render")
+local search = require('grug-far/actions/search')
 local replace = require("grug-far/actions/replace")
 local qflist = require("grug-far/actions/qflist")
 local gotoLocation = require("grug-far/actions/gotoLocation")
@@ -45,28 +46,40 @@ local function updateBufName(buf, context)
     context.count .. utils.strEllideAfter(context.state.inputs.search, context.options.maxSearchCharsInTitles, ': '))
 end
 
-local function setupRenderer(buf, context)
-  local function onBufferChange(params)
-    render({ buf = params.buf }, context)
-    updateBufName(buf, context)
-  end
-
-  vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
-    buffer = buf,
-    callback = onBufferChange
-  })
-end
-
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
   vim.api.nvim_buf_set_option(buf, 'filetype', 'grug-far')
   vim.api.nvim_win_set_buf(win, buf)
 
   setupKeymap(buf, context)
-  setupRenderer(buf, context)
-  vim.schedule(function()
-    render({ buf = buf }, context)
+
+  local debouncedSearch = utils.debounce(search, context.options.debounceMs)
+  local function debouncedSearchOnChange(buf, context)
+    -- only re-issue search when inputs have changed
+    local state = context.state
+    if vim.deep_equal(state.inputs, state.lastInputs) then
+      return
+    end
+
+    state.lastInputs = vim.deepcopy(state.inputs)
+    debouncedSearch({ buf = buf, context = context })
+  end
+
+  local function handleBufferChange()
+    render(buf, context)
     updateBufName(buf, context)
+    debouncedSearchOnChange(buf, context)
+  end
+
+  -- set up re-render on change
+  vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
+    buffer = buf,
+    callback = handleBufferChange
+  })
+
+  -- do the initial render
+  vim.schedule(function()
+    handleBufferChange()
 
     vim.api.nvim_win_set_cursor(win, { context.options.startCursorRow, 0 })
     if context.options.startInInsertMode then
