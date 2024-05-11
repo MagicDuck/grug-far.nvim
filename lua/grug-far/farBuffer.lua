@@ -52,7 +52,7 @@ local function updateBufName(buf, context)
     context.count .. utils.strEllideAfter(context.state.inputs.search, context.options.maxSearchCharsInTitles, ': '))
 end
 
-local function setupGlobalOptOverrides(buf)
+local function setupGlobalOptOverrides(buf, context)
   local originalBackspaceOpt = vim.opt.backspace:get()
   local function onBufEnter()
     -- this prevents backspacing over eol when clearing an input line
@@ -65,10 +65,12 @@ local function setupGlobalOptOverrides(buf)
   end
 
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+    group = context.augroup,
     buffer = buf,
     callback = onBufEnter
   })
   vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    group = context.augroup,
     buffer = buf,
     callback = onBufLeave
   })
@@ -79,7 +81,7 @@ function M.createBuffer(win, context)
   vim.api.nvim_buf_set_option(buf, 'filetype', 'grug-far')
   vim.api.nvim_win_set_buf(win, buf)
 
-  setupGlobalOptOverrides(buf)
+  setupGlobalOptOverrides(buf, context)
   setupKeymap(buf, context)
 
   local debouncedSearch = utils.debounce(search, context.options.debounceMs)
@@ -102,6 +104,7 @@ function M.createBuffer(win, context)
 
   -- set up re-render on change
   vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
+    group = context.augroup,
     buffer = buf,
     callback = handleBufferChange
   })
