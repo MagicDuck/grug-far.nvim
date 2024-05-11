@@ -73,27 +73,33 @@ M.defaultOptions = {
 
     search = "ex: foo    foo([a-z0-9]*)    fun\\(",
     replacement = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
-    filesGlob = "ex: *.lua     *.{css,js}    **/docs/*.md",
-    flags = "ex: --help --hidden (-.) --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
+    filesFilter = "ex: *.lua     *.{css,js}    **/docs/*.md",
+    flags = "ex: --help --hidden (-.) <relative-file-path> --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
   },
 
   -- strings to auto-fill in each input area at start
   -- those are not necessarily useful as global defaults but quite useful as overrides
   -- when lauching through the lua api. For example, this is how you would lauch grug-far.nvim
-  -- with the currennt word under the curos as the search string
+  -- with the current word under the cursor as the search string
   --
   -- require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
   --
   prefills = {
     search = "",
     replacement = "",
-    filesGlob = "",
+    filesFilter = "",
     flags = ""
   }
 }
 
 function M.with_defaults(options, defaults)
   local newOptions = vim.tbl_deep_extend('force', defaults, options)
+
+  -- deprecated prop names
+  newOptions.placeholders.filesFilter = (options.placeholders and
+      (options.placeholders.filesFilter or options.placeholders.filesGlob))
+    or defaults.placeholders.filesFilter
+
   -- special cases where option is a table that should be overriden as a whole
   newOptions.spinnerStates = options.spinnerStates or defaults.spinnerStates
 

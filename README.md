@@ -80,6 +80,28 @@ in order to save on resources as some search results can be quite beefy in size.
 Note that *grug-far.nvim* buffers will have `filetype=grug-far` if you need filter/exclude them in
 any situations.
 
+### ⚒️L Lua API
+
+For more control, you can programmatically open a grug-far buffer like so:
+```sh
+require('grug-far').grug_far(opts)
+```
+where `opts` will be merged with and override the global plugin options configured at setup time.
+
+See here for all the available [options][opts] 
+
+### 🥪 Cookbook
+
+#### Launch with the current word under the cursor as the search string
+```lua
+require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
+```
+
+#### Launch with the current file as a flag, which limits search/replace to it
+```lua
+require('grug-far').grug_far({ prefills = { flags = vim.fn.expand("%") } })
+```
+
 ## 📦 Similar Plugins / Inspiration
 
 - [nvim-spectre][spectre]: the OG find and replace in a buffer plugin, great inspiration!

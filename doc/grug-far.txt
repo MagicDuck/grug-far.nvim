@@ -34,10 +34,20 @@ show up in your buffers list.
 4. API                                                 *grug-far-api*
 
 
-grug-far.setup({config})                  *grug-far.setup()*
+require('grug-far').setup({config})                  *grug-far.setup()*
         Configures this plugin. Currently supported configuration options
         are linked from the plugin's README page:
         https://github.com/MagicDuck/grug-far.nvim/tree/main?tab=readme-ov-file#%EF%B8%8F-configuration
+
+        Parameters: ~
+            {config}(required, table) Table of values; keys as described
+                above. Accept defaults by omitting the relevant key.
+
+require('grug-far').grug_far({config})                  *grug-far.setup()*
+        Launches grug-far, where the given config overrides the global plugin
+	config that was passed to require('grug-far).setup(...). 
+        Currently supported configuration options are the same as the global
+	plugin config options linked above.
 
         Parameters: ~
             {config}(required, table) Table of values; keys as described
