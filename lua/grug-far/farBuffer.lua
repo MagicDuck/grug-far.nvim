@@ -3,6 +3,7 @@ local search = require('grug-far/actions/search')
 local replace = require("grug-far/actions/replace")
 local qflist = require("grug-far/actions/qflist")
 local gotoLocation = require("grug-far/actions/gotoLocation")
+local syncLocations = require("grug-far/actions/syncLocations")
 local close = require("grug-far/actions/close")
 local utils = require('grug-far/utils')
 
@@ -31,6 +32,11 @@ local function setupKeymap(buf, context)
   if #keymaps.gotoLocation > 0 then
     setBufKeymap(buf, 'n', 'Grug Far: go to location', keymaps.gotoLocation, function()
       gotoLocation({ buf = buf, context = context })
+    end)
+  end
+  if #keymaps.syncLocations > 0 then
+    setBufKeymap(buf, 'n', 'Grug Far: sync edited results text to locations', keymaps.syncLocations, function()
+      syncLocations({ buf = buf, context = context })
     end)
   end
   if #keymaps.close > 0 then
