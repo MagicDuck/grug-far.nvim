@@ -80,7 +80,7 @@ in order to save on resources as some search results can be quite beefy in size.
 Note that *grug-far.nvim* buffers will have `filetype=grug-far` if you need filter/exclude them in
 any situations.
 
-### ⚒️L Lua API
+### ⚒️  Lua API
 
 For more control, you can programmatically open a grug-far buffer like so:
 ```sh
