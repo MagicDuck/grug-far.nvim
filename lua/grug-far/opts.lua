@@ -24,6 +24,10 @@ local defaultOptions = {
   -- zero disables showing it
   maxSearchCharsInTitles = 30,
 
+  -- whether to start in insert mode,
+  -- set to false for normal mode
+  startInInsertMode = true,
+
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' to unset. Unset mappings will be removed from the help header
   keymaps = {

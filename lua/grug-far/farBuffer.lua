@@ -69,7 +69,9 @@ function M.createBuffer(win, context)
     updateBufName(buf, context)
 
     vim.api.nvim_win_set_cursor(win, { 3, 0 })
-    vim.cmd('startinsert!')
+    if context.options.startInInsertMode then
+      vim.cmd('startinsert!')
+    end
   end)
 
   return buf
