@@ -12,6 +12,7 @@ Grug find! Grug replace! Grug happy!
 - Replace using almost the **full power** of `rg`. Some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
 - Open search results in quickfix list
 - Goto file/line/column of match when pressing `<Enter>` in normal mode on lines in the results output (keybind configurable).
+- Inline edit matched result lines and sync them their originating file locations using a configurable keybinding.
 
 #### Searching:
 <img width="100%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/b664f77c-6e12-4a4a-a179-ada2da204039">
@@ -73,9 +74,14 @@ Ultimately it leaves the power in your hands, and in any case recovery is just a
 
 Search and replace to your heart's desire. You can create multiple such buffers with potentially
 different searches, which will reflect in each buffer's title (configurable). The buffers should
-be visible in the buffers list if you need to toggle to them. When you are done, it is recommended
-to close the buffer with the configured keybinding (see Configuration section above) or just `:bd`
-in order to save on resources as some search results can be quite beefy in size.
+be visible in the buffers list if you need to toggle to them.
+
+It is also possible to make edits to lines in the results section and have them synced to their
+originating file lines. Simply make your changes on multiple lines and press `<C-i>` (by default).
+
+When you are done, it is recommended to close the buffer with the configured keybinding 
+(see Configuration section above) or just `:bd` in order to save on resources as some search results
+can be quite beefy in size.
 
 Note that *grug-far.nvim* buffers will have `filetype=grug-far` if you need filter/exclude them in
 any situations.
