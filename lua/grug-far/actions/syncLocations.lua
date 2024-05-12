@@ -2,12 +2,11 @@ local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 local uv = vim.loop
 
-local function writeChangedLine(params)
-  local changedLine = params.changedLine
+-- note: this could use libuv and do async io if we find we need the perf boost
+local function writeChangedFile(params)
+  local changedFile = params.changedFile
   local on_done = params.on_done
-  local file = changedLine.location.filename
-  local lnum = changedLine.location.lnum
-  local newLine = changedLine.newLine
+  local file = changedFile.filename
 
   local file_handle = io.open(file, 'r')
   if not file_handle then
@@ -23,12 +22,18 @@ local function writeChangedLine(params)
   end
 
   local lines = vim.split(contents, "\n")
-  if not lines[lnum] then
-    on_done('File does not have edited row anymore: ' .. file)
-    return
-  end
 
-  lines[lnum] = newLine
+  local changedLines = changedFile.changedLines
+  for i = 1, #changedLines do
+    local changedLine = changedLines[i]
+    local lnum = changedLine.lnum
+    if not lines[lnum] then
+      on_done('File does not have edited row anymore: ' .. file)
+      return
+    end
+
+    lines[lnum] = changedLine.newLine
+  end
 
   file_handle = io.open(file, 'w+')
   if not file_handle then
@@ -50,15 +55,15 @@ end
 
 local function syncChangedLines(params)
   local context = params.context
-  local changedLines = vim.deepcopy(params.changedLines)
+  local changedFiles = vim.deepcopy(params.changedFiles)
   local reportProgress = params.reportProgress
   local on_finish = params.on_finish
   local engagedWorkers = 0
   local errorMessages = ''
 
-  local function syncNextChangedLine()
-    local changedLine = table.remove(changedLines)
-    if changedLine == nil then
+  local function syncNextChangedFile()
+    local changedFile = table.remove(changedFiles)
+    if changedFile == nil then
       if engagedWorkers == 0 then
         on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
       end
@@ -66,8 +71,8 @@ local function syncChangedLines(params)
     end
 
     engagedWorkers = engagedWorkers + 1
-    writeChangedLine({
-      changedLine = changedLine,
+    writeChangedFile({
+      changedFile = changedFile,
       on_done = vim.schedule_wrap(function(err)
         if err then
           -- optimistically try to continue
@@ -78,13 +83,13 @@ local function syncChangedLines(params)
           reportProgress()
         end
         engagedWorkers = engagedWorkers - 1
-        syncNextChangedLine()
+        syncNextChangedFile()
       end)
     })
   end
 
   for _ = 1, context.options.maxWorkers do
-    syncNextChangedLine()
+    syncNextChangedFile()
   end
 end
 
@@ -108,7 +113,7 @@ local function syncLocations(params)
   local startTime = uv.now()
 
   local extmarks = vim.api.nvim_buf_get_extmarks(0, context.locationsNamespace, 0, -1, {})
-  local changedLines = {}
+  local changedFilesByFilename = {}
   for i = 1, #extmarks do
     local markId, row = unpack(extmarks[i])
     local location = context.state.resultLocationByExtmarkId[markId]
@@ -118,8 +123,16 @@ local function syncLocations(params)
       if bufline ~= location.rgResultLine then
         local numColPrefix = string.sub(location.rgResultLine, 1, location.rgColEndIndex + 1)
         if vim.startswith(bufline, numColPrefix) then
-          table.insert(changedLines, {
-            location = location,
+          local changedFile = changedFilesByFilename[location.filename]
+          if not changedFile then
+            changedFilesByFilename[location.filename] = {
+              filename = location.filename,
+              changedLines = {}
+            }
+            changedFile = changedFilesByFilename[location.filename]
+          end
+          table.insert(changedFile.changedLines, {
+            lnum = location.lnum,
             -- note, skips (:)
             newLine = string.sub(bufline, location.rgColEndIndex + 2, -1)
           })
@@ -128,7 +141,12 @@ local function syncLocations(params)
     end
   end
 
-  if #changedLines == 0 then
+  local changedFiles = {}
+  for _, f in pairs(changedFilesByFilename) do
+    table.insert(changedFiles, f)
+  end
+
+  if #changedFiles == 0 then
     state.actionMessage = 'no changes to sync!'
     renderResultsHeader(buf, context)
     vim.notify('grug-far: no changes to sync!', vim.log.levels.INFO)
@@ -136,7 +154,7 @@ local function syncLocations(params)
   end
 
   local changesCount = 0
-  local changesTotal = #changedLines
+  local changesTotal = #changedFiles
 
   -- initiate sync in UI
   vim.schedule(function()
@@ -186,7 +204,7 @@ local function syncLocations(params)
 
   syncChangedLines({
     context = context,
-    changedLines = changedLines,
+    changedFiles = changedFiles,
     reportProgress = reportSyncedFilesUpdate,
     on_finish = on_finish_all
   })
