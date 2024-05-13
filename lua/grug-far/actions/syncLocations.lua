@@ -1,5 +1,6 @@
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
+local utils = require('grug-far/utils')
 local uv = vim.loop
 
 -- note: this could use libuv and do async io if we find we need the perf boost
@@ -106,11 +107,30 @@ local function getActionMessage(err, count, total, time)
   return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
+local function isMultilineSearchReplace(context)
+  local inputs = context.state.inputs
+  local multilineFlags = { '--multiline', '-U' }
+  if #inputs.flags > 0 then
+    for flag in string.gmatch(inputs.flags, "%S+") do
+      if utils.isBlacklistedFlag(flag, multilineFlags) then
+        return true
+      end
+    end
+  end
+end
+
+
 local function syncLocations(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
   local startTime = uv.now()
+  if isMultilineSearchReplace(context) then
+    state.actionMessage = 'sync disabled for multline search/replace!'
+    renderResultsHeader(buf, context)
+    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
+    return
+  end
 
   local extmarks = vim.api.nvim_buf_get_extmarks(0, context.locationsNamespace, 0, -1, {})
   local changedFilesByFilename = {}

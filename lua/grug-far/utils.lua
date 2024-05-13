@@ -52,4 +52,19 @@ function M.strEllideAfter(str, n, prefix)
   return (prefix or '') .. (#str > n and string.sub(str, 1, n) .. '...' or str)
 end
 
+function M.isBlacklistedFlag(flag, blacklistedFlags)
+  if not blacklistedFlags then
+    return false
+  end
+
+  for i = 1, #blacklistedFlags do
+    local badFlag = blacklistedFlags[i]
+    if flag == badFlag or vim.startswith(flag, badFlag .. ' ') or vim.startswith(flag, badFlag .. '=') then
+      return true
+    end
+  end
+
+  return false
+end
+
 return M
