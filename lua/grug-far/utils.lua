@@ -1,3 +1,5 @@
+local uv = vim.loop
+local is_win = vim.api.nvim_call_function("has", { "win32" }) == 1
 local M = {}
 
 local uv = vim.loop
@@ -66,5 +68,36 @@ function M.isBlacklistedFlag(flag, blacklistedFlags)
 
   return false
 end
+
+function M.readFileAsync(path, callback)
+  uv.fs_open(path, "r", uv.constants.O_RDONLY, function(err1, fd)
+    if err1 then return callback(err1) end
+    uv.fs_fstat(fd, function(err2, stat)
+      if err2 then return callback(err2) end
+      uv.fs_read(fd, stat.size, 0, function(err3, data)
+        if err3 then return callback(err3) end
+        uv.fs_close(fd, function(err4)
+          if err4 then return callback(err4) end
+          return callback(nil, data)
+        end)
+      end)
+    end)
+  end)
+end
+
+function M.overwriteFileAsync(path, data, callback)
+  uv.fs_open(path, "w+", uv.constants.O_RDWR + uv.constants.O_TRUNC, function(err1, fd)
+    if err1 then return callback(err1) end
+    uv.fs_write(fd, data, 0, function(err2)
+      if err2 then return callback(err2) end
+      uv.fs_close(fd, function(err3)
+        if err3 then return callback(err3) end
+        return callback(nil)
+      end)
+    end)
+  end)
+end
+
+M.eol = is_win and '\r\n' or '\n'
 
 return M

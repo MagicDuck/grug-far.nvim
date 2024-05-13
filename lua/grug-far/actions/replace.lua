@@ -2,6 +2,7 @@ local fetchFilesWithMatches = require('grug-far/rg/fetchFilesWithMatches')
 local fetchReplacedFileContent = require('grug-far/rg/fetchReplacedFileContent')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
+local utils = require('grug-far/utils')
 local uv = vim.loop
 
 local function replaceInFile(params)
@@ -16,26 +17,16 @@ local function replaceInFile(params)
     file = file,
     on_finish = function(status, errorMessage, content)
       if status == 'error' then
-        on_done(errorMessage)
-        return
+        return on_done(errorMessage)
       end
 
-      local file_handle = io.open(file, 'w+')
-      if not file_handle then
-        on_done('Could not open file: ' .. file)
-        return
-      end
+      utils.overwriteFileAsync(file, content, function(err)
+        if err then
+          return on_done('Could not write: ' .. file .. '\n' .. err)
+        end
 
-      local h = file_handle:write(content)
-      if not h then
-        on_done('Cound not write to file: ' .. file)
-        return
-      end
-
-      file_handle:flush()
-      file_handle:close()
-
-      on_done(nil)
+        on_done(nil)
+      end)
     end
   })
 end
