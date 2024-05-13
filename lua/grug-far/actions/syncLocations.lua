@@ -109,7 +109,7 @@ end
 
 local function isMultilineSearchReplace(context)
   local inputs = context.state.inputs
-  local multilineFlags = { '--multiline', '-U' }
+  local multilineFlags = { '--multiline', '-U', '--multiline-dotall' }
   if #inputs.flags > 0 then
     for flag in string.gmatch(inputs.flags, "%S+") do
       if utils.isBlacklistedFlag(flag, multilineFlags) then
