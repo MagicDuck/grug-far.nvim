@@ -9,49 +9,33 @@ local function writeChangedFile(params)
   local on_done = params.on_done
   local file = changedFile.filename
 
-  local file_handle = io.open(file, 'r')
-  if not file_handle then
-    on_done('Could not open file: ' .. file)
-    return
-  end
-
-  local contents = file_handle:read("*a")
-  file_handle:close()
-  if not contents then
-    on_done('Cound not read file: ' .. file)
-    return
-  end
-
-  local lines = vim.split(contents, "\n")
-
-  local changedLines = changedFile.changedLines
-  for i = 1, #changedLines do
-    local changedLine = changedLines[i]
-    local lnum = changedLine.lnum
-    if not lines[lnum] then
-      on_done('File does not have edited row anymore: ' .. file)
-      return
+  utils.readFileAsync(file, function(err1, contents)
+    if err1 then
+      return on_done('Could not read: ' .. file .. '\n' .. err1)
     end
 
-    lines[lnum] = changedLine.newLine
-  end
+    local lines = vim.split(contents, utils.eol)
 
-  file_handle = io.open(file, 'w+')
-  if not file_handle then
-    on_done('Could not open file: ' .. file)
-    return
-  end
+    local changedLines = changedFile.changedLines
+    for i = 1, #changedLines do
+      local changedLine = changedLines[i]
+      local lnum = changedLine.lnum
+      if not lines[lnum] then
+        return on_done('File does not have edited row anymore: ' .. file)
+      end
 
-  local h = file_handle:write(vim.fn.join(lines, "\n"))
-  if not h then
-    on_done('Cound not write to file: ' .. file)
-    return
-  end
+      lines[lnum] = changedLine.newLine
+    end
 
-  file_handle:flush()
-  file_handle:close()
+    local newContents = table.concat(lines, utils.eol)
+    utils.overwriteFileAsync(file, newContents, function(err2)
+      if err2 then
+        return on_done('Could not write: ' .. file .. '\n' .. err2)
+      end
 
-  on_done(nil)
+      on_done(nil)
+    end)
+  end)
 end
 
 local function syncChangedLines(params)
