@@ -74,6 +74,8 @@ local function setupGlobalOptOverrides(buf, context)
     buffer = buf,
     callback = onBufLeave
   })
+
+  onBufEnter()
 end
 
 function M.createBuffer(win, context)
