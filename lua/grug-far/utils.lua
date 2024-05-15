@@ -2,7 +2,6 @@ local uv = vim.loop
 local is_win = vim.api.nvim_call_function("has", { "win32" }) == 1
 local M = {}
 
-local uv = vim.loop
 function M.setTimeout(callback, timeout)
   local timer = uv.new_timer()
   timer:start(timeout, 0, function()
