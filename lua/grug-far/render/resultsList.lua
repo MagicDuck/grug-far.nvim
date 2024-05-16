@@ -37,14 +37,14 @@ function M.appendResultsChunk(buf, context, data)
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
 
       local markId = vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace,
-        lastline + highlight.start_line, 0, {})
+        lastline + highlight.start_line, 0, { right_gravity = true })
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl == 'GrugFarResultsLineNo' then
       -- omit ending ':'
       lastLocation = { filename = state.resultsLastFilename }
       table.insert(resultsLocations, lastLocation)
       local markId = vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace,
-        lastline + highlight.start_line, 0, {})
+        lastline + highlight.start_line, 0, { right_gravity = true })
       resultLocationByExtmarkId[markId] = lastLocation
 
       lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
@@ -58,6 +58,8 @@ function M.appendResultsChunk(buf, context, data)
 end
 
 -- note: row is zero-based
+-- additional note: sometimes there are mulltiple marks on the same row, like when lines are deleted
+-- but the first one should be the correct one.
 function M.getResultLocation(row, buf, context)
   local marks = vim.api.nvim_buf_get_extmarks(buf, context.locationsNamespace,
     { row, 0 }, { row, 0 }, { limit = 1 })
