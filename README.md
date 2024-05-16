@@ -95,6 +95,7 @@ This can be a nice way to refine a replacement in some situations if you want to
 or some particular matches.
 
 _Note:_ changing the `<line-number>:<column>:` prefix of result lines will disable sync 
+
 _Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
 
 ### Closing
