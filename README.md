@@ -66,23 +66,43 @@ Using [lazy.nvim][lazy]:
 
 ## 🚀 Usage
 
+### Opening and editing
 You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command. But possibly
 best to map a keybind to it for easy triggering.
 Since it's *just a buffer*, you can edit in it as you see fit. The UI will try to guide
 you along and recover gracefully if you do things like `ggVGd` (delete all lines).
 Ultimately it leaves the power in your hands, and in any case recovery is just a few `u` taps away.
 
-Search and replace to your heart's desire. You can create multiple such buffers with potentially
-different searches, which will reflect in each buffer's title (configurable). The buffers should
-be visible in the buffers list if you need to toggle to them.
+You can create multiple such buffers with potentially different searches, which will reflect in each buffer's title (configurable). 
+The buffers should be visible in the buffers list if you need to toggle to them.
 
-It is also possible to make edits to lines in the results section and have them synced to their
-originating file lines. Simply make your changes on multiple lines and press `<C-s>` (by default).
+### Searching and replacing
+Search and replace is accomplished by simply typing text on appropriately marked lines. Search will
+happen in a debounced manner as you type. In the options, you can also specify a minimum number of characters
+that one has to enter before search is triggered.
+You can also specify a files filter to narrow down your search and more ripgrep flags to refine it further.
+Error messages from ripgrep when entering invalid flags and so on are displayed to guide you along. 
 
+### Syncing results lines back to originating files
+It is possible to sync the text of the lines in the results area back to their originating files.
+This operation is either done on the current cursor line (`Sync Line`), or on all lines (`Sync All`). 
+
+A sync will happen only if a line has changed in some way compared to the source file, so if there's 
+either a replacement taking place or you have manually edited it.
+
+Deleting result lines will cause them to be excluded from being synced by `Sync All` action.
+This can be a nice way to refine a replacement in some situations if you want to exclude a particular file
+or some particular matches.
+
+_Note:_ changing the `<line-number>:<column>:` prefix of result lines will disable sync 
+_Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
+
+### Closing
 When you are done, it is recommended to close the buffer with the configured keybinding 
 (see Configuration section above) or just `:bd` in order to save on resources as some search results
 can be quite beefy in size.
 
+### Filetype
 Note that *grug-far.nvim* buffers will have `filetype=grug-far` if you need filter/exclude them in
 any situations.
 
