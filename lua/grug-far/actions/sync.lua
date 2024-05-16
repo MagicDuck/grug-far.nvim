@@ -202,7 +202,7 @@ local function sync(params)
   if #changedFiles == 0 then
     state.actionMessage = 'no changes to sync!'
     renderResultsHeader(buf, context)
-    vim.notify('grug-far: no changes to sync!', vim.log.levels.INFO)
+    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
     return
   end
 
