@@ -126,7 +126,6 @@ end
 -- note startRow / endRow are zero-based
 local function getChangedFiles(buf, context, startRow, endRow)
   local isReplacing = isDoingReplace(context)
-  N = context.locationsNamespace
   local all_extmarks = vim.api.nvim_buf_get_extmarks(0, context.locationsNamespace, { startRow, 0 }, { endRow, -1 }, {})
 
   -- filter out extraneous extmarks caused by deletion of lines
