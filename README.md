@@ -12,7 +12,7 @@ Grug find! Grug replace! Grug happy!
 - Replace using almost the **full power** of `rg`. Some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
 - Open search results in quickfix list
 - Goto file/line/column of match when pressing `<Enter>` in normal mode on lines in the results output (keybind configurable).
-- Inline edit matched result lines and sync them their originating file locations using a configurable keybinding.
+- Inline edit result lines and sync them back to their originating file locations using a configurable keybinding.
 
 #### Searching:
 <img width="100%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/b664f77c-6e12-4a4a-a179-ada2da204039">
