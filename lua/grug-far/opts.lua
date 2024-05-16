@@ -33,9 +33,8 @@ M.defaultOptions = {
 
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' or false to unset. Unset mappings will be removed from the help header
-  -- They are all mappings for both insert and normal mode except for gotoLocation
-  -- which is normal mode only. The distinction is mostly due to how they tend to
-  -- be used and in order to show something that is not too busy-looking in the help menu
+  -- you can specify either a string which is then used as the mapping for both normmal and insert mode
+  -- or you can specify a table of the form { [mode] = <lhs> } (ex: { i = '<C-enter>', n = '<leader>gr'})
   keymaps = {
     -- normal and insert mode
     replace = '<C-enter>',
@@ -45,7 +44,7 @@ M.defaultOptions = {
     close = '<C-x>',
 
     -- normal mode only
-    gotoLocation = '<enter>',
+    gotoLocation = { n = '<enter>' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -107,6 +106,23 @@ function M.with_defaults(options, defaults)
   newOptions.placeholders.filesFilter = (options.placeholders and
       (options.placeholders.filesFilter or options.placeholders.filesGlob))
     or defaults.placeholders.filesFilter
+
+  if options.placeholders and options.placeholders.filesGlob then
+    vim.notify(
+      'grug-far: options.placeholders.filesGlob deprecated. Please use options.placeholders.filesFilter instead!',
+      vim.log.levels.WARN)
+  end
+
+  -- normalize keymaps opts
+  for key, value in pairs(newOptions.keymaps) do
+    if not value or value == '' then
+      newOptions.keymaps[key] = nil
+    end
+
+    if type(value) == 'string' then
+      newOptions.keymaps[key] = { i = value, n = value }
+    end
+  end
 
   -- special cases where option is a table that should be overriden as a whole
   newOptions.spinnerStates = options.spinnerStates or defaults.spinnerStates

@@ -1,4 +1,5 @@
 local render = require("grug-far/render")
+local renderHelp = require("grug-far/render/help")
 local search = require('grug-far/actions/search')
 local replace = require("grug-far/actions/replace")
 local qflist = require("grug-far/actions/qflist")
@@ -10,46 +11,40 @@ local utils = require('grug-far/utils')
 
 local M = {}
 
-local function setBufKeymap(buf, modes, desc, lhs, callback)
-  for i = 1, #modes do
-    local mode = modes:sub(i, i)
+local function setBufKeymap(buf, desc, keymap, callback)
+  local function setMapping(mode, lhs)
     vim.api.nvim_buf_set_keymap(buf, mode, lhs, '',
       { noremap = true, desc = desc, callback = callback, nowait = true })
+  end
+
+  if keymap.i and keymap.i ~= '' then
+    setMapping('i', keymap.i)
+  end
+  if keymap.n and keymap.n ~= '' then
+    setMapping('n', keymap.n)
   end
 end
 
 local function setupKeymap(buf, context)
   local keymaps = context.options.keymaps
-  if keymaps.replace and #keymaps.replace > 0 then
-    setBufKeymap(buf, 'ni', 'Grug Far: apply replacements', keymaps.replace, function()
-      replace({ buf = buf, context = context })
-    end)
-  end
-  if keymaps.syncLocations and #keymaps.syncLocations > 0 then
-    setBufKeymap(buf, 'ni', 'Grug Far: sync result lines to locations', keymaps.syncLocations, function()
-      syncLocations({ buf = buf, context = context })
-    end)
-  end
-  if keymaps.qflist and #keymaps.qflist > 0 then
-    setBufKeymap(buf, 'ni', 'Grug Far: send results to quickfix list', keymaps.qflist, function()
-      qflist({ context = context })
-    end)
-  end
-  if keymaps.gotoLocation and #keymaps.gotoLocation > 0 then
-    setBufKeymap(buf, 'n', 'Grug Far: go to location', keymaps.gotoLocation, function()
-      gotoLocation({ buf = buf, context = context })
-    end)
-  end
-  if keymaps.syncLine and #keymaps.syncLine > 0 then
-    setBufKeymap(buf, 'ni', 'Grug Far: sync current result line to location', keymaps.syncLine, function()
-      syncLine({ buf = buf, context = context })
-    end)
-  end
-  if keymaps.close and #keymaps.close > 0 then
-    setBufKeymap(buf, 'niv', 'Grug Far: close', keymaps.close, function()
-      close()
-    end)
-  end
+  setBufKeymap(buf, 'Grug Far: apply replacements', keymaps.replace, function()
+    replace({ buf = buf, context = context })
+  end)
+  setBufKeymap(buf, 'Grug Far: sync result lines to locations', keymaps.syncLocations, function()
+    syncLocations({ buf = buf, context = context })
+  end)
+  setBufKeymap(buf, 'Grug Far: send results to quickfix list', keymaps.qflist, function()
+    qflist({ context = context })
+  end)
+  setBufKeymap(buf, 'Grug Far: go to location', keymaps.gotoLocation, function()
+    gotoLocation({ buf = buf, context = context })
+  end)
+  setBufKeymap(buf, 'Grug Far: sync current result line to location', keymaps.syncLine, function()
+    syncLine({ buf = buf, context = context })
+  end)
+  setBufKeymap(buf, 'Grug Far: close', keymaps.close, function()
+    close()
+  end)
 end
 
 local function updateBufName(buf, context)
@@ -110,11 +105,20 @@ function M.createBuffer(win, context)
     debouncedSearchOnChange()
   end
 
+  local function handleModeChange()
+    renderHelp({ buf = buf }, context)
+  end
+
   -- set up re-render on change
   vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
     group = context.augroup,
     buffer = buf,
     callback = handleBufferChange
+  })
+  vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = handleModeChange
   })
 
   -- do the initial render

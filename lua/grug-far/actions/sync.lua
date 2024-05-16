@@ -190,6 +190,7 @@ local function sync(params)
   local endRow = params.endRow
   local state = context.state
   local startTime = uv.now()
+
   if isMultilineSearchReplace(context) then
     state.actionMessage = 'sync disabled for multline search/replace!'
     renderResultsHeader(buf, context)
