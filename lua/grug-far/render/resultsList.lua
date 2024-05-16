@@ -58,13 +58,13 @@ function M.appendResultsChunk(buf, context, data)
 end
 
 -- note: row is zero-based
--- additional note: sometimes there are mulltiple marks on the same row, like when lines are deleted
--- but the first one should be the correct one.
+-- additional note: sometimes there are mulltiple marks on the same row, like when lines
+-- before this line are deleted, but the last mark should be the correct one.
 function M.getResultLocation(row, buf, context)
   local marks = vim.api.nvim_buf_get_extmarks(buf, context.locationsNamespace,
-    { row, 0 }, { row, 0 }, { limit = 1 })
+    { row, 0 }, { row, 0 }, {})
   if #marks > 0 then
-    local markId = unpack(marks[1])
+    local markId = unpack(marks[#marks])
     return context.state.resultLocationByExtmarkId[markId]
   end
 

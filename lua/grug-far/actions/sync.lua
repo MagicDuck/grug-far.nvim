@@ -108,20 +108,33 @@ local function isDoingReplace(context)
   return #inputs.replacement > 0
 end
 
+local function filterDeletedLinesExtmarks(all_extmarks)
+  local marksByRow = {}
+  for i = 1, #all_extmarks do
+    local mark = all_extmarks[i]
+    marksByRow[mark[2]] = mark
+  end
+
+  local marks = {}
+  for _, mark in pairs(marksByRow) do
+    table.insert(marks, mark)
+  end
+
+  return marks
+end
+
 -- note startRow / endRow are zero-based
 local function getChangedFiles(buf, context, startRow, endRow)
   local isReplacing = isDoingReplace(context)
-  local extmarks = vim.api.nvim_buf_get_extmarks(0, context.locationsNamespace, { startRow, 0 }, { endRow, -1 }, {})
+  N = context.locationsNamespace
+  local all_extmarks = vim.api.nvim_buf_get_extmarks(0, context.locationsNamespace, { startRow, 0 }, { endRow, -1 }, {})
+
+  -- filter out extraneous extmarks caused by deletion of lines
+  local extmarks = filterDeletedLinesExtmarks(all_extmarks)
+
   local changedFilesByFilename = {}
-  local lastHandledRow = 0
   for i = 1, #extmarks do
     local markId, row = unpack(extmarks[i])
-    if row == lastHandledRow then
-      goto continue
-    end
-
-    -- note, we only consider the first mark as there could be multiple when lines are deleted
-    lastHandledRow = row
 
     -- get the associated location info
     local location = context.state.resultLocationByExtmarkId[markId]
@@ -167,8 +180,6 @@ local function getChangedFiles(buf, context, startRow, endRow)
   end
 
 
-  -- TODO (sbadragan): currently does not get the last after deleting lines in between for some reason
-  P(changedFiles)
   return changedFiles
 end
 
