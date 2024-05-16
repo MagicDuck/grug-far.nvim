@@ -123,6 +123,8 @@ local function replace(params)
     state.actionMessage = getActionMessage(errorMessage)
     resultsList.setError(buf, context, errorMessage)
     renderResultsHeader(buf, context)
+
+    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.ERROR)
   end
 
   local on_finish_all = vim.schedule_wrap(function(status, errorMessage, customActionMessage)
@@ -139,6 +141,8 @@ local function replace(params)
     state.actionMessage = status == nil and customActionMessage or
       getActionMessage(nil, filesCount, filesCount, time)
     renderResultsHeader(buf, context)
+
+    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
   end)
 
   if #state.inputs.search == 0 or #state.inputs.replacement == 0 then
