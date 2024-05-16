@@ -234,7 +234,7 @@ local function sync(params)
     resultsList.setError(buf, context, errorMessage)
     renderResultsHeader(buf, context)
 
-    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.ERROR)
+    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
   end
 
   local on_finish_all = vim.schedule_wrap(function(status, errorMessage, customActionMessage)
