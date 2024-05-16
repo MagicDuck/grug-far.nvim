@@ -32,7 +32,7 @@ M.defaultOptions = {
   startCursorRow = 3,
 
   -- shortcuts for the actions you see at the top of the buffer
-  -- set to '' to unset. Unset mappings will be removed from the help header
+  -- set to '' or false to unset. Unset mappings will be removed from the help header
   -- They are all mappings for both insert and normal mode except for gotoLocation
   -- which is normal mode only. The distinction is mostly due to how they tend to
   -- be used and in order to show something that is not too busy-looking in the help menu
@@ -41,6 +41,7 @@ M.defaultOptions = {
     replace = '<C-enter>',
     qflist = '<C-q>',
     syncLocations = '<C-s>',
+    syncLine = '<C-a>',
     close = '<C-x>',
 
     -- normal mode only

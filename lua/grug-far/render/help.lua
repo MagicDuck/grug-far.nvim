@@ -15,11 +15,13 @@ local function renderHelp(params, context)
       end_col = 0,
       virt_text = {
         {
+          -- TODO (sbadragan): make this better?
           vim.fn.join(vim.tbl_filter(function(m) return m end, {
             printMapping('Replace: ', keymaps.replace),
+            printMapping('Sync: ', keymaps.syncLocations),
             printMapping('Quickfix List: ', keymaps.qflist),
+            printMapping('Sync Line: ', keymaps.syncLine),
             printMapping('Goto Location: n_', keymaps.gotoLocation),
-            printMapping('Sync Edits: ', keymaps.syncLocations),
             printMapping('Close: ', keymaps.close),
           }), ' | '),
 
