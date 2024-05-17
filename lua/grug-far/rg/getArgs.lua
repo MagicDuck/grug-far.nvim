@@ -1,11 +1,15 @@
 local utils = require('grug-far/utils')
 
-local function getArgs(inputs, options, extraArgs, blacklistedFlags)
+local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplace)
   if #inputs.search < (options.minSearchChars or 1) then
     return nil
   end
 
   local args = {}
+
+  if forceReplace or #inputs.replacement > 0 then
+    table.insert(args, '--replace=' .. inputs.replacement)
+  end
 
   -- user overrides
   local blacklisted = {}
@@ -40,10 +44,6 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags)
   table.insert(args, '--column')
   table.insert(args, '--field-match-separator=:')
   table.insert(args, '--block-buffered')
-
-  if #inputs.replacement > 0 then
-    table.insert(args, '--replace=' .. inputs.replacement)
-  end
 
   if #inputs.filesFilter > 0 then
     table.insert(args, '--glob=' .. inputs.filesFilter)

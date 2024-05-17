@@ -1,5 +1,6 @@
 local fetchFilesWithMatches = require('grug-far/rg/fetchFilesWithMatches')
 local fetchReplacedFileContent = require('grug-far/rg/fetchReplacedFileContent')
+local getArgs = require('grug-far/rg/getArgs')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 local utils = require('grug-far/utils')
@@ -83,13 +84,29 @@ local function getActionMessage(err, count, total, time)
   return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
+local function isEmptyStringReplace(args)
+  local replaceEqArg = '--replace='
+  for i = #args, 1, -1 do
+    local arg = args[i]
+    if vim.startswith(arg, replaceEqArg) then
+      if #arg > #replaceEqArg then
+        return false
+      else
+        return true
+      end
+    end
+  end
+
+  return true
+end
+
 local function replace(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
   local filesCount = 0
   local filesTotal = 0
-  local startTime = uv.now()
+  local startTime
 
   -- initiate replace in UI
   vim.schedule(function()
@@ -145,11 +162,21 @@ local function replace(params)
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
   end)
 
-  if #state.inputs.search == 0 or #state.inputs.replacement == 0 then
-    on_finish_all(nil, nil, 'replace cannot work due to missing search/replacement inputs!')
+  local args = getArgs(context.state.inputs, context.options, {})
+  if not args then
+    on_finish_all(nil, nil, 'replace cannot work with the current arguments!')
     return
   end
 
+  if isEmptyStringReplace(args) then
+    local choice = vim.fn.confirm("Replace matches with empty string?", "&yes\n&cancel")
+    if choice == 2 then
+      on_finish_all(nil, nil, 'replace with empty string canceled!')
+      return
+    end
+  end
+
+  startTime = uv.now()
   fetchFilesWithMatches({
     inputs = context.state.inputs,
     options = context.options,

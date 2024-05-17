@@ -11,7 +11,7 @@ local function fetchReplacedFileContent(params)
     '--no-heading',
     '--no-filename',
     params.file,
-  }, blacklistedReplaceFlags)
+  }, blacklistedReplaceFlags, true)
 
   local content = ''
   return fetchWithRg({

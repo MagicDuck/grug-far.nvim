@@ -25,9 +25,15 @@ local function fetchWithRg(params)
     code
   --signal
   )
-    stdout:close()
-    stderr:close()
-    handle:close()
+    if not stdout:is_closing() then
+      stdout:close()
+    end
+    if not stderr:is_closing() then
+      stderr:close()
+    end
+    if handle and not handle:is_closing() then
+      handle:close()
+    end
 
     if code > 0 and #errorMessage == 0 then
       errorMessage = 'no matches'
@@ -36,12 +42,19 @@ local function fetchWithRg(params)
     on_finish(isSuccess and 'success' or 'error', errorMessage);
   end)
 
+  -- TODO (sbadragan): problem here in that we don't seem to be immediately aborting searches
   local on_abort = function()
     isAborted = true
-    stdout:close()
-    stderr:close()
-    handle:close()
-    uv.kill(pid, 'sigkill')
+    if not stdout:is_closing() then
+      stdout:close()
+    end
+    if not stderr:is_closing() then
+      stderr:close()
+    end
+    if handle and not handle:is_closing() then
+      handle:close()
+    end
+    uv.kill(pid, uv.constants.SIGTERM)
   end
 
   local lastLine = ''
