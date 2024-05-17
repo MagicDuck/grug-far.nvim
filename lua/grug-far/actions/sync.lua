@@ -1,4 +1,5 @@
 local renderResultsHeader = require('grug-far/render/resultsHeader')
+local getArgs = require('grug-far/rg/getArgs')
 local resultsList = require('grug-far/render/resultsList')
 local utils = require('grug-far/utils')
 local uv = vim.loop
@@ -104,8 +105,18 @@ local function isMultilineSearchReplace(context)
 end
 
 local function isDoingReplace(context)
-  local inputs = context.state.inputs
-  return #inputs.replacement > 0
+  local args = getArgs(context.state.inputs, context.options, {})
+  if not args then
+    return false
+  end
+
+  for i = 1, #args do
+    if vim.startswith(args[i], '--replace=')
+      or args[i] == '--replace'
+      or args[i] == '-r' then
+      return true
+    end
+  end
 end
 
 local function filterDeletedLinesExtmarks(all_extmarks)

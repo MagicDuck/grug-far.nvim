@@ -83,6 +83,10 @@ that one has to enter before search is triggered.
 You can also specify a files filter to narrow down your search and more ripgrep flags to refine it further.
 Error messages from ripgrep when entering invalid flags and so on are displayed to guide you along. 
 
+_Note:_ When replacing matches with the empty string, you will be prompted to confirm, as the change is not
+visible in the results due to UI considering it just a search when there replace string is empty. If you
+would like to see the actual replacement in the results are, add `--replace=` to the flags.
+
 ### Syncing results lines back to originating files
 It is possible to sync the text of the lines in the results area back to their originating files.
 This operation is either done on the current cursor line (`Sync Line`), or on all lines (`Sync All`). 
@@ -94,9 +98,12 @@ Deleting result lines will cause them to be excluded from being synced by `Sync 
 This can be a nice way to refine a replacement in some situations if you want to exclude a particular file
 or some particular matches.
 
-_Note:_ changing the `<line-number>:<column>:` prefix of result lines will disable sync 
+_Note:_ changing the `<line-number>:<column>:` prefix of result lines will disable sync for that line
 
 _Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
+
+_Note:_ if you would like sync to work when doing a replacement with empty string, please add `--replace=`
+to the flags.
 
 ### Closing
 When you are done, it is recommended to close the buffer with the configured keybinding 
