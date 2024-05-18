@@ -221,13 +221,11 @@ local function sync(params)
   local changesTotal = #changedFiles
 
   -- initiate sync in UI
-  vim.schedule(function()
-    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
-    state.status = 'progress'
-    state.progressCount = 0
-    state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
-    renderResultsHeader(buf, context)
-  end)
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  state.status = 'progress'
+  state.progressCount = 0
+  state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
+  renderResultsHeader(buf, context)
 
   local reportSyncedFilesUpdate = vim.schedule_wrap(function()
     state.status = 'progress'
