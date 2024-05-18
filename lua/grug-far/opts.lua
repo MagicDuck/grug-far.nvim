@@ -81,7 +81,8 @@ M.defaultOptions = {
     search = "ex: foo    foo([a-z0-9]*)    fun\\(",
     replacement = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
     filesFilter = "ex: *.lua     *.{css,js}    **/docs/*.md",
-    flags = "ex: --help --hidden (-.) <relative-file-path> --ignore-case (-i) --multiline (-U) --fixed-strings (-F)",
+    flags =
+    "ex: --help --ignore-case (-i) <relative-file-path> --replace= (empty replace) --multiline (-U)",
   },
 
   -- strings to auto-fill in each input area at start

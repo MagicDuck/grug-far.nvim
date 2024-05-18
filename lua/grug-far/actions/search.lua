@@ -2,12 +2,11 @@ local fetchResults = require('grug-far/rg/fetchResults')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 
--- TODO (sbadragan): problem when you search if you go: -> ge -> g , it gets stuck
--- TODO (sbadragan): show progress when searching, helps with big searches
 local function search(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
+  local isFinished;
 
   if state.abortSearch then
     state.abortSearch();
@@ -22,13 +21,15 @@ local function search(params)
     state.actionMessage = nil
     renderResultsHeader(buf, context)
     resultsList.clear(buf, context)
-    P('starting search')
   end)
 
-  state.abortSearch = fetchResults({
+  state.abortSearch, isFinished = fetchResults({
     inputs = state.inputs,
     options = context.options,
     on_fetch_chunk = vim.schedule_wrap(function(data)
+      if isFinished() then
+        return
+      end
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
       state.stats = {
@@ -40,12 +41,12 @@ local function search(params)
       resultsList.appendResultsChunk(buf, context, data)
     end),
     on_finish = vim.schedule_wrap(function(status, errorMessage)
-      P('finish search with status ' .. (status or 'nil'))
       state.status = status
       if status == 'error' then
         state.stats = nil
         resultsList.setError(buf, context, errorMessage)
       elseif status == nil then
+        -- was aborted
         state.stats = nil
         state.actionMessage = nil
       end
