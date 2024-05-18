@@ -11,12 +11,17 @@ local function fetchWithRg(params)
   local on_fetch_chunk = params.on_fetch_chunk
   local on_finish = params.on_finish
   local args = params.args
-  local isFinished = false
+  local finished = false
   local errorMessage = ''
 
+  local function isFinished()
+    return finished
+  end
+
   if not args then
+    finished = true
     on_finish(nil, nil)
-    return
+    return nil, isFinished
   end
 
   local stdout = uv.new_pipe()
@@ -31,11 +36,11 @@ local function fetchWithRg(params)
     code
   -- signal
   )
-    if isFinished then
+    if finished then
       return
     end
 
-    isFinished = true
+    finished = true
     closeHandle(stdout)
     closeHandle(stderr)
     closeHandle(handle)
@@ -49,15 +54,14 @@ local function fetchWithRg(params)
   end)
 
   local on_abort = function()
-    if isFinished then
+    if finished then
       return
     end
 
-    isFinished = true
+    finished = true
     closeHandle(stdout)
     closeHandle(stderr)
     closeHandle(handle)
-    P('terminating search')
     uv.kill(pid, uv.constants.SIGTERM)
 
     on_finish(nil, nil);
@@ -65,7 +69,7 @@ local function fetchWithRg(params)
 
   local lastLine = ''
   uv.read_start(stdout, function(err, data)
-    if isFinished then
+    if finished then
       return
     end
 
@@ -94,7 +98,7 @@ local function fetchWithRg(params)
   end)
 
   uv.read_start(stderr, function(err, data)
-    if isFinished then
+    if finished then
       return
     end
 
@@ -108,7 +112,7 @@ local function fetchWithRg(params)
     end
   end)
 
-  return on_abort
+  return on_abort, isFinished
 end
 
 return fetchWithRg
