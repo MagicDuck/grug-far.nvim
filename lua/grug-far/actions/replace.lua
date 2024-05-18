@@ -109,13 +109,11 @@ local function replace(params)
   local startTime
 
   -- initiate replace in UI
-  vim.schedule(function()
-    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
-    state.status = 'progress'
-    state.progressCount = 0
-    state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
-    renderResultsHeader(buf, context)
-  end)
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  state.status = 'progress'
+  state.progressCount = 0
+  state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
+  renderResultsHeader(buf, context)
 
   local reportMatchingFilesUpdate = vim.schedule_wrap(function(files)
     state.status = 'progress'
