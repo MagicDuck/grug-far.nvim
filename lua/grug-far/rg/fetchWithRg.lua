@@ -1,15 +1,21 @@
 local utils = require('grug-far/utils')
 local uv = vim.loop
 
+local function closeHandle(handle)
+  if handle and not handle:is_closing() then
+    handle:close()
+  end
+end
+
 local function fetchWithRg(params)
   local on_fetch_chunk = params.on_fetch_chunk
   local on_finish = params.on_finish
   local args = params.args
-  local isAborted = false
+  local isFinished = false
   local errorMessage = ''
 
   if not args then
-    on_finish(nil)
+    on_finish(nil, nil)
     return
   end
 
@@ -23,43 +29,43 @@ local function fetchWithRg(params)
     args = args
   }, function(
     code
-  --signal
+  -- signal
   )
-    if not stdout:is_closing() then
-      stdout:close()
+    if isFinished then
+      return
     end
-    if not stderr:is_closing() then
-      stderr:close()
-    end
-    if handle and not handle:is_closing() then
-      handle:close()
-    end
+
+    isFinished = true
+    closeHandle(stdout)
+    closeHandle(stderr)
+    closeHandle(handle)
 
     if code > 0 and #errorMessage == 0 then
       errorMessage = 'no matches'
     end
     local isSuccess = code == 0 and #errorMessage == 0
+
     on_finish(isSuccess and 'success' or 'error', errorMessage);
   end)
 
-  -- TODO (sbadragan): problem here in that we don't seem to be immediately aborting searches
   local on_abort = function()
-    isAborted = true
-    if not stdout:is_closing() then
-      stdout:close()
+    if isFinished then
+      return
     end
-    if not stderr:is_closing() then
-      stderr:close()
-    end
-    if handle and not handle:is_closing() then
-      handle:close()
-    end
+
+    isFinished = true
+    closeHandle(stdout)
+    closeHandle(stderr)
+    closeHandle(handle)
+    P('terminating search')
     uv.kill(pid, uv.constants.SIGTERM)
+
+    on_finish(nil, nil);
   end
 
   local lastLine = ''
   uv.read_start(stdout, function(err, data)
-    if isAborted then
+    if isFinished then
       return
     end
 
@@ -88,7 +94,7 @@ local function fetchWithRg(params)
   end)
 
   uv.read_start(stderr, function(err, data)
-    if isAborted then
+    if isFinished then
       return
     end
 
