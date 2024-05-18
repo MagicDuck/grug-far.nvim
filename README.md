@@ -84,8 +84,8 @@ You can also specify a files filter to narrow down your search and more ripgrep 
 Error messages from ripgrep when entering invalid flags and so on are displayed to guide you along. 
 
 _Note:_ When replacing matches with the empty string, you will be prompted to confirm, as the change is not
-visible in the results due to UI considering it just a search when there replace string is empty. If you
-would like to see the actual replacement in the results are, add `--replace=` to the flags.
+visible in the results area due to UI considering it just a search. If you
+would like to see the actual replacement in the results area, add `--replace=` to the flags.
 
 ### Syncing results lines back to originating files
 It is possible to sync the text of the lines in the results area back to their originating files.
