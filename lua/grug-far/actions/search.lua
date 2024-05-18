@@ -6,7 +6,7 @@ local function search(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
-  local isFinished;
+  local isFinished = false;
 
   if state.abortSearch then
     state.abortSearch();
@@ -14,20 +14,19 @@ local function search(params)
   end
 
   -- initiate search in UI
-  vim.schedule(function()
-    state.status = 'progress'
-    state.progressCount = 0
-    state.stats = { matches = 0, files = 0 }
-    state.actionMessage = nil
-    renderResultsHeader(buf, context)
-    resultsList.clear(buf, context)
-  end)
+  state.status = 'progress'
+  state.progressCount = 0
+  state.stats = { matches = 0, files = 0 }
+  state.actionMessage = nil
+  renderResultsHeader(buf, context)
+  resultsList.clear(buf, context)
 
-  state.abortSearch, isFinished = fetchResults({
+  state.abortSearch = fetchResults({
     inputs = state.inputs,
     options = context.options,
     on_fetch_chunk = vim.schedule_wrap(function(data)
-      if isFinished() then
+      if isFinished then
+        -- make sure to stop immediately when aborted early
         return
       end
       state.status = 'progress'
@@ -41,6 +40,7 @@ local function search(params)
       resultsList.appendResultsChunk(buf, context, data)
     end),
     on_finish = vim.schedule_wrap(function(status, errorMessage)
+      isFinished = true
       state.status = status
       if status == 'error' then
         state.stats = nil
