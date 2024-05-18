@@ -14,14 +14,9 @@ local function fetchWithRg(params)
   local finished = false
   local errorMessage = ''
 
-  local function isFinished()
-    return finished
-  end
-
   if not args then
-    finished = true
     on_finish(nil, nil)
-    return nil, isFinished
+    return nil
   end
 
   local stdout = uv.new_pipe()
@@ -112,7 +107,7 @@ local function fetchWithRg(params)
     end
   end)
 
-  return on_abort, isFinished
+  return on_abort
 end
 
 return fetchWithRg
