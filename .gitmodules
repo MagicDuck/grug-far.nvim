@@ -1,6 +1,0 @@
-[submodule "test/vendor/matcher_combinators.lua"]
-	path = test/vendor/matcher_combinators.lua
-	url = https://github.com/m00qek/matcher_combinators.lua.git
-[submodule "test/vendor/plenary.nvim"]
-	path = test/vendor/plenary.nvim
-	url = https://github.com/nvim-lua/plenary.nvim.git
