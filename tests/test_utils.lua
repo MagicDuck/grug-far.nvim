@@ -1,9 +1,8 @@
 local utils = require('grug-far/utils')
 local MiniTest = require('mini.test')
-local helpers = require('grug-far/test/helpers')
+-- local helpers = require('grug-far/test/helpers')
 local expect = MiniTest.expect
 
--- Actual tests definitions will go here
 describe('strEllideAfter', function()
   it('returns empty string if n = 0', function()
     expect.equality('', utils.strEllideAfter('hello world', 0))
