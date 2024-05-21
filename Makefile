@@ -14,3 +14,7 @@ prepare:
 # clean up
 clean:
 	rm -rf deps
+# lint
+lint:
+	selene lua plugin tests
+	stylua --check lua plugin tests

@@ -152,40 +152,32 @@ local function getChangedFiles(buf, context, startRow, endRow)
 
     -- get the associated location info
     local location = context.state.resultLocationByExtmarkId[markId]
-    if not (location and location.rgResultLine) then
-      goto continue
+    if location and location.rgResultLine then
+      -- get the current text on row
+      local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, true))
+      local isChanged = isReplacing or bufline ~= location.rgResultLine
+      if isChanged then
+        -- ignore ones where user has messed with row:col: prefix as we can't get actual changed text
+        local numColPrefix = string.sub(location.rgResultLine, 1, location.rgColEndIndex + 1)
+        if vim.startswith(bufline, numColPrefix) then
+          local changedFile = changedFilesByFilename[location.filename]
+          if not changedFile then
+            changedFilesByFilename[location.filename] = {
+              filename = location.filename,
+              changedLines = {},
+            }
+            changedFile = changedFilesByFilename[location.filename]
+          end
+
+          -- note, skips (:)
+          local newLine = string.sub(bufline, location.rgColEndIndex + 2, -1)
+          table.insert(changedFile.changedLines, {
+            lnum = location.lnum,
+            newLine = newLine,
+          })
+        end
+      end
     end
-
-    -- get the current text on row
-    local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, true))
-    local isChanged = isReplacing or bufline ~= location.rgResultLine
-    if not isChanged then
-      goto continue
-    end
-
-    -- ignore ones where user has messed with row:col: prefix as we can't get actual changed text
-    local numColPrefix = string.sub(location.rgResultLine, 1, location.rgColEndIndex + 1)
-    if not vim.startswith(bufline, numColPrefix) then
-      goto continue
-    end
-
-    local changedFile = changedFilesByFilename[location.filename]
-    if not changedFile then
-      changedFilesByFilename[location.filename] = {
-        filename = location.filename,
-        changedLines = {},
-      }
-      changedFile = changedFilesByFilename[location.filename]
-    end
-
-    -- note, skips (:)
-    local newLine = string.sub(bufline, location.rgColEndIndex + 2, -1)
-    table.insert(changedFile.changedLines, {
-      lnum = location.lnum,
-      newLine = newLine,
-    })
-
-    ::continue::
   end
 
   local changedFiles = {}
