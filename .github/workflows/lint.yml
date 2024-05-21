@@ -15,7 +15,7 @@ jobs:
       - name: Run luacheck
         uses: lunarmodules/luacheck@v1
         with:
-          args: lua/* tests/*
+          args: lua/* tests/* plugin/*
 
       - name: Run selene
         uses: NTBBloodbath/selene-action@v1.0.0
