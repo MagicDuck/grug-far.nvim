@@ -1,6 +1,6 @@
 local utils = require('grug-far/utils')
+local MiniTest = require('mini.test')
 local expect = MiniTest.expect
-local new_set = MiniTest.new_set
 
 -- Actual tests definitions will go here
 describe('strEllideAfter', function()
