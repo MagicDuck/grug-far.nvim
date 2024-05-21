@@ -1,5 +1,6 @@
 local utils = require('grug-far/utils')
 local MiniTest = require('mini.test')
+local helpers = require('grug-far/test/helpers')
 local expect = MiniTest.expect
 
 -- Actual tests definitions will go here
