@@ -15,19 +15,24 @@ local function renderHelp(params, context)
     end_col = 0,
     virt_text = {
       {
-        vim.fn.join(vim.tbl_filter(function(m) return m end, {
-          printMapping('Replace', keymaps.replace, mode),
-          printMapping('Sync All', keymaps.syncLocations, mode),
-          printMapping('Sync Line', keymaps.syncLine, mode),
-          printMapping('Quickfix', keymaps.qflist, mode),
-          printMapping('Goto', keymaps.gotoLocation, mode),
-          printMapping('Close', keymaps.close, mode),
-        }), ' | '),
+        vim.fn.join(
+          vim.tbl_filter(function(m)
+            return m
+          end, {
+            printMapping('Replace', keymaps.replace, mode),
+            printMapping('Sync All', keymaps.syncLocations, mode),
+            printMapping('Sync Line', keymaps.syncLine, mode),
+            printMapping('Quickfix', keymaps.qflist, mode),
+            printMapping('Goto', keymaps.gotoLocation, mode),
+            printMapping('Close', keymaps.close, mode),
+          }),
+          ' | '
+        ),
 
-        'GrugFarHelpHeader'
-      }
+        'GrugFarHelpHeader',
+      },
     },
-    virt_text_pos = 'overlay'
+    virt_text_pos = 'overlay',
   })
 end
 

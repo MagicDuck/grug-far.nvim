@@ -13,7 +13,9 @@ local function ensureTopEmptyLines(buf, count)
   for i = 1, #lines do
     local line = lines[i]
     foundNonEmpty = foundNonEmpty or not (line and #line == 0)
-    if foundNonEmpty then table.insert(emptyLines, "") end
+    if foundNonEmpty then
+      table.insert(emptyLines, '')
+    end
   end
 
   if #emptyLines > 0 then
@@ -36,40 +38,40 @@ local function render(buf, context)
   inputs.search = renderInput({
     buf = buf,
     lineNr = lineNr,
-    extmarkName = "search",
+    extmarkName = 'search',
     icon = 'searchInput',
-    label = "Search:",
-    placeholder = placeholders.enabled and placeholders.search
+    label = 'Search:',
+    placeholder = placeholders.enabled and placeholders.search,
   }, context)
 
   lineNr = lineNr + 1
   inputs.replacement = renderInput({
     buf = buf,
     lineNr = lineNr,
-    extmarkName = "replace",
+    extmarkName = 'replace',
     icon = 'replaceInput',
-    label = "Replace:",
-    placeholder = placeholders.enabled and placeholders.replacement
+    label = 'Replace:',
+    placeholder = placeholders.enabled and placeholders.replacement,
   }, context)
 
   lineNr = lineNr + 1
   inputs.filesFilter = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
-    extmarkName = "files_glob",
+    extmarkName = 'files_glob',
     icon = 'filesFilterInput',
-    label = "Files Filter:",
-    placeholder = placeholders.enabled and placeholders.filesFilter
+    label = 'Files Filter:',
+    placeholder = placeholders.enabled and placeholders.filesFilter,
   }, context))
 
   lineNr = lineNr + 1
   inputs.flags = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
-    extmarkName = "flags",
+    extmarkName = 'flags',
     icon = 'flagsInput',
-    label = "Flags:",
-    placeholder = placeholders.enabled and placeholders.flags
+    label = 'Flags:',
+    placeholder = placeholders.enabled and placeholders.flags,
   }, context))
 
   lineNr = lineNr + BEFORE_RESULTS_LINES

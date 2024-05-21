@@ -21,7 +21,7 @@ local function fetchReplacedFileContent(params)
     end,
     on_finish = function(status, errorMessage)
       params.on_finish(status, errorMessage, content)
-    end
+    end,
   })
 end
 

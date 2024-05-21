@@ -12,7 +12,7 @@ local function syncLine(params)
     buf = params.buf,
     context = context,
     startRow = cursor_row,
-    endRow = cursor_row
+    endRow = cursor_row,
   })
 end
 

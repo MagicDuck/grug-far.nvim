@@ -23,14 +23,12 @@ local function fetchWithRg(params)
   local stderr = uv.new_pipe()
 
   local handle, pid
-  handle, pid = uv.spawn("rg", {
+  handle, pid = uv.spawn('rg', {
     stdio = { nil, stdout, stderr },
     cwd = vim.fn.getcwd(),
-    args = args
-  }, function(
-    code
-  -- signal
-  )
+    args = args,
+  }, function(code  -- signal
+)
     if finished then
       return
     end
@@ -45,7 +43,7 @@ local function fetchWithRg(params)
     end
     local isSuccess = code == 0 and #errorMessage == 0
 
-    on_finish(isSuccess and 'success' or 'error', errorMessage);
+    on_finish(isSuccess and 'success' or 'error', errorMessage)
   end)
 
   local on_abort = function()
@@ -59,7 +57,7 @@ local function fetchWithRg(params)
     closeHandle(handle)
     uv.kill(pid, uv.constants.SIGTERM)
 
-    on_finish(nil, nil);
+    on_finish(nil, nil)
   end
 
   local lastLine = ''
@@ -77,7 +75,7 @@ local function fetchWithRg(params)
       -- large outputs can cause the last line to be truncated
       -- save it and prepend to next chunk
       local chunkData = lastLine .. data
-      local i = utils.strFindLast(chunkData, "\n")
+      local i = utils.strFindLast(chunkData, '\n')
       if i then
         chunkData = string.sub(chunkData, 1, i)
         lastLine = string.sub(chunkData, i + 1, -1)

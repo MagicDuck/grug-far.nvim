@@ -70,7 +70,7 @@ local function syncChangedLines(params)
         end
         engagedWorkers = engagedWorkers - 1
         syncNextChangedFile()
-      end)
+      end),
     })
   end
 
@@ -96,7 +96,7 @@ local function isMultilineSearchReplace(context)
   local inputs = context.state.inputs
   local multilineFlags = { '--multiline', '-U', '--multiline-dotall' }
   if #inputs.flags > 0 then
-    for flag in string.gmatch(inputs.flags, "%S+") do
+    for flag in string.gmatch(inputs.flags, '%S+') do
       if utils.isBlacklistedFlag(flag, multilineFlags) then
         return true
       end
@@ -111,9 +111,7 @@ local function isDoingReplace(context)
   end
 
   for i = 1, #args do
-    if vim.startswith(args[i], '--replace=')
-      or args[i] == '--replace'
-      or args[i] == '-r' then
+    if vim.startswith(args[i], '--replace=') or args[i] == '--replace' or args[i] == '-r' then
       return true
     end
   end
@@ -137,7 +135,13 @@ end
 -- note startRow / endRow are zero-based
 local function getChangedFiles(buf, context, startRow, endRow)
   local isReplacing = isDoingReplace(context)
-  local all_extmarks = vim.api.nvim_buf_get_extmarks(0, context.locationsNamespace, { startRow, 0 }, { endRow, -1 }, {})
+  local all_extmarks = vim.api.nvim_buf_get_extmarks(
+    0,
+    context.locationsNamespace,
+    { startRow, 0 },
+    { endRow, -1 },
+    {}
+  )
 
   -- filter out extraneous extmarks caused by deletion of lines
   local extmarks = filterDeletedLinesExtmarks(all_extmarks)
@@ -169,7 +173,7 @@ local function getChangedFiles(buf, context, startRow, endRow)
     if not changedFile then
       changedFilesByFilename[location.filename] = {
         filename = location.filename,
-        changedLines = {}
+        changedLines = {},
       }
       changedFile = changedFilesByFilename[location.filename]
     end
@@ -178,7 +182,7 @@ local function getChangedFiles(buf, context, startRow, endRow)
     local newLine = string.sub(bufline, location.rgColEndIndex + 2, -1)
     table.insert(changedFile.changedLines, {
       lnum = location.lnum,
-      newLine = newLine
+      newLine = newLine,
     })
 
     ::continue::
@@ -188,7 +192,6 @@ local function getChangedFiles(buf, context, startRow, endRow)
   for _, f in pairs(changedFilesByFilename) do
     table.insert(changedFiles, f)
   end
-
 
   return changedFiles
 end
@@ -257,8 +260,8 @@ local function sync(params)
     state.status = status
     local time = uv.now() - startTime
     -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-    state.actionMessage = status == nil and customActionMessage or
-      getActionMessage(nil, changesCount, changesCount, time)
+    state.actionMessage = status == nil and customActionMessage
+      or getActionMessage(nil, changesCount, changesCount, time)
     renderResultsHeader(buf, context)
 
     vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
@@ -268,7 +271,7 @@ local function sync(params)
     context = context,
     changedFiles = changedFiles,
     reportProgress = reportSyncedFilesUpdate,
-    on_finish = on_finish_all
+    on_finish = on_finish_all,
   })
 end
 

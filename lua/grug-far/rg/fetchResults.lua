@@ -17,7 +17,7 @@ local function fetchResults(params)
     on_fetch_chunk = function(data)
       params.on_fetch_chunk(parseResults(data))
     end,
-    on_finish = params.on_finish
+    on_finish = params.on_finish,
   })
 end
 
