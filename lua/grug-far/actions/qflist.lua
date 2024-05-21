@@ -12,14 +12,10 @@ local function qflist(params)
   local search = state.inputs.search
 
   vim.fn.setqflist(resultsLocations, 'r')
-  vim.fn.setqflist(
-    {},
-    'a',
-    {
-      title = 'Grug FAR results'
-        .. utils.strEllideAfter(search, context.options.maxSearchCharsInTitles, ' for: '),
-    }
-  )
+  vim.fn.setqflist({}, 'a', {
+    title = 'Grug FAR results'
+      .. utils.strEllideAfter(search, context.options.maxSearchCharsInTitles, ' for: '),
+  })
   -- open list below taking whole horizontal space
   vim.cmd('botright copen | stopinsert')
 end

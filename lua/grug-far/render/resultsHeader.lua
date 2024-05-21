@@ -30,15 +30,12 @@ local function renderInfoLine(buf, context, headerRow)
 
   local stats = context.state.stats
   if stats and stats.matches > 0 then
-    table.insert(
-      virt_lines,
+    table.insert(virt_lines, {
       {
-        {
-          ' ' .. stats.matches .. ' matches in ' .. stats.files .. ' files' .. ' ',
-          'GrugFarResultsStats',
-        },
-      }
-    )
+        ' ' .. stats.matches .. ' matches in ' .. stats.files .. ' files' .. ' ',
+        'GrugFarResultsStats',
+      },
+    })
   end
 
   local actionMessage = context.state.actionMessage
