@@ -27,8 +27,9 @@ local function fetchWithRg(params)
     stdio = { nil, stdout, stderr },
     cwd = vim.fn.getcwd(),
     args = args,
-  }, function(code  -- signal
-)
+  }, function(
+    code -- ,signal
+  )
     if finished then
       return
     end
