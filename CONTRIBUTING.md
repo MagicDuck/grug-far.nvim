@@ -2,21 +2,15 @@
 
 ## Linting
 
-You'll need to install [Lua][lua] and [LuaRocks][luarocks] to run the linter.
+You'll need to install [stylua][stylua] and [selene][selene].
 
 ```bash
-$ luacheck lua/ test/spec/
+$ make lint
 ```
 
 ## Testing
 
-This uses [busted][busted], [luassert][luassert] (both through
-[plenary.nvim][plenary]) and [matcher_combinators][matcher_combinators] to
-define tests in `test/spec/` directory. These dependencies are required only to
-run tests, that's why they are installed as git submodules.
-
-Make sure your shell is in the `./test` directory or, if it is in the root directory,
-replace `make` by `make -C ./test` in the commands below.
+This uses [mini.test][mini.test]
 
 To init the dependencies run
 
@@ -30,27 +24,13 @@ To run all tests just execute
 $ make test
 ```
 
-If you have [entr(1)][entr] installed you may use it to run all tests whenever a
-file is changed using:
-
-```bash
-$ make watch
-```
-
-In both commands you might specify a single spec to test/watch using:
-
-```bash
-$ make test SPEC=spec/grug-far/my_cool_module_spec.lua
-$ make watch SPEC=spec/grug-far/my_cool_module_spec.lua
-```
-
 ## Github actions
 
-An Action will run all the tests and the linter on every commit on the main
-branch and also on Pull Request. Tests will be run using 
-[stable and nightly][neovim-test-versions] versions of Neovim.
+An Action will run all the tests and lints on Pull Request to main. Tests will be run using 
+[stable][neovim-test-versions] versions of Neovim (last 2).
 
-[lua]: https://www.lua.org/
+[stylua]: https://github.com/JohnnyMorganz/StyLua
+[selene]: https://kampfkarren.github.io/selene/cli/installation.html
 [entr]: https://eradman.com/entrproject/
 [luarocks]: https://luarocks.org/
 [busted]: https://olivinelabs.com/busted/
@@ -60,3 +40,4 @@ branch and also on Pull Request. Tests will be run using
 [integration-badge]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml/badge.svg
 [integration-runs]: https://github.com/m00qek/plugin-template.nvim/actions/workflows/integration.yml
 [neovim-test-versions]: .github/workflows/integration.yml#L17
+[mini.test]: https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-test.md
