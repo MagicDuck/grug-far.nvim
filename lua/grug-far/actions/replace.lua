@@ -28,7 +28,7 @@ local function replaceInFile(params)
 
         on_done(nil)
       end)
-    end
+    end,
   })
 end
 
@@ -62,7 +62,7 @@ local function replaceInMatchedFiles(params)
         reportProgress()
         engagedWorkers = engagedWorkers - 1
         replaceNextFile()
-      end)
+      end),
     })
   end
 
@@ -153,8 +153,8 @@ local function replace(params)
     state.status = status
     local time = uv.now() - startTime
     -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-    state.actionMessage = status == nil and customActionMessage or
-      getActionMessage(nil, filesCount, filesCount, time)
+    state.actionMessage = status == nil and customActionMessage
+      or getActionMessage(nil, filesCount, filesCount, time)
     renderResultsHeader(buf, context)
 
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
@@ -167,7 +167,7 @@ local function replace(params)
   end
 
   if isEmptyStringReplace(args) then
-    local choice = vim.fn.confirm("Replace matches with empty string?", "&yes\n&cancel")
+    local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
     if choice == 2 then
       on_finish_all(nil, nil, 'replace with empty string canceled!')
       return
@@ -181,9 +181,13 @@ local function replace(params)
     on_fetch_chunk = reportMatchingFilesUpdate,
     on_finish = vim.schedule_wrap(function(status, errorMessage, files, blacklistedArgs)
       if not status then
-        on_finish_all(nil, nil,
-          blacklistedArgs and 'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', ') or
-          'replace aborted!')
+        on_finish_all(
+          nil,
+          nil,
+          blacklistedArgs
+              and 'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', ')
+            or 'replace aborted!'
+        )
         return
       elseif status == 'error' then
         on_finish_all(status, errorMessage)
@@ -195,9 +199,9 @@ local function replace(params)
         context = context,
         reportProgress = reportReplacedFilesUpdate,
         reportError = reportError,
-        on_finish = on_finish_all
+        on_finish = on_finish_all,
       })
-    end)
+    end),
   })
 end
 

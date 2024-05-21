@@ -15,7 +15,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   local blacklisted = {}
   local extraUserArgs = options.extraRgArgs and vim.trim(options.extraRgArgs) or ''
   if #extraUserArgs > 0 then
-    for arg in string.gmatch(extraUserArgs, "%S+") do
+    for arg in string.gmatch(extraUserArgs, '%S+') do
       if utils.isBlacklistedFlag(arg, blacklistedFlags) then
         table.insert(blacklisted, arg)
       else
@@ -25,7 +25,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   end
 
   if #inputs.flags > 0 then
-    for flag in string.gmatch(inputs.flags, "%S+") do
+    for flag in string.gmatch(inputs.flags, '%S+') do
       if utils.isBlacklistedFlag(flag, blacklistedFlags) then
         table.insert(blacklisted, flag)
       else

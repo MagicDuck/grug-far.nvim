@@ -5,7 +5,7 @@ local function syncLocations(params)
     buf = params.buf,
     context = params.context,
     startRow = 0,
-    endRow = -1
+    endRow = -1,
   })
 end
 

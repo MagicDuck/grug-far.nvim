@@ -1,20 +1,25 @@
-local render = require("grug-far/render")
-local renderHelp = require("grug-far/render/help")
+local render = require('grug-far/render')
+local renderHelp = require('grug-far/render/help')
 local search = require('grug-far/actions/search')
-local replace = require("grug-far/actions/replace")
-local qflist = require("grug-far/actions/qflist")
-local gotoLocation = require("grug-far/actions/gotoLocation")
-local syncLocations = require("grug-far/actions/syncLocations")
-local syncLine = require("grug-far/actions/syncLine")
-local close = require("grug-far/actions/close")
+local replace = require('grug-far/actions/replace')
+local qflist = require('grug-far/actions/qflist')
+local gotoLocation = require('grug-far/actions/gotoLocation')
+local syncLocations = require('grug-far/actions/syncLocations')
+local syncLine = require('grug-far/actions/syncLine')
+local close = require('grug-far/actions/close')
 local utils = require('grug-far/utils')
 
 local M = {}
 
 local function setBufKeymap(buf, desc, keymap, callback)
   local function setMapping(mode, lhs)
-    vim.api.nvim_buf_set_keymap(buf, mode, lhs, '',
-      { noremap = true, desc = desc, callback = callback, nowait = true })
+    vim.api.nvim_buf_set_keymap(
+      buf,
+      mode,
+      lhs,
+      '',
+      { noremap = true, desc = desc, callback = callback, nowait = true }
+    )
   end
 
   if keymap.i and keymap.i ~= '' then
@@ -48,9 +53,16 @@ local function setupKeymap(buf, context)
 end
 
 local function updateBufName(buf, context)
-  vim.api.nvim_buf_set_name(buf,
-    'Grug FAR - ' ..
-    context.count .. utils.strEllideAfter(context.state.inputs.search, context.options.maxSearchCharsInTitles, ': '))
+  vim.api.nvim_buf_set_name(
+    buf,
+    'Grug FAR - '
+      .. context.count
+      .. utils.strEllideAfter(
+        context.state.inputs.search,
+        context.options.maxSearchCharsInTitles,
+        ': '
+      )
+  )
 end
 
 local function setupGlobalOptOverrides(buf, context)
@@ -68,12 +80,12 @@ local function setupGlobalOptOverrides(buf, context)
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = context.augroup,
     buffer = buf,
-    callback = onBufEnter
+    callback = onBufEnter,
   })
   vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     group = context.augroup,
     buffer = buf,
-    callback = onBufLeave
+    callback = onBufLeave,
   })
 
   onBufEnter()
@@ -113,12 +125,12 @@ function M.createBuffer(win, context)
   vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
     group = context.augroup,
     buffer = buf,
-    callback = handleBufferChange
+    callback = handleBufferChange,
   })
   vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
     group = context.augroup,
     buffer = buf,
-    callback = handleModeChange
+    callback = handleModeChange,
   })
 
   -- do the initial render

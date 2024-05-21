@@ -1,6 +1,6 @@
-local opts = require("grug-far/opts")
-local highlights = require("grug-far/highlights")
-local farBuffer = require("grug-far/farBuffer")
+local opts = require('grug-far/opts')
+local highlights = require('grug-far/highlights')
+local farBuffer = require('grug-far/farBuffer')
 
 local M = {}
 
@@ -10,7 +10,7 @@ function M.setup(options)
   globalOptions = opts.with_defaults(options or {}, opts.defaultOptions)
   namespace = vim.api.nvim_create_namespace('grug-far')
   highlights.setup()
-  vim.api.nvim_create_user_command("GrugFar", M.grug_far, {})
+  vim.api.nvim_create_user_command('GrugFar', M.grug_far, {})
 end
 
 local function is_configured()
@@ -28,8 +28,8 @@ local function createContext(options)
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
     extmarkIds = {},
     state = {
-      inputs = {}
-    }
+      inputs = {},
+    },
   }
 end
 
@@ -56,13 +56,15 @@ local function setupCleanup(buf, context)
   vim.api.nvim_create_autocmd({ 'BufDelete' }, {
     group = context.augroup,
     buffer = buf,
-    callback = onBufDelete
+    callback = onBufDelete,
   })
 end
 
 function M.grug_far(options)
   if not is_configured() then
-    print('Please call require("grug-far").setup(...) before executing require("grug-far").grug_far(...)!')
+    print(
+      'Please call require("grug-far").setup(...) before executing require("grug-far").grug_far(...)!'
+    )
     return
   end
 

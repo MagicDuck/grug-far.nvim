@@ -6,10 +6,10 @@ local function search(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
-  local isFinished = false;
+  local isFinished = false
 
   if state.abortSearch then
-    state.abortSearch();
+    state.abortSearch()
     state.abortSearch = nil
   end
 
@@ -33,7 +33,7 @@ local function search(params)
       state.progressCount = state.progressCount + 1
       state.stats = {
         matches = state.stats.matches + data.stats.matches,
-        files = state.stats.files + data.stats.files
+        files = state.stats.files + data.stats.files,
       }
       renderResultsHeader(buf, context)
 

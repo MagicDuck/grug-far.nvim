@@ -52,7 +52,18 @@ M.defaultOptions = {
 
   -- spinner states, default depends on nerdfont, set to false to disable
   spinnerStates = {
-    '󱑋 ', '󱑌 ', '󱑍 ', '󱑎 ', '󱑏 ', '󱑐 ', '󱑑 ', '󱑒 ', '󱑓 ', '󱑔 ', '󱑕 ', '󱑖 '
+    '󱑋 ',
+    '󱑌 ',
+    '󱑍 ',
+    '󱑎 ',
+    '󱑏 ',
+    '󱑐 ',
+    '󱑑 ',
+    '󱑒 ',
+    '󱑓 ',
+    '󱑔 ',
+    '󱑕 ',
+    '󱑖 ',
   },
 
   -- icons for UI, default ones depend on nerdfont
@@ -69,7 +80,7 @@ M.defaultOptions = {
     resultsStatusReady = '󱩾 ',
     resultsStatusError = ' ',
     resultsStatusSuccess = '󰗡 ',
-    resultsActionMessage = '  '
+    resultsActionMessage = '  ',
   },
 
   -- placeholders to show in input areas when they are empty
@@ -78,11 +89,10 @@ M.defaultOptions = {
     -- whether to show placeholders
     enabled = true,
 
-    search = "ex: foo    foo([a-z0-9]*)    fun\\(",
-    replacement = "ex: bar    ${1}_foo    $$MY_ENV_VAR ",
-    filesFilter = "ex: *.lua     *.{css,js}    **/docs/*.md",
-    flags =
-    "ex: --help --ignore-case (-i) <relative-file-path> --replace= (empty replace) --multiline (-U)",
+    search = 'ex: foo    foo([a-z0-9]*)    fun\\(',
+    replacement = 'ex: bar    ${1}_foo    $$MY_ENV_VAR ',
+    filesFilter = 'ex: *.lua     *.{css,js}    **/docs/*.md',
+    flags = 'ex: --help --ignore-case (-i) <relative-file-path> --replace= (empty replace) --multiline (-U)',
   },
 
   -- strings to auto-fill in each input area at start
@@ -93,25 +103,27 @@ M.defaultOptions = {
   -- require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
   --
   prefills = {
-    search = "",
-    replacement = "",
-    filesFilter = "",
-    flags = ""
-  }
+    search = '',
+    replacement = '',
+    filesFilter = '',
+    flags = '',
+  },
 }
 
 function M.with_defaults(options, defaults)
   local newOptions = vim.tbl_deep_extend('force', defaults, options)
 
   -- deprecated prop names
-  newOptions.placeholders.filesFilter = (options.placeholders and
-      (options.placeholders.filesFilter or options.placeholders.filesGlob))
-    or defaults.placeholders.filesFilter
+  newOptions.placeholders.filesFilter = (
+    options.placeholders
+    and (options.placeholders.filesFilter or options.placeholders.filesGlob)
+  ) or defaults.placeholders.filesFilter
 
   if options.placeholders and options.placeholders.filesGlob then
     vim.notify(
       'grug-far: options.placeholders.filesGlob deprecated. Please use options.placeholders.filesFilter instead!',
-      vim.log.levels.WARN)
+      vim.log.levels.WARN
+    )
   end
 
   -- normalize keymaps opts

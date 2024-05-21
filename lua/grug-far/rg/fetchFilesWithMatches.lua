@@ -13,7 +13,7 @@ local function fetchFilesWithMatches(params)
   return fetchWithRg({
     args = args,
     on_fetch_chunk = function(data)
-      local lines = vim.split(data, "\n")
+      local lines = vim.split(data, '\n')
       for i = 1, #lines do
         if #lines[i] > 0 then
           table.insert(filesWithMatches, lines[i])
@@ -23,7 +23,7 @@ local function fetchFilesWithMatches(params)
     end,
     on_finish = function(status, errorMessage)
       params.on_finish(status, errorMessage, filesWithMatches, blacklistedArgs)
-    end
+    end,
   })
 end
 

@@ -16,9 +16,14 @@ function M.appendResultsChunk(buf, context, data)
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
     for j = highlight.start_line, highlight.end_line do
-      vim.api.nvim_buf_add_highlight(buf, context.namespace, highlight.hl, lastline + j,
+      vim.api.nvim_buf_add_highlight(
+        buf,
+        context.namespace,
+        highlight.hl,
+        lastline + j,
         j == highlight.start_line and highlight.start_col or 0,
-        j == highlight.end_line and highlight.end_col or -1)
+        j == highlight.end_line and highlight.end_col or -1
+      )
     end
   end
 
@@ -36,15 +41,25 @@ function M.appendResultsChunk(buf, context, data)
     if hl == 'GrugFarResultsPath' then
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
 
-      local markId = vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace,
-        lastline + highlight.start_line, 0, { right_gravity = true })
+      local markId = vim.api.nvim_buf_set_extmark(
+        buf,
+        context.locationsNamespace,
+        lastline + highlight.start_line,
+        0,
+        { right_gravity = true }
+      )
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl == 'GrugFarResultsLineNo' then
       -- omit ending ':'
       lastLocation = { filename = state.resultsLastFilename }
       table.insert(resultsLocations, lastLocation)
-      local markId = vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace,
-        lastline + highlight.start_line, 0, { right_gravity = true })
+      local markId = vim.api.nvim_buf_set_extmark(
+        buf,
+        context.locationsNamespace,
+        lastline + highlight.start_line,
+        0,
+        { right_gravity = true }
+      )
       resultLocationByExtmarkId[markId] = lastLocation
 
       lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
@@ -61,8 +76,13 @@ end
 -- additional note: sometimes there are mulltiple marks on the same row, like when lines
 -- before this line are deleted, but the last mark should be the correct one.
 function M.getResultLocation(row, buf, context)
-  local marks = vim.api.nvim_buf_get_extmarks(buf, context.locationsNamespace,
-    { row, 0 }, { row, 0 }, {})
+  local marks = vim.api.nvim_buf_get_extmarks(
+    buf,
+    context.locationsNamespace,
+    { row, 0 },
+    { row, 0 },
+    {}
+  )
   if #marks > 0 then
     local markId = unpack(marks[#marks])
     return context.state.resultLocationByExtmarkId[markId]
@@ -87,7 +107,7 @@ end
 function M.clear(buf, context)
   -- remove all lines after heading and add one blank line
   local headerRow = context.state.headerRow
-  setBufLines(buf, headerRow, -1, false, { "" })
+  setBufLines(buf, headerRow, -1, false, { '' })
 
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
