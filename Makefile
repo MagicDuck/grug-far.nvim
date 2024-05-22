@@ -16,5 +16,5 @@ clean:
 	rm -rf deps
 # lint
 lint:
-	selene lua plugin tests
-	stylua --check lua plugin tests
+	selene lua tests
+	stylua --check lua tests

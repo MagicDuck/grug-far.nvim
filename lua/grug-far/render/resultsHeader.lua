@@ -1,5 +1,8 @@
 local opts = require('grug-far/opts')
 
+--- gets status text
+---@param context GrugFarContext
+---@return string | nil
 local function getStatusText(context)
   local status = context.state.status
   if status == 'error' then
@@ -19,12 +22,19 @@ local function getStatusText(context)
   return opts.getIcon('resultsStatusReady', context)
 end
 
+--- gets separator line
+---@param context GrugFarContext
+---@return string
 local function getSeparator(context)
   -- note: use a large number to ensure it's always > window width
   local separatorLine = context.options.resultsSeparatorLineChar:rep(400)
   return ' ' .. (getStatusText(context) or '') .. ' ' .. separatorLine
 end
 
+--- render stats information line
+---@param buf integer
+---@param context GrugFarContext
+---@param headerRow integer
 local function renderInfoLine(buf, context, headerRow)
   local virt_lines = {}
 
@@ -61,6 +71,8 @@ local function renderInfoLine(buf, context, headerRow)
   end
 end
 
+---@param buf integer
+---@param context GrugFarContext
 local function renderResultsHeader(buf, context)
   local headerRow = context.state.headerRow
 

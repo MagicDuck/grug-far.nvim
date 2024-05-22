@@ -1,5 +1,61 @@
 local M = {}
 
+---@class KeymapTable
+---@field n? string
+---@field i? string
+
+---@alias KeymapDef KeymapTable | string | boolean
+
+---@class Keymaps
+---@field replace KeymapDef
+---@field qflist KeymapDef
+---@field syncLocations KeymapDef
+---@field syncLine KeymapDef
+---@field close KeymapDef
+---@field gotoLocation KeymapDef
+
+---@class IconsTable
+---@field enabled boolean
+---@field searchInput string
+---@field replaceInput string
+---@field filesFilterInput string
+---@field flagsInput string
+---@field resultsStatusReady string
+---@field resultsStatusError string
+---@field resultsStatusSuccess string
+---@field resultsActionMessage string
+
+---@class PlaceholdersTable
+---@field enabled boolean
+---@field search string
+---@field replacement string
+---@field filesFilter string
+---@field filesGlob? string deprecated, use filesFilter
+---@field flags string
+
+---@class PrefillsTable
+---@field search string
+---@field replacement string
+---@field filesFilter string
+---@field flags string
+
+---@class GrugFarOptions
+---@field debounceMs integer
+---@field minSearchChars integer
+---@field maxWorkers integer
+---@field extraRgArgs string
+---@field disableBufferLineNumbers boolean
+---@field maxSearchCharsInTitles integer
+---@field startInInsertMode boolean
+---@field startCursorRow integer
+---@field keymaps Keymaps
+---@field resultsSeparatorLineChar string
+---@field spinnerStates string[] | false
+---@field icons IconsTable
+---@field placeholders PlaceholdersTable
+---@field prefills PrefillsTable
+
+---@type GrugFarOptions
 M.defaultOptions = {
   -- debounce milliseconds for issuing search while user is typing
   -- prevents excesive searching
@@ -110,6 +166,10 @@ M.defaultOptions = {
   },
 }
 
+--- generates merged options
+---@param options GrugFarOptions
+---@param defaults GrugFarOptions
+---@return GrugFarOptions
 function M.with_defaults(options, defaults)
   local newOptions = vim.tbl_deep_extend('force', defaults, options)
 
@@ -143,6 +203,10 @@ function M.with_defaults(options, defaults)
   return newOptions
 end
 
+--- gets icon with given name if icons enabled
+---@param iconName string
+---@param context GrugFarContext
+---@return string|nil
 function M.getIcon(iconName, context)
   local icons = context.options.icons
   if not icons.enabled then

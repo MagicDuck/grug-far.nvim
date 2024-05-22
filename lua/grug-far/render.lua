@@ -2,6 +2,8 @@ local renderHelp = require('grug-far/render/help')
 local renderInput = require('grug-far/render/input')
 local renderResults = require('grug-far/render/results')
 
+---@param buf integer
+---@param count integer
 local function ensureTopEmptyLines(buf, count)
   local lines = vim.api.nvim_buf_get_lines(buf, 0, count, false)
   for _ = #lines + 1, count do
@@ -26,6 +28,8 @@ end
 local TOP_EMPTY_LINES = 2
 local BEFORE_RESULTS_LINES = 2
 
+---@param buf integer
+---@param context GrugFarContext
 local function render(buf, context)
   local inputs = context.state.inputs
   local placeholders = context.options.placeholders

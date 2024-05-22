@@ -2,6 +2,12 @@ local uv = vim.loop
 local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 local M = {}
 
+---@alias uv_timer any
+
+--- setTimeout, like in js
+---@param callback fun()
+---@param timeout integer milliseconds
+---@return uv_timer timer
 function M.setTimeout(callback, timeout)
   local timer = uv.new_timer()
   timer:start(timeout, 0, function()
@@ -12,6 +18,8 @@ function M.setTimeout(callback, timeout)
   return timer
 end
 
+--- clear the timeout
+---@param timer uv_timer
 function M.clearTimeout(timer)
   if timer and not timer:is_closing() then
     timer:stop()
@@ -19,6 +27,10 @@ function M.clearTimeout(timer)
   end
 end
 
+--- debounce given function
+---@param callback fun(parms: any)
+---@param timeout integer milliseconds
+---@return fun(params: any) deobuncedCallback
 function M.debounce(callback, timeout)
   local timer
   return function(params)
@@ -29,6 +41,10 @@ function M.debounce(callback, timeout)
   end
 end
 
+--- finds location of given substring in string
+---@param str string
+---@param substr string
+---@return integer | nil, integer | nil
 function M.strFindLast(str, substr)
   local i = 0
   local j = nil
@@ -48,6 +64,11 @@ function M.strFindLast(str, substr)
   return i, j
 end
 
+--- truncate string and add ... after n chars, adding a prefix if non empty
+---@param str string
+---@param n integer
+---@param prefix string | nil
+---@return string
 function M.strEllideAfter(str, n, prefix)
   if n == 0 or #str == 0 then
     return ''
@@ -55,6 +76,10 @@ function M.strEllideAfter(str, n, prefix)
   return (prefix or '') .. (#str > n and string.sub(str, 1, n) .. '...' or str)
 end
 
+--- check if given flag is included in blacklist
+---@param flag string
+---@param blacklistedFlags string[]
+---@return boolean
 function M.isBlacklistedFlag(flag, blacklistedFlags)
   if not blacklistedFlags then
     return false
@@ -74,6 +99,9 @@ function M.isBlacklistedFlag(flag, blacklistedFlags)
   return false
 end
 
+--- async reads given file using libuv
+---@param path string
+---@param callback fun(err: string | nil, data: string | nil)
 function M.readFileAsync(path, callback)
   uv.fs_open(path, 'r', uv.constants.O_RDONLY, function(err1, fd)
     if err1 then
@@ -104,6 +132,10 @@ function M.readFileAsync(path, callback)
   end)
 end
 
+--- async overwrites file with given content
+---@param path string
+---@param data string
+---@param callback fun(err: string | nil)
 function M.overwriteFileAsync(path, data, callback)
   uv.fs_open(path, 'w+', uv.constants.O_RDWR + uv.constants.O_TRUNC, function(err1, fd)
     if err1 then

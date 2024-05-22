@@ -1,5 +1,16 @@
 local opts = require('grug-far/opts')
 
+---@class InputRenderParams
+---@field buf integer
+---@field lineNr integer
+---@field extmarkName string
+---@field label? string
+---@field placeholder? string
+---@field icon? string
+
+---@param params InputRenderParams
+---@param context GrugFarContext
+---@return string textContent
 local function renderInput(params, context)
   local buf = params.buf
   local lineNr = params.lineNr
