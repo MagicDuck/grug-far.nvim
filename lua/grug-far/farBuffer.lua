@@ -11,6 +11,11 @@ local utils = require('grug-far/utils')
 
 local M = {}
 
+--- add a keymapping
+---@param buf integer
+---@param desc string
+---@param keymap KeymapDef
+---@param callback fun()
 local function setBufKeymap(buf, desc, keymap, callback)
   local function setMapping(mode, lhs)
     vim.api.nvim_buf_set_keymap(
@@ -30,6 +35,9 @@ local function setBufKeymap(buf, desc, keymap, callback)
   end
 end
 
+--- set up all key maps
+---@param buf integer
+---@param context GrugFarContext
 local function setupKeymap(buf, context)
   local keymaps = context.options.keymaps
   setBufKeymap(buf, 'Grug Far: apply replacements', keymaps.replace, function()
@@ -52,6 +60,8 @@ local function setupKeymap(buf, context)
   end)
 end
 
+---@param buf integer
+---@param context GrugFarContext
 local function updateBufName(buf, context)
   vim.api.nvim_buf_set_name(
     buf,
@@ -65,6 +75,8 @@ local function updateBufName(buf, context)
   )
 end
 
+---@param buf integer
+---@param context GrugFarContext
 local function setupGlobalOptOverrides(buf, context)
   local originalBackspaceOpt = vim.opt.backspace:get()
   local function onBufEnter()
@@ -91,6 +103,9 @@ local function setupGlobalOptOverrides(buf, context)
   onBufEnter()
 end
 
+---@param win integer
+---@param context GrugFarContext
+---@return integer bufId
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
   vim.api.nvim_buf_set_option(buf, 'filetype', 'grug-far')

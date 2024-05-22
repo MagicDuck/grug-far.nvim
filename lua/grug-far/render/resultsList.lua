@@ -1,5 +1,11 @@
 local M = {}
 
+--- sets buf lines, even when buf is not modifiable
+---@param buf integer
+---@param start integer
+---@param ending integer
+---@param strict_indexing boolean
+---@param replacement string[]
 local function setBufLines(buf, start, ending, strict_indexing, replacement)
   local isModifiable = vim.api.nvim_buf_get_option(buf, 'modifiable')
   vim.api.nvim_buf_set_option(buf, 'modifiable', true)
@@ -7,8 +13,14 @@ local function setBufLines(buf, start, ending, strict_indexing, replacement)
   vim.api.nvim_buf_set_option(buf, 'modifiable', isModifiable)
 end
 
+--- append a bunch of result lines to the buffer
+---@param buf integer
+---@param context GrugFarContext
+-- TODO (sbadragan): need a special class for this thing
+---@param data { highlights: any, lines: string[]}
 function M.appendResultsChunk(buf, context, data)
   -- add text
+  -- TODO (sbadragan): there is a problem with auto-complete now
   local lastline = vim.api.nvim_buf_line_count(buf)
   setBufLines(buf, lastline, lastline, false, data.lines)
 

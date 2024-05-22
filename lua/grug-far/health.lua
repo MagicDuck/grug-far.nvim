@@ -2,20 +2,24 @@ local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 
 local M = {}
 
+---@class Dependency
+---@field name string
+---@field url string
+---@field optional boolean
+---@field binaries? string[]
+
+---@type Dependency[]
 local dependencies = {
   {
-    package = {
-      {
-        name = 'rg',
-        url = '[BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep)',
-        optional = false,
-      },
-    },
+    name = 'rg',
+    url = '[BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep)',
+    optional = false,
   },
 }
 
-local check_binary_installed = function(package)
-  local binaries = package.binaries or { package.name }
+---@param dep Dependency
+local function check_binary_installed(dep)
+  local binaries = dep.binaries or { dep.name }
   for _, binary in ipairs(binaries) do
     if is_win then
       binary = binary .. '.exe'
@@ -40,25 +44,23 @@ function M.check()
   vim.health.start('Checking external dependencies')
 
   for _, dep in pairs(dependencies) do
-    for _, package in ipairs(dep.package) do
-      local installed, version = check_binary_installed(package)
-      if not installed then
-        local err_msg = ('%s: not found.'):format(package.name)
-        if package.optional then
-          vim.health.warn(
-            ('%s %s'):format(err_msg, ('Install %s for extended capabilities'):format(package.url))
-          )
-        else
-          vim.health.error(
-            ('%s %s'):format(
-              err_msg,
-              ('`GrugFar` will not function without %s installed.'):format(package.url)
-            )
-          )
-        end
+    local installed, version = check_binary_installed(dep)
+    if not installed then
+      local err_msg = ('%s: not found.'):format(dep.name)
+      if dep.optional then
+        vim.health.warn(
+          ('%s %s'):format(err_msg, ('Install %s for extended capabilities'):format(dep.url))
+        )
       else
-        vim.health.ok(('%s: found %s'):format(package.name, version))
+        vim.health.error(
+          ('%s %s'):format(
+            err_msg,
+            ('`GrugFar` will not function without %s installed.'):format(dep.url)
+          )
+        )
       end
+    else
+      vim.health.ok(('%s: found %s'):format(dep.name, version))
     end
   end
 end

@@ -1,9 +1,15 @@
+---@param prefix string
+---@param keymap KeymapDef
+---@param mode string
+---@return string | nil
 local function printMapping(prefix, keymap, mode)
   local m = string.sub(mode, 1, 1)
   local lhs = keymap[m]
   return (lhs and #lhs > 0) and prefix .. ' ' .. lhs or nil
 end
 
+---@param params { buf: integer }
+---@param context GrugFarContext
 local function renderHelp(params, context)
   local buf = params.buf
   local mode = vim.fn.mode()
