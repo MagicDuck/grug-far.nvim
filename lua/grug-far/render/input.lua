@@ -5,7 +5,7 @@ local opts = require('grug-far/opts')
 ---@field lineNr integer
 ---@field extmarkName string
 ---@field label? string
----@field placeholder? string
+---@field placeholder? string | false
 ---@field icon? string
 
 ---@param params InputRenderParams

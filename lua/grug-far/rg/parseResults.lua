@@ -1,11 +1,22 @@
 local colors = require('grug-far/rg/colors')
 
+--- @enum ResultsTokenType
 local token_types = {
   color = 1,
   color_ending = 2,
   newline = 3,
 }
 
+---@class ResultsToken
+---@field type ResultsTokenType
+---@field hl string
+---@field name string
+---@field start integer
+---@field fin integer
+
+--- gets tokens (line number, column, etc.) in results
+---@param data string
+---@return ResultsToken[]
 local function getTokens(data)
   local tokens = {}
   local i
@@ -53,6 +64,13 @@ local function getTokens(data)
   return tokens
 end
 
+---@class ParsedResultsStats
+---@field files integer
+---@field matches integer
+
+--- get results stats
+---@param tokens ResultsToken[]
+---@return ParsedResultsStats
 local function getStats(tokens)
   local stats = { matches = 0, files = 0 }
   for k = 1, #tokens do
@@ -70,6 +88,21 @@ local function getStats(tokens)
   return stats
 end
 
+---@class ResultHighlight
+---@field hl string
+---@field start_line integer
+---@field start_col integer
+---@field end_line integer
+---@field end_col integer
+
+---@class ParsedResultsData
+---@field lines string[]
+---@field highlights ResultHighlight[] in source order
+---@field stats ParsedResultsStats
+
+--- parse results chunk and get info
+---@param data string
+---@return ParsedResultsData
 local function parseResults(data)
   local tokens = getTokens(data)
 

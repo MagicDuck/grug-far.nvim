@@ -4,7 +4,16 @@ local resultsList = require('grug-far/render/resultsList')
 local utils = require('grug-far/utils')
 local uv = vim.loop
 
--- note: this could use libuv and do async io if we find we need the perf boost
+---@class ChangedLine
+---@field lnum integer
+---@field newLine string
+
+---@class ChangedFile
+---@field filename string
+---@field changedLines string[]
+
+--- performs sync for given changed file
+---@param params { context: GrugFarContext, changedFile: ChangedFile, on_done: fun(errorMessage: string | nil) }
 local function writeChangedFile(params)
   local changedFile = params.changedFile
   local on_done = params.on_done
@@ -39,7 +48,15 @@ local function writeChangedFile(params)
   end)
 end
 
-local function syncChangedLines(params)
+---@class syncChangedFilesParams
+---@field context GrugFarContext
+---@field changedFiles ChangedFile[]
+---@field reportProgress fun()
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string | nil)
+
+--- sync given changed files
+---@param params syncChangedFilesParams
+local function syncChangedFiles(params)
   local context = params.context
   local changedFiles = vim.deepcopy(params.changedFiles)
   local reportProgress = params.reportProgress
@@ -79,6 +96,12 @@ local function syncChangedLines(params)
   end
 end
 
+--- gets action message to display
+---@param err string | nil
+---@param count? integer
+---@param total? integer
+---@param time? integer
+---@return string
 local function getActionMessage(err, count, total, time)
   local msg = 'sync '
   if err then
@@ -92,6 +115,7 @@ local function getActionMessage(err, count, total, time)
   return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
+---@param context GrugFarContext
 local function isMultilineSearchReplace(context)
   local inputs = context.state.inputs
   local multilineFlags = { '--multiline', '-U', '--multiline-dotall' }
@@ -104,6 +128,8 @@ local function isMultilineSearchReplace(context)
   end
 end
 
+--- is user performing a replacement, ui-wise?
+---@param context GrugFarContext
 local function isDoingReplace(context)
   local args = getArgs(context.state.inputs, context.options, {})
   if not args then
@@ -117,6 +143,10 @@ local function isDoingReplace(context)
   end
 end
 
+---@alias Extmark integer[]
+
+---@param all_extmarks Extmark[]
+---@return Extmark[]
 local function filterDeletedLinesExtmarks(all_extmarks)
   local marksByRow = {}
   for i = 1, #all_extmarks do
@@ -132,7 +162,13 @@ local function filterDeletedLinesExtmarks(all_extmarks)
   return marks
 end
 
--- note startRow / endRow are zero-based
+--- figure out which files changed and how
+--- note startRow / endRow are zero-based
+---@param buf integer
+---@param context GrugFarContext
+---@param startRow integer
+---@param endRow integer
+---@return ChangedFile[]
 local function getChangedFiles(buf, context, startRow, endRow)
   local isReplacing = isDoingReplace(context)
   local all_extmarks = vim.api.nvim_buf_get_extmarks(
@@ -188,6 +224,8 @@ local function getChangedFiles(buf, context, startRow, endRow)
   return changedFiles
 end
 
+--- performs sync of lines in results area with corresponding original file locations
+---@param params { buf: integer, context: GrugFarContext, startRow: integer, endRow: integer }
 local function sync(params)
   local buf = params.buf
   local context = params.context
@@ -259,7 +297,7 @@ local function sync(params)
     vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
   end)
 
-  syncChangedLines({
+  syncChangedFiles({
     context = context,
     changedFiles = changedFiles,
     reportProgress = reportSyncedFilesUpdate,

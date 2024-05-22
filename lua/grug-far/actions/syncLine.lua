@@ -1,5 +1,7 @@
 local sync = require('grug-far/actions/sync')
 
+--- syncs current result line with original file location
+---@param params { buf: integer, context: GrugFarContext }
 local function syncLine(params)
   local context = params.context
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0)) - 1
