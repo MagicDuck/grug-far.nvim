@@ -30,3 +30,22 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: latest
           args: --check .
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Checkout dependency neodev
+        uses: actions/checkout@v3
+        with:
+          repository: "folke/neodev.nvim"
+          path: "deps/neodev.nvim"
+
+      - name: Type Check Code Base
+        uses: mrcjkb/lua-typecheck-action@v0.1.2
+        with:
+          configpath: .github/workflows/.luarc.json
+          directories: |
+            lua
