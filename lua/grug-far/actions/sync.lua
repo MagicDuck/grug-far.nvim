@@ -10,7 +10,7 @@ local uv = vim.loop
 
 ---@class ChangedFile
 ---@field filename string
----@field changedLines string[]
+---@field changedLines ChangedLine[]
 
 --- performs sync for given changed file
 ---@param params { context: GrugFarContext, changedFile: ChangedFile, on_done: fun(errorMessage: string | nil) }
@@ -24,7 +24,7 @@ local function writeChangedFile(params)
       return on_done('Could not read: ' .. file .. '\n' .. err1)
     end
 
-    local lines = vim.split(contents, utils.eol)
+    local lines = vim.split(contents or '', utils.eol)
 
     local changedLines = changedFile.changedLines
     for i = 1, #changedLines do
