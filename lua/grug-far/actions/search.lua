@@ -2,6 +2,8 @@ local fetchResults = require('grug-far/rg/fetchResults')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 
+--- performs search
+---@param params { buf: integer, context: GrugFarContext }
 local function search(params)
   local buf = params.buf
   local context = params.context

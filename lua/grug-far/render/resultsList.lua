@@ -16,11 +16,9 @@ end
 --- append a bunch of result lines to the buffer
 ---@param buf integer
 ---@param context GrugFarContext
--- TODO (sbadragan): need a special class for this thing
----@param data { highlights: any, lines: string[]}
+---@param data ParsedResultsData
 function M.appendResultsChunk(buf, context, data)
   -- add text
-  -- TODO (sbadragan): there is a problem with auto-complete now
   local lastline = vim.api.nvim_buf_line_count(buf)
   setBufLines(buf, lastline, lastline, false, data.lines)
 
@@ -84,9 +82,14 @@ function M.appendResultsChunk(buf, context, data)
   end
 end
 
--- note: row is zero-based
--- additional note: sometimes there are mulltiple marks on the same row, like when lines
--- before this line are deleted, but the last mark should be the correct one.
+--- gets result location at given row if available
+--- note: row is zero-based
+--- additional note: sometimes there are mulltiple marks on the same row, like when lines
+--- before this line are deleted, but the last mark should be the correct one.
+---@param row integer
+---@param buf integer
+---@param context GrugFarContext
+---@return ResultLocation | nil
 function M.getResultLocation(row, buf, context)
   local marks = vim.api.nvim_buf_get_extmarks(
     buf,
@@ -103,6 +106,10 @@ function M.getResultLocation(row, buf, context)
   return nil
 end
 
+--- displays results error
+---@param buf integer
+---@param context GrugFarContext
+---@param error string
 function M.setError(buf, context, error)
   M.clear(buf, context)
 
@@ -116,6 +123,9 @@ function M.setError(buf, context, error)
   end
 end
 
+--- clears results area
+---@param buf integer
+---@param context GrugFarContext
 function M.clear(buf, context)
   -- remove all lines after heading and add one blank line
   local headerRow = context.state.headerRow

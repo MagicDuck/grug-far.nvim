@@ -2,12 +2,10 @@ local uv = vim.loop
 local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 local M = {}
 
----@alias uv_timer any
-
 --- setTimeout, like in js
 ---@param callback fun()
 ---@param timeout integer milliseconds
----@return uv_timer timer
+---@return uv_timer_t timer
 function M.setTimeout(callback, timeout)
   local timer = uv.new_timer()
   timer:start(timeout, 0, function()
@@ -19,7 +17,7 @@ function M.setTimeout(callback, timeout)
 end
 
 --- clear the timeout
----@param timer uv_timer
+---@param timer uv_timer_t
 function M.clearTimeout(timer)
   if timer and not timer:is_closing() then
     timer:stop()
@@ -78,7 +76,7 @@ end
 
 --- check if given flag is included in blacklist
 ---@param flag string
----@param blacklistedFlags string[]
+---@param blacklistedFlags? string[]
 ---@return boolean
 function M.isBlacklistedFlag(flag, blacklistedFlags)
   if not blacklistedFlags then
@@ -101,7 +99,7 @@ end
 
 --- async reads given file using libuv
 ---@param path string
----@param callback fun(err: string | nil, data: string | nil)
+---@param callback fun(err: string , data: nil) | fun(err: nil, data: string)
 function M.readFileAsync(path, callback)
   uv.fs_open(path, 'r', uv.constants.O_RDONLY, function(err1, fd)
     if err1 then

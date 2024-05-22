@@ -1,5 +1,12 @@
 local utils = require('grug-far/utils')
 
+--- get args for ripgrep or nil if params invalid / insufficient
+---@param inputs GrugFarInputs
+---@param options GrugFarOptions
+---@param extraArgs string[]
+---@param blacklistedFlags? string[]
+---@param forceReplace? boolean
+---@return string[] | nil args, string[] | nil blacklisted
 local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplace)
   if #inputs.search < (options.minSearchChars or 1) then
     return nil

@@ -1,5 +1,8 @@
 local resultsList = require('grug-far/render/resultsList')
 
+--- opens location at current cursor line (if there is one) in previous window
+--- that is the window user was in before creating the grug-far split window
+---@param params { buf: integer, context: GrugFarContext }
 local function gotoLocation(params)
   local buf = params.buf
   local context = params.context

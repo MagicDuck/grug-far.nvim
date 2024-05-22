@@ -36,9 +36,15 @@ local contextCount = 0
 ---@field rgResultLine? string
 ---@field rgColEndIndex? integer
 
+---@class GrugFarInputs
+---@field search string
+---@field replacement string
+---@field filesFilter string
+---@field flags string
+
 ---@class GrugFarState
----@field inputs {[string]: string}
----@field lastInputs? {[string]: string}
+---@field inputs GrugFarInputs
+---@field lastInputs? GrugFarInputs
 ---@field headerRow integer
 ---@field status? GrugFarStatus
 ---@field progressCount? integer
@@ -47,6 +53,7 @@ local contextCount = 0
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultsLocations ResultLocation[]
 ---@field resultsLastFilename? string
+---@field abortSearch? fun()
 
 ---@class GrugFarContext
 ---@field count integer

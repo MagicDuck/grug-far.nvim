@@ -1,12 +1,21 @@
 local utils = require('grug-far/utils')
 local uv = vim.loop
 
+---@param handle uv_handle_t | nil
 local function closeHandle(handle)
   if handle and not handle:is_closing() then
     handle:close()
   end
 end
 
+---@class FetchWithRgParams
+---@field args string[] | nil
+---@field on_fetch_chunk fun(data: string)
+---@field on_finish fun(status: GrugFarStatus, errorMesage: string | nil)
+
+--- fetch with ripgrep
+---@param params FetchWithRgParams
+---@return nil | fun() abort
 local function fetchWithRg(params)
   local on_fetch_chunk = params.on_fetch_chunk
   local on_finish = params.on_finish
@@ -22,8 +31,8 @@ local function fetchWithRg(params)
   local stdout = uv.new_pipe()
   local stderr = uv.new_pipe()
 
-  local handle, pid
-  handle, pid = uv.spawn('rg', {
+  local handle
+  handle = uv.spawn('rg', {
     stdio = { nil, stdout, stderr },
     cwd = vim.fn.getcwd(),
     args = args,
@@ -56,7 +65,9 @@ local function fetchWithRg(params)
     closeHandle(stdout)
     closeHandle(stderr)
     closeHandle(handle)
-    uv.kill(pid, uv.constants.SIGTERM)
+    if handle then
+      handle:kill(vim.constants.SIGTERM)
+    end
 
     on_finish(nil, nil)
   end

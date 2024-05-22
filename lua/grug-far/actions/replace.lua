@@ -6,6 +6,8 @@ local resultsList = require('grug-far/render/resultsList')
 local utils = require('grug-far/utils')
 local uv = vim.loop
 
+--- performs replacement in given file
+---@param params { context: GrugFarContext, file: string, on_done: fun(errorMessage: string | nil) }
 local function replaceInFile(params)
   local context = params.context
   local state = context.state
@@ -32,6 +34,14 @@ local function replaceInFile(params)
   })
 end
 
+---@class replaceInMatchedFilesParams
+---@field context GrugFarContext
+---@field files string[]
+---@field reportProgress fun()
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string | nil)
+
+--- performs replacement in given matched file
+---@param params replaceInMatchedFilesParams
 local function replaceInMatchedFiles(params)
   local context = params.context
   local files = vim.deepcopy(params.files)
@@ -71,6 +81,12 @@ local function replaceInMatchedFiles(params)
   end
 end
 
+--- gets action message to display
+---@param err string | nil
+---@param count? integer
+---@param total? integer
+---@param time? integer
+---@return string
 local function getActionMessage(err, count, total, time)
   local msg = 'replace '
   if err then
@@ -84,6 +100,9 @@ local function getActionMessage(err, count, total, time)
   return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
+--- are we replacing matches with the empty string?
+---@param args string[]
+---@return boolean
 local function isEmptyStringReplace(args)
   local replaceEqArg = '--replace='
   for i = #args, 1, -1 do
@@ -100,6 +119,8 @@ local function isEmptyStringReplace(args)
   return true
 end
 
+--- performs replace
+---@param params { buf: integer, context: GrugFarContext }
 local function replace(params)
   local buf = params.buf
   local context = params.context

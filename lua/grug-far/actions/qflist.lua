@@ -1,8 +1,11 @@
 local utils = require('grug-far/utils')
 
+--- opens all locations in the results area in a quickfix list
+---@param params { context: GrugFarContext }
 local function qflist(params)
   local context = params.context
   local state = context.state
+  -- TODO: should this respect deletions in the results area?
   local resultsLocations = state.resultsLocations
 
   if #resultsLocations == 0 then

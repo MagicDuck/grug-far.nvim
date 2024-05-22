@@ -2,6 +2,15 @@ local getArgs = require('grug-far/rg/getArgs')
 local blacklistedReplaceFlags = require('grug-far/rg/blacklistedReplaceFlags')
 local fetchWithRg = require('grug-far/rg/fetchWithRg')
 
+---@class FetchWithMatchesParams
+---@field inputs GrugFarInputs
+---@field options GrugFarOptions
+---@field on_fetch_chunk fun(data: string[])
+---@field on_finish fun(status: GrugFarStatus, errorMesage: string | nil, filesWithMatches: string[], blacklistedArgs: string[] | nil)
+
+--- fetch list of files that match search
+---@param params FetchWithMatchesParams
+---@return nil | fun() abort
 local function fetchFilesWithMatches(params)
   local filesWithMatches = {}
 
