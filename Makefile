@@ -1,10 +1,12 @@
 # Run all test files
+# use with update_screenshot=true to update the screenshots
 test:
 	nvim --headless --noplugin -u ./scripts/minimal_init.lua -c "lua MiniTest.run()"
 
-# Run test from file at `$FILE` environment variable, ex: make test-file FILE=...
+# Run test from file at `$spec` environment variable, ex: make test-file spec=...
+# use with update_screenshot=true to update the screenshots
 test-file:
-	nvim --headless --noplugin -u ./scripts/minimal_init.lua -c "lua MiniTest.run_file('$(FILE)')"
+	nvim --headless --noplugin -u ./scripts/minimal_init.lua -c "lua MiniTest.run_file('$(spec)')"
 
 update-screenshots:
 	rm -rf tests/screenshots/* 

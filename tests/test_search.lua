@@ -1,7 +1,5 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
-local screenshot = require('grug-far/test/screenshot')
-local expect = MiniTest.expect
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -34,8 +32,8 @@ T['can search for some string'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 end
 
 T['can search with flags'] = function()
@@ -56,8 +54,8 @@ T['can search with flags'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 end
 
 T['can search with particular file in flags'] = function()
@@ -78,8 +76,8 @@ T['can search with particular file in flags'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 end
 
 T['can search with file filter'] = function()
@@ -100,8 +98,8 @@ T['can search with file filter'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 end
 
 T['can search with replace string'] = function()
@@ -122,8 +120,8 @@ T['can search with replace string'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 end
 
 T['can search with no matches'] = function()
@@ -144,8 +142,8 @@ T['can search with no matches'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 end
 
 T['can search for some string with many matches'] = function()
@@ -168,8 +166,8 @@ T['can search for some string with many matches'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 end
 
 T['can search and edit search'] = function()
@@ -194,8 +192,8 @@ T['can search and edit search'] = function()
   helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
 
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 end
 
 return T

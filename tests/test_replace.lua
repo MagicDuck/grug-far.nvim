@@ -1,7 +1,5 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
-local screenshot = require('grug-far/test/screenshot')
-local expect = MiniTest.expect
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -35,13 +33,13 @@ T['can replace with replace string'] = function()
 
   child.type_keys('<C-enter>')
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
 
   child.type_keys('<esc>cc', 'curly')
   vim.loop.sleep(50)
   helpers.childWaitForFinishedStatus(child)
-  expect.reference_screenshot(child.get_screenshot())
+  helpers.childExpectScreenshot(child)
 end
 
 return T
