@@ -7,517 +7,505 @@
 006|
 007|
 008|
-009|[0m[38;2;0;0;1mfile_1[0m
-010|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-011|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-012|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+009|file_1
+010|1:9:        grug walks many steps
+011|2:9:        grug talks and grug drinks
+012|3:14:        then grug thinks
 013|
-014|[0m[38;2;0;0;1mfile_10[0m
-015|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-016|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-017|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+014|file_10
+015|1:9:        grug walks many steps
+016|2:9:        grug talks and grug drinks
+017|3:14:        then grug thinks
 018|
-019|[0m[38;2;0;0;1mfile_100[0m
-020|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-021|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-022|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+019|file_100
+020|1:9:        grug walks many steps
+021|2:9:        grug talks and grug drinks
+022|3:14:        then grug thinks
 023|
-024|[0m[38;2;0;0;1mfile_11[0m
-025|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-026|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-027|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+024|file_11
+025|1:9:        grug walks many steps
+026|2:9:        grug talks and grug drinks
+027|3:14:        then grug thinks
 028|
-029|[0m[38;2;0;0;1mfile_12[0m
-030|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-031|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-032|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+029|file_12
+030|1:9:        grug walks many steps
+031|2:9:        grug talks and grug drinks
+032|3:14:        then grug thinks
 033|
-034|[0m[38;2;0;0;1mfile_13[0m
-035|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-036|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-037|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+034|file_13
+035|1:9:        grug walks many steps
+036|2:9:        grug talks and grug drinks
+037|3:14:        then grug thinks
 038|
-039|[0m[38;2;0;0;1mfile_14[0m
-040|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-041|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-042|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+039|file_14
+040|1:9:        grug walks many steps
+041|2:9:        grug talks and grug drinks
+042|3:14:        then grug thinks
 043|
-044|[0m[38;2;0;0;1mfile_15[0m
-045|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-046|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-047|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+044|file_15
+045|1:9:        grug walks many steps
+046|2:9:        grug talks and grug drinks
+047|3:14:        then grug thinks
 048|
-049|[0m[38;2;0;0;1mfile_16[0m
-050|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-051|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-052|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+049|file_16
+050|1:9:        grug walks many steps
+051|2:9:        grug talks and grug drinks
+052|3:14:        then grug thinks
 053|
-054|[0m[38;2;0;0;1mfile_17[0m
-055|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-056|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-057|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+054|file_17
+055|1:9:        grug walks many steps
+056|2:9:        grug talks and grug drinks
+057|3:14:        then grug thinks
 058|
-059|[0m[38;2;0;0;1mfile_18[0m
-060|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-061|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-062|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+059|file_18
+060|1:9:        grug walks many steps
+061|2:9:        grug talks and grug drinks
+062|3:14:        then grug thinks
 063|
-064|[0m[38;2;0;0;1mfile_19[0m
-065|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-066|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-067|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+064|file_19
+065|1:9:        grug walks many steps
+066|2:9:        grug talks and grug drinks
+067|3:14:        then grug thinks
 068|
-069|[0m[38;2;0;0;1mfile_2[0m
-070|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-071|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-072|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+069|file_2
+070|1:9:        grug walks many steps
+071|2:9:        grug talks and grug drinks
+072|3:14:        then grug thinks
 073|
-074|[0m[38;2;0;0;1mfile_20[0m
-075|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-076|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-077|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+074|file_20
+075|1:9:        grug walks many steps
+076|2:9:        grug talks and grug drinks
+077|3:14:        then grug thinks
 078|
-079|[0m[38;2;0;0;1mfile_21[0m
-080|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-081|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-082|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+079|file_21
+080|1:9:        grug walks many steps
+081|2:9:        grug talks and grug drinks
+082|3:14:        then grug thinks
 083|
-084|[0m[38;2;0;0;1mfile_22[0m
-085|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-086|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-087|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+084|file_22
+085|1:9:        grug walks many steps
+086|2:9:        grug talks and grug drinks
+087|3:14:        then grug thinks
 088|
-089|[0m[38;2;0;0;1mfile_23[0m
-090|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-091|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-092|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+089|file_23
+090|1:9:        grug walks many steps
+091|2:9:        grug talks and grug drinks
+092|3:14:        then grug thinks
 093|
-094|[0m[38;2;0;0;1mfile_24[0m
-095|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-096|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-097|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+094|file_24
+095|1:9:        grug walks many steps
+096|2:9:        grug talks and grug drinks
+097|3:14:        then grug thinks
 098|
-099|[0m[38;2;0;0;1mfile_25[0m
-100|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-101|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-102|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+099|file_25
+100|1:9:        grug walks many steps
+101|2:9:        grug talks and grug drinks
+102|3:14:        then grug thinks
 103|
-104|[0m[38;2;0;0;1mfile_26[0m
-105|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-106|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-107|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+104|file_26
+105|1:9:        grug walks many steps
+106|2:9:        grug talks and grug drinks
+107|3:14:        then grug thinks
 108|
-109|[0m[38;2;0;0;1mfile_27[0m
-110|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-111|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-112|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+109|file_27
+110|1:9:        grug walks many steps
+111|2:9:        grug talks and grug drinks
+112|3:14:        then grug thinks
 113|
-114|[0m[38;2;0;0;1mfile_28[0m
-115|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-116|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-117|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+114|file_28
+115|1:9:        grug walks many steps
+116|2:9:        grug talks and grug drinks
+117|3:14:        then grug thinks
 118|
-119|[0m[38;2;0;0;1mfile_29[0m
-120|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-121|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-122|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+119|file_29
+120|1:9:        grug walks many steps
+121|2:9:        grug talks and grug drinks
+122|3:14:        then grug thinks
 123|
-124|[0m[38;2;0;0;1mfile_3[0m
-125|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-126|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-127|
-128|==========================================
-129|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-130|
-131|[0m[38;2;0;0;1mfile_30[0m
-132|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-133|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-134|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-135|
-136|[0m[38;2;0;0;1mfile_31[0m
-137|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-138|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-139|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-140|
-141|[0m[38;2;0;0;1mfile_32[0m
-142|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-143|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-144|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-145|
-146|[0m[38;2;0;0;1mfile_33[0m
-147|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-148|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-149|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-150|
-151|[0m[38;2;0;0;1mfile_34[0m
-152|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-153|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-154|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-155|
-156|[0m[38;2;0;0;1mfile_35[0m
-157|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-158|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-159|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-160|
-161|[0m[38;2;0;0;1mfile_36[0m
-162|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-163|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-164|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-165|
-166|[0m[38;2;0;0;1mfile_37[0m
-167|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-168|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-169|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-170|
-171|[0m[38;2;0;0;1mfile_38[0m
-172|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-173|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-174|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-175|
-176|[0m[38;2;0;0;1mfile_39[0m
-177|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-178|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-179|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-180|
-181|[0m[38;2;0;0;1mfile_4[0m
-182|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-183|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-184|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-185|
-186|[0m[38;2;0;0;1mfile_40[0m
-187|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-188|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-189|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-190|
-191|[0m[38;2;0;0;1mfile_41[0m
-192|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-193|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-194|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-195|
-196|[0m[38;2;0;0;1mfile_42[0m
-197|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-198|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-199|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-200|
-201|[0m[38;2;0;0;1mfile_43[0m
-202|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-203|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-204|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-205|
-206|[0m[38;2;0;0;1mfile_44[0m
-207|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-208|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-209|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-210|
-211|[0m[38;2;0;0;1mfile_45[0m
-212|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-213|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-214|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-215|
-216|[0m[38;2;0;0;1mfile_46[0m
-217|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-218|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-219|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-220|
-221|[0m[38;2;0;0;1mfile_47[0m
-222|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-223|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-224|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-225|
-226|[0m[38;2;0;0;1mfile_48[0m
-227|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-228|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-229|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-230|
-231|[0m[38;2;0;0;1mfile_49[0m
-232|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-233|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-234|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-235|
-236|[0m[38;2;0;0;1mfile_5[0m
-237|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-238|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-239|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-240|
-241|[0m[38;2;0;0;1mfile_50[0m
-242|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-243|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-244|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-245|
-246|[0m[38;2;0;0;1mfile_51[0m
-247|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
+124|file_3
+125|1:9:        grug walks many steps
+126|2:9:        grug talks and grug drinks
+127|3:14:        then grug thinks
+128|
+129|file_30
+130|1:9:        grug walks many steps
+131|2:9:        grug talks and grug drinks
+132|3:14:        then grug thinks
+133|
+134|file_31
+135|1:9:        grug walks many steps
+136|2:9:        grug talks and grug drinks
+137|3:14:        then grug thinks
+138|
+139|file_32
+140|1:9:        grug walks many steps
+141|2:9:        grug talks and grug drinks
+142|3:14:        then grug thinks
+143|
+144|file_33
+145|1:9:        grug walks many steps
+146|2:9:        grug talks and grug drinks
+147|3:14:        then grug thinks
+148|
+149|file_34
+150|1:9:        grug walks many steps
+151|2:9:        grug talks and grug drinks
+152|3:14:        then grug thinks
+153|
+154|file_35
+155|1:9:        grug walks many steps
+156|2:9:        grug talks and grug drinks
+157|3:14:        then grug thinks
+158|
+159|file_36
+160|1:9:        grug walks many steps
+161|2:9:        grug talks and grug drinks
+162|3:14:        then grug thinks
+163|
+164|file_37
+165|1:9:        grug walks many steps
+166|2:9:        grug talks and grug drinks
+167|3:14:        then grug thinks
+168|
+169|file_38
+170|1:9:        grug walks many steps
+171|2:9:        grug talks and grug drinks
+172|3:14:        then grug thinks
+173|
+174|file_39
+175|1:9:        grug walks many steps
+176|2:9:        grug talks and grug drinks
+177|3:14:        then grug thinks
+178|
+179|file_4
+180|1:9:        grug walks many steps
+181|2:9:        grug talks and grug drinks
+182|3:14:        then grug thinks
+183|
+184|file_40
+185|1:9:        grug walks many steps
+186|2:9:        grug talks and grug drinks
+187|3:14:        then grug thinks
+188|
+189|file_41
+190|1:9:        grug walks many steps
+191|2:9:        grug talks and grug drinks
+192|3:14:        then grug thinks
+193|
+194|file_42
+195|1:9:        grug walks many steps
+196|2:9:        grug talks and grug drinks
+197|3:14:        then grug thinks
+198|
+199|file_43
+200|1:9:        grug walks many steps
+201|2:9:        grug talks and grug drinks
+202|3:14:        then grug thinks
+203|
+204|file_44
+205|1:9:        grug walks many steps
+206|2:9:        grug talks and grug drinks
+207|3:14:        then grug thinks
+208|
+209|file_45
+210|1:9:        grug walks many steps
+211|2:9:        grug talks and grug drinks
+212|3:14:        then grug thinks
+213|
+214|file_46
+215|1:9:        grug walks many steps
+216|2:9:        grug talks and grug drinks
+217|3:14:        then grug thinks
+218|
+219|file_47
+220|1:9:        grug walks many steps
+221|2:9:        grug talks and grug drinks
+222|3:14:        then grug thinks
+223|
+224|file_48
+225|1:9:        grug walks many steps
+226|2:9:        grug talks and grug drinks
+227|3:14:        then grug thinks
+228|
+229|file_49
+230|1:9:        grug walks many steps
+231|2:9:        grug talks and grug drinks
+232|3:14:        then grug thinks
+233|
+234|file_5
+235|1:9:        grug walks many steps
+236|2:9:        grug talks and grug drinks
+237|3:14:        then grug thinks
+238|
+239|file_50
+240|1:9:        grug walks many steps
+241|2:9:        grug talks and grug drinks
+242|3:14:        then grug thinks
+243|
+244|file_51
+245|1:9:        grug walks many steps
+246|2:9:        grug talks and grug drinks
+247|3:14:        then grug thinks
 248|
-249|==========================================
-250|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-251|
-252|==========================================
-253|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-254|
-255|[0m[38;2;0;0;1mfile_52[0m
-256|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-257|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-258|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-259|
-260|[0m[38;2;0;0;1mfile_53[0m
-261|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-262|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-263|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-264|
-265|[0m[38;2;0;0;1mfile_54[0m
-266|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-267|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-268|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-269|
-270|[0m[38;2;0;0;1mfile_55[0m
-271|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-272|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-273|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-274|
-275|[0m[38;2;0;0;1mfile_56[0m
-276|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-277|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-278|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-279|
-280|[0m[38;2;0;0;1mfile_57[0m
-281|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-282|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-283|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-284|
-285|[0m[38;2;0;0;1mfile_58[0m
-286|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-287|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-288|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-289|
-290|[0m[38;2;0;0;1mfile_59[0m
-291|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-292|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-293|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-294|
-295|[0m[38;2;0;0;1mfile_6[0m
-296|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-297|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-298|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-299|
-300|[0m[38;2;0;0;1mfile_60[0m
-301|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-302|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-303|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-304|
-305|[0m[38;2;0;0;1mfile_61[0m
-306|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-307|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-308|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-309|
-310|[0m[38;2;0;0;1mfile_62[0m
-311|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-312|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-313|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-314|
-315|[0m[38;2;0;0;1mfile_63[0m
-316|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-317|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-318|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-319|
-320|[0m[38;2;0;0;1mfile_64[0m
-321|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-322|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-323|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-324|
-325|[0m[38;2;0;0;1mfile_65[0m
-326|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-327|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-328|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-329|
-330|[0m[38;2;0;0;1mfile_66[0m
-331|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-332|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-333|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-334|
-335|[0m[38;2;0;0;1mfile_67[0m
-336|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-337|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-338|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-339|
-340|[0m[38;2;0;0;1mfile_68[0m
-341|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-342|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-343|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-344|
-345|[0m[38;2;0;0;1mfile_69[0m
-346|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-347|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-348|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-349|
-350|[0m[38;2;0;0;1mfile_7[0m
-351|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-352|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-353|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-354|
-355|[0m[38;2;0;0;1mfile_70[0m
-356|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-357|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-358|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-359|
-360|[0m[38;2;0;0;1mfile_71[0m
-361|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-362|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-363|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-364|
-365|[0m[38;2;0;0;1mfile_72[0m
-366|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-367|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-368|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-369|
-370|[0m[38;2;0;0;1mfile_73[0m
-371|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-372|
-373|==========================================
-374|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-375|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-376|
-377|[0m[38;2;0;0;1mfile_74[0m
-378|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-379|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-380|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-381|
-382|[0m[38;2;0;0;1mfile_75[0m
-383|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-384|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-385|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-386|
-387|[0m[38;2;0;0;1mfile_76[0m
-388|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-389|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-390|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-391|
-392|[0m[38;2;0;0;1mfile_77[0m
-393|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-394|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-395|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-396|
-397|[0m[38;2;0;0;1mfile_78[0m
-398|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-399|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-400|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-401|
-402|[0m[38;2;0;0;1mfile_79[0m
-403|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-404|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-405|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-406|
-407|[0m[38;2;0;0;1mfile_8[0m
-408|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-409|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-410|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-411|
-412|[0m[38;2;0;0;1mfile_80[0m
-413|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-414|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-415|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-416|
-417|[0m[38;2;0;0;1mfile_81[0m
-418|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-419|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-420|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-421|
-422|[0m[38;2;0;0;1mfile_82[0m
-423|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-424|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-425|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-426|
-427|[0m[38;2;0;0;1mfile_83[0m
-428|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-429|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-430|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-431|
-432|[0m[38;2;0;0;1mfile_84[0m
-433|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-434|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-435|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-436|
-437|[0m[38;2;0;0;1mfile_85[0m
-438|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-439|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-440|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-441|
-442|[0m[38;2;0;0;1mfile_86[0m
-443|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-444|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-445|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-446|
-447|[0m[38;2;0;0;1mfile_87[0m
-448|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-449|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-450|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-451|
-452|[0m[38;2;0;0;1mfile_88[0m
-453|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-454|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-455|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-456|
-457|[0m[38;2;0;0;1mfile_89[0m
-458|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-459|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-460|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-461|
-462|[0m[38;2;0;0;1mfile_9[0m
-463|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-464|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-465|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-466|
-467|[0m[38;2;0;0;1mfile_90[0m
-468|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-469|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-470|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-471|
-472|[0m[38;2;0;0;1mfile_91[0m
-473|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-474|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-475|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-476|
-477|[0m[38;2;0;0;1mfile_92[0m
-478|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-479|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-480|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-481|
-482|[0m[38;2;0;0;1mfile_93[0m
-483|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-484|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-485|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-486|
-487|[0m[38;2;0;0;1mfile_94[0m
-488|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-489|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-490|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-491|
-492|[0m[38;2;0;0;1mfile_95[0m
+249|file_52
+250|1:9:        grug walks many steps
+251|2:9:        grug talks and grug drinks
+252|3:14:        then grug thinks
+253|
+254|file_53
+255|1:9:        grug walks many steps
+256|2:9:        grug talks and grug drinks
+257|3:14:        then grug thinks
+258|
+259|file_54
+260|1:9:        grug walks many steps
+261|2:9:        grug talks and grug drinks
+262|3:14:        then grug thinks
+263|
+264|file_55
+265|1:9:        grug walks many steps
+266|2:9:        grug talks and grug drinks
+267|3:14:        then grug thinks
+268|
+269|file_56
+270|1:9:        grug walks many steps
+271|2:9:        grug talks and grug drinks
+272|3:14:        then grug thinks
+273|
+274|file_57
+275|1:9:        grug walks many steps
+276|2:9:        grug talks and grug drinks
+277|3:14:        then grug thinks
+278|
+279|file_58
+280|1:9:        grug walks many steps
+281|2:9:        grug talks and grug drinks
+282|3:14:        then grug thinks
+283|
+284|file_59
+285|1:9:        grug walks many steps
+286|2:9:        grug talks and grug drinks
+287|3:14:        then grug thinks
+288|
+289|file_6
+290|1:9:        grug walks many steps
+291|2:9:        grug talks and grug drinks
+292|3:14:        then grug thinks
+293|
+294|file_60
+295|1:9:        grug walks many steps
+296|2:9:        grug talks and grug drinks
+297|3:14:        then grug thinks
+298|
+299|file_61
+300|1:9:        grug walks many steps
+301|2:9:        grug talks and grug drinks
+302|3:14:        then grug thinks
+303|
+304|file_62
+305|1:9:        grug walks many steps
+306|2:9:        grug talks and grug drinks
+307|3:14:        then grug thinks
+308|
+309|file_63
+310|1:9:        grug walks many steps
+311|2:9:        grug talks and grug drinks
+312|3:14:        then grug thinks
+313|
+314|file_64
+315|1:9:        grug walks many steps
+316|2:9:        grug talks and grug drinks
+317|3:14:        then grug thinks
+318|
+319|file_65
+320|1:9:        grug walks many steps
+321|2:9:        grug talks and grug drinks
+322|3:14:        then grug thinks
+323|
+324|file_66
+325|1:9:        grug walks many steps
+326|2:9:        grug talks and grug drinks
+327|3:14:        then grug thinks
+328|
+329|file_67
+330|1:9:        grug walks many steps
+331|2:9:        grug talks and grug drinks
+332|3:14:        then grug thinks
+333|
+334|file_68
+335|1:9:        grug walks many steps
+336|2:9:        grug talks and grug drinks
+337|3:14:        then grug thinks
+338|
+339|file_69
+340|1:9:        grug walks many steps
+341|2:9:        grug talks and grug drinks
+342|3:14:        then grug thinks
+343|
+344|file_7
+345|1:9:        grug walks many steps
+346|2:9:        grug talks and grug drinks
+347|3:14:        then grug thinks
+348|
+349|file_70
+350|1:9:        grug walks many steps
+351|2:9:        grug talks and grug drinks
+352|3:14:        then grug thinks
+353|
+354|file_71
+355|1:9:        grug walks many steps
+356|2:9:        grug talks and grug drinks
+357|3:14:        then grug thinks
+358|
+359|file_72
+360|1:9:        grug walks many steps
+361|2:9:        grug talks and grug drinks
+362|3:14:        then grug thinks
+363|
+364|file_73
+365|1:9:        grug walks many steps
+366|2:9:        grug talks and grug drinks
+367|3:14:        then grug thinks
+368|
+369|file_74
+370|1:9:        grug walks many steps
+371|2:9:        grug talks and grug drinks
+372|3:14:        then grug thinks
+373|
+374|file_75
+375|1:9:        grug walks many steps
+376|2:9:        grug talks and grug drinks
+377|3:14:        then grug thinks
+378|
+379|file_76
+380|1:9:        grug walks many steps
+381|2:9:        grug talks and grug drinks
+382|3:14:        then grug thinks
+383|
+384|file_77
+385|1:9:        grug walks many steps
+386|2:9:        grug talks and grug drinks
+387|3:14:        then grug thinks
+388|
+389|file_78
+390|1:9:        grug walks many steps
+391|2:9:        grug talks and grug drinks
+392|3:14:        then grug thinks
+393|
+394|file_79
+395|1:9:        grug walks many steps
+396|2:9:        grug talks and grug drinks
+397|3:14:        then grug thinks
+398|
+399|file_8
+400|1:9:        grug walks many steps
+401|2:9:        grug talks and grug drinks
+402|3:14:        then grug thinks
+403|
+404|file_80
+405|1:9:        grug walks many steps
+406|2:9:        grug talks and grug drinks
+407|3:14:        then grug thinks
+408|
+409|file_81
+410|1:9:        grug walks many steps
+411|2:9:        grug talks and grug drinks
+412|3:14:        then grug thinks
+413|
+414|file_82
+415|1:9:        grug walks many steps
+416|2:9:        grug talks and grug drinks
+417|3:14:        then grug thinks
+418|
+419|file_83
+420|1:9:        grug walks many steps
+421|2:9:        grug talks and grug drinks
+422|3:14:        then grug thinks
+423|
+424|file_84
+425|1:9:        grug walks many steps
+426|2:9:        grug talks and grug drinks
+427|3:14:        then grug thinks
+428|
+429|file_85
+430|1:9:        grug walks many steps
+431|2:9:        grug talks and grug drinks
+432|3:14:        then grug thinks
+433|
+434|file_86
+435|1:9:        grug walks many steps
+436|2:9:        grug talks and grug drinks
+437|3:14:        then grug thinks
+438|
+439|file_87
+440|1:9:        grug walks many steps
+441|2:9:        grug talks and grug drinks
+442|3:14:        then grug thinks
+443|
+444|file_88
+445|1:9:        grug walks many steps
+446|2:9:        grug talks and grug drinks
+447|3:14:        then grug thinks
+448|
+449|file_89
+450|1:9:        grug walks many steps
+451|2:9:        grug talks and grug drinks
+452|3:14:        then grug thinks
+453|
+454|file_9
+455|1:9:        grug walks many steps
+456|2:9:        grug talks and grug drinks
+457|3:14:        then grug thinks
+458|
+459|file_90
+460|1:9:        grug walks many steps
+461|2:9:        grug talks and grug drinks
+462|3:14:        then grug thinks
+463|
+464|file_91
+465|1:9:        grug walks many steps
+466|2:9:        grug talks and grug drinks
+467|3:14:        then grug thinks
+468|
+469|file_92
+470|1:9:        grug walks many steps
+471|2:9:        grug talks and grug drinks
+472|3:14:        then grug thinks
+473|
+474|file_93
+475|1:9:        grug walks many steps
+476|2:9:        grug talks and grug drinks
+477|3:14:        then grug thinks
+478|
+479|file_94
+480|1:9:        grug walks many steps
+481|2:9:        grug talks and grug drinks
+482|3:14:        then grug thinks
+483|
+484|file_95
+485|1:9:        grug walks many steps
+486|2:9:        grug talks and grug drinks
+487|3:14:        then grug thinks
+488|
+489|file_96
+490|1:9:        grug walks many steps
+491|2:9:        grug talks and grug drinks
+492|3:14:        then grug thinks
 493|
-494|==========================================
-495|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-496|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-497|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+494|file_97
+495|1:9:        grug walks many steps
+496|2:9:        grug talks and grug drinks
+497|3:14:        then grug thinks
 498|
-499|[0m[38;2;0;0;1mfile_96[0m
-500|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-501|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-502|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
+499|file_98
+500|1:9:        grug walks many steps
+501|2:9:        grug talks and grug drinks
+502|3:14:        then grug thinks
 503|
-504|[0m[38;2;0;0;1mfile_97[0m
-505|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-506|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-507|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-508|
-509|[0m[38;2;0;0;1mfile_98[0m
-510|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-511|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-512|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-513|
-514|[0m[38;2;0;0;1mfile_99[0m
-515|[0m[38;2;0;0;2m1[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m walks many steps
-516|[0m[38;2;0;0;2m2[0m:[0m[38;2;0;0;3m9[0m:        [0m[38;2;0;0;0mgrug[0m talks and [0m[38;2;0;0;0mgrug[0m drinks
-517|[0m[38;2;0;0;2m3[0m:[0m[38;2;0;0;3m14[0m:        then [0m[38;2;0;0;0mgrug[0m thinks
-518|
-519|==========================================
+504|file_99
+505|1:9:        grug walks many steps
+506|2:9:        grug talks and grug drinks
+507|3:14:        then grug thinks
 
 ---|-
 001| 
@@ -1027,15 +1015,3 @@
 505| 
 506| 
 507| 
-508| 
-509| 
-510| 
-511| 
-512| 
-513| 
-514| 
-515| 
-516| 
-517| 
-518| 
-519| 

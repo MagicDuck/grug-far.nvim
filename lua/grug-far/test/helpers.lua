@@ -72,10 +72,11 @@ end
 
 --- waits until condition fn evals to true, checking every interval ms
 --- times otu at timeout ms
+---@param child NeovimChild
 ---@param condition fun(): boolean
 ---@param timeout? integer, defaults to 2000
 ---@param interval? integer, defaults to 100
-function M.waitForCondition(condition, timeout, interval)
+function M.childWaitForCondition(child, condition, timeout, interval)
   local max = timeout or 2000
   local inc = interval or 100
   for _ = 0, max, inc do
@@ -86,7 +87,9 @@ function M.waitForCondition(condition, timeout, interval)
     end
   end
 
-  error('Timed out waiting for condition after ' .. max .. 'ms!')
+  error(
+    'Timed out waiting for condition after ' .. max .. 'ms!\n\n' .. tostring(child.get_screenshot())
+  )
 end
 
 --- init the child neovim process
@@ -114,15 +117,24 @@ function M.initChildNeovim(child)
           resultsStatusError = 'STATUS_ERROR',
           resultsStatusSuccess = 'STATUS_SUCCESS',
         },
+        spinnerStates = { 'STATUS_PROGRESS' },
       },
     }
   )
 end
 
---- waits until child buf has given status
+--- waits until child buf has progress status
+---@param child NeovimChild
+function M.childWaitForProgressStatus(child)
+  M.childWaitForCondition(child, function()
+    return M.childBufUIVirtualTextContains(child, 'STATUS_PROGRESS')
+  end)
+end
+
+--- waits until child buf has given success or error status
 ---@param child NeovimChild
 function M.childWaitForFinishedStatus(child)
-  M.waitForCondition(function()
+  M.childWaitForCondition(child, function()
     return M.childBufUIVirtualTextContains(child, 'STATUS_SUCCESS')
       or M.childBufUIVirtualTextContains(child, 'STATUS_ERROR')
   end)

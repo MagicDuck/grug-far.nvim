@@ -148,13 +148,6 @@ T['can search with no matches'] = function()
   expect.reference_screenshot(screenshot.fromChildBufLines(child))
 end
 
--- TODO (sbadragan): there is a bug here, with --sort=path, number of matches is incorrect
--- problem right here: color crosses lines
--- [0m[38;2;0;0;1mfile_95[0m
---
---==========================================
---[38;2;0;0;0mgrug[0m walks many steps
-
 T['can search for some string with many matches'] = function()
   local files = {}
   for i = 1, 100 do
@@ -173,6 +166,32 @@ T['can search for some string with many matches'] = function()
     prefills = { search = 'grug' },
   })
 
+  helpers.childWaitForFinishedStatus(child)
+
+  expect.reference_screenshot(child.get_screenshot())
+  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+end
+
+T['can search and edit search'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>cc', 'walks')
+  vim.loop.sleep(200)
   helpers.childWaitForFinishedStatus(child)
 
   expect.reference_screenshot(child.get_screenshot())
