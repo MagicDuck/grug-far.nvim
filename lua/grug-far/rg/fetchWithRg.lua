@@ -88,13 +88,9 @@ local function fetchWithRg(params)
       -- large outputs can cause the last line to be truncated
       -- save it and prepend to next chunk
       local chunkData = lastLine .. data
-      local i = utils.strFindLast(chunkData, '\n')
-      if i then
-        chunkData = string.sub(chunkData, 1, i)
-        lastLine = string.sub(chunkData, i + 1, -1)
+      chunkData, lastLine = utils.splitLastLine(chunkData)
+      if #chunkData > 0 then
         on_fetch_chunk(chunkData)
-      else
-        lastLine = chunkData
       end
     else
       if #lastLine > 0 then

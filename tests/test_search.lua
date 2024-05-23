@@ -38,30 +38,6 @@ T['can search for some string'] = function()
   expect.reference_screenshot(screenshot.fromChildBufLines(child))
 end
 
-T['can search for some string with many matches'] = function()
-  local files = {}
-  for i = 1, 100 do
-    table.insert(files, {
-      filename = 'file_' .. i,
-      content = [[
-        grug walks many steps
-        grug talks and grug drinks
-        then grug thinks
-      ]],
-    })
-  end
-  helpers.writeTestFiles(files)
-
-  helpers.childRunGrugFar(child, {
-    prefills = { search = 'grug' },
-  })
-
-  helpers.childWaitForFinishedStatus(child)
-
-  expect.reference_screenshot(child.get_screenshot())
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
-end
-
 T['can search with flags'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
@@ -164,6 +140,37 @@ T['can search with no matches'] = function()
 
   helpers.childRunGrugFar(child, {
     prefills = { search = 'george' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  expect.reference_screenshot(child.get_screenshot())
+  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+end
+
+-- TODO (sbadragan): there is a bug here, with --sort=path, number of matches is incorrect
+-- problem right here: color crosses lines
+-- [0m[38;2;0;0;1mfile_95[0m
+--
+--==========================================
+--[38;2;0;0;0mgrug[0m walks many steps
+
+T['can search for some string with many matches'] = function()
+  local files = {}
+  for i = 1, 100 do
+    table.insert(files, {
+      filename = 'file_' .. i,
+      content = [[
+        grug walks many steps
+        grug talks and grug drinks
+        then grug thinks
+      ]],
+    })
+  end
+  helpers.writeTestFiles(files)
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
   })
 
   helpers.childWaitForFinishedStatus(child)

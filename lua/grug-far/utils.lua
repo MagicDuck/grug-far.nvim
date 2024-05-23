@@ -62,6 +62,20 @@ function M.strFindLast(str, substr)
   return i, j
 end
 
+--- splits off last line in string
+---@param str string
+---@return string prefix, string lastLine
+function M.splitLastLine(str)
+  local i = M.strFindLast(str, '\n')
+  if i then
+    local pre = str:sub(1, i)
+    local lastLine = str:sub(i + 1)
+    return pre, lastLine
+  end
+
+  return '', str
+end
+
 --- truncate string and add ... after n chars, adding a prefix if non empty
 ---@param str string
 ---@param n integer
