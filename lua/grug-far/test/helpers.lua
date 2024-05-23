@@ -1,3 +1,7 @@
+local MiniTest = require('mini.test')
+local expect = MiniTest.expect
+local screenshot = require('grug-far/test/screenshot')
+
 local M = {}
 
 --- get list of virtual text chunks associated with given namespace in given buffer
@@ -181,6 +185,26 @@ function M.writeTestFiles(files)
     local file = files[i]
     vim.fn.writefile(vim.split(file.content, '\n'), './temp_test_dir/' .. file.filename)
   end
+end
+
+--- expect child screenshot to match saved refeence screenshot
+---@param child NeovimChild
+function M.childExpectScreenshot(child)
+  expect.reference_screenshot(
+    child.get_screenshot(),
+    nil,
+    { force = not not vim.env['update_screenshots'] }
+  )
+end
+
+--- expect child buf lines to match saved refeence screenshot
+---@param child NeovimChild
+function M.childExpectBufLines(child)
+  expect.reference_screenshot(
+    screenshot.fromChildBufLines(child),
+    nil,
+    { force = not not vim.env['update_screenshots'] }
+  )
 end
 
 -- NOTE: for testing uncomment the following line, then open a grug-far buffer and execute
