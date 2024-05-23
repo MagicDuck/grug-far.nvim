@@ -46,6 +46,7 @@ M.defaultOptions = {
     syncLocations = '<C-s>',
     syncLine = '<C-a>',
     close = '<C-x>',
+    refresh = '',
 
     -- normal mode only
     gotoLocation = { n = '<enter>' },
@@ -69,6 +70,9 @@ M.defaultOptions = {
     '󱑕 ',
     '󱑖 ',
   },
+
+  -- whether to report duration of replace/sync operations
+  reportDuration = true,
 
   -- icons for UI, default ones depend on nerdfont
   -- set individul ones to '' to disable, or set enabled = false for complete disable
@@ -124,6 +128,7 @@ M.defaultOptions = {
 ---@field replace KeymapDef
 ---@field qflist KeymapDef
 ---@field syncLocations KeymapDef
+---@field refresh KeymapDef
 ---@field syncLine KeymapDef
 ---@field close KeymapDef
 ---@field gotoLocation KeymapDef
@@ -132,6 +137,7 @@ M.defaultOptions = {
 ---@field replace? KeymapDef
 ---@field qflist? KeymapDef
 ---@field syncLocations? KeymapDef
+---@field refresh? KeymapDef
 ---@field syncLine? KeymapDef
 ---@field close? KeymapDef
 ---@field gotoLocation? KeymapDef
@@ -199,6 +205,7 @@ M.defaultOptions = {
 ---@field keymaps Keymaps
 ---@field resultsSeparatorLineChar string
 ---@field spinnerStates string[] | false
+---@field reportDuration boolean
 ---@field icons IconsTable
 ---@field placeholders PlaceholdersTable
 ---@field prefills PrefillsTable
@@ -216,6 +223,7 @@ M.defaultOptions = {
 ---@field keymaps? KeymapsOverride
 ---@field resultsSeparatorLineChar? string
 ---@field spinnerStates? string[] | false
+---@field reportDuration? boolean
 ---@field icons? IconsTableOverride
 ---@field placeholders? PlaceholdersTableOverride
 ---@field prefills? PrefillsTableOverride
@@ -250,9 +258,6 @@ function M.with_defaults(options, defaults)
       newOptions.keymaps[key] = { i = value, n = value }
     end
   end
-
-  -- special cases where option is a table that should be overriden as a whole
-  -- newOptions.spinnerStates = options.spinnerStates or defaults.spinnerStates
 
   return newOptions
 end

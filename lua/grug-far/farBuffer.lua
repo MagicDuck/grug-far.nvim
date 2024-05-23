@@ -58,6 +58,9 @@ local function setupKeymap(buf, context)
   setBufKeymap(buf, 'Grug Far: close', keymaps.close, function()
     close()
   end)
+  setBufKeymap(buf, 'Grug Far: refresh search', keymaps.refresh, function()
+    search({ buf = buf, context = context })
+  end)
 end
 
 ---@param buf integer

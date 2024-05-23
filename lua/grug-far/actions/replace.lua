@@ -93,8 +93,12 @@ local function getActionMessage(err, count, total, time)
     return msg .. 'failed!'
   end
 
-  if count == total and total ~= 0 and time then
-    return msg .. 'completed in ' .. time .. 'ms!'
+  if count == total and total ~= 0 then
+    if time then
+      return msg .. 'completed in ' .. time .. 'ms!'
+    else
+      return msg .. 'completed!'
+    end
   end
 
   return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
@@ -175,7 +179,12 @@ local function replace(params)
     local time = uv.now() - startTime
     -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
     state.actionMessage = status == nil and customActionMessage
-      or getActionMessage(nil, filesCount, filesCount, time)
+      or getActionMessage(
+        nil,
+        filesCount,
+        filesCount,
+        context.options.reportDuration and time or nil
+      )
     renderResultsHeader(buf, context)
 
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)

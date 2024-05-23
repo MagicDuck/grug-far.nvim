@@ -24,10 +24,20 @@ To run all tests just execute
 $ make test
 ```
 
+To run specific test:
+```bash
+$ make test-file FILE=tests/test_search.lua
+```
+
+To update screenshots:
+```bash
+$ make update-screenshots 
+```
+
 ## Github actions
 
 An Action will run all the tests and lints on Pull Request to main. Tests will be run using 
-[stable][neovim-test-versions] versions of Neovim (last 2).
+a [stable][neovim-test-versions] version of Neovim.
 
 [stylua]: https://github.com/JohnnyMorganz/StyLua
 [selene]: https://kampfkarren.github.io/selene/cli/installation.html
