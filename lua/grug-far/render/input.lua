@@ -41,6 +41,17 @@ local function renderInput(params, context)
       })
   end
 
+  -- TODO (sbadragan): remove
+  -- P(
+  --   vim.api.nvim_buf_get_extmarks(
+  --     buf,
+  --     context.namespace,
+  --     { lineNr, 0 },
+  --     { lineNr, -1 },
+  --     { details = true }
+  --   )
+  -- )
+
   if placeholder then
     local placeholderExtmarkName = extmarkName .. '_placeholder'
     if #line == 0 then

@@ -125,6 +125,14 @@ M.defaultOptions = {
 ---@field close KeymapDef
 ---@field gotoLocation KeymapDef
 
+---@class KeymapsOverride
+---@field replace? KeymapDef
+---@field qflist? KeymapDef
+---@field syncLocations? KeymapDef
+---@field syncLine? KeymapDef
+---@field close? KeymapDef
+---@field gotoLocation? KeymapDef
+
 ---@class IconsTable
 ---@field enabled boolean
 ---@field searchInput string
@@ -136,6 +144,17 @@ M.defaultOptions = {
 ---@field resultsStatusSuccess string
 ---@field resultsActionMessage string
 
+---@class IconsTableOverride
+---@field enabled? boolean
+---@field searchInput? string
+---@field replaceInput? string
+---@field filesFilterInput? string
+---@field flagsInput? string
+---@field resultsStatusReady? string
+---@field resultsStatusError? string
+---@field resultsStatusSuccess? string
+---@field resultsActionMessage? string
+
 ---@class PlaceholdersTable
 ---@field enabled boolean
 ---@field search string
@@ -144,11 +163,25 @@ M.defaultOptions = {
 ---@field filesGlob? string deprecated, use filesFilter
 ---@field flags string
 
+---@class PlaceholdersTableOverride
+---@field enabled? boolean
+---@field search? string
+---@field replacement? string
+---@field filesFilter? string
+---@field filesGlob? string deprecated, use filesFilter
+---@field flags? string
+
 ---@class PrefillsTable
 ---@field search string
 ---@field replacement string
 ---@field filesFilter string
 ---@field flags string
+
+---@class PrefillsTableOverride
+---@field search? string
+---@field replacement? string
+---@field filesFilter? string
+---@field flags? string
 
 ---@class GrugFarOptions
 ---@field debounceMs integer
@@ -166,8 +199,24 @@ M.defaultOptions = {
 ---@field placeholders PlaceholdersTable
 ---@field prefills PrefillsTable
 
+---@class GrugFarOptionsOverride
+---@field debounceMs? integer
+---@field minSearchChars? integer
+---@field maxWorkers? integer
+---@field extraRgArgs? string
+---@field disableBufferLineNumbers? boolean
+---@field maxSearchCharsInTitles? integer
+---@field startInInsertMode? boolean
+---@field startCursorRow? integer
+---@field keymaps? Keymaps
+---@field resultsSeparatorLineChar? string
+---@field spinnerStates? string[] | false
+---@field icons? IconsTable
+---@field placeholders? PlaceholdersTable
+---@field prefills? PrefillsTable
+
 --- generates merged options
----@param options GrugFarOptions
+---@param options GrugFarOptionsOverride
 ---@param defaults GrugFarOptions
 ---@return GrugFarOptions
 function M.with_defaults(options, defaults)
