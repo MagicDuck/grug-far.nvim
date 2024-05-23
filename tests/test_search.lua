@@ -150,4 +150,26 @@ T['can search with replace string'] = function()
   expect.reference_screenshot(screenshot.fromChildBufLines(child))
 end
 
+T['can search with no matches'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'george' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  expect.reference_screenshot(child.get_screenshot())
+  expect.reference_screenshot(screenshot.fromChildBufLines(child))
+end
+
 return T
