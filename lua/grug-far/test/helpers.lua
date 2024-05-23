@@ -91,10 +91,14 @@ function M.waitForCondition(condition, timeout, interval)
   local max = timeout or 2000
   local inc = interval or 100
   for _ = 0, max, inc do
-    if not condition() then
+    if condition() then
+      return
+    else
       vim.loop.sleep(inc)
     end
   end
+
+  error('Timed out waiting for condition after ' .. max .. 'ms!')
 end
 
 --- init the child neovim process
@@ -107,7 +111,6 @@ function M.initChildNeovim(child)
 
   child.lua(
     [[ 
-    vim.api.nvim_set_current_dir('temp_test_dir')
     GrugFar = require('grug-far')
     GrugFar.setup(...)
     Helpers = require('grug-far/test/helpers')
@@ -136,11 +139,24 @@ end
 
 --- run grug_far(options) in child
 ---@param child NeovimChild
----@param options GrugFarOptions
+---@param options GrugFarOptionsOverride
 function M.childRunGrugFar(child, options)
+  local cwd = vim.loop.cwd()
+  child.lua('vim.api.nvim_set_current_dir("' .. cwd .. '/temp_test_dir")')
   child.lua('GrugFar.grug_far(...)', {
     options,
   })
+end
+
+--- writes files given based on given spec to temp test dir
+--- clears out temp test dir beforehand
+---@param files {[string]: string}
+function M.writeTestFiles(files)
+  vim.fn.delete('./temp_test_dir', 'rf')
+  vim.fn.mkdir('./temp_test_dir')
+  for filename, content in pairs(files) do
+    vim.fn.writefile(vim.split(content, '\n'), './temp_test_dir/' .. filename)
+  end
 end
 
 -- NOTE: for testing uncomment the following line, then open a grug-far buffer and execute

@@ -17,14 +17,22 @@ local T = MiniTest.new_set({
 })
 
 T['can search for some string'] = function()
+  helpers.writeTestFiles({
+    file1 = [[ grug walks ]],
+    file2 = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+  })
+
   helpers.childRunGrugFar(child, {
-    prefills = { search = 'bob' },
+    prefills = { search = 'grug' },
   })
 
   helpers.childWaitForStatus(child, 'STATUS_SUCCESS')
 
-  expect.reference_screenshot(screenshot.fromChildBufLines(child))
   expect.reference_screenshot(child.get_screenshot())
+  expect.reference_screenshot(screenshot.fromChildBufLines(child))
 end
 
 return T
