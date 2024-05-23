@@ -1,5 +1,4 @@
 local renderHelp = require('grug-far/render/help')
--- TODO (sbadragan): replace all of those with local M = {} so nav works better
 local renderInput = require('grug-far/render/input')
 local renderResults = require('grug-far/render/results')
 
