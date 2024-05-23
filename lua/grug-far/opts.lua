@@ -213,12 +213,12 @@ M.defaultOptions = {
 ---@field maxSearchCharsInTitles? integer
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
----@field keymaps? Keymaps
+---@field keymaps? KeymapsOverride
 ---@field resultsSeparatorLineChar? string
 ---@field spinnerStates? string[] | false
----@field icons? IconsTable
----@field placeholders? PlaceholdersTable
----@field prefills? PrefillsTable
+---@field icons? IconsTableOverride
+---@field placeholders? PlaceholdersTableOverride
+---@field prefills? PrefillsTableOverride
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride
