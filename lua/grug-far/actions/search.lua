@@ -20,8 +20,16 @@ local function search(params)
   state.progressCount = 0
   state.stats = { matches = 0, files = 0 }
   state.actionMessage = nil
-  renderResultsHeader(buf, context)
-  resultsList.clear(buf, context)
+
+  -- note: we clear first time we fetch more info instead of intially
+  -- in order to reduce flicker
+  local isCleared = false
+  local function clearResultsIfNeeded()
+    if not isCleared then
+      isCleared = true
+      resultsList.clear(buf, context)
+    end
+  end
 
   state.abortSearch = fetchResults({
     inputs = state.inputs,
@@ -31,6 +39,9 @@ local function search(params)
         -- make sure to stop immediately when aborted early
         return
       end
+
+      clearResultsIfNeeded()
+
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
       state.stats = {
@@ -43,6 +54,9 @@ local function search(params)
     end),
     on_finish = vim.schedule_wrap(function(status, errorMessage)
       isFinished = true
+
+      clearResultsIfNeeded()
+
       state.status = status
       if status == 'error' then
         state.stats = nil
