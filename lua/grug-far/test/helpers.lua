@@ -116,8 +116,11 @@ function M.initChildNeovim(child)
     Helpers = require('grug-far/test/helpers')
   ]],
     {
+      ---@type GrugFarOptions
       {
         rgPath = rgPath,
+        -- one thread so that we get things in the same order
+        extraRgArgs = '--threads=1',
         icons = {
           resultsStatusReady = 'STATUS_READY',
           resultsStatusError = 'STATUS_ERROR',
@@ -154,8 +157,9 @@ end
 function M.writeTestFiles(files)
   vim.fn.delete('./temp_test_dir', 'rf')
   vim.fn.mkdir('./temp_test_dir')
-  for filename, content in pairs(files) do
-    vim.fn.writefile(vim.split(content, '\n'), './temp_test_dir/' .. filename)
+  for i = 1, #files do
+    local file = files[i]
+    vim.fn.writefile(vim.split(file.content, '\n'), './temp_test_dir/' .. file.filename)
   end
 end
 
