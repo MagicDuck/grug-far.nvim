@@ -8,7 +8,7 @@ local M = {}
 local globalOptions = nil
 
 --- set up grug-far
----@param options GrugFarOptions
+---@param options? GrugFarOptionsOverride
 function M.setup(options)
   if vim.fn.has('nvim-0.9.0') == 0 then
     vim.api.nvim_err_writeln('grug-far is guaranteeed to work on at least nvim-0.9.0')
@@ -73,7 +73,7 @@ local function createContext(options)
   return {
     count = contextCount,
     options = options,
-    namespace = vim.api.nvim_create_namespace('grug-far'),
+    namespace = vim.api.nvim_create_namespace('grug-far-namespace'),
     locationsNamespace = vim.api.nvim_create_namespace(''),
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
     extmarkIds = {},
@@ -118,7 +118,7 @@ local function setupCleanup(buf, context)
 end
 
 --- launch grug-far with the given overrides
----@param options GrugFarOptions
+---@param options? GrugFarOptionsOverride
 function M.grug_far(options)
   if not is_configured() then
     print(

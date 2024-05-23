@@ -8,12 +8,14 @@ test-file: deps/mini.nvim
 
 # Download 'mini.nvim' to use its 'mini.test' testing module
 prepare:
+	make clean
 	@mkdir -p deps
-	# git clone --filter=blob:none https://github.com/echasnovski/mini.nvim deps/mini.nvim
 	git clone --depth=1 --single-branch https://github.com/echasnovski/mini.nvim deps/mini.nvim
+	@mkdir -p temp_test_dir
 # clean up
 clean:
 	rm -rf deps
+	rm -rf temp_test_dir
 # lint
 lint:
 	selene lua tests
