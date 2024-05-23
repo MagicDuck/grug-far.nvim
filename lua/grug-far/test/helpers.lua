@@ -118,6 +118,19 @@ function M.initChildNeovim(child)
           resultsStatusSuccess = 'STATUS_SUCCESS',
         },
         spinnerStates = { 'STATUS_PROGRESS' },
+        reportDuration = false,
+        keymaps = {
+          -- normal and insert mode
+          replace = '<C-enter>',
+          qflist = '<C-q>',
+          syncLocations = '<C-s>',
+          syncLine = '<C-a>',
+          close = '<C-x>',
+          refresh = '<C-r>',
+
+          -- normal mode only
+          gotoLocation = { n = '<enter>' },
+        },
       },
     }
   )
