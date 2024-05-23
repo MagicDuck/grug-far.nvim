@@ -252,7 +252,7 @@ function M.with_defaults(options, defaults)
   end
 
   -- special cases where option is a table that should be overriden as a whole
-  newOptions.spinnerStates = options.spinnerStates or defaults.spinnerStates
+  -- newOptions.spinnerStates = options.spinnerStates or defaults.spinnerStates
 
   return newOptions
 end

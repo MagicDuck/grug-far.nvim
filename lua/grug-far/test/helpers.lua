@@ -123,12 +123,19 @@ function M.initChildNeovim(child)
   )
 end
 
+--- waits until child buf contains given UI virtual text
+---@param child NeovimChild
+---@param text string
+function M.childWaitForUIVirtualText(child, text)
+  M.childWaitForCondition(child, function()
+    return M.childBufUIVirtualTextContains(child, text)
+  end)
+end
+
 --- waits until child buf has progress status
 ---@param child NeovimChild
 function M.childWaitForProgressStatus(child)
-  M.childWaitForCondition(child, function()
-    return M.childBufUIVirtualTextContains(child, 'STATUS_PROGRESS')
-  end)
+  return M.childWaitForUIVirtualText(child, 'STATUS_PROGRESS')
 end
 
 --- waits until child buf has given success or error status

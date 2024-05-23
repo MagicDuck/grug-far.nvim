@@ -191,7 +191,7 @@ T['can search and edit search'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>cc', 'walks')
-  vim.loop.sleep(200)
+  helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
 
   expect.reference_screenshot(child.get_screenshot())
