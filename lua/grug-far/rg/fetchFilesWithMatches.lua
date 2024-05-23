@@ -21,6 +21,7 @@ local function fetchFilesWithMatches(params)
 
   return fetchWithRg({
     args = args,
+    options = params.options,
     on_fetch_chunk = function(data)
       local lines = vim.split(data, '\n')
       for i = 1, #lines do

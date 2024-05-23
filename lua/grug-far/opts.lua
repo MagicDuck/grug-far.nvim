@@ -13,6 +13,9 @@ M.defaultOptions = {
   -- max number of parallel replacements tasks
   maxWorkers = 4,
 
+  -- ripgrep executable to use, can be a different path if you need to configure
+  rgPath = 'rg',
+
   -- extra args that you always want to pass to rg
   -- like for example if you always want context lines around matches
   extraRgArgs = '',
@@ -187,6 +190,7 @@ M.defaultOptions = {
 ---@field debounceMs integer
 ---@field minSearchChars integer
 ---@field maxWorkers integer
+---@field rgPath string
 ---@field extraRgArgs string
 ---@field disableBufferLineNumbers boolean
 ---@field maxSearchCharsInTitles integer
@@ -203,6 +207,7 @@ M.defaultOptions = {
 ---@field debounceMs? integer
 ---@field minSearchChars? integer
 ---@field maxWorkers? integer
+---@field rgPath? string
 ---@field extraRgArgs? string
 ---@field disableBufferLineNumbers? boolean
 ---@field maxSearchCharsInTitles? integer

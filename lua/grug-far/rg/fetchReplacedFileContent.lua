@@ -25,6 +25,7 @@ local function fetchReplacedFileContent(params)
   local content = ''
   return fetchWithRg({
     args = args,
+    options = params.options,
     on_fetch_chunk = function(data)
       content = content .. data
     end,

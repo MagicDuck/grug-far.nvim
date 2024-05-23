@@ -23,6 +23,7 @@ local function fetchResults(params)
 
   return fetchWithRg({
     args = args,
+    options = params.options,
     on_fetch_chunk = function(data)
       params.on_fetch_chunk(parseResults(data))
     end,
