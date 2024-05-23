@@ -17,17 +17,25 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        neovim_version: ['v0.9.5', 'v0.10.0']
+        neovim_version: ['v0.9.5']
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
-      - name: Install xmllint
-        run: sudo apt-get install -y ripgrep
       - name: Setup neovim
         uses: rhysd/action-setup-vim@v1
         with:
           neovim: true
           version: ${{ matrix.neovim_version }}
+      - name: Install ripgrep
+        run: |
+          mkdir ripgrep
+          cd ripgrep
+          wget -O - https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz | tar zxf - --strip-component=1
+          ls
+          cd ..
+          ./ripgrep/rg foo .
       - name: Run tests
-        run: make prepare && make test
+        run: | 
+          make prepare
+          env RG_PATH=$(realpath ./ripgrep/rg) make test

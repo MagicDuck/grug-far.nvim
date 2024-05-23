@@ -10,6 +10,7 @@ end
 
 ---@class FetchWithRgParams
 ---@field args string[] | nil
+---@field options GrugFarOptions
 ---@field on_fetch_chunk fun(data: string)
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string | nil)
 
@@ -32,7 +33,7 @@ local function fetchWithRg(params)
   local stderr = uv.new_pipe()
 
   local handle
-  handle = uv.spawn('rg', {
+  handle = uv.spawn(params.options.rgPath, {
     stdio = { nil, stdout, stderr },
     cwd = vim.fn.getcwd(),
     args = args,

@@ -103,6 +103,8 @@ function M.initChildNeovim(child)
   -- Restart child process with custom 'init.lua' script
   child.restart({ '-u', 'scripts/minimal_init.lua' })
 
+  local rgPath = vim.env.RG_PATH or 'rg'
+
   child.lua(
     [[ 
     vim.api.nvim_set_current_dir('temp_test_dir')
@@ -112,6 +114,7 @@ function M.initChildNeovim(child)
   ]],
     {
       {
+        rgPath = rgPath,
         icons = {
           resultsStatusReady = 'STATUS_READY',
           resultsStatusError = 'STATUS_ERROR',
