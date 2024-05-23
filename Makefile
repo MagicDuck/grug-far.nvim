@@ -1,10 +1,14 @@
 # Run all test files
-test: deps/mini.nvim
+test:
 	nvim --headless --noplugin -u ./scripts/minimal_init.lua -c "lua MiniTest.run()"
 
 # Run test from file at `$FILE` environment variable, ex: make test-file FILE=...
-test-file: deps/mini.nvim
+test-file:
 	nvim --headless --noplugin -u ./scripts/minimal_init.lua -c "lua MiniTest.run_file('$(FILE)')"
+
+update-screenshots:
+	rm -rf tests/screenshots/* 
+	make test
 
 # Download 'mini.nvim' to use its 'mini.test' testing module
 prepare:
