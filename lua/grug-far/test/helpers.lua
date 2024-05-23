@@ -107,8 +107,8 @@ function M.initChildNeovim(child)
       ---@type GrugFarOptions
       {
         rgPath = rgPath,
-        -- one thread so that we get things in the same order
-        extraRgArgs = '--threads=1',
+        -- sort by path so that we get things in the same order
+        extraRgArgs = '--sort=path',
         icons = {
           resultsStatusReady = 'STATUS_READY',
           resultsStatusError = 'STATUS_ERROR',
