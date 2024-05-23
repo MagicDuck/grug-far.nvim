@@ -42,4 +42,32 @@ T['can replace with replace string'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can replace with empty string'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ and grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      and then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', flags = '--replace=' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<C-enter>')
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'and')
+  vim.loop.sleep(50)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T
