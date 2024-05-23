@@ -133,10 +133,10 @@ end
 
 --- waits until child buf has given status
 ---@param child NeovimChild
----@param status "STATUS_SUCCESS" | "STATUS_READY" | "STATUS_ERROR"
-function M.childWaitForStatus(child, status)
+function M.childWaitForFinishedStatus(child)
   M.waitForCondition(function()
-    return M.childBufUIVirtualTextContains(child, status)
+    return M.childBufUIVirtualTextContains(child, 'STATUS_SUCCESS')
+      or M.childBufUIVirtualTextContains(child, 'STATUS_ERROR')
   end)
 end
 
