@@ -1,17 +1,5 @@
 local M = {}
 
--- { 8, 5, 0, {
---       end_col = 0,
---       end_right_gravity = false,
---       end_row = 5,
---       ns_id = 5,
---       right_gravity = false,
---       virt_lines = { { { " 󰮚 Flags:", "GrugFarInputLabel" } } },
---       virt_lines_above = true,
---       virt_lines_leftcol = true
---     }
--- TODO (sbadragan): add more helpers here
-
 --- get list of virtual text chunks associated with given namespace in given buffer
 ---@param buf integer
 ---@param namespaceName string
