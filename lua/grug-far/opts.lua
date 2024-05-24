@@ -36,17 +36,21 @@ M.defaultOptions = {
   startCursorRow = 3,
 
   -- shortcuts for the actions you see at the top of the buffer
-  -- set to '' or false to unset. Unset mappings will be removed from the help header
+  -- set to '' or false to unset. Mappings with no normal mode value will be removed from the help header
   -- you can specify either a string which is then used as the mapping for both normmal and insert mode
-  -- or you can specify a table of the form { [mode] = <lhs> } (ex: { i = '<C-enter>', n = '<leader>gr'})
+  -- or you can specify a table of the form { [mode] = <lhs> } (ex: { i = '<C-enter>', n = '<localleader>gr'})
+  -- it is recommended to use <localleader> though as that is more vim-ish
+  -- see https://learnvimscriptthehardway.stevelosh.com/chapters/11.html#local-leader
   keymaps = {
     -- normal and insert mode
-    replace = '<C-enter>',
-    qflist = '<C-q>',
-    syncLocations = '<C-s>',
-    syncLine = '<C-a>',
-    close = '<C-x>',
-    refresh = '<C-.>',
+    replace = { n = '<localleader>r' },
+    qflist = { n = '<localleader>q' },
+    syncLocations = { n = '<localleader>s' },
+    syncLine = { n = '<localleader>l' },
+    close = { n = '<localleader>c' },
+    historyOpen = { n = '<localleader>h' },
+    historyAdd = { n = '<localleader>a' },
+    refresh = { n = '<localleader>f' },
 
     -- normal mode only
     gotoLocation = { n = '<enter>' },
@@ -73,6 +77,9 @@ M.defaultOptions = {
 
   -- whether to report duration of replace/sync operations
   reportDuration = true,
+
+  -- maximum width of help header
+  headerMaxWidth = 100,
 
   -- icons for UI, default ones depend on nerdfont
   -- set individul ones to '' to disable, or set enabled = false for complete disable
@@ -130,6 +137,8 @@ M.defaultOptions = {
 ---@field replace KeymapDef
 ---@field qflist KeymapDef
 ---@field syncLocations KeymapDef
+---@field historyAdd KeymapDef
+---@field historyOpen KeymapDef
 ---@field refresh KeymapDef
 ---@field syncLine KeymapDef
 ---@field close KeymapDef
@@ -139,6 +148,8 @@ M.defaultOptions = {
 ---@field replace? KeymapDef
 ---@field qflist? KeymapDef
 ---@field syncLocations? KeymapDef
+---@field historyAdd? KeymapDef
+---@field historyOpen? KeymapDef
 ---@field refresh? KeymapDef
 ---@field syncLine? KeymapDef
 ---@field close? KeymapDef
@@ -210,6 +221,7 @@ M.defaultOptions = {
 ---@field resultsSeparatorLineChar string
 ---@field spinnerStates string[] | false
 ---@field reportDuration boolean
+---@field headerMaxWidth integer
 ---@field icons IconsTable
 ---@field placeholders PlaceholdersTable
 ---@field prefills PrefillsTable
@@ -228,6 +240,7 @@ M.defaultOptions = {
 ---@field resultsSeparatorLineChar? string
 ---@field spinnerStates? string[] | false
 ---@field reportDuration? boolean
+---@field headerMaxWidth? integer
 ---@field icons? IconsTableOverride
 ---@field placeholders? PlaceholdersTableOverride
 ---@field prefills? PrefillsTableOverride
