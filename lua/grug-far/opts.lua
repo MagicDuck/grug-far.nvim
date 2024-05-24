@@ -46,7 +46,7 @@ M.defaultOptions = {
     syncLocations = '<C-s>',
     syncLine = '<C-a>',
     close = '<C-x>',
-    refresh = '',
+    refresh = '<C-.>',
 
     -- normal mode only
     gotoLocation = { n = '<enter>' },
@@ -79,6 +79,8 @@ M.defaultOptions = {
   icons = {
     -- whether to show icons
     enabled = true,
+
+    actionEntryBullet = '󰐊 ',
 
     searchInput = ' ',
     replaceInput = ' ',
@@ -145,6 +147,7 @@ M.defaultOptions = {
 ---@class IconsTable
 ---@field enabled boolean
 ---@field searchInput string
+---@field actionEntryBullet string
 ---@field replaceInput string
 ---@field filesFilterInput string
 ---@field flagsInput string
@@ -156,6 +159,7 @@ M.defaultOptions = {
 ---@class IconsTableOverride
 ---@field enabled? boolean
 ---@field searchInput? string
+---@field actionEntryBullet? string
 ---@field replaceInput? string
 ---@field filesFilterInput? string
 ---@field flagsInput? string
