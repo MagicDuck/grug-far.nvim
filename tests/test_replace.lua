@@ -36,7 +36,7 @@ T['can replace with replace string'] = function()
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
-  child.type_keys('<esc>cc', 'curly')
+  child.type_keys(50, '<esc>cc', 'curly')
   vim.loop.sleep(50)
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
@@ -64,9 +64,32 @@ T['can replace with empty string'] = function()
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
-  child.type_keys('<esc>cc', 'and')
+  child.type_keys(50, '<esc>cc', 'and')
   vim.loop.sleep(50)
   helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['is prevented from replacing with blacklisted flags'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replace = 'curly', flags = '--json' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<C-enter>')
+  helpers.childWaitForUIVirtualText(child, 'replace cannot work')
   helpers.childExpectScreenshot(child)
 end
 

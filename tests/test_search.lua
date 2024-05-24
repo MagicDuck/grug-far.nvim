@@ -188,7 +188,7 @@ T['can search and edit search'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>cc', 'walks')
+  child.type_keys(50, '<esc>cc', 'walks')
   helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
 
