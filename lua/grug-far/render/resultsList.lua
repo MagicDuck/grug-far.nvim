@@ -41,7 +41,6 @@ function M.appendResultsChunk(buf, context, data)
   -- those are used for actions like quickfix list and go to location
   local state = context.state
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
-  local resultsLocations = state.resultsLocations
   local lastLocation = nil
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
@@ -62,7 +61,6 @@ function M.appendResultsChunk(buf, context, data)
     elseif hl == 'GrugFarResultsLineNo' then
       -- omit ending ':'
       lastLocation = { filename = state.resultsLastFilename }
-      table.insert(resultsLocations, lastLocation)
       local markId = vim.api.nvim_buf_set_extmark(
         buf,
         context.locationsNamespace,
@@ -123,6 +121,25 @@ function M.setError(buf, context, error)
   end
 end
 
+---@alias Extmark integer[]
+
+---@param all_extmarks Extmark[]
+---@return Extmark[]
+function M.filterDeletedLinesExtmarks(all_extmarks)
+  local marksByRow = {}
+  for i = 1, #all_extmarks do
+    local mark = all_extmarks[i]
+    marksByRow[mark[2]] = mark
+  end
+
+  local marks = {}
+  for _, mark in pairs(marksByRow) do
+    table.insert(marks, mark)
+  end
+
+  return marks
+end
+
 --- clears results area
 ---@param buf integer
 ---@param context GrugFarContext
@@ -133,7 +150,6 @@ function M.clear(buf, context)
 
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
-  context.state.resultsLocations = {}
   context.state.resultsLastFilename = nil
 end
 

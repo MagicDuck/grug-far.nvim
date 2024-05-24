@@ -51,7 +51,6 @@ local contextCount = 0
 ---@field stats? { matches: integer, files: integer }
 ---@field actionMessage? string
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
----@field resultsLocations ResultLocation[]
 ---@field resultsLastFilename? string
 ---@field abortSearch? fun()
 
@@ -80,7 +79,6 @@ local function createContext(options)
     state = {
       inputs = {},
       headerRow = 0,
-      resultsLocations = {},
       resultLocationByExtmarkId = {},
     },
   }
