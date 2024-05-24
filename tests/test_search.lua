@@ -36,6 +36,28 @@ T['can search for some string'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['reports error from rg'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    -- note: invalid regex
+    prefills = { search = 'grug ([])' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
 T['can search with flags'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
