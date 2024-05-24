@@ -53,12 +53,13 @@ T['can sync all with changes ignoring deleted lines'] = function()
       content = [[ 
       grug talks and grug drinks
       then grug thinks
+      and grug flies
     ]],
     },
   })
 
   helpers.childRunGrugFar(child, {
-    prefills = { search = 'grug' },
+    prefills = { search = 'grug', replacement = 'curly' },
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -72,7 +73,7 @@ T['can sync all with changes ignoring deleted lines'] = function()
   helpers.childWaitForUIVirtualText(child, 'sync completed!')
   helpers.childExpectScreenshot(child)
 
-  child.type_keys('<C-r>')
+  child.type_keys(10, '<esc>3G', 'i', 'curly')
   vim.loop.sleep(50)
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
