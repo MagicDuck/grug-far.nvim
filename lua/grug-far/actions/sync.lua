@@ -119,19 +119,6 @@ local function getActionMessage(err, count, total, time)
   return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
----@param context GrugFarContext
-local function isMultilineSearchReplace(context)
-  local inputs = context.state.inputs
-  local multilineFlags = { '--multiline', '-U', '--multiline-dotall' }
-  if #inputs.flags > 0 then
-    for flag in string.gmatch(inputs.flags, '%S+') do
-      if utils.isBlacklistedFlag(flag, multilineFlags) then
-        return true
-      end
-    end
-  end
-end
-
 --- is user performing a replacement, ui-wise?
 ---@param context GrugFarContext
 local function isDoingReplace(context)
@@ -145,25 +132,6 @@ local function isDoingReplace(context)
       return true
     end
   end
-end
-
----@alias Extmark integer[]
-
----@param all_extmarks Extmark[]
----@return Extmark[]
-local function filterDeletedLinesExtmarks(all_extmarks)
-  local marksByRow = {}
-  for i = 1, #all_extmarks do
-    local mark = all_extmarks[i]
-    marksByRow[mark[2]] = mark
-  end
-
-  local marks = {}
-  for _, mark in pairs(marksByRow) do
-    table.insert(marks, mark)
-  end
-
-  return marks
 end
 
 --- figure out which files changed and how
@@ -184,7 +152,7 @@ local function getChangedFiles(buf, context, startRow, endRow)
   )
 
   -- filter out extraneous extmarks caused by deletion of lines
-  local extmarks = filterDeletedLinesExtmarks(all_extmarks)
+  local extmarks = resultsList.filterDeletedLinesExtmarks(all_extmarks)
 
   local changedFilesByFilename = {}
   for i = 1, #extmarks do
@@ -238,7 +206,7 @@ local function sync(params)
   local state = context.state
   local startTime = uv.now()
 
-  if isMultilineSearchReplace(context) then
+  if utils.isMultilineSearchReplace(context) then
     state.actionMessage = 'sync disabled for multline search/replace!'
     renderResultsHeader(buf, context)
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
