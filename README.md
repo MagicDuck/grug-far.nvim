@@ -105,6 +105,14 @@ _Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
 _Note:_ if you would like sync to work when doing a replacement with empty string, please add `--replace=`
 to the flags.
 
+### Opening result lines in quickfix list
+
+Result lines can be opened in the quickfix list. Deleting result lines will cause them not to be included. 
+
+_Note:_ changing the `<line-number>:<column>:` prefix of result lines will remove lines from consideration
+
+_Note:_ quickfix list is disabled when doing multiline replacement (`--multiline` flag)
+
 ### Closing
 When you are done, it is recommended to close the buffer with the configured keybinding 
 (see Configuration section above) or just `:bd` in order to save on resources as some search results
