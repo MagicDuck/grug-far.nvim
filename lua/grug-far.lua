@@ -33,8 +33,8 @@ local contextCount = 0
 ---@field filename string
 ---@field lnum? integer
 ---@field col? integer
----@field rgResultLine? string
----@field rgColEndIndex? integer
+---@field text? string
+---@field end_col? integer
 
 ---@class GrugFarInputs
 ---@field search string
