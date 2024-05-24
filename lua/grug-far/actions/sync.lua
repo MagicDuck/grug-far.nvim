@@ -160,13 +160,13 @@ local function getChangedFiles(buf, context, startRow, endRow)
 
     -- get the associated location info
     local location = context.state.resultLocationByExtmarkId[markId]
-    if location and location.rgResultLine then
+    if location and location.text then
       -- get the current text on row
-      local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, true))
-      local isChanged = isReplacing or bufline ~= location.rgResultLine
-      if isChanged then
+      local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
+      local isChanged = isReplacing or bufline ~= location.text
+      if bufline and isChanged then
         -- ignore ones where user has messed with row:col: prefix as we can't get actual changed text
-        local numColPrefix = string.sub(location.rgResultLine, 1, location.rgColEndIndex + 1)
+        local numColPrefix = string.sub(location.text, 1, location.end_col + 1)
         if vim.startswith(bufline, numColPrefix) then
           local changedFile = changedFilesByFilename[location.filename]
           if not changedFile then
@@ -178,7 +178,7 @@ local function getChangedFiles(buf, context, startRow, endRow)
           end
 
           -- note, skips (:)
-          local newLine = string.sub(bufline, location.rgColEndIndex + 2, -1)
+          local newLine = string.sub(bufline, location.end_col + 2, -1)
           table.insert(changedFile.changedLines, {
             lnum = location.lnum,
             newLine = newLine,
