@@ -68,4 +68,30 @@ T['can open quickfix list with deleted lines'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['is prevented when multiline search'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', flags = '--multiline' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<C-q>')
+
+  helpers.childWaitForUIVirtualText(child, 'quickfix list disabled')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
