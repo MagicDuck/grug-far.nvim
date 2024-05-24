@@ -39,4 +39,33 @@ T['can open quickfix list'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can open quickfix list with deleted lines'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug flies
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys(10, '<esc>10G', 'dd')
+  child.type_keys(10, '<esc>13G', 'dd')
+
+  child.type_keys('<C-q>')
+  vim.loop.sleep(100)
+  helpers.childExpectScreenshot(child)
+end
+
 return T
