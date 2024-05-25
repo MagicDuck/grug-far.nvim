@@ -33,10 +33,24 @@ local BEFORE_RESULTS_LINES = 2
 local function render(buf, context)
   local inputs = context.state.inputs
   local placeholders = context.options.placeholders
+  local keymaps = context.options.keymaps
 
   local lineNr = 0
   ensureTopEmptyLines(buf, TOP_EMPTY_LINES)
-  renderHelp({ buf = buf }, context)
+  renderHelp({
+    buf = buf,
+    actions = {
+      { text = 'Replace', keymap = keymaps.replace },
+      { text = 'Sync All', keymap = keymaps.syncLocations },
+      { text = 'Sync Line', keymap = keymaps.syncLine },
+      { text = 'History Open', keymap = keymaps.historyOpen },
+      { text = 'History Add', keymap = keymaps.historyAdd },
+      { text = 'Refresh', keymap = keymaps.refresh },
+      { text = 'Goto', keymap = keymaps.gotoLocation },
+      { text = 'Quickfix', keymap = keymaps.qflist },
+      { text = 'Close', keymap = keymaps.close },
+    },
+  }, context)
 
   lineNr = lineNr + TOP_EMPTY_LINES
   inputs.search = renderInput({
