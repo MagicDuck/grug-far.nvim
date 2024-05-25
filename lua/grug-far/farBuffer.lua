@@ -1,5 +1,4 @@
 local render = require('grug-far/render')
-local renderHelp = require('grug-far/render/help')
 local search = require('grug-far/actions/search')
 local replace = require('grug-far/actions/replace')
 local qflist = require('grug-far/actions/qflist')

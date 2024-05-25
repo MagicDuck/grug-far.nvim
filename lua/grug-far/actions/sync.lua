@@ -280,7 +280,9 @@ local function sync(params)
     renderResultsHeader(buf, context)
 
     vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
-    on_success()
+    if on_success then
+      on_success()
+    end
   end)
 
   syncChangedFiles({
