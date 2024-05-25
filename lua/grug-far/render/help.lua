@@ -7,9 +7,13 @@ local function getActionMapping(keymap)
   if not lhs or #lhs == 0 then
     return nil
   end
-  lhs = lhs
-    :gsub('<localleader>', vim.g.maplocalleader)
-    :gsub('<leader>', vim.g.mapleader == ' ' and '< >' or vim.g.mapleader)
+  if vim.g.maplocalleader then
+    lhs = lhs:gsub('<localleader>', vim.g.maplocalleader)
+  end
+  if vim.g.mapleader then
+    lhs = lhs:gsub('<leader>', vim.g.mapleader == ' ' and '< >' or vim.g.mapleader)
+  end
+
   return lhs
 end
 

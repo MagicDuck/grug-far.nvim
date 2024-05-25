@@ -9,7 +9,12 @@ function M.getHistoryFilename(context)
     vim.fn.mkdir(historyDir, 'p')
   end
 
-  return historyDir .. '/history'
+  local file = historyDir .. '/history'
+  if vim.fn.filereadable(file) == 0 then
+    vim.fn.writefile({ '' }, file)
+  end
+
+  return file
 end
 
 --- adds entry to history
