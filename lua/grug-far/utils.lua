@@ -183,6 +183,30 @@ function M.isMultilineSearchReplace(context)
   end
 end
 
+--- add a keymapping
+---@param buf integer
+---@param desc string
+---@param keymap KeymapDef
+---@param callback fun()
+function M.setBufKeymap(buf, desc, keymap, callback)
+  local function setMapping(mode, lhs)
+    vim.api.nvim_buf_set_keymap(
+      buf,
+      mode,
+      lhs,
+      '',
+      { noremap = true, desc = desc, callback = callback, nowait = true }
+    )
+  end
+
+  if keymap.i and keymap.i ~= '' then
+    setMapping('i', keymap.i)
+  end
+  if keymap.n and keymap.n ~= '' then
+    setMapping('n', keymap.n)
+  end
+end
+
 M.eol = is_win and '\r\n' or '\n'
 
 return M

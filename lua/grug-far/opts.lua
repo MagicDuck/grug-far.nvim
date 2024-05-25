@@ -42,7 +42,6 @@ M.defaultOptions = {
   -- it is recommended to use <localleader> though as that is more vim-ish
   -- see https://learnvimscriptthehardway.stevelosh.com/chapters/11.html#local-leader
   keymaps = {
-    -- normal and insert mode
     replace = { n = '<localleader>r' },
     qflist = { n = '<localleader>q' },
     syncLocations = { n = '<localleader>s' },
@@ -51,9 +50,8 @@ M.defaultOptions = {
     historyOpen = { n = '<localleader>h' },
     historyAdd = { n = '<localleader>a' },
     refresh = { n = '<localleader>f' },
-
-    -- normal mode only
     gotoLocation = { n = '<enter>' },
+    pickHistoryEntry = { n = '<enter>' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -143,6 +141,7 @@ M.defaultOptions = {
 ---@field syncLine KeymapDef
 ---@field close KeymapDef
 ---@field gotoLocation KeymapDef
+---@field pickHistoryEntry KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -154,6 +153,7 @@ M.defaultOptions = {
 ---@field syncLine? KeymapDef
 ---@field close? KeymapDef
 ---@field gotoLocation? KeymapDef
+---@field pickHistoryEntry? KeymapDef
 
 ---@class IconsTable
 ---@field enabled boolean

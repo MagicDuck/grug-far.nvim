@@ -66,8 +66,8 @@ local function renderHelp(params, context)
   local buf = params.buf
 
   local virt_lines = getHelpVirtLines(context)
-  context.extmarkIds.help1 = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
-    id = context.extmarkIds.help1,
+  context.extmarkIds.help = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
+    id = context.extmarkIds.help,
     virt_text = virt_lines[1],
     virt_text_pos = 'overlay',
     virt_lines = vim.list_slice(virt_lines, 2),
