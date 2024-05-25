@@ -1,13 +1,15 @@
 local utils = require('grug-far/utils')
 local M = {}
 
-function M.getHistoryFilename()
-  local hist_dir = vim.fn.stdpath('state') .. '/grug-far'
-  if vim.fn.isdirectory(hist_dir) == 0 then
-    vim.fn.mkdir(hist_dir)
+---@param context GrugFarContext
+---@return string
+function M.getHistoryFilename(context)
+  local historyDir = context.options.history.historyDir
+  if vim.fn.isdirectory(historyDir) == 0 then
+    vim.fn.mkdir(historyDir, 'p')
   end
 
-  return hist_dir .. '/history'
+  return historyDir .. '/history'
 end
 
 --- adds entry to history
@@ -15,7 +17,7 @@ end
 ---@param notify? boolean
 function M.addHistoryEntry(context, notify)
   local inputs = context.state.inputs
-  local historyFilename = M.getHistoryFilename()
+  local historyFilename = M.getHistoryFilename(context)
   local callback = vim.schedule_wrap(function(err)
     if notify then
       if err then
