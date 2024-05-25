@@ -22,7 +22,7 @@ function M.addHistoryEntry(inputs, callback)
     end
 
     -- TODO (sbadragan): parse contents and dedupe
-    local newContents = '\nSearch: '
+    local newContents = '\n\nSearch: '
       .. inputs.search
       .. '\nReplace: '
       .. inputs.replacement

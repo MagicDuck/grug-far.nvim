@@ -47,7 +47,7 @@ M.defaultOptions = {
     syncLocations = { n = '<localleader>s' },
     syncLine = { n = '<localleader>l' },
     close = { n = '<localleader>c' },
-    historyOpen = { n = '<localleader>h' },
+    historyOpen = { n = '<localleader>t' },
     historyAdd = { n = '<localleader>a' },
     refresh = { n = '<localleader>f' },
     gotoLocation = { n = '<enter>' },
@@ -96,6 +96,8 @@ M.defaultOptions = {
     resultsStatusError = ' ',
     resultsStatusSuccess = '󰗡 ',
     resultsActionMessage = '  ',
+
+    historyTitle = '  ',
   },
 
   -- placeholders to show in input areas when they are empty

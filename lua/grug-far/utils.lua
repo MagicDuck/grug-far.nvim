@@ -207,6 +207,29 @@ function M.setBufKeymap(buf, desc, keymap, callback)
   end
 end
 
+---@param buf integer
+---@param count integer
+function M.ensureBufTopEmptyLines(buf, count)
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, count, false)
+  for _ = #lines + 1, count do
+    table.insert(lines, nil)
+  end
+
+  local foundNonEmpty = false
+  local emptyLines = {}
+  for i = 1, #lines do
+    local line = lines[i]
+    foundNonEmpty = foundNonEmpty or not (line and #line == 0)
+    if foundNonEmpty then
+      table.insert(emptyLines, '')
+    end
+  end
+
+  if #emptyLines > 0 then
+    vim.api.nvim_buf_set_lines(buf, 0, 0, false, emptyLines)
+  end
+end
+
 M.eol = is_win and '\r\n' or '\n'
 
 return M
