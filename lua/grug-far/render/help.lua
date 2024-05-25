@@ -2,7 +2,7 @@ local opts = require('grug-far/opts')
 
 ---@param keymap KeymapDef
 ---@return string | nil
-local function getActionMappping(keymap)
+local function getActionMapping(keymap)
   local lhs = keymap.n
   if not lhs or #lhs == 0 then
     return nil
@@ -15,24 +15,18 @@ end
 
 ---@alias VirtText string[]
 
+---@class GrugFarAction
+---@field text string
+---@field keymap KeymapDef
+
 --- gets help virtual text lines
+---@param actions GrugFarAction[]
 ---@param context GrugFarContext
 ---@return VirtText[][]
-local function getHelpVirtLines(context)
-  local keymaps = context.options.keymaps
-  local entries = vim.tbl_filter(function(m)
-    return m.lhs
-  end, {
-    { text = 'Replace', lhs = getActionMappping(keymaps.replace) },
-    { text = 'Sync All', lhs = getActionMappping(keymaps.syncLocations) },
-    { text = 'Sync Line', lhs = getActionMappping(keymaps.syncLine) },
-    { text = 'History Open', lhs = getActionMappping(keymaps.historyOpen) },
-    { text = 'History Add', lhs = getActionMappping(keymaps.historyAdd) },
-    { text = 'Refresh', lhs = getActionMappping(keymaps.refresh) },
-    { text = 'Goto', lhs = getActionMappping(keymaps.gotoLocation) },
-    { text = 'Quickfix', lhs = getActionMappping(keymaps.qflist) },
-    { text = 'Close', lhs = getActionMappping(keymaps.close) },
-  })
+local function getHelpVirtLines(actions, context)
+  local entries = vim.tbl_map(function(action)
+    return { text = action.text, lhs = getActionMapping(action.keymap) }
+  end, actions)
 
   local maxEntryLen = 0
   for _, entry in ipairs(entries) do
@@ -60,12 +54,13 @@ local function getHelpVirtLines(context)
   return virt_lines
 end
 
----@param params { buf: integer }
+---@param params { buf: integer, actions: GrugFarAction[] }
 ---@param context GrugFarContext
 local function renderHelp(params, context)
   local buf = params.buf
+  local actions = params.actions
 
-  local virt_lines = getHelpVirtLines(context)
+  local virt_lines = getHelpVirtLines(actions, context)
   context.extmarkIds.help = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
     id = context.extmarkIds.help,
     virt_text = virt_lines[1],

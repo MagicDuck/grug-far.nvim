@@ -129,20 +129,11 @@ function M.createBuffer(win, context)
     debouncedSearchOnChange()
   end
 
-  local function handleModeChange()
-    renderHelp({ buf = buf }, context)
-  end
-
   -- set up re-render on change
   vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
     group = context.augroup,
     buffer = buf,
     callback = handleBufferChange,
-  })
-  vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
-    group = context.augroup,
-    buffer = buf,
-    callback = handleModeChange,
   })
 
   -- do the initial render
