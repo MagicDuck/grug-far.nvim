@@ -7,59 +7,53 @@ local gotoLocation = require('grug-far/actions/gotoLocation')
 local syncLocations = require('grug-far/actions/syncLocations')
 local syncLine = require('grug-far/actions/syncLine')
 local close = require('grug-far/actions/close')
+local historyOpen = require('grug-far/actions/historyOpen')
+local historyAdd = require('grug-far/actions/historyAdd')
 local utils = require('grug-far/utils')
 
 local M = {}
-
---- add a keymapping
----@param buf integer
----@param desc string
----@param keymap KeymapDef
----@param callback fun()
-local function setBufKeymap(buf, desc, keymap, callback)
-  local function setMapping(mode, lhs)
-    vim.api.nvim_buf_set_keymap(
-      buf,
-      mode,
-      lhs,
-      '',
-      { noremap = true, desc = desc, callback = callback, nowait = true }
-    )
-  end
-
-  if keymap.i and keymap.i ~= '' then
-    setMapping('i', keymap.i)
-  end
-  if keymap.n and keymap.n ~= '' then
-    setMapping('n', keymap.n)
-  end
-end
 
 --- set up all key maps
 ---@param buf integer
 ---@param context GrugFarContext
 local function setupKeymap(buf, context)
   local keymaps = context.options.keymaps
-  setBufKeymap(buf, 'Grug Far: apply replacements', keymaps.replace, function()
+  utils.setBufKeymap(buf, 'Grug Far: apply replacements', keymaps.replace, function()
     replace({ buf = buf, context = context })
   end)
-  setBufKeymap(buf, 'Grug Far: sync result lines to locations', keymaps.syncLocations, function()
-    syncLocations({ buf = buf, context = context })
-  end)
-  setBufKeymap(buf, 'Grug Far: send results to quickfix list', keymaps.qflist, function()
+  utils.setBufKeymap(
+    buf,
+    'Grug Far: sync result lines to locations',
+    keymaps.syncLocations,
+    function()
+      syncLocations({ buf = buf, context = context })
+    end
+  )
+  utils.setBufKeymap(buf, 'Grug Far: send results to quickfix list', keymaps.qflist, function()
     qflist({ buf = buf, context = context })
   end)
-  setBufKeymap(buf, 'Grug Far: go to location', keymaps.gotoLocation, function()
+  utils.setBufKeymap(buf, 'Grug Far: go to location', keymaps.gotoLocation, function()
     gotoLocation({ buf = buf, context = context })
   end)
-  setBufKeymap(buf, 'Grug Far: sync current result line to location', keymaps.syncLine, function()
-    syncLine({ buf = buf, context = context })
-  end)
-  setBufKeymap(buf, 'Grug Far: close', keymaps.close, function()
+  utils.setBufKeymap(
+    buf,
+    'Grug Far: sync current result line to location',
+    keymaps.syncLine,
+    function()
+      syncLine({ buf = buf, context = context })
+    end
+  )
+  utils.setBufKeymap(buf, 'Grug Far: close', keymaps.close, function()
     close()
   end)
-  setBufKeymap(buf, 'Grug Far: refresh search', keymaps.refresh, function()
+  utils.setBufKeymap(buf, 'Grug Far: refresh search', keymaps.refresh, function()
     search({ buf = buf, context = context })
+  end)
+  utils.setBufKeymap(buf, 'Grug Far: history open', keymaps.historyOpen, function()
+    historyOpen({ buf = buf, context = context })
+  end)
+  utils.setBufKeymap(buf, 'Grug Far: history add', keymaps.historyAdd, function()
+    historyAdd({ context = context })
   end)
 end
 
