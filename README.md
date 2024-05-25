@@ -13,6 +13,7 @@ Grug find! Grug replace! Grug happy!
 - Open search results in quickfix list
 - Goto file/line/column of match when pressing `<Enter>` in normal mode on lines in the results output (keybind configurable).
 - Inline edit result lines and sync them back to their originating file locations using a configurable keybinding.
+- Manual/auto-save search history and reload
 
 #### Searching:
 <img width="100%" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/b664f77c-6e12-4a4a-a179-ada2da204039">
@@ -119,6 +120,27 @@ Result lines can be opened in the quickfix list. Deleting result lines will caus
 _Note:_ changing the `<line-number>:<column>:` prefix of result lines will remove lines from consideration
 
 _Note:_ quickfix list is disabled when doing multiline replacement (`--multiline` flag)
+
+### History
+
+**grug-far** can keep track of your search history. This is done either by manually adding a history entry with
+`History Add` action or automatically on certain successful actions like `Replace` and `Sync All`.
+
+When you would like to pick one of your history entries to reuse, you can use the `History Open` action to
+open the search history as a buffer. From there you can either pick an entry that will be auto-filled in.
+
+Note that you can edit the history buffer and save just like any other buffer if you need to do some cleanup.
+The format of a history entry is:
+```
+<optional comment, ex: My special search>
+Search: <text>
+Replace: <text>
+Files Filter: <text>
+Flags: <text>
+```
+History entries are separated by one or more empty lines.
+
+_Note_: **grug-far** will ignore lines that do not start with the prefixes above
 
 ### Closing
 When you are done, it is recommended to close the buffer with the configured keybinding 
