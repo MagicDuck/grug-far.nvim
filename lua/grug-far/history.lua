@@ -1,7 +1,6 @@
 local utils = require('grug-far/utils')
 local M = {}
 
--- TODO (sbadragan): expand this to work with project specific
 function M.getHistoryFilename()
   local hist_dir = vim.fn.stdpath('state') .. '/grug-far'
   if vim.fn.isdirectory(hist_dir) == 0 then
@@ -12,16 +11,26 @@ function M.getHistoryFilename()
 end
 
 --- adds entry to history
----@param inputs GrugFarInputs
-function M.addHistoryEntry(inputs, callback)
+---@param context GrugFarContext
+---@param notify? boolean
+function M.addHistoryEntry(context, notify)
+  local inputs = context.state.inputs
   local historyFilename = M.getHistoryFilename()
-  local cb = vim.schedule_wrap(callback)
+  local callback = vim.schedule_wrap(function(err)
+    if notify then
+      if err then
+        vim.notify('grug-far: could not add to history: ' .. err, vim.log.levels.ERROR)
+      else
+        vim.notify('grug-far: added current search to history!', vim.log.levels.INFO)
+      end
+    end
+  end)
+
   utils.readFileAsync(historyFilename, function(err, contents)
     if err then
-      cb(err)
+      callback(err)
     end
 
-    -- TODO (sbadragan): parse contents and dedupe
     local newContents = '\n\nSearch: '
       .. inputs.search
       .. '\nReplace: '
@@ -33,7 +42,21 @@ function M.addHistoryEntry(inputs, callback)
       .. '\n'
       .. contents
 
-    utils.overwriteFileAsync(historyFilename, newContents, cb)
+    local lines = vim.split(newContents, '\n')
+    local maxHistoryLines = context.options.history.maxHistoryLines
+    if #lines > maxHistoryLines then
+      local firstEmptyLine
+      for i = maxHistoryLines, 1, -1 do
+        if #lines[i] == 0 then
+          firstEmptyLine = i
+          break
+        end
+      end
+      lines = vim.list_slice(lines, 1, firstEmptyLine)
+      newContents = table.concat(lines, '\n')
+    end
+
+    utils.overwriteFileAsync(historyFilename, newContents, callback)
   end)
 end
 

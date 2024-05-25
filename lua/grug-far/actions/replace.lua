@@ -4,6 +4,7 @@ local getArgs = require('grug-far/rg/getArgs')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 local utils = require('grug-far/utils')
+local history = require('grug-far/history')
 local uv = vim.loop
 
 --- performs replacement in given file
@@ -188,6 +189,11 @@ local function replace(params)
     renderResultsHeader(buf, context)
 
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
+
+    local autoSave = context.options.history.autoSave
+    if autoSave.enabled and autoSave.onReplace then
+      history.addHistoryEntry(context)
+    end
   end)
 
   local args = getArgs(context.state.inputs, context.options, {})

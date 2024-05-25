@@ -196,13 +196,21 @@ local function getChangedFiles(buf, context, startRow, endRow)
   return changedFiles
 end
 
+---@class SyncParams
+---@field buf integer
+---@field context GrugFarContext
+---@field startRow integer
+---@field endRow integer
+---@field on_success fun()
+
 --- performs sync of lines in results area with corresponding original file locations
----@param params { buf: integer, context: GrugFarContext, startRow: integer, endRow: integer }
+---@param params SyncParams
 local function sync(params)
   local buf = params.buf
   local context = params.context
   local startRow = params.startRow
   local endRow = params.endRow
+  local on_success = params.on_success
   local state = context.state
   local startTime = uv.now()
 
@@ -272,6 +280,7 @@ local function sync(params)
     renderResultsHeader(buf, context)
 
     vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
+    on_success()
   end)
 
   syncChangedFiles({
