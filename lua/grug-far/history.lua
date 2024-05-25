@@ -38,7 +38,7 @@ function M.addHistoryEntry(context, notify)
       callback(err)
     end
 
-    local newContents = '\n\nSearch: '
+    local entry = '\n\nSearch: '
       .. inputs.search
       .. '\nReplace: '
       .. inputs.replacement
@@ -47,8 +47,14 @@ function M.addHistoryEntry(context, notify)
       .. '\nFlags: '
       .. inputs.flags
       .. '\n'
-      .. contents
 
+    -- dedupe last entry
+    local newContents = contents or ''
+    if not vim.startswith(newContents, entry) then
+      newContents = entry .. contents
+    end
+
+    -- ensure max history lines
     local lines = vim.split(newContents, '\n')
     local maxHistoryLines = context.options.history.maxHistoryLines
     if #lines > maxHistoryLines then

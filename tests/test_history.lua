@@ -104,4 +104,31 @@ T['auto-saves to history on sync all'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['dedupes last history entry'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'curly', flags = '-i' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+  vim.loop.sleep(50)
+  child.type_keys('<C-p>')
+  vim.loop.sleep(50)
+  child.type_keys('<C-p>')
+
+  vim.loop.sleep(50)
+  child.type_keys('<C-h>')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 return T

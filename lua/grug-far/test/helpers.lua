@@ -172,6 +172,9 @@ end
 ---@param child NeovimChild
 ---@param options GrugFarOptionsOverride
 function M.childRunGrugFar(child, options)
+  vim.fn.delete('./temp_history_dir', 'rf')
+  vim.fn.mkdir('./temp_history_dir')
+
   local cwd = vim.loop.cwd()
   child.lua('vim.api.nvim_set_current_dir("' .. cwd .. '/temp_test_dir")')
   child.lua('GrugFar.grug_far(...)', {
@@ -183,9 +186,6 @@ end
 --- clears out temp test dir beforehand
 ---@param files {[string]: string}
 function M.writeTestFiles(files)
-  vim.fn.delete('./temp_history_dir', 'rf')
-  vim.fn.mkdir('./temp_history_dir')
-
   vim.fn.delete('./temp_test_dir', 'rf')
   vim.fn.mkdir('./temp_test_dir')
   for i = 1, #files do
