@@ -126,8 +126,8 @@ When you are done, it is recommended to close the buffer with the configured key
 can be quite beefy in size.
 
 ### Filetype
-Note that *grug-far.nvim* buffers will have `filetype=grug-far` if you need filter/exclude them in
-any situations.
+Note that *grug-far.nvim* buffers will have `filetype=grug-far` and history buffers will have `filetype=grug-far-history`
+if you need filter/exclude them in any situations.
 
 ### ⚒️  Lua API
 

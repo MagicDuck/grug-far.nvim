@@ -1,5 +1,7 @@
+local renderHelp = require('grug-far/render/help')
 local history = require('grug-far/history')
 local utils = require('grug-far/utils')
+local opts = require('grug-far/opts')
 
 --- gets history entry at given 0-based buffer row
 ---@param historyBuf integer
@@ -80,36 +82,50 @@ local function setupKeymap(historyWin, historyBuf, buf, context)
   )
 end
 
---- creates history window
----@param buf integer
+---@param historyBuf integer
 ---@param context GrugFarContext
----@return integer historyBuf
-local function createHistoryBuffer(buf, context)
-  local historyBuf = vim.api.nvim_create_buf(false, true)
-  -- TODO (sbadragan): add note to readme
-  vim.api.nvim_buf_set_option(historyBuf, 'filetype', 'grug-far-history')
+local function renderHistoryBuffer(historyBuf, context)
+  local keymaps = context.options.keymaps
 
-  return historyBuf
+  utils.ensureBufTopEmptyLines(historyBuf, 2)
+  renderHelp({
+    buf = historyBuf,
+    extmarkName = 'historyHelp',
+    top_virt_lines = {
+      {
+        {
+          '(edit and save as usual if you need to, make sure to preserve format) ',
+          'GrugFarHelpHeader',
+        },
+      },
+    },
+    actions = {
+      { text = 'Pick Entry', keymap = keymaps.pickHistoryEntry },
+      { text = 'Close', keymap = { n = ':q' } },
+    },
+  }, context)
 end
 
 --- creates history window
 ---@param buf integer
 ---@param context GrugFarContext
 local function createHistoryWindow(buf, context)
-  local historyBuf = createHistoryBuffer(buf, context)
-  local width = vim.api.nvim_win_get_width(0) - 2
-  local height = vim.api.nvim_win_get_height(0) - 3
+  local historyBuf = vim.api.nvim_create_buf(false, true)
+  local horizontal_margin = 5
+  local vertical_margin = 5
+  local width = vim.api.nvim_win_get_width(0) - 2 * horizontal_margin
+  local height = vim.api.nvim_win_get_height(0) - 2 * vertical_margin
   local historyWin = vim.api.nvim_open_win(historyBuf, true, {
     relative = 'win',
-    row = 0,
-    col = 0,
+    row = vertical_margin,
+    col = horizontal_margin,
     width = width,
     height = height,
     border = 'rounded',
-    title = 'History',
+    title = (opts.getIcon('historyTitle', context) or ' ') .. 'History ',
     title_pos = 'left',
+    style = 'minimal',
   })
-  vim.api.nvim_win_set_option(historyWin, 'number', true)
 
   local historyFilename = history.getHistoryFilename()
   vim.cmd('e ' .. vim.fn.fnameescape(historyFilename))
@@ -123,7 +139,24 @@ local function createHistoryWindow(buf, context)
     end,
   })
 
+  vim.api.nvim_buf_set_option(historyBuf, 'filetype', 'grug-far-history')
   setupKeymap(historyWin, historyBuf, buf, context)
+
+  local function handleBufferChange()
+    renderHistoryBuffer(historyBuf, context)
+  end
+
+  -- set up re-render on change
+  vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
+    group = context.augroup,
+    buffer = historyBuf,
+    callback = handleBufferChange,
+  })
+
+  -- do the initial render
+  vim.schedule(function()
+    renderHistoryBuffer(historyBuf, context)
+  end)
 
   return historyWin
 end

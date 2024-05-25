@@ -20,10 +20,11 @@ end
 ---@field keymap KeymapDef
 
 --- gets help virtual text lines
+---@param virt_lines VirtText[][]
 ---@param actions GrugFarAction[]
 ---@param context GrugFarContext
 ---@return VirtText[][]
-local function getHelpVirtLines(actions, context)
+local function getHelpVirtLines(virt_lines, actions, context)
   local entries = vim.tbl_map(function(action)
     return { text = action.text, lhs = getActionMapping(action.keymap) }
   end, actions)
@@ -36,7 +37,6 @@ local function getHelpVirtLines(actions, context)
     end
   end
 
-  local virt_lines = {}
   local sep = opts.getIcon('actionEntryBullet', context) or '| '
   local headerMaxWidth = context.options.headerMaxWidth
   local entries_per_line = math.floor(headerMaxWidth / maxEntryLen)
@@ -54,15 +54,23 @@ local function getHelpVirtLines(actions, context)
   return virt_lines
 end
 
----@param params { buf: integer, actions: GrugFarAction[] }
+---@class HelpRenderParams
+---@field buf integer
+---@field extmarkName string
+---@field actions GrugFarAction[]
+---@field top_virt_lines? VirtText[][]
+
+---@param params HelpRenderParams
 ---@param context GrugFarContext
 local function renderHelp(params, context)
   local buf = params.buf
   local actions = params.actions
+  local top_virt_lines = params.top_virt_lines or {}
+  local extmarkName = params.extmarkName
 
-  local virt_lines = getHelpVirtLines(actions, context)
-  context.extmarkIds.help = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
-    id = context.extmarkIds.help,
+  local virt_lines = getHelpVirtLines(top_virt_lines, actions, context)
+  context.extmarkIds[extmarkName] = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
+    id = context.extmarkIds[extmarkName],
     virt_text = virt_lines[1],
     virt_text_pos = 'overlay',
     virt_lines = vim.list_slice(virt_lines, 2),
