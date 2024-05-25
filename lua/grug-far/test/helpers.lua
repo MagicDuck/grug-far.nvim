@@ -104,6 +104,9 @@ function M.initChildNeovim(child)
 
   local rgPath = vim.env.RG_PATH or 'rg'
 
+  vim.fn.delete('./temp_history_dir', 'rf')
+  vim.fn.mkdir('./temp_history_dir')
+
   child.lua(
     [[ 
     GrugFar = require('grug-far')
@@ -124,16 +127,20 @@ function M.initChildNeovim(child)
         spinnerStates = { 'STATUS_PROGRESS' },
         reportDuration = false,
         keymaps = {
-          -- normal and insert mode
           replace = '<C-enter>',
           qflist = '<C-q>',
           syncLocations = '<C-s>',
           syncLine = '<C-a>',
           close = '<C-x>',
           refresh = '<C-r>',
+          historyAdd = '<C-p>',
+          historyOpen = '<C-h>',
+          pickHistoryEntry = { n = '<enter>' },
 
-          -- normal mode only
           gotoLocation = { n = '<enter>' },
+        },
+        history = {
+          historyDir = vim.loop.cwd() .. '/temp_history_dir',
         },
       },
     }

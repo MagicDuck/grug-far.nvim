@@ -18,10 +18,12 @@ prepare:
 	@mkdir -p deps
 	git clone --depth=1 --single-branch https://github.com/echasnovski/mini.nvim deps/mini.nvim
 	@mkdir -p temp_test_dir
+	@mkdir -p temp_history_dir
 # clean up
 clean:
 	rm -rf deps
 	rm -rf temp_test_dir
+	rm -rf temp_history_dir
 # lint
 lint:
 	selene lua tests
