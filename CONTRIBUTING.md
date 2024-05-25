@@ -26,12 +26,16 @@ $ make test
 
 To run specific test:
 ```bash
-$ make test-file spec=tests/test_search.lua
+$ make test file=tests/test_search.lua
 ```
 
+To run test at specific line:
+```bash
+$ make test file=tests/test_search.lua line=83
+```
 To update screenshots:
 ```bash
-$ make test-file spec=tests/test_search.lua update_screenshots=true
+$ make test spec=tests/test_search.lua update_screenshots=true
 ```
 
 ## Github actions
