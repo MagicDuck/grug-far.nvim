@@ -104,9 +104,6 @@ function M.initChildNeovim(child)
 
   local rgPath = vim.env.RG_PATH or 'rg'
 
-  vim.fn.delete('./temp_history_dir', 'rf')
-  vim.fn.mkdir('./temp_history_dir')
-
   child.lua(
     [[ 
     GrugFar = require('grug-far')
@@ -186,6 +183,9 @@ end
 --- clears out temp test dir beforehand
 ---@param files {[string]: string}
 function M.writeTestFiles(files)
+  vim.fn.delete('./temp_history_dir', 'rf')
+  vim.fn.mkdir('./temp_history_dir')
+
   vim.fn.delete('./temp_test_dir', 'rf')
   vim.fn.mkdir('./temp_test_dir')
   for i = 1, #files do
