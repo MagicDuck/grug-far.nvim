@@ -127,7 +127,7 @@ local function createHistoryWindow(buf, context)
     style = 'minimal',
   })
 
-  local historyFilename = history.getHistoryFilename()
+  local historyFilename = history.getHistoryFilename(context)
   vim.cmd('e ' .. vim.fn.fnameescape(historyFilename))
 
   -- delete buffer on window close

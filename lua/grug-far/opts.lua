@@ -132,6 +132,9 @@ M.defaultOptions = {
     -- to remove oldest entries
     maxHistoryLines = 10000,
 
+    -- directory where to store history file
+    historyDir = vim.fn.stdpath('state') .. '/grug-far',
+
     -- configuration for when to auto-save history entries
     autoSave = {
       -- whether to auto-save at all, trumps all other settings below
@@ -193,10 +196,12 @@ M.defaultOptions = {
 
 ---@class HistoryTable
 ---@field maxHistoryLines integer
+---@field historyDir string
 ---@field autoSave AutoSaveTable
 
 ---@class HistoryTableOverride
 ---@field maxHistoryLines? integer
+---@field historyDir? string
 ---@field autoSave? AutoSaveTable
 
 ---@class IconsTable
