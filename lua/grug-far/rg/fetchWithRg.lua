@@ -67,7 +67,7 @@ local function fetchWithRg(params)
     closeHandle(stderr)
     closeHandle(handle)
     if handle then
-      handle:kill(vim.constants.SIGTERM)
+      handle:kill(vim.loop.constants.SIGTERM)
     end
 
     on_finish(nil, nil)
