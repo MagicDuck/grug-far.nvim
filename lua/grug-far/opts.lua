@@ -125,6 +125,28 @@ M.defaultOptions = {
     filesFilter = '',
     flags = '',
   },
+
+  -- search history settings
+  history = {
+    -- maximum number of lines in history file, end of file will be smartly truncated
+    -- to remove oldest entries
+    maxHistoryLines = 10000,
+
+    -- configuration for when to auto-save history entries
+    autoSave = {
+      -- whether to auto-save at all, trumps all other settings below
+      enabled = true,
+
+      -- auto-save after a replace
+      onReplace = true,
+
+      -- auto-save after sync all
+      onSyncAll = true,
+
+      -- auto-save after buffer is deleted
+      onBufDelete = true,
+    },
+  },
 }
 
 ---@class KeymapTable
@@ -156,6 +178,26 @@ M.defaultOptions = {
 ---@field close? KeymapDef
 ---@field gotoLocation? KeymapDef
 ---@field pickHistoryEntry? KeymapDef
+
+---@class AutoSaveTable
+---@field enabled boolean
+---@field onReplace boolean
+---@field onSyncAll boolean
+---@field onBufDelete boolean
+
+---@class AutoSaveTableOverride
+---@field enabled? boolean
+---@field onReplace? boolean
+---@field onSyncAll? boolean
+---@field onBufDelete? boolean
+
+---@class HistoryTable
+---@field maxHistoryLines integer
+---@field autoSave AutoSaveTable
+
+---@class HistoryTableOverride
+---@field maxHistoryLines? integer
+---@field autoSave? AutoSaveTable
 
 ---@class IconsTable
 ---@field enabled boolean
@@ -227,6 +269,7 @@ M.defaultOptions = {
 ---@field icons IconsTable
 ---@field placeholders PlaceholdersTable
 ---@field prefills PrefillsTable
+---@field history HistoryTable
 
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
@@ -246,6 +289,7 @@ M.defaultOptions = {
 ---@field icons? IconsTableOverride
 ---@field placeholders? PlaceholdersTableOverride
 ---@field prefills? PrefillsTableOverride
+---@field history? HistoryTableOverride
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride

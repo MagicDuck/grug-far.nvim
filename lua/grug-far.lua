@@ -1,6 +1,7 @@
 local opts = require('grug-far/opts')
 local highlights = require('grug-far/highlights')
 local farBuffer = require('grug-far/farBuffer')
+local history = require('grug-far/history')
 
 local M = {}
 
@@ -103,6 +104,11 @@ end
 ---@param context GrugFarContext
 local function setupCleanup(buf, context)
   local function onBufDelete()
+    local autoSave = context.options.history.autoSave
+    if autoSave.enabled and autoSave.onBufDelete then
+      history.addHistoryEntry(context)
+    end
+
     vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
     vim.api.nvim_del_augroup_by_id(context.augroup)
