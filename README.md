@@ -70,7 +70,8 @@ Using [lazy.nvim][lazy]:
 
 **Note on the key mappings**: By default, grug-far, will use `<localleader>` for it's keymaps as that is the vim
 recommended way for plugins. See https://learnvimscriptthehardway.stevelosh.com/chapters/11.html#local-leader
-So to use that make sure have `<localleader>` configured. For example, to use `,` as the local leader:
+
+So to use that, make sure you have `<localleader>` configured. For example, to use `,` as the local leader:
 ```
 vim.g.maplocalleader = ','
 ```
