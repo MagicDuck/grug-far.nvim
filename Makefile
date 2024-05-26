@@ -5,6 +5,12 @@
 test:
 	nvim --headless --noplugin -u ./scripts/minimal_init.lua -l ./scripts/test_cli.lua
 
+# launches test version of nvim that has the same plugin configuration as what the tests get
+# this is useful sometiemes to check what is going on when child neovim processes just hang without any output
+launch-test-nvim:
+	nvim --noplugin -u ./scripts/test_plugin_config.lua -c GrugFar
+
+# clean / update all screenshots
 update-screenshots:
 	rm -rf tests/screenshots/* 
 	make test
