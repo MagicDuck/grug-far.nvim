@@ -14,7 +14,7 @@
 13| STAT│Flags: -i                     ││~                                      
 14| 4 ma│                              │   │~                                      
 15|     │                              │   │~                                      
-16|file1│Search:                       │   │~                                      
+16|file1│Search: walks                 │   │~                                      
 17|1:2: │Replace:                      │   │~                                      
 18|     │Files Filter:                 │   │~                                      
 19|file2╰──────────────────────────────╯   │~                                      

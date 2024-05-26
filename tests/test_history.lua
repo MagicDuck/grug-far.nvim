@@ -32,19 +32,22 @@ T['can manually save and reload from history'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
   child.type_keys(100, '<esc>cc', 'walks')
   vim.loop.sleep(100)
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
   child.type_keys(100, '<esc>cc', 'talks')
   vim.loop.sleep(100)
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
-  vim.loop.sleep(100)
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
+  helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
@@ -76,6 +79,7 @@ T['auto-saves to history on replace'] = function()
 
   vim.loop.sleep(50)
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
+  helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)
 end
 
@@ -102,6 +106,7 @@ T['auto-saves to history on sync all'] = function()
 
   vim.loop.sleep(50)
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
+  helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)
 end
 
@@ -121,13 +126,13 @@ T['dedupes last history entry'] = function()
     prefills = { search = 'grug', replacement = 'curly', flags = '-i' },
   })
   helpers.childWaitForFinishedStatus(child)
-  vim.loop.sleep(50)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
-  vim.loop.sleep(50)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
-  vim.loop.sleep(50)
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
+  helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 end
