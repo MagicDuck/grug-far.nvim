@@ -1,6 +1,7 @@
 local MiniTest = require('mini.test')
 local expect = MiniTest.expect
 local screenshot = require('grug-far/test/screenshot')
+local opts = require('grug-far/opts')
 
 local M = {}
 
@@ -96,13 +97,51 @@ function M.childWaitForCondition(child, condition, timeout, interval)
   )
 end
 
+--- gets setup opts
+---@return GrugFarOptionsOverride
+function M.getSetupOptions()
+  local rgPath = vim.env.RG_PATH or 'rg'
+
+  return {
+    rgPath = rgPath,
+    -- sort by path so that we get things in the same order
+    extraRgArgs = '--sort=path',
+    icons = {
+      resultsStatusReady = 'STATUS_READY',
+      resultsStatusError = 'STATUS_ERROR',
+      resultsStatusSuccess = 'STATUS_SUCCESS',
+    },
+    spinnerStates = { 'STATUS_PROGRESS' },
+    reportDuration = false,
+    keymaps = {
+      replace = '<C-enter>',
+      qflist = '<C-q>',
+      syncLocations = '<C-s>',
+      syncLine = '<C-a>',
+      close = '<C-x>',
+      refresh = '<C-r>',
+      historyAdd = '<C-p>',
+      historyOpen = '<C-h>',
+      pickHistoryEntry = { n = '<enter>' },
+
+      gotoLocation = { n = '<enter>' },
+    },
+    history = {
+      historyDir = vim.loop.cwd() .. '/temp_history_dir',
+    },
+  }
+end
+
+function M.getKeymaps()
+  local options = opts.with_defaults(M.getSetupOptions(), opts.defaultOptions)
+  return options.keymaps
+end
+
 --- init the child neovim process
 ---@param child NeovimChild
 function M.initChildNeovim(child)
   -- Restart child process with custom 'init.lua' script
   child.restart({ '-u', 'scripts/minimal_init.lua' })
-
-  local rgPath = vim.env.RG_PATH or 'rg'
 
   child.lua(
     [[ 
@@ -111,35 +150,7 @@ function M.initChildNeovim(child)
     Helpers = require('grug-far/test/helpers')
   ]],
     {
-      ---@type GrugFarOptions
-      {
-        rgPath = rgPath,
-        -- sort by path so that we get things in the same order
-        extraRgArgs = '--sort=path',
-        icons = {
-          resultsStatusReady = 'STATUS_READY',
-          resultsStatusError = 'STATUS_ERROR',
-          resultsStatusSuccess = 'STATUS_SUCCESS',
-        },
-        spinnerStates = { 'STATUS_PROGRESS' },
-        reportDuration = false,
-        keymaps = {
-          replace = '<C-enter>',
-          qflist = '<C-q>',
-          syncLocations = '<C-s>',
-          syncLine = '<C-a>',
-          close = '<C-x>',
-          refresh = '<C-r>',
-          historyAdd = '<C-p>',
-          historyOpen = '<C-h>',
-          pickHistoryEntry = { n = '<enter>' },
-
-          gotoLocation = { n = '<enter>' },
-        },
-        history = {
-          historyDir = vim.loop.cwd() .. '/temp_history_dir',
-        },
-      },
+      M.getSetupOptions(),
     }
   )
 end

@@ -1,5 +1,6 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
+local keymaps = helpers.getKeymaps()
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -34,7 +35,8 @@ T['can goto given location'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>11G', '<enter>')
+  child.type_keys(10, '<esc>11G')
+  child.type_keys('<esc>' .. keymaps.gotoLocation.n)
   vim.loop.sleep(50)
   helpers.childExpectScreenshot(child)
 end

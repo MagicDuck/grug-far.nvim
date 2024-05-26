@@ -1,5 +1,6 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
+local keymaps = helpers.getKeymaps()
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -63,7 +64,7 @@ T['can open quickfix list with deleted lines'] = function()
   child.type_keys(10, '<esc>10G', 'dd')
   child.type_keys(10, '<esc>13G', 'dd')
 
-  child.type_keys('<C-q>')
+  child.type_keys('<esc>' .. keymaps.qflist.n)
   vim.loop.sleep(100)
   helpers.childExpectScreenshot(child)
 end
@@ -88,7 +89,7 @@ T['is prevented when multiline search'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-q>')
+  child.type_keys('<esc>' .. keymaps.qflist.n)
 
   helpers.childWaitForUIVirtualText(child, 'quickfix list disabled')
   helpers.childExpectScreenshot(child)
