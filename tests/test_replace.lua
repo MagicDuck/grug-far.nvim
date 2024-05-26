@@ -1,5 +1,6 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
+local keymaps = helpers.getKeymaps()
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -31,7 +32,7 @@ T['can replace with replace string'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-enter>')
+  child.type_keys('<esc>' .. keymaps.replace.n)
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
@@ -59,7 +60,7 @@ T['can replace with empty string'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-enter>')
+  child.type_keys('<esc>' .. keymaps.replace.n)
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
@@ -88,7 +89,7 @@ T['is prevented from replacing with blacklisted flags'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-enter>')
+  child.type_keys('<esc>' .. keymaps.replace.n)
   helpers.childWaitForUIVirtualText(child, 'replace cannot work')
   helpers.childExpectScreenshot(child)
 end

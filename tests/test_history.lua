@@ -1,5 +1,6 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
+local keymaps = helpers.getKeymaps()
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -30,25 +31,25 @@ T['can manually save and reload from history'] = function()
     prefills = { search = 'grug', flags = '-i' },
   })
   helpers.childWaitForFinishedStatus(child)
-  child.type_keys('<C-p>')
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
 
-  child.type_keys(50, '<esc>cc', 'walks')
-  vim.loop.sleep(50)
+  child.type_keys(100, '<esc>cc', 'walks')
+  vim.loop.sleep(100)
   helpers.childWaitForFinishedStatus(child)
-  child.type_keys('<C-p>')
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
 
-  child.type_keys(50, '<esc>cc', 'talks')
-  vim.loop.sleep(50)
+  child.type_keys(100, '<esc>cc', 'talks')
+  vim.loop.sleep(100)
   helpers.childWaitForFinishedStatus(child)
-  child.type_keys('<C-p>')
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
 
-  vim.loop.sleep(50)
-  child.type_keys('<C-h>')
+  vim.loop.sleep(100)
+  child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
-  child.type_keys(50, '<esc>16G', '<enter>')
-  vim.loop.sleep(50)
+  child.type_keys(100, '<esc>16G', '<enter>')
+  vim.loop.sleep(100)
   helpers.childExpectScreenshot(child)
 end
 
@@ -69,12 +70,12 @@ T['auto-saves to history on replace'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-enter>')
+  child.type_keys('<esc>' .. keymaps.replace.n)
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
 
   vim.loop.sleep(50)
-  child.type_keys('<C-h>')
+  child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childExpectScreenshot(child)
 end
 
@@ -95,12 +96,12 @@ T['auto-saves to history on sync all'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-s>')
+  child.type_keys('<esc>' .. keymaps.syncLocations.n)
   helpers.childWaitForUIVirtualText(child, 'sync completed!')
   helpers.childExpectScreenshot(child)
 
   vim.loop.sleep(50)
-  child.type_keys('<C-h>')
+  child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childExpectScreenshot(child)
 end
 
@@ -121,12 +122,12 @@ T['dedupes last history entry'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
   vim.loop.sleep(50)
-  child.type_keys('<C-p>')
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
   vim.loop.sleep(50)
-  child.type_keys('<C-p>')
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
 
   vim.loop.sleep(50)
-  child.type_keys('<C-h>')
+  child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 end

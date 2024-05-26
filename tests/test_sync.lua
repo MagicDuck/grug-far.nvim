@@ -1,5 +1,6 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
+local keymaps = helpers.getKeymaps()
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -31,7 +32,7 @@ T['can sync all'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-s>')
+  child.type_keys('<esc>' .. keymaps.syncLocations.n)
   helpers.childWaitForUIVirtualText(child, 'sync completed!')
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
@@ -68,7 +69,7 @@ T['can sync all with changes ignoring deleted lines'] = function()
   child.type_keys(10, '<esc>13G', 'dd')
   child.type_keys(10, '$bi', 'believes he ')
 
-  child.type_keys('<C-s>')
+  child.type_keys('<esc>' .. keymaps.syncLocations.n)
 
   helpers.childWaitForUIVirtualText(child, 'sync completed!')
   helpers.childExpectScreenshot(child)
@@ -100,7 +101,7 @@ T['is prevented when multiline search'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-s>')
+  child.type_keys('<esc>' .. keymaps.syncLocations.n)
 
   helpers.childWaitForUIVirtualText(child, 'sync disabled')
   helpers.childExpectScreenshot(child)
@@ -128,12 +129,12 @@ T['can sync individual line'] = function()
 
   child.type_keys(10, '<esc>11G', 'A', ' a deep depth indeed!')
 
-  child.type_keys('<C-a>')
+  child.type_keys('<esc>' .. keymaps.syncLine.n)
 
   helpers.childWaitForUIVirtualText(child, 'sync completed!')
   helpers.childExpectScreenshot(child)
 
-  child.type_keys('<C-r>')
+  child.type_keys('<esc>' .. keymaps.refresh.n)
   vim.loop.sleep(50)
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
