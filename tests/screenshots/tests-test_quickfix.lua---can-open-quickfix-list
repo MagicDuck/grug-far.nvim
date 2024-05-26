@@ -10,7 +10,7 @@
 09| STATUS_SUCCESS │~                                      
 10| 5 matches in 2 files                   │~                                      
 11|                                        │~                                      
-12|Grug FAR - 1: grug    3,5            30% [No Name]            0,0-1          All
+12|Grug FAR - 1: grug    3,4            30% [No Name]            0,0-1          All
 13|file1.txt|2 col 8-3| grug walks                                                 
 14|file1.txt|3 col 13-4| then grug swims                                           
 15|file2.doc|2 col 7-3| grug talks and grug drinks                                 

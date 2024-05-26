@@ -113,18 +113,18 @@ function M.getSetupOptions()
     },
     spinnerStates = { 'STATUS_PROGRESS' },
     reportDuration = false,
+    -- note: child.type_keys does not like <localleader> so replacing with ','
     keymaps = {
-      replace = '<C-enter>',
-      qflist = '<C-q>',
-      syncLocations = '<C-s>',
-      syncLine = '<C-a>',
-      close = '<C-x>',
-      refresh = '<C-r>',
-      historyAdd = '<C-p>',
-      historyOpen = '<C-h>',
-      pickHistoryEntry = { n = '<enter>' },
-
+      replace = { n = ',r' },
+      qflist = { n = ',q' },
+      syncLocations = { n = ',s' },
+      syncLine = { n = ',l' },
+      close = { n = ',c' },
+      historyOpen = { n = ',t' },
+      historyAdd = { n = ',a' },
+      refresh = { n = ',f' },
       gotoLocation = { n = '<enter>' },
+      pickHistoryEntry = { n = '<enter>' },
     },
     history = {
       historyDir = vim.loop.cwd() .. '/temp_history_dir',
