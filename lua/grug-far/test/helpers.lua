@@ -155,6 +155,16 @@ function M.initChildNeovim(child)
   )
 end
 
+--- waits until child screenshot contains given virtual text
+---@param child NeovimChild
+---@param text string
+function M.childWaitForScreenshotText(child, text)
+  M.childWaitForCondition(child, function()
+    local screenshotText = tostring(child.get_screenshot())
+    return string.find(screenshotText, text, 1, true) ~= nil
+  end)
+end
+
 --- waits until child buf contains given UI virtual text
 ---@param child NeovimChild
 ---@param text string
@@ -162,12 +172,6 @@ function M.childWaitForUIVirtualText(child, text)
   M.childWaitForCondition(child, function()
     return M.childBufUIVirtualTextContains(child, text)
   end)
-end
-
---- waits until child buf has progress status
----@param child NeovimChild
-function M.childWaitForProgressStatus(child)
-  return M.childWaitForUIVirtualText(child, 'STATUS_PROGRESS')
 end
 
 --- waits until child buf has given success or error status
