@@ -35,7 +35,7 @@ T['can open quickfix list'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<C-q>')
+  child.type_keys('<esc>' .. keymaps.qflist.n)
   vim.loop.sleep(100)
   helpers.childExpectScreenshot(child)
 end
