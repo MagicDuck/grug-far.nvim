@@ -319,7 +319,7 @@ function M.with_defaults(options, defaults)
   -- normalize keymaps opts
   for key, value in pairs(newOptions.keymaps) do
     if not value or value == '' then
-      newOptions.keymaps[key] = nil
+      newOptions.keymaps[key] = {}
     end
 
     if type(value) == 'string' then

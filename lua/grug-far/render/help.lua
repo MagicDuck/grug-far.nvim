@@ -32,6 +32,9 @@ local function getHelpVirtLines(virt_lines, actions, context)
   local entries = vim.tbl_map(function(action)
     return { text = action.text, lhs = getActionMapping(action.keymap) }
   end, actions)
+  entries = vim.tbl_filter(function(entry)
+    return entry.lhs ~= nil
+  end, entries)
 
   local maxEntryLen = 0
   for _, entry in ipairs(entries) do
