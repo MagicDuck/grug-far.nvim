@@ -175,17 +175,17 @@ See here for all the available [options][opts]
 
 #### Launch with the current word under the cursor as the search string
 ```lua
-require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
+:lua require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
 ```
 
 #### Launch with the current file as a flag, which limits search/replace to it
 ```lua
-require('grug-far').grug_far({ prefills = { flags = vim.fn.expand("%") } })
+:lua require('grug-far').grug_far({ prefills = { flags = vim.fn.expand("%") } })
 ```
 
 #### Launch with the current visual selection, searching only current file
 ```lua
-require('grug-far').with_visual_selection({ prefills = { flags = vim.fn.expand("%") } })
+:<C-u>lua require('grug-far').with_visual_selection({ prefills = { flags = vim.fn.expand("%") } })
 ```
 
 ## 📦 Similar Plugins / Inspiration
