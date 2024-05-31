@@ -187,6 +187,7 @@ local function replace(params)
         context.options.reportDuration and time or nil
       )
     renderResultsHeader(buf, context)
+    vim.cmd.checktime()
 
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
 
