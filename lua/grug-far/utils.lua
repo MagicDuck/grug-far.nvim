@@ -230,6 +230,15 @@ function M.ensureBufTopEmptyLines(buf, count)
   end
 end
 
+--- get lines of text in visual selection
+---@return string[]
+function M.getVisualSelectionLines()
+  local _, ls, cs = unpack(vim.fn.getpos('v'))
+  local _, le, ce = unpack(vim.fn.getpos("'>"))
+  local lastline = vim.fn.getline(le)
+  return vim.api.nvim_buf_get_text(0, ls - 1, cs - 1, le - 1, math.min(ce, #lastline), {})
+end
+
 M.eol = is_win and '\r\n' or '\n'
 
 return M

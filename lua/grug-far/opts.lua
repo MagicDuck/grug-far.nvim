@@ -297,7 +297,7 @@ M.defaultOptions = {
 ---@field history? HistoryTableOverride
 
 --- generates merged options
----@param options GrugFarOptionsOverride
+---@param options GrugFarOptionsOverride | GrugFarOptions
 ---@param defaults GrugFarOptions
 ---@return GrugFarOptions
 function M.with_defaults(options, defaults)

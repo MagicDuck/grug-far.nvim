@@ -14,6 +14,27 @@ local T = MiniTest.new_set({
   },
 })
 
+T['can search for visual selection inside one line'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  child.cmd(':e file2')
+  helpers.childRunWithVisualSelection(child, {})
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search for some string'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
