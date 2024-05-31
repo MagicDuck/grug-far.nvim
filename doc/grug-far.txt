@@ -40,17 +40,30 @@ require('grug-far').setup({config})                  *grug-far.setup()*
         https://github.com/MagicDuck/grug-far.nvim/tree/main?tab=readme-ov-file#%EF%B8%8F-configuration
 
         Parameters: ~
-            {config}(required, table) Table of values; keys as described
+            {config}(optional, table) Table of values; keys as described
                 above. Accept defaults by omitting the relevant key.
 
-require('grug-far').grug_far({config})                  *grug-far.grg_far()*
+require('grug-far').grug_far({config})                *grug-far.grug_far()*
         Launches grug-far, where the given config overrides the global plugin
 	config that was passed to require('grug-far).setup(...). 
         Currently supported configuration options are the same as the global
 	plugin config options linked above.
 
         Parameters: ~
-            {config}(required, table) Table of values; keys as described
+            {config}(optional, table) Table of values; keys as described
+                above. Accept defaults by omitting the relevant key.
+
+require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selection()*
+        Launches grug-far, pre-filling search with the current visual
+	selection. If the visual selection crosses multiple lines, only the
+	first line is used. The given config overrides the global plugin
+	config that was passed to require('grug-far).setup(...). 
+
+        Currently supported configuration options are the same as the global
+	plugin config options linked above.
+
+        Parameters: ~
+            {config}(optional, table) Table of values; keys as described
                 above. Accept defaults by omitting the relevant key.
 
 ==============================================================================

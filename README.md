@@ -161,6 +161,12 @@ For more control, you can programmatically open a grug-far buffer like so:
 ```sh
 require('grug-far').grug_far(opts)
 ```
+or if you would like to pre-fill current visual selection as the search text:
+(note, includes first line only and will also set `--fixed-strings` flag as selection can contain special characters)
+```
+require('grug-far').with_visual_selection(opts)
+```
+
 where `opts` will be merged with and override the global plugin options configured at setup time.
 
 See here for all the available [options][opts] 
@@ -175,6 +181,11 @@ require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } 
 #### Launch with the current file as a flag, which limits search/replace to it
 ```lua
 require('grug-far').grug_far({ prefills = { flags = vim.fn.expand("%") } })
+```
+
+#### Launch with the current visual selection, searching only current file
+```lua
+require('grug-far').with_visual_selection({ prefills = { flags = vim.fn.expand("%") } })
 ```
 
 ## 📦 Similar Plugins / Inspiration

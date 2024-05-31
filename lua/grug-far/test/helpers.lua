@@ -197,6 +197,20 @@ function M.childRunGrugFar(child, options)
   })
 end
 
+--- run with_visual_selection(options) in child
+---@param child NeovimChild
+---@param options GrugFarOptionsOverride
+function M.childRunWithVisualSelection(child, options)
+  vim.fn.delete('./temp_history_dir', 'rf')
+  vim.fn.mkdir('./temp_history_dir')
+
+  local cwd = vim.loop.cwd()
+  child.lua('vim.api.nvim_set_current_dir("' .. cwd .. '/temp_test_dir")')
+  child.lua('GrugFar.with_visual_selection(...)', {
+    options,
+  })
+end
+
 --- writes files given based on given spec to temp test dir
 --- clears out temp test dir beforehand
 ---@param files {[string]: string}

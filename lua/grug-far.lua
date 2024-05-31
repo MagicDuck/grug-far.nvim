@@ -2,6 +2,7 @@ local opts = require('grug-far/opts')
 local highlights = require('grug-far/highlights')
 local farBuffer = require('grug-far/farBuffer')
 local history = require('grug-far/history')
+local utils = require('grug-far/utils')
 
 local M = {}
 
@@ -122,7 +123,7 @@ local function setupCleanup(buf, context)
 end
 
 --- launch grug-far with the given overrides
----@param options? GrugFarOptionsOverride
+---@param options? GrugFarOptionsOverride | GrugFarOptions
 function M.grug_far(options)
   if not is_configured() then
     print(
@@ -135,6 +136,23 @@ function M.grug_far(options)
   local win = createWindow(context)
   local buf = farBuffer.createBuffer(win, context)
   setupCleanup(buf, context)
+end
+
+--- launch grug-far with the given overrides, pre-filling
+--- search with current visual selection. If the visual selection crosses
+--- multiple lines, only the first line is used
+--- (this is because visual selection can contain special chars, so we need to pass
+--- --fixed-strings flag to rg. But in that case '\n' is interpreted literally, so we
+--- can't use it to separate lines)
+---@param options? GrugFarOptionsOverride
+function M.with_visual_selection(options)
+  local selectedLines = utils.getVisualSelectionLines()
+  local params = opts.with_defaults(options or {}, globalOptions)
+  params.prefills.search = selectedLines[1] or ''
+  local flags = params.prefills.flags or ''
+  params.prefills.flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+
+  M.grug_far(params)
 end
 
 return M
