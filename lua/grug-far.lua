@@ -140,15 +140,14 @@ end
 
 --- launch grug-far with the given overrides, pre-filling
 --- search with current visual selection. If the visual selection crosses
---- multiple lines, only the first line is used
+--- multiple lines, lines are joined
 --- (this is because visual selection can contain special chars, so we need to pass
 --- --fixed-strings flag to rg. But in that case '\n' is interpreted literally, so we
 --- can't use it to separate lines)
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
-  local selectedLines = utils.getVisualSelectionLines()
   local params = opts.with_defaults(options or {}, globalOptions)
-  params.prefills.search = selectedLines[1] or ''
+  params.prefills.search = utils.getVisualSelectionText()
   local flags = params.prefills.flags or ''
   params.prefills.flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
 

@@ -230,13 +230,26 @@ function M.ensureBufTopEmptyLines(buf, count)
   end
 end
 
---- get lines of text in visual selection
----@return string[]
-function M.getVisualSelectionLines()
-  local ls, cs = unpack(vim.api.nvim_buf_get_mark(0, '<'))
-  local le, ce = unpack(vim.api.nvim_buf_get_mark(0, '>'))
-  local lastline = vim.fn.getline(le)
-  return vim.api.nvim_buf_get_text(0, ls - 1, cs, le - 1, math.min(ce + 1, #lastline), {})
+--- get text in visual selection
+--- if multiline, lines are joined
+---@return string
+function M.getVisualSelectionText()
+  local start_pos = vim.api.nvim_buf_get_mark(0, '<')
+  local end_pos = vim.api.nvim_buf_get_mark(0, '>')
+  local lines = vim.fn.getline(start_pos[1], end_pos[1])
+  -- add when only select in 1 line
+  local plusEnd = 0
+  local plusStart = 1
+  if #lines == 0 then
+    return ''
+  elseif #lines == 1 then
+    plusEnd = 1
+    plusStart = 1
+  end
+  lines[#lines] = string.sub(lines[#lines], 0, end_pos[2] + plusEnd)
+  lines[1] = string.sub(lines[1], start_pos[2] + plusStart, string.len(lines[1]))
+  local query = table.concat(lines, '')
+  return query
 end
 
 M.eol = is_win and '\r\n' or '\n'

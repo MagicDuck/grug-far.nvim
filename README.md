@@ -162,7 +162,7 @@ For more control, you can programmatically open a grug-far buffer like so:
 require('grug-far').grug_far(opts)
 ```
 or if you would like to pre-fill current visual selection as the search text:
-(note, includes first line only and will also set `--fixed-strings` flag as selection can contain special characters)
+(note, this will also set `--fixed-strings` flag as selection can contain special characters)
 ```
 require('grug-far').with_visual_selection(opts)
 ```

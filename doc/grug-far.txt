@@ -55,8 +55,8 @@ require('grug-far').grug_far({config})                *grug-far.grug_far()*
 
 require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selection()*
         Launches grug-far, pre-filling search with the current visual
-	selection. If the visual selection crosses multiple lines, only the
-	first line is used. The given config overrides the global plugin
+	selection. If the visual selection crosses multiple lines, lines
+	are joined. The given config overrides the global plugin
 	config that was passed to require('grug-far).setup(...). 
 
         Currently supported configuration options are the same as the global
