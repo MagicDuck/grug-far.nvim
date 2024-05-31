@@ -278,6 +278,7 @@ local function sync(params)
         context.options.reportDuration and time or nil
       )
     renderResultsHeader(buf, context)
+    vim.cmd.checktime()
 
     vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
     if on_success then
