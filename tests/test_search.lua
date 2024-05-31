@@ -255,7 +255,7 @@ T['searches full line visual selection'] = function()
 
   helpers.cdTempTestDir(child)
   child.cmd(':e file2')
-  child.type_keys(50, 'j', 'V', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+  child.type_keys(100, 'j', '0v$', '<esc>:lua GrugFar.with_visual_selection()<CR>')
 
   helpers.childWaitForFinishedStatus(child)
 
