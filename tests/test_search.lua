@@ -14,27 +14,6 @@ local T = MiniTest.new_set({
   },
 })
 
-T['can search for visual selection inside one line'] = function()
-  helpers.writeTestFiles({
-    { filename = 'file1', content = [[ grug walks ]] },
-    {
-      filename = 'file2',
-      content = [[ 
-      grug talks and grug drinks
-      then grug thinks
-    ]],
-    },
-  })
-
-  child.cmd(':e file2')
-  helpers.childRunWithVisualSelection(child, {})
-
-  helpers.childWaitForFinishedStatus(child)
-
-  helpers.childExpectScreenshot(child)
-  helpers.childExpectBufLines(child)
-end
-
 T['can search for some string'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
@@ -237,6 +216,72 @@ T['can search and edit search'] = function()
 
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
+end
+
+T['can search for visual selection inside one line'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      something else
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2')
+  child.type_keys(50, 'jj', 'vee', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
+T['searches full line visual selection'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      something else
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2')
+  child.type_keys(50, 'j', 'V', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
+T['searches first line of multiline visual selection'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      something else
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2')
+  child.type_keys(50, 'j', 'wwwvjj', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
 end
 
 return T

@@ -174,6 +174,12 @@ function M.childWaitForUIVirtualText(child, text)
   end)
 end
 
+---@param child NeovimChild
+function M.cdTempTestDir(child)
+  local cwd = vim.loop.cwd()
+  child.lua('vim.api.nvim_set_current_dir("' .. cwd .. '/temp_test_dir")')
+end
+
 --- waits until child buf has given success or error status
 ---@param child NeovimChild
 function M.childWaitForFinishedStatus(child)
@@ -190,23 +196,8 @@ function M.childRunGrugFar(child, options)
   vim.fn.delete('./temp_history_dir', 'rf')
   vim.fn.mkdir('./temp_history_dir')
 
-  local cwd = vim.loop.cwd()
-  child.lua('vim.api.nvim_set_current_dir("' .. cwd .. '/temp_test_dir")')
+  M.cdTempTestDir(child)
   child.lua('GrugFar.grug_far(...)', {
-    options,
-  })
-end
-
---- run with_visual_selection(options) in child
----@param child NeovimChild
----@param options GrugFarOptionsOverride
-function M.childRunWithVisualSelection(child, options)
-  vim.fn.delete('./temp_history_dir', 'rf')
-  vim.fn.mkdir('./temp_history_dir')
-
-  local cwd = vim.loop.cwd()
-  child.lua('vim.api.nvim_set_current_dir("' .. cwd .. '/temp_test_dir")')
-  child.lua('GrugFar.with_visual_selection(...)', {
     options,
   })
 end
