@@ -7,10 +7,10 @@ local M = {}
 ---@param strict_indexing boolean
 ---@param replacement string[]
 local function setBufLines(buf, start, ending, strict_indexing, replacement)
-  local isModifiable = vim.api.nvim_buf_get_option(buf, 'modifiable')
-  vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+  local isModifiable = vim.api.nvim_get_option_value('modifiable', { buf = buf })
+  vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
   vim.api.nvim_buf_set_lines(buf, start, ending, strict_indexing, replacement)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', isModifiable)
+  vim.api.nvim_set_option_value('modifiable', isModifiable, { buf = buf })
 end
 
 --- append a bunch of result lines to the buffer
