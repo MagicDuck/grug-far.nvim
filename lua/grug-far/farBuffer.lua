@@ -104,7 +104,7 @@ end
 ---@return integer bufId
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'grug-far')
+  vim.api.nvim_set_option_value('filetype', 'grug-far', { buf = buf })
   vim.api.nvim_win_set_buf(win, buf)
 
   setupGlobalOptOverrides(buf, context)
