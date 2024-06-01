@@ -94,8 +94,8 @@ local function createWindow(context)
   local win = vim.api.nvim_get_current_win()
 
   if context.options.disableBufferLineNumbers then
-    vim.api.nvim_win_set_option(win, 'number', false)
-    vim.api.nvim_win_set_option(win, 'relativenumber', false)
+    vim.api.nvim_set_option_value('number', false, { win = win })
+    vim.api.nvim_set_option_value('relativenumber', false, { win = win })
   end
 
   return win

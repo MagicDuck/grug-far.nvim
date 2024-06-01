@@ -139,7 +139,7 @@ local function createHistoryWindow(buf, context)
     end,
   })
 
-  vim.api.nvim_buf_set_option(historyBuf, 'filetype', 'grug-far-history')
+  vim.api.nvim_set_option_value('filetype', 'grug-far-history', { buf = historyBuf })
   setupKeymap(historyWin, historyBuf, buf, context)
 
   local function handleBufferChange()
