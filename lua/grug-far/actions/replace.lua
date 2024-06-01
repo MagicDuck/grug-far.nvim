@@ -135,7 +135,7 @@ local function replace(params)
   local startTime
 
   -- initiate replace in UI
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
   state.status = 'progress'
   state.progressCount = 0
   state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
@@ -158,7 +158,7 @@ local function replace(params)
   end)
 
   local reportError = function(errorMessage)
-    vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+    vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
 
     state.status = 'error'
     state.actionMessage = getActionMessage(errorMessage)
@@ -169,7 +169,7 @@ local function replace(params)
   end
 
   local on_finish_all = vim.schedule_wrap(function(status, errorMessage, customActionMessage)
-    vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+    vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
 
     if status == 'error' then
       reportError(errorMessage)
