@@ -6,16 +6,17 @@ local renderResultsHeader = require('grug-far/render/resultsHeader')
 ---@param minLineNr integer
 ---@return integer headerRow
 local function ensureMinLineNr(buf, context, minLineNr)
-  local headerRow = unpack(
-    context.extmarkIds.results_header
-        and vim.api.nvim_buf_get_extmark_by_id(
-          buf,
-          context.namespace,
-          context.extmarkIds.results_header,
-          {}
-        )
-      or {}
-  )
+  local headerRow = nil
+  if context.extmarkIds.results_header then
+    headerRow = unpack(
+      vim.api.nvim_buf_get_extmark_by_id(
+        buf,
+        context.namespace,
+        context.extmarkIds.results_header,
+        {}
+      )
+    )
+  end
 
   if headerRow == nil or headerRow < minLineNr then
     local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
@@ -26,7 +27,7 @@ local function ensureMinLineNr(buf, context, minLineNr)
     headerRow = minLineNr
   end
 
-  return headerRow
+  return headerRow --[[@as integer]]
 end
 
 ---@param params { buf: integer, minLineNr: integer }

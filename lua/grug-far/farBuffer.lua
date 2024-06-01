@@ -9,6 +9,7 @@ local close = require('grug-far/actions/close')
 local historyOpen = require('grug-far/actions/historyOpen')
 local historyAdd = require('grug-far/actions/historyAdd')
 local utils = require('grug-far/utils')
+local resultsList = require('grug-far/render/resultsList')
 
 local M = {}
 
@@ -133,6 +134,11 @@ function M.createBuffer(win, context)
     group = context.augroup,
     buffer = buf,
     callback = handleBufferChange,
+  })
+  vim.api.nvim_buf_attach(buf, false, {
+    on_bytes = function(_, _, _, start_row, _, _, _, _, _, new_end_row_offset)
+      resultsList.markUnsyncedLines(buf, context, start_row, start_row + new_end_row_offset)
+    end,
   })
 
   -- do the initial render
