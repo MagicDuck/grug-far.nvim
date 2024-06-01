@@ -96,6 +96,7 @@ M.defaultOptions = {
     resultsStatusError = ' ',
     resultsStatusSuccess = '󰗡 ',
     resultsActionMessage = '  ',
+    resultsEditedIndicator = ' ',
 
     historyTitle = '  ',
   },
@@ -215,6 +216,7 @@ M.defaultOptions = {
 ---@field resultsStatusError string
 ---@field resultsStatusSuccess string
 ---@field resultsActionMessage string
+---@field resultsEditedIndicator string
 
 ---@class IconsTableOverride
 ---@field enabled? boolean
@@ -227,6 +229,7 @@ M.defaultOptions = {
 ---@field resultsStatusError? string
 ---@field resultsStatusSuccess? string
 ---@field resultsActionMessage? string
+---@field resultsEditedIndicator? string
 
 ---@class PlaceholdersTable
 ---@field enabled boolean

@@ -1,5 +1,4 @@
 local renderResultsHeader = require('grug-far/render/resultsHeader')
-local getArgs = require('grug-far/rg/getArgs')
 local resultsList = require('grug-far/render/resultsList')
 local utils = require('grug-far/utils')
 local uv = vim.loop
@@ -119,21 +118,6 @@ local function getActionMessage(err, count, total, time)
   return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
---- is user performing a replacement, ui-wise?
----@param context GrugFarContext
-local function isDoingReplace(context)
-  local args = getArgs(context.state.inputs, context.options, {})
-  if not args then
-    return false
-  end
-
-  for i = 1, #args do
-    if vim.startswith(args[i], '--replace=') or args[i] == '--replace' or args[i] == '-r' then
-      return true
-    end
-  end
-end
-
 --- figure out which files changed and how
 --- note startRow / endRow are zero-based
 ---@param buf integer
@@ -142,51 +126,24 @@ end
 ---@param endRow integer
 ---@return ChangedFile[]
 local function getChangedFiles(buf, context, startRow, endRow)
-  local isReplacing = isDoingReplace(context)
-  local all_extmarks = vim.api.nvim_buf_get_extmarks(
-    0,
-    context.locationsNamespace,
-    { startRow, 0 },
-    { endRow, -1 },
-    {}
-  )
-
-  -- filter out extraneous extmarks caused by deletion of lines
-  local extmarks = resultsList.filterDeletedLinesExtmarks(all_extmarks)
+  local isReplacing = resultsList.isDoingReplace(context)
 
   local changedFilesByFilename = {}
-  for i = 1, #extmarks do
-    local markId, row = unpack(extmarks[i])
-
-    -- get the associated location info
-    local location = context.state.resultLocationByExtmarkId[markId]
-    if location and location.text then
-      -- get the current text on row
-      local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
-      local isChanged = isReplacing or bufline ~= location.text
-      if bufline and isChanged then
-        -- ignore ones where user has messed with row:col: prefix as we can't get actual changed text
-        local numColPrefix = string.sub(location.text, 1, location.end_col + 1)
-        if vim.startswith(bufline, numColPrefix) then
-          local changedFile = changedFilesByFilename[location.filename]
-          if not changedFile then
-            changedFilesByFilename[location.filename] = {
-              filename = location.filename,
-              changedLines = {},
-            }
-            changedFile = changedFilesByFilename[location.filename]
-          end
-
-          -- note, skips (:)
-          local newLine = string.sub(bufline, location.end_col + 2, -1)
-          table.insert(changedFile.changedLines, {
-            lnum = location.lnum,
-            newLine = newLine,
-          })
-        end
-      end
+  resultsList.forEachChangedLocation(buf, context, startRow, endRow, function(location, newLine)
+    local changedFile = changedFilesByFilename[location.filename]
+    if not changedFile then
+      changedFilesByFilename[location.filename] = {
+        filename = location.filename,
+        changedLines = {},
+      }
+      changedFile = changedFilesByFilename[location.filename]
     end
-  end
+
+    table.insert(changedFile.changedLines, {
+      lnum = location.lnum,
+      newLine = newLine,
+    })
+  end, isReplacing)
 
   local changedFiles = {}
   for _, f in pairs(changedFilesByFilename) do
@@ -279,6 +236,10 @@ local function sync(params)
       )
     renderResultsHeader(buf, context)
     vim.cmd.checktime()
+
+    vim.schedule(function()
+      resultsList.markUnsyncedLines(buf, context, startRow, endRow, true)
+    end)
 
     vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
     if on_success then
