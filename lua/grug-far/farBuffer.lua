@@ -136,9 +136,9 @@ function M.createBuffer(win, context)
     callback = handleBufferChange,
   })
   vim.api.nvim_buf_attach(buf, false, {
-    on_bytes = function(_, _, _, start_row, _, _, _, _, _, new_end_row_offset)
-      resultsList.markUnsyncedLines(buf, context, start_row, start_row + new_end_row_offset)
-    end,
+    on_bytes = vim.schedule_wrap(function(_, _, _, start_row, _, _, _, _, _, new_end_row_offset)
+      resultsList.markUnsyncedLines(buf, context, start_row - 1, start_row + new_end_row_offset)
+    end),
   })
 
   -- do the initial render
