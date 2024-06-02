@@ -61,6 +61,7 @@ local contextCount = 0
 ---@field options GrugFarOptions
 ---@field namespace integer
 ---@field locationsNamespace integer
+---@field historyHlNamespace integer
 ---@field augroup integer
 ---@field extmarkIds {[string]: integer}
 ---@field state GrugFarState
@@ -76,6 +77,7 @@ local function createContext(options)
     options = options,
     namespace = vim.api.nvim_create_namespace('grug-far-namespace'),
     locationsNamespace = vim.api.nvim_create_namespace(''),
+    historyHlNamespace = vim.api.nvim_create_namespace(''),
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
     extmarkIds = {},
     state = {
@@ -112,6 +114,7 @@ local function setupCleanup(buf, context)
 
     vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
+    vim.api.nvim_buf_clear_namespace(buf, context.historyHlNamespace, 0, -1)
     vim.api.nvim_del_augroup_by_id(context.augroup)
   end
 
