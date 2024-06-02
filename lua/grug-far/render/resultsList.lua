@@ -1,5 +1,4 @@
 local opts = require('grug-far/opts')
-local utils = require('grug-far/utils')
 local getArgs = require('grug-far/rg/getArgs')
 local M = {}
 
@@ -233,7 +232,10 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
   -- reset marks
   for i = 1, #extmarks do
     local markId, row = unpack(extmarks[i]) --[[@as integer, integer]]
-    setLocationMark(buf, context, row, markId)
+    local location = context.state.resultLocationByExtmarkId[markId]
+    if location.text then
+      setLocationMark(buf, context, row, markId)
+    end
   end
 
   -- update the ones that are changed
