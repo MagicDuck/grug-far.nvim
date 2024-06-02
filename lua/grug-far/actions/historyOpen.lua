@@ -106,6 +106,31 @@ local function renderHistoryBuffer(historyBuf, context)
   }, context)
 end
 
+local function highlightHistoryBuffer(historyBuf, context, start_row, end_row)
+  local lines = vim.api.nvim_buf_get_lines(historyBuf, start_row, end_row, false)
+  vim.api.nvim_buf_clear_namespace(historyBuf, context.historyHlNamespace, start_row, end_row)
+  local inputKeys = { 'Search:', 'Replace:', 'Files Filter:', 'Flags:' }
+  for i, line in ipairs(lines) do
+    local highlightedLine = false
+    for _, inputKey in ipairs(inputKeys) do
+      if not highlightedLine then
+        local col_start, col_end = string.find(line, inputKey)
+        if col_start == 1 and col_end then
+          vim.api.nvim_buf_add_highlight(
+            historyBuf,
+            context.historyHlNamespace,
+            'GrugFarInputLabel',
+            start_row + i - 1,
+            col_start - 1,
+            col_end - 1
+          )
+          highlightedLine = true
+        end
+      end
+    end
+  end
+end
+
 --- creates history window
 ---@param buf integer
 ---@param context GrugFarContext
@@ -152,12 +177,19 @@ local function createHistoryWindow(buf, context)
     buffer = historyBuf,
     callback = handleBufferChange,
   })
+  vim.api.nvim_buf_attach(historyBuf, false, {
+    on_bytes = vim.schedule_wrap(function(_, _, _, start_row, _, _, _, _, _, new_end_row_offset)
+      highlightHistoryBuffer(historyBuf, context, start_row, start_row + new_end_row_offset + 1)
+    end),
+  })
 
   -- do the initial render
   vim.schedule(function()
     renderHistoryBuffer(historyBuf, context)
     -- place cursor at first entry
     vim.api.nvim_win_set_cursor(historyWin, { 3, 0 })
+
+    highlightHistoryBuffer(historyBuf, context, 0, -1)
   end)
 
   return historyWin
