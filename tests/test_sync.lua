@@ -128,6 +128,7 @@ T['can sync individual line'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys(10, '<esc>11G', 'A', ' a deep depth indeed!')
+  helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>' .. keymaps.syncLine.n)
 
