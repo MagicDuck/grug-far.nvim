@@ -24,13 +24,12 @@ end
 ---@param sign_text? string
 ---@return integer markId
 local function setLocationMark(buf, context, line, markId, sign_text)
-  return vim.api.nvim_buf_set_extmark(
-    buf,
-    context.locationsNamespace,
-    line,
-    0,
-    { right_gravity = true, id = markId, sign_text = sign_text }
-  )
+  return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
+    right_gravity = true,
+    id = markId,
+    sign_text = sign_text,
+    sign_hl_group = sign_text and 'GrugFarResultsChangeIndicator' or nil,
+  })
 end
 
 --- append a bunch of result lines to the buffer
@@ -62,8 +61,7 @@ function M.appendResultsChunk(buf, context, data)
   local state = context.state
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
   local lastLocation = nil
-  local sign_text = M.isDoingReplace(context)
-      and (opts.getIcon('resultsEditedIndicator', context) or 'C')
+  local sign_text = M.isDoingReplace(context) and opts.getIcon('resultsChangeIndicator', context)
     or nil
 
   for i = 1, #data.highlights do
@@ -216,6 +214,11 @@ end
 ---@param endRow? integer
 ---@param sync? boolean whether to sync with current line contents, this removes indicators
 function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
+  local sign_text = opts.getIcon('resultsChangeIndicator', context)
+  if not sign_text then
+    return
+  end
+
   local extmarks = vim.api.nvim_buf_get_extmarks(
     buf,
     context.locationsNamespace,
@@ -234,7 +237,6 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
   end
 
   -- update the ones that are changed
-  local sign_text = opts.getIcon('resultsEditedIndicator', context) or 'C'
   M.forEachChangedLocation(
     buf,
     context,
