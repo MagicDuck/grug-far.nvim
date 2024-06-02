@@ -19,7 +19,7 @@ Grug find! Grug replace! Grug happy!
 <img width="1260" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/66afe574-f9a7-4aa8-8fbd-2ad763b4b323">
 
 #### Replacing:
-<img width="1257" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/d462255c-f6e4-4e0d-b096-fcf23f1c7410">
+<img width="1258" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/a768c853-c5d7-497c-8138-08285a5c5714">
 
 #### Rg teaching you it's ways
 <img width="1261" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/97651c2c-ea18-4b2d-b735-b52996903803">
@@ -28,7 +28,7 @@ Grug find! Grug replace! Grug happy!
 <img width="1247" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/f1f25cd0-bbc6-414c-b0e4-a2be4a1b10e3">
 
 #### History:
-<img width="1262" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/35127109-4d96-4304-aac5-45a953557c37">
+<img width="1253" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/c24f0678-640e-4dae-bc00-002fca1c4607">
 
 ## 🤔 Philosophy
 
