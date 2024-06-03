@@ -158,8 +158,6 @@ local function replace(params)
   end)
 
   local reportError = function(errorMessage)
-    vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
-
     state.status = 'error'
     state.actionMessage = getActionMessage(errorMessage)
     resultsList.setError(buf, context, errorMessage)
@@ -235,7 +233,6 @@ local function replace(params)
         files = files,
         context = context,
         reportProgress = reportReplacedFilesUpdate,
-        reportError = reportError,
         on_finish = on_finish_all,
       })
     end),

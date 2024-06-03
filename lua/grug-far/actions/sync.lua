@@ -206,8 +206,6 @@ local function sync(params)
   end)
 
   local reportError = function(errorMessage)
-    vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
-
     state.status = 'error'
     state.actionMessage = getActionMessage(errorMessage)
     resultsList.setError(buf, context, errorMessage)
