@@ -10,9 +10,15 @@ local M = {}
 ---@param replacement string[]
 local function setBufLines(buf, start, ending, strict_indexing, replacement)
   local isModifiable = vim.api.nvim_get_option_value('modifiable', { buf = buf })
-  vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
+  if not isModifiable then
+    vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
+  end
+
   vim.api.nvim_buf_set_lines(buf, start, ending, strict_indexing, replacement)
-  vim.api.nvim_set_option_value('modifiable', isModifiable, { buf = buf })
+
+  if not isModifiable == false then
+    vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
+  end
 end
 
 --- sets location mark
