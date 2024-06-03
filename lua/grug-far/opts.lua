@@ -20,6 +20,12 @@ M.defaultOptions = {
   -- like for example if you always want context lines around matches
   extraRgArgs = '',
 
+  -- specifies the command to run (with `vim.cmd(...)`) in order to create
+  -- the window in which the grug-far buffer will appear
+  -- ex (horizontal bottom right split): 'botright split'
+  -- ex (open new tab): 'tabnew'
+  windowCreationCommand = 'vsplit',
+
   -- buffer line numbers + match line numbers can get a bit visually overwhelming
   -- turn this off if you still like to see the line numbers
   disableBufferLineNumbers = true,
@@ -265,6 +271,7 @@ M.defaultOptions = {
 ---@field maxWorkers integer
 ---@field rgPath string
 ---@field extraRgArgs string
+---@field windowCreationCommand string
 ---@field disableBufferLineNumbers boolean
 ---@field maxSearchCharsInTitles integer
 ---@field startInInsertMode boolean
@@ -285,6 +292,7 @@ M.defaultOptions = {
 ---@field maxWorkers? integer
 ---@field rgPath? string
 ---@field extraRgArgs? string
+---@field windowCreationCommand? string
 ---@field disableBufferLineNumbers? boolean
 ---@field maxSearchCharsInTitles? integer
 ---@field startInInsertMode? boolean
