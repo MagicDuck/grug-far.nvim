@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         neovim_version: ['v0.10.0']
     runs-on: ${{ matrix.os }}
 
