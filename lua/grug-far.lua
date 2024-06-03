@@ -92,7 +92,7 @@ end
 ---@return integer windowId
 local function createWindow(context)
   context.prevWin = vim.api.nvim_get_current_win()
-  vim.cmd('vsplit')
+  vim.cmd(context.options.windowCreationCommand)
   local win = vim.api.nvim_get_current_win()
 
   if context.options.disableBufferLineNumbers then
