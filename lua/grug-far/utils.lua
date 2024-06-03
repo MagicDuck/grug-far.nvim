@@ -149,7 +149,7 @@ end
 ---@param data string
 ---@param callback fun(err: string | nil)
 function M.overwriteFileAsync(path, data, callback)
-  uv.fs_open(path, 'w+', uv.constants.O_RDWR + uv.constants.O_TRUNC, function(err1, fd)
+  uv.fs_open(path, 'w+', uv.constants.O_TRUNC, function(err1, fd)
     if err1 then
       return callback(err1)
     end
