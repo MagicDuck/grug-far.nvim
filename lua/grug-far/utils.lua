@@ -115,7 +115,7 @@ end
 ---@param path string
 ---@param callback fun(err: string , data: nil) | fun(err: nil, data: string)
 function M.readFileAsync(path, callback)
-  uv.fs_open(path, 'r', uv.constants.O_RDONLY, function(err1, fd)
+  uv.fs_open(path, 'r', 0, function(err1, fd)
     if err1 then
       return callback(err1)
     end
@@ -149,22 +149,30 @@ end
 ---@param data string
 ---@param callback fun(err: string | nil)
 function M.overwriteFileAsync(path, data, callback)
-  uv.fs_open(path, 'w+', uv.constants.O_TRUNC, function(err1, fd)
+  uv.fs_open(path, uv.constants.O_WRONLY, 0, function(err1, fd)
     if err1 then
       return callback(err1)
     end
     if not fd then
       return callback('could not open file ' .. path)
     end
-    uv.fs_write(fd, data, 0, function(err2)
+    -- Note: we need to truncate manually instead of opening file in "w" mode
+    -- since windows will create a new file instead of reusing existing file
+    uv.fs_ftruncate(fd, 0, function(err2)
       if err2 then
         return callback(err2)
       end
-      uv.fs_close(fd, function(err3)
+
+      uv.fs_write(fd, data, 0, function(err3)
         if err3 then
           return callback(err3)
         end
-        return callback(nil)
+        uv.fs_close(fd, function(err4)
+          if err4 then
+            return callback(err4)
+          end
+          return callback(nil)
+        end)
       end)
     end)
   end)
