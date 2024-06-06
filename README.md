@@ -110,6 +110,12 @@ Deleting result lines will cause them to be excluded from being synced by `Sync 
 This can be a nice way to refine a replacement in some situations if you want to exclude a particular file
 or some particular matches.
 
+If you don't edit the results list, `Sync All` and `Replace` have equivalent outcomes, except for one case. 
+When you do multi-line replace with `--multiline` and `--multiline-dot-all` flags, sync won't work so you 
+have to use replace. Essentially the difference it that `Replace` runs `rg --replace=... --passthrough` on 
+each file and does not depend at all on what's in the results area. `Sync All` does a line by line
+sync based on what's in the results area.
+
 _Note:_ changing the `<line-number>:<column>:` prefix of result lines will disable sync for that line
 
 _Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
