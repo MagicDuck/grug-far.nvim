@@ -106,7 +106,7 @@ end
 ---@param buf integer
 ---@param context GrugFarContext
 local function setupCleanup(buf, context)
-  local function onBufDelete()
+  local function cleanup()
     local autoSave = context.options.history.autoSave
     if autoSave.enabled and autoSave.onBufDelete then
       history.addHistoryEntry(context)
@@ -118,10 +118,17 @@ local function setupCleanup(buf, context)
     vim.api.nvim_del_augroup_by_id(context.augroup)
   end
 
-  vim.api.nvim_create_autocmd({ 'BufDelete' }, {
+  local function onBufUnload()
+    local status, err = pcall(cleanup)
+    if not status then
+      vim.notify('grug-far: error on cleanup! Please report! Error:\n' .. err, vim.log.levels.ERROR)
+    end
+  end
+
+  vim.api.nvim_create_autocmd({ 'BufUnload' }, {
     group = context.augroup,
     buffer = buf,
-    callback = onBufDelete,
+    callback = onBufUnload,
   })
 end
 
