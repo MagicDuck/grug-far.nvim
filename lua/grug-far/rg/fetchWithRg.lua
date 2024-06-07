@@ -22,13 +22,8 @@ local function fetchWithRg(params)
   local finished = false
   local errorMessage = ''
 
-  local on_fetch_chunk = vim.schedule_wrap(function(...)
-    if finished then
-      return
-    end
-    params.on_fetch_chunk(...)
-  end)
-  local on_finish = vim.schedule_wrap(params.on_finish)
+  local on_fetch_chunk = params.on_fetch_chunk
+  local on_finish = params.on_finish
 
   if not args then
     on_finish(nil, nil)
@@ -39,31 +34,35 @@ local function fetchWithRg(params)
   local stderr = uv.new_pipe()
 
   local handle
-  handle = uv.spawn(params.options.rgPath, {
-    stdio = { nil, stdout, stderr },
-    cwd = vim.fn.getcwd(),
-    args = args,
-  }, function(
-    code -- ,signal
+  handle = uv.spawn(
+    params.options.rgPath,
+    {
+      stdio = { nil, stdout, stderr },
+      cwd = vim.fn.getcwd(),
+      args = args,
+    },
+    vim.schedule_wrap(function(
+      code -- ,signal
+    )
+      if finished then
+        return
+      end
+
+      finished = true
+      closeHandle(stdout)
+      closeHandle(stderr)
+      closeHandle(handle)
+
+      if code > 0 and #errorMessage == 0 then
+        errorMessage = 'no matches'
+      end
+      local isSuccess = code == 0 and #errorMessage == 0
+
+      on_finish(isSuccess and 'success' or 'error', errorMessage)
+    end)
   )
-    if finished then
-      return
-    end
 
-    finished = true
-    closeHandle(stdout)
-    closeHandle(stderr)
-    closeHandle(handle)
-
-    if code > 0 and #errorMessage == 0 then
-      errorMessage = 'no matches'
-    end
-    local isSuccess = code == 0 and #errorMessage == 0
-
-    on_finish(isSuccess and 'success' or 'error', errorMessage)
-  end)
-
-  local on_abort = function()
+  local on_abort = vim.schedule_wrap(function()
     if finished then
       return
     end
@@ -77,48 +76,54 @@ local function fetchWithRg(params)
     end
 
     on_finish(nil, nil)
-  end
+  end)
 
   local lastLine = ''
-  uv.read_start(stdout, function(err, data)
-    if finished then
-      return
-    end
-
-    if err then
-      errorMessage = errorMessage .. '\nerror reading from rg stdout!'
-      return
-    end
-
-    if data then
-      -- large outputs can cause the last line to be truncated
-      -- save it and prepend to next chunk
-      local chunkData = lastLine .. data
-      chunkData, lastLine = utils.splitLastLine(chunkData)
-      if #chunkData > 0 then
-        on_fetch_chunk(chunkData)
+  uv.read_start(
+    stdout,
+    vim.schedule_wrap(function(err, data)
+      if finished then
+        return
       end
-    else
-      if #lastLine > 0 then
-        on_fetch_chunk(lastLine)
+
+      if err then
+        errorMessage = errorMessage .. '\nerror reading from rg stdout!'
+        return
       end
-    end
-  end)
 
-  uv.read_start(stderr, function(err, data)
-    if finished then
-      return
-    end
+      if data then
+        -- large outputs can cause the last line to be truncated
+        -- save it and prepend to next chunk
+        local chunkData = lastLine .. data
+        chunkData, lastLine = utils.splitLastLine(chunkData)
+        if #chunkData > 0 then
+          on_fetch_chunk(chunkData)
+        end
+      else
+        if #lastLine > 0 then
+          on_fetch_chunk(lastLine)
+        end
+      end
+    end)
+  )
 
-    if err then
-      errorMessage = errorMessage .. '\nerror reading from rg stderr!'
-      return
-    end
+  uv.read_start(
+    stderr,
+    vim.schedule_wrap(function(err, data)
+      if finished then
+        return
+      end
 
-    if data then
-      errorMessage = errorMessage .. data
-    end
-  end)
+      if err then
+        errorMessage = errorMessage .. '\nerror reading from rg stderr!'
+        return
+      end
+
+      if data then
+        errorMessage = errorMessage .. data
+      end
+    end)
+  )
 
   return on_abort
 end
