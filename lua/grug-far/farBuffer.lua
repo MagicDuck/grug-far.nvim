@@ -124,7 +124,14 @@ function M.createBuffer(win, context)
     end
 
     state.lastInputs = vim.deepcopy(state.inputs)
-    debouncedSearch({ buf = buf, context = context })
+
+    -- do a "clear" search immediately if empty string to improve responsiveness
+    -- otherwise debounce search
+    if state.inputs.search == '' then
+      search({ buf = buf, context = context })
+    else
+      debouncedSearch({ buf = buf, context = context })
+    end
   end
 
   local function handleBufferChange()
