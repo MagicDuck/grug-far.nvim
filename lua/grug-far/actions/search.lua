@@ -10,9 +10,9 @@ local function search(params)
   local state = context.state
   local isFinished = false
 
-  if state.abortSearch then
-    state.abortSearch()
-    state.abortSearch = nil
+  if state.abort.search then
+    state.abort.search()
+    state.abort.search = nil
   end
 
   -- initiate search in UI
@@ -31,7 +31,7 @@ local function search(params)
     end
   end
 
-  state.abortSearch = fetchResults({
+  state.abort.search = fetchResults({
     inputs = state.inputs,
     options = context.options,
     on_fetch_chunk = vim.schedule_wrap(function(data)

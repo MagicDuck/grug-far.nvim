@@ -44,6 +44,12 @@ local contextCount = 0
 ---@field filesFilter string
 ---@field flags string
 
+---@class GrugFarStateAbort
+---@field search? fun()
+---@field replace? fun()
+---@field syncLine? fun()
+---@field syncAll? fun()
+
 ---@class GrugFarState
 ---@field inputs GrugFarInputs
 ---@field lastInputs? GrugFarInputs
@@ -54,7 +60,7 @@ local contextCount = 0
 ---@field actionMessage? string
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultsLastFilename? string
----@field abortSearch? fun()
+---@field abort GrugFarStateAbort
 
 ---@class GrugFarContext
 ---@field count integer
@@ -84,6 +90,7 @@ local function createContext(options)
       inputs = {},
       headerRow = 0,
       resultLocationByExtmarkId = {},
+      abort = {},
     },
   }
 end
@@ -111,6 +118,7 @@ local function setupCleanup(buf, context)
     if autoSave.enabled and autoSave.onBufDelete then
       history.addHistoryEntry(context)
     end
+    -- TODO (sbadragan): call abort action
 
     vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)

@@ -8,7 +8,8 @@ M.defaultOptions = {
 
   -- minimum number of chars which will cause a search to happen
   -- prevents performance issues in larger dirs
-  minSearchChars = 2,
+  -- TODO (sbadragan): set this back
+  minSearchChars = 1,
 
   -- max number of parallel replacements tasks
   maxWorkers = 4,
@@ -58,6 +59,7 @@ M.defaultOptions = {
     refresh = { n = '<localleader>f' },
     gotoLocation = { n = '<enter>' },
     pickHistoryEntry = { n = '<enter>' },
+    abort = { n = '<localleader>b' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -176,6 +178,7 @@ M.defaultOptions = {
 ---@field close KeymapDef
 ---@field gotoLocation KeymapDef
 ---@field pickHistoryEntry KeymapDef
+---@field abort KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -188,6 +191,7 @@ M.defaultOptions = {
 ---@field close? KeymapDef
 ---@field gotoLocation? KeymapDef
 ---@field pickHistoryEntry? KeymapDef
+---@field abort? KeymapDef
 
 ---@class AutoSaveTable
 ---@field enabled boolean
