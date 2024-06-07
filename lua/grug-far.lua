@@ -47,8 +47,7 @@ local contextCount = 0
 ---@class GrugFarStateAbort
 ---@field search? fun()
 ---@field replace? fun()
----@field syncLine? fun()
----@field syncAll? fun()
+---@field sync? fun()
 
 ---@class GrugFarState
 ---@field inputs GrugFarInputs

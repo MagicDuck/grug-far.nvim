@@ -8,6 +8,17 @@ local function search(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
+  local abort = state.abort
+
+  if abort.sync then
+    vim.notify('grug-far: sync in progress', vim.log.levels.INFO)
+    return
+  end
+
+  if abort.replace then
+    vim.notify('grug-far: replace in progress', vim.log.levels.INFO)
+    return
+  end
 
   if state.abort.search then
     state.abort.search()
@@ -30,6 +41,7 @@ local function search(params)
     end
   end
 
+  -- TODO (sbadragan): random number of matches and files are reported with ,f
   state.abort.search = fetchResults({
     inputs = state.inputs,
     options = context.options,
@@ -49,6 +61,7 @@ local function search(params)
       resultsList.smartForceRedrawBufferOnProgress(buf, state.progressCount)
     end,
     on_finish = function(status, errorMessage)
+      state.abort.search = nil
       clearResultsIfNeeded()
 
       state.status = status

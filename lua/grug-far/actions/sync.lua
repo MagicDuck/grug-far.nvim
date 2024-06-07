@@ -158,7 +158,7 @@ end
 ---@field context GrugFarContext
 ---@field startRow integer
 ---@field endRow integer
----@field on_success fun()
+---@field on_success? fun()
 
 --- performs sync of lines in results area with corresponding original file locations
 ---@param params SyncParams
@@ -169,6 +169,23 @@ local function sync(params)
   local endRow = params.endRow
   local on_success = params.on_success
   local state = context.state
+  local abort = state.abort
+
+  if abort.sync then
+    vim.notify('grug-far: sync already in progress', vim.log.levels.INFO)
+    return
+  end
+
+  if abort.replace then
+    vim.notify('grug-far: replace in progress', vim.log.levels.INFO)
+    return
+  end
+
+  if abort.search then
+    vim.notify('grug-far: search in progress', vim.log.levels.INFO)
+    return
+  end
+
   local startTime = uv.now()
 
   if utils.isMultilineSearchReplace(context) then
