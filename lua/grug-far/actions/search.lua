@@ -8,7 +8,6 @@ local function search(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
-  local isFinished = false
 
   if state.abort.search then
     state.abort.search()
@@ -34,15 +33,8 @@ local function search(params)
   state.abort.search = fetchResults({
     inputs = state.inputs,
     options = context.options,
-    on_fetch_chunk = vim.schedule_wrap(function(data)
-      -- TODO (sbadragan): for responsiveness, this isFinished thing
-      -- should happen at a level where abort affects it which means we should
-      -- vim.schedule at the level of fetchWithRG
-      if isFinished then
-        -- make sure to stop immediately when aborted early
-        return
-      end
-
+    -- TODO (sbadragan): unwrap other calls
+    on_fetch_chunk = function(data)
       clearResultsIfNeeded()
 
       state.status = 'progress'
@@ -54,25 +46,19 @@ local function search(params)
       renderResultsHeader(buf, context)
 
       resultsList.appendResultsChunk(buf, context, data)
-      vim.api.nvim__redraw({ buf = buf, flush = true })
-    end),
-    on_finish = vim.schedule_wrap(function(status, errorMessage)
-      isFinished = true
-
+      resultsList.forceRedrawBuffer(buf)
+    end,
+    on_finish = function(status, errorMessage)
       clearResultsIfNeeded()
 
       state.status = status
       if status == 'error' then
         state.stats = nil
         resultsList.setError(buf, context, errorMessage)
-      elseif status == nil then
-        -- was aborted
-        state.stats = nil
-        state.actionMessage = nil
       end
 
       renderResultsHeader(buf, context)
-    end),
+    end,
   })
 end
 

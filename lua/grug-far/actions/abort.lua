@@ -20,14 +20,15 @@ local function abort(params)
   -- clear stuff
   if abortedAny then
     vim.schedule(function()
-      -- vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
+      vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
       -- state.status = nil
       -- state.progressCount = 0
-      -- state.actionMessage = 'Aborted task!'
-      -- renderResultsHeader(buf, context)
+      state.actionMessage = 'Aborted task!'
+      renderResultsHeader(buf, context)
+      -- TODO (sbadragan): needed?
       -- vim.cmd.checktime()
-      -- vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
-      vim.notify('grug-far: Aborted!!!!', vim.log.levels.INFO)
+      vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
+      -- vim.notify('grug-far: Aborted!!!!', vim.log.levels.INFO)
     end)
   end
 end

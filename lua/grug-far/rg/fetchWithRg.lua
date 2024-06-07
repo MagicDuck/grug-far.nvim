@@ -18,11 +18,17 @@ end
 ---@param params FetchWithRgParams
 ---@return nil | fun() abort
 local function fetchWithRg(params)
-  local on_fetch_chunk = params.on_fetch_chunk
-  local on_finish = params.on_finish
   local args = params.args
   local finished = false
   local errorMessage = ''
+
+  local on_fetch_chunk = vim.schedule_wrap(function(...)
+    if finished then
+      return
+    end
+    params.on_fetch_chunk(...)
+  end)
+  local on_finish = vim.schedule_wrap(params.on_finish)
 
   if not args then
     on_finish(nil, nil)
