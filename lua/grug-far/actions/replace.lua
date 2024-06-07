@@ -177,6 +177,10 @@ local function replace(params)
   renderResultsHeader(buf, context)
 
   local reportMatchingFilesUpdate = function(files)
+    if state.bufClosed then
+      return
+    end
+
     state.status = 'progress'
     state.progressCount = state.progressCount + 1
     filesTotal = filesTotal + #files
@@ -186,6 +190,10 @@ local function replace(params)
   end
 
   local reportReplacedFilesUpdate = function()
+    if state.bufClosed then
+      return
+    end
+
     state.status = 'progress'
     state.progressCount = state.progressCount + 1
     filesCount = filesCount + 1
@@ -206,6 +214,10 @@ local function replace(params)
   end
 
   local on_finish_all = function(status, errorMessage, customActionMessage)
+    if state.bufClosed then
+      return
+    end
+
     vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
     state.abort.replace = nil
 

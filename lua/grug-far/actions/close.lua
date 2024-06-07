@@ -12,7 +12,6 @@ local function close(params)
     end
   end
 
-  -- TODO (sbadragan): should we add a forceAbort option?
   if runningTask then
     local choice = vim.fn.confirm(
       runningTask .. ' task will be aborted. Are you sure you want to close grug-far buffer?',

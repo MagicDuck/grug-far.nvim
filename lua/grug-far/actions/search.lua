@@ -45,8 +45,11 @@ local function search(params)
   state.abort.search = fetchResults({
     inputs = state.inputs,
     options = context.options,
-    -- TODO (sbadragan): unwrap other calls
     on_fetch_chunk = function(data)
+      if state.bufClosed then
+        return
+      end
+
       clearResultsIfNeeded()
 
       state.status = 'progress'
@@ -61,6 +64,10 @@ local function search(params)
       resultsList.smartForceRedrawBufferOnProgress(buf, state.progressCount)
     end,
     on_finish = function(status, errorMessage)
+      if state.bufClosed then
+        return
+      end
+
       state.abort.search = nil
       clearResultsIfNeeded()
 

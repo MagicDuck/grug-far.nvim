@@ -60,6 +60,7 @@ local contextCount = 0
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultsLastFilename? string
 ---@field abort GrugFarStateAbort
+---@field bufClosed boolean
 
 ---@class GrugFarContext
 ---@field count integer
@@ -90,6 +91,7 @@ local function createContext(options)
       headerRow = 0,
       resultLocationByExtmarkId = {},
       abort = {},
+      bufClosed = false,
     },
   }
 end
@@ -117,7 +119,9 @@ local function setupCleanup(buf, context)
     if autoSave.enabled and autoSave.onBufDelete then
       history.addHistoryEntry(context)
     end
-    -- TODO (sbadragan): call abort action
+
+    utils.abortTasks(context)
+    context.state.bufClosed = true
 
     vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
