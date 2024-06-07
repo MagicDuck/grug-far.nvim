@@ -116,7 +116,7 @@ end
 --- displays results error
 ---@param buf integer
 ---@param context GrugFarContext
----@param error string
+---@param error string | nil
 function M.setError(buf, context, error)
   M.clear(buf, context)
 
@@ -266,6 +266,14 @@ function M.clear(buf, context)
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLastFilename = nil
+end
+
+--- force redraws buffer. This is order to apear more responsive to the user
+--- and quickly give user feedback as results come in / data is updated
+---@param buf integer
+function M.forceRedrawBuffer(buf)
+  -- TODO (sbadragan): throttle?
+  vim.api.nvim__redraw({ buf = buf, flush = true })
 end
 
 return M
