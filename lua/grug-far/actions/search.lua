@@ -35,6 +35,9 @@ local function search(params)
     inputs = state.inputs,
     options = context.options,
     on_fetch_chunk = vim.schedule_wrap(function(data)
+      -- TODO (sbadragan): for responsiveness, this isFinished thing
+      -- should happen at a level where abort affects it which means we should
+      -- vim.schedule at the level of fetchWithRG
       if isFinished then
         -- make sure to stop immediately when aborted early
         return
@@ -51,6 +54,7 @@ local function search(params)
       renderResultsHeader(buf, context)
 
       resultsList.appendResultsChunk(buf, context, data)
+      vim.api.nvim__redraw({ buf = buf, flush = true })
     end),
     on_finish = vim.schedule_wrap(function(status, errorMessage)
       isFinished = true
