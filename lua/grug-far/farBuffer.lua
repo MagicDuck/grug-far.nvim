@@ -115,7 +115,7 @@ function M.createBuffer(win, context)
   setupGlobalOptOverrides(buf, context)
   setupKeymap(buf, context)
 
-  local debouncedSearch = utils.debounce(search, context.options.debounceMs)
+  local debouncedSearch = utils.debounce(vim.schedule_wrap(search), context.options.debounceMs)
   local function debouncedSearchOnChange()
     -- only re-issue search when inputs have changed
     local state = context.state

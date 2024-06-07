@@ -11,7 +11,7 @@ function M.setTimeout(callback, timeout)
   timer:start(timeout, 0, function()
     timer:stop()
     timer:close()
-    vim.schedule(callback)
+    callback()
   end)
   return timer
 end
