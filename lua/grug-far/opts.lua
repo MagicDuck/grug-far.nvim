@@ -8,8 +8,7 @@ M.defaultOptions = {
 
   -- minimum number of chars which will cause a search to happen
   -- prevents performance issues in larger dirs
-  -- TODO (sbadragan): set this back
-  minSearchChars = 1,
+  minSearchChars = 2,
 
   -- max number of parallel replacements tasks
   maxWorkers = 4,
