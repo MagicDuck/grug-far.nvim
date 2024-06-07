@@ -231,6 +231,10 @@ local function sync(params)
   renderResultsHeader(buf, context)
 
   local reportSyncedFilesUpdate = vim.schedule_wrap(function()
+    if state.bufClosed then
+      return
+    end
+
     state.status = 'progress'
     state.progressCount = state.progressCount + 1
     changesCount = changesCount + 1
@@ -250,6 +254,10 @@ local function sync(params)
   end
 
   local on_finish_all = vim.schedule_wrap(function(status, errorMessage, customActionMessage)
+    if state.bufClosed then
+      return
+    end
+
     vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
     state.abort.sync = nil
 

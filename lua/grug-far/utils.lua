@@ -281,6 +281,21 @@ function M.getVisualSelectionText()
   return query
 end
 
+--- aborts all tasks
+---@param context GrugFarContext
+---@return boolean if any aborted
+function M.abortTasks(context)
+  local abortedAny = false
+  for n, abort_fn in pairs(context.state.abort) do
+    if abort_fn then
+      abort_fn()
+      abort_fn = nil
+      abortedAny = true
+    end
+  end
+  return abortedAny
+end
+
 M.eol = is_win and '\r\n' or '\n'
 
 return M
