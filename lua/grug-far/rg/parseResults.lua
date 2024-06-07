@@ -89,7 +89,7 @@ local function getStats(tokens)
   return stats
 end
 
---- Return '\r' at the end of the line
+--- Remove '\r' from the end of a line on Windows
 ---@param line string
 ---@return string
 local function getLineWithoutCarriageReturn(line)
