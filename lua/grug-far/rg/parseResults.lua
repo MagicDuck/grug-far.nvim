@@ -1,4 +1,5 @@
 local colors = require('grug-far/rg/colors')
+local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 
 --- @enum ResultsTokenType
 local token_types = {
