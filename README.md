@@ -152,10 +152,14 @@ History entries are separated by one or more empty lines.
 
 _Note_: **grug-far** will ignore lines that do not start with the prefixes above
 
+### Aborting
+If you inadvertently launched a wrong search/sync/replace, you can abort early using the `Abort` action.
+
 ### Closing
 When you are done, it is recommended to close the buffer with the configured keybinding 
 (see Configuration section above) or just `:bd` in order to save on resources as some search results
-can be quite beefy in size.
+can be quite beefy in size. The advantage of using the `Close` action as opposed to just `:bd` is that it
+will ask you to confirm if there is a replace/sync in progress, as those would be aborted.
 
 ### Filetype
 Note that *grug-far.nvim* buffers will have `filetype=grug-far` and history buffers will have `filetype=grug-far-history`
