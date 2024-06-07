@@ -286,7 +286,7 @@ end
 ---@return boolean if any aborted
 function M.abortTasks(context)
   local abortedAny = false
-  for n, abort_fn in pairs(context.state.abort) do
+  for _, abort_fn in pairs(context.state.abort) do
     if abort_fn then
       abort_fn()
       abort_fn = nil
