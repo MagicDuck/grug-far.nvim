@@ -25,17 +25,38 @@ function M.clearTimeout(timer)
   end
 end
 
---- debounce given function
+--- debounce (trailing) given function
 ---@param callback fun(parms: any)
----@param timeout integer milliseconds
+---@param ms integer milliseconds
 ---@return fun(params: any) deobuncedCallback
-function M.debounce(callback, timeout)
+function M.debounce(callback, ms)
   local timer
   return function(params)
     M.clearTimeout(timer)
     timer = M.setTimeout(function()
       callback(params)
-    end, timeout)
+    end, ms)
+  end
+end
+
+--- throttle (leading) given function
+---@param callback fun(...)
+---@param ms integer
+---@return fun(...) throttledCallback
+function M.throttle(callback, ms)
+  local throttlePause = false
+
+  return function(...)
+    if throttlePause then
+      return
+    end
+    throttlePause = true
+
+    callback(...)
+
+    M.setTimeout(function()
+      throttlePause = false
+    end, ms)
   end
 end
 
