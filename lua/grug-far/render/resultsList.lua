@@ -1,4 +1,5 @@
 local opts = require('grug-far/opts')
+local utils = require('grug-far/utils')
 local getArgs = require('grug-far/rg/getArgs')
 local M = {}
 
@@ -276,14 +277,6 @@ function M.forceRedrawBuffer(buf)
   vim.api.nvim__redraw({ buf = buf, flush = true })
 end
 
---- smart redraws the buffer occasionally to give the user the impression
---- of responsiveness, but also tries to save on redraws
----@param buf integer
----@param progressCount integer
-function M.smartForceRedrawBufferOnProgress(buf, progressCount)
-  if progressCount % 40 == 0 then
-    M.forceRedrawBuffer(buf)
-  end
-end
+M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)
 
 return M

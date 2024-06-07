@@ -186,7 +186,7 @@ local function replace(params)
     filesTotal = filesTotal + #files
     state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
     renderResultsHeader(buf, context)
-    resultsList.smartForceRedrawBufferOnProgress(buf, state.progressCount)
+    resultsList.throttledForceRedrawBuffer(buf)
   end
 
   local reportReplacedFilesUpdate = function()
@@ -199,7 +199,7 @@ local function replace(params)
     filesCount = filesCount + 1
     state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
     renderResultsHeader(buf, context)
-    resultsList.smartForceRedrawBufferOnProgress(buf, state.progressCount)
+    resultsList.throttledForceRedrawBuffer(buf)
   end
 
   local reportError = function(errorMessage)
