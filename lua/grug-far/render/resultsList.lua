@@ -1,5 +1,4 @@
 local opts = require('grug-far/opts')
-local utils = require('grug-far/utils')
 local getArgs = require('grug-far/rg/getArgs')
 local M = {}
 
