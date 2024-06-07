@@ -272,6 +272,7 @@ end
 --- and quickly give user feedback as results come in / data is updated
 ---@param buf integer
 function M.forceRedrawBuffer(buf)
+  ---@diagnostic disable-next-line
   vim.api.nvim__redraw({ buf = buf, flush = true })
 end
 
