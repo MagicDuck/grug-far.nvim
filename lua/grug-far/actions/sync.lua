@@ -55,6 +55,7 @@ end
 
 --- sync given changed files
 ---@param params syncChangedFilesParams
+---@return fun() abort
 local function syncChangedFiles(params)
   local context = params.context
   local changedFiles = vim.deepcopy(params.changedFiles)
@@ -62,12 +63,25 @@ local function syncChangedFiles(params)
   local on_finish = params.on_finish
   local engagedWorkers = 0
   local errorMessages = ''
+  local isAborted = false
+
+  local function abortAll()
+    isAborted = true
+  end
 
   local function syncNextChangedFile()
+    if isAborted then
+      changedFiles = {}
+    end
+
     local changedFile = table.remove(changedFiles)
     if changedFile == nil then
       if engagedWorkers == 0 then
-        on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
+        if isAborted then
+          on_finish(nil, nil)
+        else
+          on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
+        end
       end
       return
     end
@@ -93,6 +107,8 @@ local function syncChangedFiles(params)
   for _ = 1, context.options.maxWorkers do
     syncNextChangedFile()
   end
+
+  return abortAll
 end
 
 --- gets action message to display
@@ -235,6 +251,7 @@ local function sync(params)
 
   local on_finish_all = vim.schedule_wrap(function(status, errorMessage, customActionMessage)
     vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
+    state.abort.sync = nil
 
     if status == 'error' then
       reportError(errorMessage)
@@ -242,21 +259,34 @@ local function sync(params)
     end
 
     state.status = status
-    local time = uv.now() - startTime
-    -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-    state.actionMessage = status == nil and customActionMessage
-      or getActionMessage(
+    vim.cmd.checktime()
+
+    local wasAborted = status == nil and customActionMessage == nil
+
+    if wasAborted then
+      state.actionMessage = 'sync aborted at ' .. changesCount .. ' / ' .. changesTotal
+    elseif status == nil and customActionMessage then
+      state.actionMessage = customActionMessage
+    else
+      local time = uv.now() - startTime
+      -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
+      state.actionMessage = getActionMessage(
         nil,
         changesCount,
         changesCount,
         context.options.reportDuration and time or nil
       )
+    end
+
     renderResultsHeader(buf, context)
-    vim.cmd.checktime()
 
     vim.schedule(function()
       resultsList.markUnsyncedLines(buf, context, startRow, endRow, true)
     end)
+
+    if wasAborted then
+      return
+    end
 
     vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
     if on_success then
@@ -264,7 +294,7 @@ local function sync(params)
     end
   end)
 
-  syncChangedFiles({
+  state.abort.sync = syncChangedFiles({
     context = context,
     changedFiles = changedFiles,
     reportProgress = reportSyncedFilesUpdate,
