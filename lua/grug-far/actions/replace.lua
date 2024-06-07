@@ -134,6 +134,7 @@ local function replace(params)
   local filesTotal = 0
   local startTime
 
+  -- TODO (sbadragan): add handling to abort
   -- initiate replace in UI
   vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
   state.status = 'progress'
