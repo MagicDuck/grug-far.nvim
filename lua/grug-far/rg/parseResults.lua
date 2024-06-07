@@ -88,6 +88,26 @@ local function getStats(tokens)
   return stats
 end
 
+--- Return '\r' at the end of the line
+---@param line string
+---@return string
+local function getLineWithoutCarriageReturn(line)
+  if not is_win then
+    return line
+  end
+
+  local last_char = string.sub(line, -1)
+  if last_char ~= '\r' then
+    return line
+  end
+
+  if string.len(line) <= 1 then
+    return line
+  end
+
+  return string.sub(line, 1, -2)
+end
+
 ---@class ResultHighlight
 ---@field hl string
 ---@field start_line integer
@@ -116,7 +136,7 @@ local function parseResults(data)
     line = line .. string.sub(data, i, token.start - 1)
     i = token.fin + 1
     if token.type == token_types.newline then
-      table.insert(lines, line)
+      table.insert(lines, getLineWithoutCarriageReturn(line))
       line = ''
     elseif token.type == token_types.color then
       highlight = { hl = token.hl, start_line = #lines, start_col = #line }
