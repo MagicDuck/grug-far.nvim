@@ -46,7 +46,7 @@ local function search(params)
       renderResultsHeader(buf, context)
 
       resultsList.appendResultsChunk(buf, context, data)
-      resultsList.forceRedrawBuffer(buf)
+      resultsList.smartForceRedrawBufferOnProgress(buf, state.progressCount)
     end,
     on_finish = function(status, errorMessage)
       clearResultsIfNeeded()
