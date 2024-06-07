@@ -240,6 +240,7 @@ local function sync(params)
     changesCount = changesCount + 1
     state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
     renderResultsHeader(buf, context)
+    resultsList.throttledForceRedrawBuffer(buf)
   end)
 
   local reportError = function(errorMessage)

@@ -41,7 +41,6 @@ local function search(params)
     end
   end
 
-  -- TODO (sbadragan): random number of matches and files are reported with ,f
   state.abort.search = fetchResults({
     inputs = state.inputs,
     options = context.options,
@@ -61,7 +60,7 @@ local function search(params)
       renderResultsHeader(buf, context)
 
       resultsList.appendResultsChunk(buf, context, data)
-      resultsList.smartForceRedrawBufferOnProgress(buf, state.progressCount)
+      resultsList.throttledForceRedrawBuffer(buf)
     end,
     on_finish = function(status, errorMessage)
       if state.bufClosed then
