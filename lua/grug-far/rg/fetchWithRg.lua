@@ -34,35 +34,33 @@ local function fetchWithRg(params)
   local stderr = uv.new_pipe()
 
   local handle
-  handle = uv.spawn(
-    params.options.rgPath,
-    {
-      stdio = { nil, stdout, stderr },
-      cwd = vim.fn.getcwd(),
-      args = args,
-    },
-    vim.schedule_wrap(function(
-      code -- ,signal
-    )
-      if finished then
-        return
-      end
+  handle = uv.spawn(params.options.rgPath, {
+    stdio = { nil, stdout, stderr },
+    cwd = vim.fn.getcwd(),
+    args = args,
+  }, function(
+    code -- ,signal
+  )
+    if finished then
+      return
+    end
 
+    closeHandle(stdout)
+    closeHandle(stderr)
+    closeHandle(handle)
+
+    if code > 0 and #errorMessage == 0 then
+      errorMessage = 'no matches'
+    end
+    local isSuccess = code == 0 and #errorMessage == 0
+
+    vim.schedule(function()
       finished = true
-      closeHandle(stdout)
-      closeHandle(stderr)
-      closeHandle(handle)
-
-      if code > 0 and #errorMessage == 0 then
-        errorMessage = 'no matches'
-      end
-      local isSuccess = code == 0 and #errorMessage == 0
-
       on_finish(isSuccess and 'success' or 'error', errorMessage)
     end)
-  )
+  end)
 
-  local on_abort = vim.schedule_wrap(function()
+  local on_abort = function()
     if finished then
       return
     end
@@ -75,8 +73,10 @@ local function fetchWithRg(params)
       handle:kill(vim.loop.constants.SIGTERM)
     end
 
-    on_finish(nil, nil)
-  end)
+    vim.schedule(function()
+      on_finish(nil, nil)
+    end)
+  end
 
   local lastLine = ''
   uv.read_start(
