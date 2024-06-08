@@ -23,7 +23,7 @@ M.defaultOptions = {
   -- specifies the command to run (with `vim.cmd(...)`) in order to create
   -- the window in which the grug-far buffer will appear
   -- ex (horizontal bottom right split): 'botright split'
-  -- ex (open new tab): 'tabnew'
+  -- ex (open new tab): 'tabnew %'
   windowCreationCommand = 'vsplit',
 
   -- buffer line numbers + match line numbers can get a bit visually overwhelming
