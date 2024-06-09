@@ -102,10 +102,6 @@ local function getLineWithoutCarriageReturn(line)
     return line
   end
 
-  if string.len(line) <= 1 then
-    return line
-  end
-
   return string.sub(line, 1, -2)
 end
 
