@@ -18,11 +18,12 @@ end
 ---@param params FetchWithRgParams
 ---@return nil | fun() abort
 local function fetchWithRg(params)
-  local on_fetch_chunk = params.on_fetch_chunk
-  local on_finish = params.on_finish
   local args = params.args
   local finished = false
   local errorMessage = ''
+
+  local on_fetch_chunk = params.on_fetch_chunk
+  local on_finish = params.on_finish
 
   if not args then
     on_finish(nil, nil)
@@ -44,7 +45,6 @@ local function fetchWithRg(params)
       return
     end
 
-    finished = true
     closeHandle(stdout)
     closeHandle(stderr)
     closeHandle(handle)
@@ -54,7 +54,10 @@ local function fetchWithRg(params)
     end
     local isSuccess = code == 0 and #errorMessage == 0
 
-    on_finish(isSuccess and 'success' or 'error', errorMessage)
+    vim.schedule(function()
+      finished = true
+      on_finish(isSuccess and 'success' or 'error', errorMessage)
+    end)
   end)
 
   local on_abort = function()
@@ -70,49 +73,57 @@ local function fetchWithRg(params)
       handle:kill(vim.loop.constants.SIGTERM)
     end
 
-    on_finish(nil, nil)
+    vim.schedule(function()
+      on_finish(nil, nil)
+    end)
   end
 
   local lastLine = ''
-  uv.read_start(stdout, function(err, data)
-    if finished then
-      return
-    end
-
-    if err then
-      errorMessage = errorMessage .. '\nerror reading from rg stdout!'
-      return
-    end
-
-    if data then
-      -- large outputs can cause the last line to be truncated
-      -- save it and prepend to next chunk
-      local chunkData = lastLine .. data
-      chunkData, lastLine = utils.splitLastLine(chunkData)
-      if #chunkData > 0 then
-        on_fetch_chunk(chunkData)
+  uv.read_start(
+    stdout,
+    vim.schedule_wrap(function(err, data)
+      if finished then
+        return
       end
-    else
-      if #lastLine > 0 then
-        on_fetch_chunk(lastLine)
+
+      if err then
+        errorMessage = errorMessage .. '\nerror reading from rg stdout!'
+        return
       end
-    end
-  end)
 
-  uv.read_start(stderr, function(err, data)
-    if finished then
-      return
-    end
+      if data then
+        -- large outputs can cause the last line to be truncated
+        -- save it and prepend to next chunk
+        local chunkData = lastLine .. data
+        chunkData, lastLine = utils.splitLastLine(chunkData)
+        if #chunkData > 0 then
+          on_fetch_chunk(chunkData)
+        end
+      else
+        if #lastLine > 0 then
+          on_fetch_chunk(lastLine)
+        end
+      end
+    end)
+  )
 
-    if err then
-      errorMessage = errorMessage .. '\nerror reading from rg stderr!'
-      return
-    end
+  uv.read_start(
+    stderr,
+    vim.schedule_wrap(function(err, data)
+      if finished then
+        return
+      end
 
-    if data then
-      errorMessage = errorMessage .. data
-    end
-  end)
+      if err then
+        errorMessage = errorMessage .. '\nerror reading from rg stderr!'
+        return
+      end
+
+      if data then
+        errorMessage = errorMessage .. data
+      end
+    end)
+  )
 
   return on_abort
 end

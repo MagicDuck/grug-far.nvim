@@ -200,6 +200,17 @@ end
 local function historyOpen(params)
   local buf = params.buf
   local context = params.context
+  local abort = context.state.abort
+
+  if abort.sync then
+    vim.notify('grug-far: sync in progress', vim.log.levels.INFO)
+    return
+  end
+
+  if abort.replace then
+    vim.notify('grug-far: replace in progress', vim.log.levels.INFO)
+    return
+  end
 
   createHistoryWindow(buf, context)
 end

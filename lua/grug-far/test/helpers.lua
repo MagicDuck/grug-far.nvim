@@ -120,6 +120,7 @@ function M.getSetupOptions()
       syncLocations = { n = ',s' },
       syncLine = { n = ',l' },
       close = { n = ',c' },
+      abort = { n = ',b' },
       historyOpen = { n = ',t' },
       historyAdd = { n = ',a' },
       refresh = { n = ',f' },

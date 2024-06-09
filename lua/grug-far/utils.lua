@@ -11,7 +11,7 @@ function M.setTimeout(callback, timeout)
   timer:start(timeout, 0, function()
     timer:stop()
     timer:close()
-    vim.schedule(callback)
+    callback()
   end)
   return timer
 end
@@ -25,17 +25,38 @@ function M.clearTimeout(timer)
   end
 end
 
---- debounce given function
+--- debounce (trailing) given function
 ---@param callback fun(parms: any)
----@param timeout integer milliseconds
+---@param ms integer milliseconds
 ---@return fun(params: any) deobuncedCallback
-function M.debounce(callback, timeout)
+function M.debounce(callback, ms)
   local timer
   return function(params)
     M.clearTimeout(timer)
     timer = M.setTimeout(function()
       callback(params)
-    end, timeout)
+    end, ms)
+  end
+end
+
+--- throttle (leading) given function
+---@param callback fun(...)
+---@param ms integer
+---@return fun(...) throttledCallback
+function M.throttle(callback, ms)
+  local throttlePause = false
+
+  return function(...)
+    if throttlePause then
+      return
+    end
+    throttlePause = true
+
+    callback(...)
+
+    M.setTimeout(function()
+      throttlePause = false
+    end, ms)
   end
 end
 
@@ -258,6 +279,21 @@ function M.getVisualSelectionText()
   lines[1] = string.sub(lines[1], start_pos[2] + plusStart, string.len(lines[1]))
   local query = table.concat(lines, '')
   return query
+end
+
+--- aborts all tasks
+---@param context GrugFarContext
+---@return boolean if any aborted
+function M.abortTasks(context)
+  local abortedAny = false
+  for _, abort_fn in pairs(context.state.abort) do
+    if abort_fn then
+      abort_fn()
+      abort_fn = nil
+      abortedAny = true
+    end
+  end
+  return abortedAny
 end
 
 M.eol = is_win and '\r\n' or '\n'

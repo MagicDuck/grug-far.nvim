@@ -27,6 +27,7 @@ local function render(buf, context)
       { text = 'Refresh', keymap = keymaps.refresh },
       { text = 'Goto', keymap = keymaps.gotoLocation },
       { text = 'Quickfix', keymap = keymaps.qflist },
+      { text = 'Abort', keymap = keymaps.abort },
       { text = 'Close', keymap = keymaps.close },
     },
   }, context)

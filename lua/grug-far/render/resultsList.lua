@@ -1,4 +1,5 @@
 local opts = require('grug-far/opts')
+local utils = require('grug-far/utils')
 local getArgs = require('grug-far/rg/getArgs')
 local M = {}
 
@@ -116,7 +117,7 @@ end
 --- displays results error
 ---@param buf integer
 ---@param context GrugFarContext
----@param error string
+---@param error string | nil
 function M.setError(buf, context, error)
   M.clear(buf, context)
 
@@ -267,5 +268,15 @@ function M.clear(buf, context)
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLastFilename = nil
 end
+
+--- force redraws buffer. This is order to apear more responsive to the user
+--- and quickly give user feedback as results come in / data is updated
+---@param buf integer
+function M.forceRedrawBuffer(buf)
+  ---@diagnostic disable-next-line
+  vim.api.nvim__redraw({ buf = buf, flush = true })
+end
+
+M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)
 
 return M

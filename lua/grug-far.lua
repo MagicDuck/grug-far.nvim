@@ -44,6 +44,11 @@ local contextCount = 0
 ---@field filesFilter string
 ---@field flags string
 
+---@class GrugFarStateAbort
+---@field search? fun()
+---@field replace? fun()
+---@field sync? fun()
+
 ---@class GrugFarState
 ---@field inputs GrugFarInputs
 ---@field lastInputs? GrugFarInputs
@@ -54,7 +59,8 @@ local contextCount = 0
 ---@field actionMessage? string
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultsLastFilename? string
----@field abortSearch? fun()
+---@field abort GrugFarStateAbort
+---@field bufClosed boolean
 
 ---@class GrugFarContext
 ---@field count integer
@@ -84,6 +90,8 @@ local function createContext(options)
       inputs = {},
       headerRow = 0,
       resultLocationByExtmarkId = {},
+      abort = {},
+      bufClosed = false,
     },
   }
 end
@@ -106,11 +114,14 @@ end
 ---@param buf integer
 ---@param context GrugFarContext
 local function setupCleanup(buf, context)
-  local function onBufDelete()
+  local function cleanup()
     local autoSave = context.options.history.autoSave
     if autoSave.enabled and autoSave.onBufDelete then
       history.addHistoryEntry(context)
     end
+
+    utils.abortTasks(context)
+    context.state.bufClosed = true
 
     vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
@@ -118,10 +129,17 @@ local function setupCleanup(buf, context)
     vim.api.nvim_del_augroup_by_id(context.augroup)
   end
 
-  vim.api.nvim_create_autocmd({ 'BufDelete' }, {
+  local function onBufUnload()
+    local status, err = pcall(cleanup)
+    if not status then
+      vim.notify('grug-far: error on cleanup! Please report! Error:\n' .. err, vim.log.levels.ERROR)
+    end
+  end
+
+  vim.api.nvim_create_autocmd({ 'BufUnload' }, {
     group = context.augroup,
     buffer = buf,
-    callback = onBufDelete,
+    callback = onBufUnload,
   })
 end
 

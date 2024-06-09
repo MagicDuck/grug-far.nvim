@@ -23,7 +23,7 @@ M.defaultOptions = {
   -- specifies the command to run (with `vim.cmd(...)`) in order to create
   -- the window in which the grug-far buffer will appear
   -- ex (horizontal bottom right split): 'botright split'
-  -- ex (open new tab): 'tabnew'
+  -- ex (open new tab): 'tabnew %'
   windowCreationCommand = 'vsplit',
 
   -- buffer line numbers + match line numbers can get a bit visually overwhelming
@@ -58,6 +58,7 @@ M.defaultOptions = {
     refresh = { n = '<localleader>f' },
     gotoLocation = { n = '<enter>' },
     pickHistoryEntry = { n = '<enter>' },
+    abort = { n = '<localleader>b' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -176,6 +177,7 @@ M.defaultOptions = {
 ---@field close KeymapDef
 ---@field gotoLocation KeymapDef
 ---@field pickHistoryEntry KeymapDef
+---@field abort KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -188,6 +190,7 @@ M.defaultOptions = {
 ---@field close? KeymapDef
 ---@field gotoLocation? KeymapDef
 ---@field pickHistoryEntry? KeymapDef
+---@field abort? KeymapDef
 
 ---@class AutoSaveTable
 ---@field enabled boolean

@@ -90,7 +90,8 @@ T['is prevented from replacing with blacklisted flags'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>' .. keymaps.replace.n)
-  helpers.childWaitForUIVirtualText(child, 'replace cannot work')
+
+  helpers.childWaitForScreenshotText(child, 'replace cannot work')
   helpers.childExpectScreenshot(child)
 end
 

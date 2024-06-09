@@ -6,6 +6,7 @@ local gotoLocation = require('grug-far/actions/gotoLocation')
 local syncLocations = require('grug-far/actions/syncLocations')
 local syncLine = require('grug-far/actions/syncLine')
 local close = require('grug-far/actions/close')
+local abort = require('grug-far/actions/abort')
 local historyOpen = require('grug-far/actions/historyOpen')
 local historyAdd = require('grug-far/actions/historyAdd')
 local utils = require('grug-far/utils')
@@ -44,7 +45,7 @@ local function setupKeymap(buf, context)
     end
   )
   utils.setBufKeymap(buf, 'Grug Far: close', keymaps.close, function()
-    close()
+    close({ context = context })
   end)
   utils.setBufKeymap(buf, 'Grug Far: refresh search', keymaps.refresh, function()
     search({ buf = buf, context = context })
@@ -54,6 +55,9 @@ local function setupKeymap(buf, context)
   end)
   utils.setBufKeymap(buf, 'Grug Far: history add', keymaps.historyAdd, function()
     historyAdd({ context = context })
+  end)
+  utils.setBufKeymap(buf, 'Grug Far: abort current tasks', keymaps.abort, function()
+    abort({ buf = buf, context = context })
   end)
 end
 
@@ -111,7 +115,7 @@ function M.createBuffer(win, context)
   setupGlobalOptOverrides(buf, context)
   setupKeymap(buf, context)
 
-  local debouncedSearch = utils.debounce(search, context.options.debounceMs)
+  local debouncedSearch = utils.debounce(vim.schedule_wrap(search), context.options.debounceMs)
   local function debouncedSearchOnChange()
     -- only re-issue search when inputs have changed
     local state = context.state
@@ -120,7 +124,14 @@ function M.createBuffer(win, context)
     end
 
     state.lastInputs = vim.deepcopy(state.inputs)
-    debouncedSearch({ buf = buf, context = context })
+
+    -- do a "clear" search immediately if empty string to improve responsiveness
+    -- otherwise debounce search
+    if state.inputs.search == '' then
+      search({ buf = buf, context = context })
+    else
+      debouncedSearch({ buf = buf, context = context })
+    end
   end
 
   local function handleBufferChange()
