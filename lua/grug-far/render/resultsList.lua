@@ -274,7 +274,10 @@ end
 ---@param buf integer
 function M.forceRedrawBuffer(buf)
   ---@diagnostic disable-next-line
-  vim.api.nvim__redraw({ buf = buf, flush = true })
+  if vim.api.nvim__redraw then
+    ---@diagnostic disable-next-line
+    vim.api.nvim__redraw({ buf = buf, flush = true })
+  end
 end
 
 M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)
