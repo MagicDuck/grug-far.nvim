@@ -92,7 +92,7 @@ M.defaultOptions = {
     -- whether to show icons
     enabled = true,
 
-    actionEntryBullet = '󰐊 ',
+    actionEntryBullet = ' ',
 
     searchInput = ' ',
     replaceInput = ' ',
