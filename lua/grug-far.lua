@@ -169,8 +169,12 @@ end
 function M.with_visual_selection(options)
   local params = opts.with_defaults(options or {}, globalOptions)
   params.prefills.search = utils.getVisualSelectionText()
+
   local flags = params.prefills.flags or ''
-  params.prefills.flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+  if not flags:find('%-%-fixed%-strings') then
+    flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+  end
+  params.prefills.flags = flags
 
   M.grug_far(params)
 end
