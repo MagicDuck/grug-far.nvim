@@ -205,7 +205,7 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'grug-far' },
   callback = function()
     vim.keymap.set('n', '<localleader>w', function()
-      toggle_flags({'--fixed-strings'})
+      require('grug-far').toggle_flags({'--fixed-strings'})
     end, { buffer = true })
   end,
 })
