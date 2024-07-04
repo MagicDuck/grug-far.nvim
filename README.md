@@ -198,6 +198,19 @@ See here for all the available [options][opts]
 :<C-u>lua require('grug-far').with_visual_selection({ prefills = { flags = vim.fn.expand("%") } })
 ```
 
+#### Create a buffer local keybinding to toggle --fixed-strings flag
+```lua
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('extra-grug-far-keybinds', { clear = true })
+  pattern = { 'grug-far' },
+  callback = function()
+    vim.keymap.set('n', '<localleader>w', function()
+      toggle_flags({'--fixed-strings'})
+    end, { buffer = true })
+  end,
+})
+```
+
 ## 📦 Similar Plugins / Inspiration
 
 - [nvim-spectre][spectre]: the OG find and replace in a buffer plugin, great inspiration!
