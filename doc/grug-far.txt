@@ -66,6 +66,14 @@ require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selec
             {config}(optional, table) Table of values; keys as described
                 above. Accept defaults by omitting the relevant key.
 
+require('grug-far').toggle_flags({flags})                *grug-far.toggle_flags()*
+        Toggles given list of flags in the current grug-far buffer. The 
+	flags get added to/removed from the Flags input line.
+	ex: require('grug-far).toggle_flags({'--fixed-strings'}). 
+
+        Parameters: ~
+            {flags}(table) Table of flag strings to toggle.
+
 ==============================================================================
 4. Highlights                                          *grug-far-highlights*
 
