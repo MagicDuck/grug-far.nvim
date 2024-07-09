@@ -26,6 +26,7 @@ local function render(buf, context)
       { text = 'History Add', keymap = keymaps.historyAdd },
       { text = 'Refresh', keymap = keymaps.refresh },
       { text = 'Goto', keymap = keymaps.gotoLocation },
+      { text = 'Open', keymap = keymaps.openLocation },
       { text = 'Quickfix', keymap = keymaps.qflist },
       { text = 'Abort', keymap = keymaps.abort },
       { text = 'Close', keymap = keymaps.close },
