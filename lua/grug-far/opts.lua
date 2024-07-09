@@ -3,7 +3,7 @@ local M = {}
 ---@type GrugFarOptions
 M.defaultOptions = {
   -- debounce milliseconds for issuing search while user is typing
-  -- prevents excesive searching
+  -- prevents excessive searching
   debounceMs = 500,
 
   -- minimum number of chars which will cause a search to happen
@@ -62,6 +62,7 @@ M.defaultOptions = {
     historyOpen = { n = '<localleader>t' },
     historyAdd = { n = '<localleader>a' },
     refresh = { n = '<localleader>f' },
+    openLocation = { n = '<localleader>o' },
     gotoLocation = { n = '<enter>' },
     pickHistoryEntry = { n = '<enter>' },
     abort = { n = '<localleader>b' },
@@ -90,10 +91,10 @@ M.defaultOptions = {
   reportDuration = true,
 
   -- maximum width of help header
-  headerMaxWidth = 100,
+  headerMaxWidth = 110,
 
   -- icons for UI, default ones depend on nerdfont
-  -- set individul ones to '' to disable, or set enabled = false for complete disable
+  -- set individual ones to '' to disable, or set enabled = false for complete disable
   icons = {
     -- whether to show icons
     enabled = true,
@@ -115,7 +116,7 @@ M.defaultOptions = {
   },
 
   -- placeholders to show in input areas when they are empty
-  -- set individul ones to '' to disable, or set enabled = false for complete disable
+  -- set individual ones to '' to disable, or set enabled = false for complete disable
   placeholders = {
     -- whether to show placeholders
     enabled = true,
@@ -128,7 +129,7 @@ M.defaultOptions = {
 
   -- strings to auto-fill in each input area at start
   -- those are not necessarily useful as global defaults but quite useful as overrides
-  -- when lauching through the lua api. For example, this is how you would lauch grug-far.nvim
+  -- when launching through the lua api. For example, this is how you would launch grug-far.nvim
   -- with the current word under the cursor as the search string
   --
   -- require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
@@ -188,6 +189,7 @@ M.defaultOptions = {
 ---@field syncLine KeymapDef
 ---@field close KeymapDef
 ---@field gotoLocation KeymapDef
+---@field openLocation KeymapDef
 ---@field pickHistoryEntry KeymapDef
 ---@field abort KeymapDef
 
@@ -200,6 +202,7 @@ M.defaultOptions = {
 ---@field refresh? KeymapDef
 ---@field syncLine? KeymapDef
 ---@field close? KeymapDef
+---@field open? KeymapDef
 ---@field gotoLocation? KeymapDef
 ---@field pickHistoryEntry? KeymapDef
 ---@field abort? KeymapDef

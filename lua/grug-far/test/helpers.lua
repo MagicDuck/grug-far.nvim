@@ -76,7 +76,7 @@ function M.childBufUIVirtualTextContains(child, str)
 end
 
 --- waits until condition fn evals to true, checking every interval ms
---- times otu at timeout ms
+--- times out at timeout ms
 ---@param child NeovimChild
 ---@param condition fun(): boolean
 ---@param timeout? integer, defaults to 2000
@@ -124,6 +124,7 @@ function M.getSetupOptions()
       historyOpen = { n = ',t' },
       historyAdd = { n = ',a' },
       refresh = { n = ',f' },
+      openLocation = { n = ',o' },
       gotoLocation = { n = '<enter>' },
       pickHistoryEntry = { n = '<enter>' },
     },
