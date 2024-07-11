@@ -181,6 +181,8 @@ where `opts` will be merged with and override the global plugin options configur
 
 See here for all the available [options][opts] 
 
+For more details on the API, see [docs][docs]
+
 ### 🥪 Cookbook
 
 #### Launch with the current word under the cursor as the search string
@@ -201,11 +203,12 @@ See here for all the available [options][opts]
 #### Create a buffer local keybinding to toggle --fixed-strings flag
 ```lua
 vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('extra-grug-far-keybinds', { clear = true })
+  group = augroup('test'),
   pattern = { 'grug-far' },
   callback = function()
     vim.keymap.set('n', '<localleader>w', function()
-      require('grug-far').toggle_flags({'--fixed-strings'})
+      local state = unpack(require('grug-far').toggle_flags({ '--fixed-strings' }))
+      vim.notify('grug-far: toggled --fixed-strings ' .. (state and 'ON' or 'OFF'))
     end, { buffer = true })
   end,
 })
@@ -219,6 +222,7 @@ vim.api.nvim_create_autocmd('FileType', {
 - [plugin-template.nvim][neovim-plugin-template]: super handy template, this plugin is based on it! 
 
 [opts]: lua/grug-far/opts.lua
+[docs]: doc/grug-far.txt
 [highlights]: lua/grug-far/highlights.lua
 [lazy]: https://github.com/folke/lazy.nvim
 [spectre]: https://github.com/nvim-pack/nvim-spectre
