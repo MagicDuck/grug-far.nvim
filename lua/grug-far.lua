@@ -183,11 +183,12 @@ end
 ---@param flags string[]
 function M.toggle_flags(flags)
   if #flags == 0 then
-    return
+    return {}
   end
 
   local FLAGS_LINE_NO = 6
   local flags_line = vim.fn.getline(FLAGS_LINE_NO)
+  local states = {}
   for _, flag in ipairs(flags) do
     local i, j = flags_line:find(' ' .. flag, 1, true)
     if not i then
@@ -196,11 +197,15 @@ function M.toggle_flags(flags)
 
     if i then
       flags_line = flags_line:sub(1, i - 1) .. flags_line:sub(j + 1, -1)
+      table.insert(states, false)
     else
       flags_line = flags_line .. ' ' .. flag
+      table.insert(states, true)
     end
   end
   vim.fn.setline(FLAGS_LINE_NO, flags_line)
+
+  return states
 end
 
 return M
