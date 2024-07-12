@@ -223,10 +223,10 @@ end
 --- toggles grug-far instance with given name visible / hidden
 ---@param name string
 ---@param initialOptions? GrugFarOptionsOverride
-function M.toggle_named_instance(name, initialOptions)
+function M.toggle_instance(name, initialOptions)
   if not is_configured() then
     print(
-      'Please call require("grug-far").setup(...) before executing require("grug-far").toggle_named_instance(...)!'
+      'Please call require("grug-far").setup(...) before executing require("grug-far").toggle_instance(...)!'
     )
     return
   end
