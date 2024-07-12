@@ -34,6 +34,12 @@ M.defaultOptions = {
   -- zero disables showing it
   maxSearchCharsInTitles = 30,
 
+  -- static title to use for grug-far buffer, as opposed to the dynamically generated title.
+  -- Note that nvim does not allow multiple buffers with the same name, so this option is meant more
+  -- as something to be speficied for a particular instance as opposed to something set in the setup function
+  -- nil or '' disables it
+  staticTitle = nil,
+
   -- whether to start in insert mode,
   -- set to false for normal mode
   startInInsertMode = true,
@@ -277,6 +283,7 @@ M.defaultOptions = {
 ---@field windowCreationCommand string
 ---@field disableBufferLineNumbers boolean
 ---@field maxSearchCharsInTitles integer
+---@field staticTitle? string
 ---@field startInInsertMode boolean
 ---@field startCursorRow integer
 ---@field keymaps Keymaps
@@ -298,6 +305,7 @@ M.defaultOptions = {
 ---@field windowCreationCommand? string
 ---@field disableBufferLineNumbers? boolean
 ---@field maxSearchCharsInTitles? integer
+---@field staticTitle? string
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
 ---@field keymaps? KeymapsOverride

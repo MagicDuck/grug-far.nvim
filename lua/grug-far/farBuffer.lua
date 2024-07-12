@@ -64,15 +64,17 @@ end
 ---@param buf integer
 ---@param context GrugFarContext
 local function updateBufName(buf, context)
+  local staticTitle = context.options.staticTitle
   vim.api.nvim_buf_set_name(
     buf,
-    'Grug FAR - '
-      .. context.count
-      .. utils.strEllideAfter(
-        context.state.inputs.search,
-        context.options.maxSearchCharsInTitles,
-        ': '
-      )
+    (staticTitle and #staticTitle > 0) and staticTitle
+      or 'Grug FAR - '
+        .. context.count
+        .. utils.strEllideAfter(
+          context.state.inputs.search,
+          context.options.maxSearchCharsInTitles,
+          ': '
+        )
   )
 end
 
