@@ -9,6 +9,14 @@ local M = {}
 ---@type GrugFarOptions
 local globalOptions = nil
 
+---@class NamedInstance
+---@field buf integer
+---@field win? integer
+---@field context GrugFarContext
+
+---@type table<string, NamedInstance>
+local namedInstances = {}
+
 --- set up grug-far
 ---@param options? GrugFarOptionsOverride
 function M.setup(options)
@@ -72,6 +80,7 @@ local contextCount = 0
 ---@field extmarkIds {[string]: integer}
 ---@field state GrugFarState
 ---@field prevWin? integer
+---@field instanceName? string
 
 --- generate instance specific context
 ---@param options GrugFarOptions
@@ -122,6 +131,7 @@ local function setupCleanup(buf, context)
 
     utils.abortTasks(context)
     context.state.bufClosed = true
+    namedInstances[context.instanceName] = nil
 
     vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
@@ -206,6 +216,41 @@ function M.toggle_flags(flags)
   vim.fn.setline(FLAGS_LINE_NO, flags_line)
 
   return states
+end
+
+-- TODO (sbadragan): should we have an option to clear it?
+-- TODO (sbadragan): how do we set the title?
+--- toggles grug-far instance with given name visible / hidden
+---@param name string
+---@param initialOptions? GrugFarOptionsOverride
+function M.toggle_named_instance(name, initialOptions)
+  if not is_configured() then
+    print(
+      'Please call require("grug-far").setup(...) before executing require("grug-far").toggle_named_instance(...)!'
+    )
+    return
+  end
+
+  if not namedInstances[name] then
+    local context = createContext(opts.with_defaults(initialOptions or {}, globalOptions))
+    context.instanceName = name
+    local win = createWindow(context)
+    local buf = farBuffer.createBuffer(win, context)
+    setupCleanup(buf, context)
+    namedInstances[name] = { buf = buf, win = win, context = context }
+    return
+  end
+
+  local inst = namedInstances[name]
+  if inst.win then
+    -- toggle it off
+    vim.api.nvim_win_close(inst.win, true)
+    inst.win = nil
+  else
+    -- toggle it on
+    inst.win = createWindow(inst.context)
+    vim.api.nvim_win_set_buf(inst.win, inst.buf)
+  end
 end
 
 return M
