@@ -66,13 +66,27 @@ require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selec
             {config}(optional, table) Table of values; keys as described
                 above. Accept defaults by omitting the relevant key.
 
+require('grug-far').toggle_instance({config})       *grug-far.toggle_instance()*
+        Toggles visibility of grug-far instance with the given config.instanceName.
+	The given config overrides the global plugin config that was passed to 
+	require('grug-far).setup(...). Currently supported configuration options are
+	the same as the global plugin config options linked above.
+
+        Parameters: ~
+            {config}(optional, table) Table of values; keys as described
+                above. Accept defaults by omitting the relevant key.
+
 require('grug-far').toggle_flags({flags})                *grug-far.toggle_flags()*
         Toggles given list of flags in the current grug-far buffer. The 
 	flags get added to/removed from the Flags input line.
 	ex: require('grug-far).toggle_flags({'--fixed-strings'}). 
 
         Parameters: ~
-            {flags}(table) Table of flag strings to toggle.
+            {flags}(table) List of flag strings to toggle.
+
+	Return:
+	    {flags_state}(table) List of boolean flag states
+
 
 ==============================================================================
 4. Highlights                                          *grug-far-highlights*
