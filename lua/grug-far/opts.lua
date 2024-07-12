@@ -164,6 +164,12 @@ M.defaultOptions = {
       onBufDelete = true,
     },
   },
+
+  -- unique instance name. This is used as a handle to refer to a particular instance of grug-far when
+  -- toggling visibility, etc.
+  -- As this needs to be unique per instance, this option is meant to be speficied for a particular instance
+  -- as opposed to something set in the setup function
+  instanceName = nil,
 }
 
 ---@class KeymapTable
@@ -295,6 +301,7 @@ M.defaultOptions = {
 ---@field placeholders PlaceholdersTable
 ---@field prefills PrefillsTable
 ---@field history HistoryTable
+---@field instanceName? string
 
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
@@ -317,6 +324,7 @@ M.defaultOptions = {
 ---@field placeholders? PlaceholdersTableOverride
 ---@field prefills? PrefillsTableOverride
 ---@field history? HistoryTableOverride
+---@field instanceName? string
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride | GrugFarOptions

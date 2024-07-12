@@ -163,10 +163,24 @@ function M.grug_far(options)
     return
   end
 
-  local context = createContext(opts.with_defaults(options or {}, globalOptions))
+  local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
+  if resolvedOpts.instanceName and namedInstances[resolvedOpts.instanceName] then
+    print(
+      'require("grug-far").grug-far({..., instanceName:...}): A grug-far instance with instanceName="'
+        .. resolvedOpts.instanceName
+        .. '" already exists!'
+    )
+    return
+  end
+
+  local context = createContext(resolvedOpts)
   local win = createWindow(context)
   local buf = farBuffer.createBuffer(win, context)
   setupCleanup(buf, context)
+
+  if resolvedOpts.instanceName then
+    namedInstances[resolvedOpts.instanceName] = { buf = buf, win = win, context = context }
+  end
 end
 
 --- launch grug-far with the given overrides, pre-filling
@@ -218,12 +232,10 @@ function M.toggle_flags(flags)
   return states
 end
 
--- TODO (sbadragan): should we have an option to clear it?
--- TODO (sbadragan): how do we set the title?
---- toggles grug-far instance with given name visible / hidden
----@param name string
----@param initialOptions? GrugFarOptionsOverride
-function M.toggle_instance(name, initialOptions)
+--- toggles visibility of grug-far instance with given instance name
+--- requires options.instanceName to be given in order to identify the grug-far instance to toggle
+---@param options GrugFarOptionsOverride
+function M.toggle_instance(options)
   if not is_configured() then
     print(
       'Please call require("grug-far").setup(...) before executing require("grug-far").toggle_instance(...)!'
@@ -231,17 +243,19 @@ function M.toggle_instance(name, initialOptions)
     return
   end
 
-  if not namedInstances[name] then
-    local context = createContext(opts.with_defaults(initialOptions or {}, globalOptions))
-    context.instanceName = name
-    local win = createWindow(context)
-    local buf = farBuffer.createBuffer(win, context)
-    setupCleanup(buf, context)
-    namedInstances[name] = { buf = buf, win = win, context = context }
+  if not options.instanceName then
+    print(
+      'require("grug-far").toggle_instance(options): options.instanceName is required! This just needs to be any string you want to use to identify the grug-far instance.'
+    )
     return
   end
 
-  local inst = namedInstances[name]
+  if not namedInstances[options.instanceName] then
+    M.grug_far(options)
+    return
+  end
+
+  local inst = namedInstances[options.instanceName]
   if inst.win then
     -- toggle it off
     vim.api.nvim_win_close(inst.win, true)
