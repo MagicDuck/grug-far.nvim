@@ -7,7 +7,7 @@ local function open(params)
   local buf = params.buf
   local context = params.context
 
-  local grufar_win = vim.api.nvim_get_current_win()
+  local grugfar_win = vim.api.nvim_get_current_win()
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
 
   local location = resultsList.getResultLocation(cursor_row - 1, buf, context)
@@ -21,6 +21,7 @@ local function open(params)
 
   vim.api.nvim_command([[execute "normal! m` "]])
 
+  ---@diagnostic disable-next-line
   local bufnr = vim.fn.bufnr(location.filename)
 
   if bufnr == -1 then
@@ -31,7 +32,7 @@ local function open(params)
 
   vim.api.nvim_win_set_cursor(0, { location.lnum or 1, location.col and location.col - 1 or 0 })
 
-  vim.api.nvim_set_current_win(grufar_win)
+  vim.api.nvim_set_current_win(grugfar_win)
 end
 
 return open
