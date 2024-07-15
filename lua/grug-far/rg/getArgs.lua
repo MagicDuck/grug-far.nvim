@@ -51,6 +51,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   table.insert(args, '--column')
   table.insert(args, '--field-match-separator=:')
   table.insert(args, '--block-buffered')
+  table.insert(args, '--with-filename')
 
   if #inputs.filesFilter > 0 then
     table.insert(args, '--glob=' .. inputs.filesFilter)
