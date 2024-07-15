@@ -131,7 +131,9 @@ local function setupCleanup(buf, context)
 
     utils.abortTasks(context)
     context.state.bufClosed = true
-    namedInstances[context.instanceName] = nil
+    if context.instanceName then
+      namedInstances[context.instanceName] = nil
+    end
 
     vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
