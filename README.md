@@ -200,7 +200,7 @@ For more details on the API, see [docs][docs]
 :<C-u>lua require('grug-far').with_visual_selection({ prefills = { flags = vim.fn.expand("%") } })
 ```
 
-#### Toggle visibility or a particular instance and set title to a fixed string
+#### Toggle visibility of a particular instance and set title to a fixed string
 ```lua
 :lua require('grug-far').toggle_instance({ instanceName="far", staticTitle="Find and Replace" })
 ```
