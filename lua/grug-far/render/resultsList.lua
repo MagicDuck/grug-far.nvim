@@ -1,7 +1,11 @@
 local opts = require('grug-far/opts')
 local utils = require('grug-far/utils')
 local getArgs = require('grug-far/rg/getArgs')
+local treesitter = require('grug-far/render/treesitter')
+
 local M = {}
+---@type table<string, number[][][]>
+M.regions = {}
 
 --- sets buf lines, even when buf is not modifiable
 ---@param buf integer
@@ -24,6 +28,16 @@ end
 ---@param sign_text? string
 ---@return integer markId
 local function setLocationMark(buf, context, line, markId, sign_text)
+  if context.state.resultsLastFileType then
+    local ft = context.state.resultsLastFileType
+    local text = vim.api.nvim_buf_get_lines(buf, line, line + 1, false)[1]
+    local from = (text or ''):match('^(%d+:%d+:)')
+    if text and from then
+      local node = { line, #from, line, #text }
+      M.regions[ft] = M.regions[ft] or {}
+      table.insert(M.regions[ft], { node })
+    end
+  end
   return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
     right_gravity = true,
     id = markId,
@@ -40,7 +54,6 @@ function M.appendResultsChunk(buf, context, data)
   -- add text
   local lastline = vim.api.nvim_buf_line_count(buf)
   setBufLines(buf, lastline, lastline, false, data.lines)
-
   -- add highlights
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
@@ -71,6 +84,7 @@ function M.appendResultsChunk(buf, context, data)
 
     if hl == 'GrugFarResultsPath' then
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
+      state.resultsLastFileType = vim.filetype.match({ filename = state.resultsLastFilename })
 
       local markId = setLocationMark(buf, context, lastline + highlight.start_line)
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
@@ -263,6 +277,11 @@ function M.clear(buf, context)
   -- remove all lines after heading and add one blank line
   local headerRow = context.state.headerRow
   setBufLines(buf, headerRow, -1, false, { '' })
+  M.regions = {}
+  local regions = vim.deepcopy(M.regions)
+  if not vim.tbl_isempty(regions) then
+    treesitter.attach(buf, regions)
+  end
 
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
@@ -277,6 +296,13 @@ function M.forceRedrawBuffer(buf)
   if vim.api.nvim__redraw then
     ---@diagnostic disable-next-line
     vim.api.nvim__redraw({ buf = buf, flush = true })
+  end
+end
+
+function M.highlight(buf)
+  local regions = vim.deepcopy(M.regions)
+  if not vim.tbl_isempty(regions) then
+    treesitter.attach(buf, regions)
   end
 end
 

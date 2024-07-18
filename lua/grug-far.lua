@@ -67,6 +67,7 @@ local contextCount = 0
 ---@field actionMessage? string
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultsLastFilename? string
+---@field resultsLastFileType? string
 ---@field abort GrugFarStateAbort
 ---@field bufClosed boolean
 
