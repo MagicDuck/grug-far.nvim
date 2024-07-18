@@ -278,11 +278,7 @@ function M.clear(buf, context)
   local headerRow = context.state.headerRow
   setBufLines(buf, headerRow, -1, false, { '' })
   M.regions = {}
-  local regions = vim.deepcopy(M.regions)
-  if not vim.tbl_isempty(regions) then
-    treesitter.attach(buf, regions)
-  end
-
+  treesitter.attach(buf, {})
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLastFilename = nil
