@@ -23,6 +23,7 @@ local highlights = {
   GrugFarResultsLineNo = { default = true, link = 'Number' },
   GrugFarResultsLineColumn = { default = true, link = 'Number' },
   GrugFarResultsChangeIndicator = { default = true, link = nvim10 and 'Changed' or 'diffLine' },
+  GrugFarResultsRgCmdHeader = { default = true, link = '@text.uri' },
 }
 
 function M.setup()

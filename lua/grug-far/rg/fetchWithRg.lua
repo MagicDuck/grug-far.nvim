@@ -16,7 +16,7 @@ end
 
 --- fetch with ripgrep
 ---@param params FetchWithRgParams
----@return nil | fun() abort
+---@return nil | fun(), string[]? abort and args
 local function fetchWithRg(params)
   local args = params.args
   local finished = false
@@ -27,7 +27,7 @@ local function fetchWithRg(params)
 
   if not args then
     on_finish(nil, nil)
-    return nil
+    return nil, args
   end
 
   local stdout = uv.new_pipe()
@@ -125,7 +125,7 @@ local function fetchWithRg(params)
     end)
   )
 
-  return on_abort
+  return on_abort, args
 end
 
 return fetchWithRg

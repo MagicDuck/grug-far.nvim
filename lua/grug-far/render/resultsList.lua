@@ -269,6 +269,38 @@ function M.clear(buf, context)
   context.state.resultsLastFilename = nil
 end
 
+--- appends rg search command to results list
+---@param buf integer
+---@param context GrugFarContext
+---@param rgArgs string[]
+function M.appendRgSearchCommand(buf, context, rgArgs)
+  local lastline = vim.api.nvim_buf_line_count(buf)
+  local header = 'Search Command:'
+  local lines = { header }
+  for i, arg in ipairs(rgArgs) do
+    local line = vim.fn.shellescape(arg)
+    if i == 1 then
+      line = 'rg ' .. line
+    end
+    if i < #rgArgs then
+      line = line .. ' \\'
+    end
+    table.insert(lines, line)
+  end
+  table.insert(lines, '')
+  table.insert(lines, '')
+
+  setBufLines(buf, lastline, lastline, false, lines)
+  vim.api.nvim_buf_add_highlight(
+    buf,
+    context.helpHlNamespace,
+    'GrugFarResultsRgCmdHeader',
+    lastline,
+    0,
+    #header
+  )
+end
+
 --- force redraws buffer. This is order to apear more responsive to the user
 --- and quickly give user feedback as results come in / data is updated
 ---@param buf integer

@@ -68,6 +68,7 @@ local contextCount = 0
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultsLastFilename? string
 ---@field abort GrugFarStateAbort
+---@field showRgCommand boolean
 ---@field bufClosed boolean
 
 ---@class GrugFarAction
@@ -110,6 +111,7 @@ local function createContext(options)
       headerRow = 0,
       resultLocationByExtmarkId = {},
       abort = {},
+      showRgCommand = false,
       bufClosed = false,
     },
   }

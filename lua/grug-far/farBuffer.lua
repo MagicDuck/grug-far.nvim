@@ -11,6 +11,7 @@ local help = require('grug-far/actions/help')
 local abort = require('grug-far/actions/abort')
 local historyOpen = require('grug-far/actions/historyOpen')
 local historyAdd = require('grug-far/actions/historyAdd')
+local toggleShowRgCommand = require('grug-far/actions/toggleShowRgCommand')
 local utils = require('grug-far/utils')
 local resultsList = require('grug-far/render/resultsList')
 
@@ -116,6 +117,14 @@ local function getActions(buf, context)
       description = 'Close grug-far buffer/window. This is the same as `:bd` except that it will also ask you to confirm if there is a replace/sync in progress, as those would be aborted.',
       action = function()
         close({ context = context })
+      end,
+    },
+    {
+      text = 'Toggle Show rg Command',
+      keymap = keymaps.toggleShowRgCommand,
+      description = 'Toggle showing rg command. Can be useful for debugging purposes.',
+      action = function()
+        toggleShowRgCommand({ buf = buf, context = context })
       end,
     },
   }
