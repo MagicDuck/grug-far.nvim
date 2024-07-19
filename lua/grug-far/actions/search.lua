@@ -69,6 +69,7 @@ local function search(params)
 
       state.abort.search = nil
       clearResultsIfNeeded()
+      resultsList.highlight(buf, context)
 
       state.status = status
       if status == 'error' then
