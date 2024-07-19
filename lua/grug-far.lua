@@ -41,7 +41,6 @@ local contextCount = 0
 
 ---@class ResultLocation
 ---@field filename string
----@field ft? string
 ---@field lnum? integer
 ---@field col? integer
 ---@field text? string
@@ -71,6 +70,7 @@ local contextCount = 0
 ---@field abort GrugFarStateAbort
 ---@field showRgCommand boolean
 ---@field bufClosed boolean
+---@field highlightResults FileResults
 ---@field highlightRegions LangRegions
 
 ---@class GrugFarAction
@@ -116,6 +116,7 @@ local function createContext(options)
       showRgCommand = false,
       bufClosed = false,
       highlightRegions = {},
+      highlightResults = {},
     },
   }
 end

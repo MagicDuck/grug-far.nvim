@@ -37,16 +37,21 @@ end
 --- sets location mark
 ---@param context GrugFarContext
 ---@param line integer
----@param text string
----@param ft string
-local function addHighlightRegion(context, line, text, ft)
-  local from = (text or ''):match('^(%d+:%d+:)')
-  local lang = vim.treesitter.language.get_lang(ft) or ft
-  if from then
-    local node = { line, #from, line, #text }
-    context.state.highlightRegions[lang] = context.state.highlightRegions[lang] or {}
-    table.insert(context.state.highlightRegions[lang], { node })
+---@param loc ResultLocation
+local function addHighlightResult(context, line, loc)
+  local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
+  if not from then
+    return
   end
+  local results = context.state.highlightResults[loc.filename]
+  if not results then
+    results = {
+      ft = utils.getFileType(loc.filename),
+      lines = {},
+    }
+    context.state.highlightResults[loc.filename] = results
+  end
+  table.insert(results.lines, { row = line, col = #from, end_col = #loc.text + 1, lnum = loc.lnum })
 end
 
 --- append a bunch of result lines to the buffer
@@ -88,36 +93,27 @@ function M.appendResultsChunk(buf, context, data)
 
     if hl == 'GrugFarResultsPath' then
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
-
       local markId = setLocationMark(buf, context, lastline + highlight.start_line)
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl == 'GrugFarResultsLineNo' then
       -- omit ending ':'
       lastLocation = { filename = state.resultsLastFilename }
-      if context.options.resultsHighlight then
-        lastLocation.ft = utils.getFileType(lastLocation.filename)
-      end
       local markId = setLocationMark(buf, context, lastline + highlight.start_line, nil, sign_text)
       resultLocationByExtmarkId[markId] = lastLocation
 
       lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
+      lastLocation.text = line
+      if context.options.resultsHighlight and lastLocation.text then
+        addHighlightResult(context, lastline + highlight.start_line, lastLocation)
+      end
     elseif hl == 'GrugFarResultsLineColumn' and lastLocation and not lastLocation.col then
       -- omit ending ':', use first match on that line
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
-      lastLocation.text = line
       lastLocation.end_col = highlight.end_col
-      if context.options.resultsHighlight and lastLocation.ft then
-        addHighlightRegion(
-          context,
-          lastline + highlight.start_line,
-          lastLocation.text,
-          lastLocation.ft
-        )
-      end
     end
   end
   if context.options.resultsHighlight then
-    M.highlight(buf, context)
+    M.throttledHighlight(buf, context)
   end
 end
 
@@ -297,6 +293,7 @@ function M.clear(buf, context)
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLastFilename = nil
+  context.state.highlightResults = {}
   context.state.highlightRegions = {}
   if context.options.resultsHighlight then
     treesitter.clear(buf)
@@ -349,12 +346,33 @@ end
 ---@param buf number
 ---@param context GrugFarContext
 function M.highlight(buf, context)
-  local regions = vim.deepcopy(context.state.highlightRegions)
+  local regions = context.state.highlightRegions
+
+  -- Process any pending results
+  for _, results in pairs(context.state.highlightResults) do
+    local lang = vim.treesitter.language.get_lang(results.ft) or results.ft
+    regions[lang] = regions[lang] or {}
+    local last_line ---@type number?
+    for _, line in ipairs(results.lines) do
+      local node = { line.row, line.col, line.row, line.end_col }
+      -- put consecutive lines in the same region
+      if line.lnum - 1 ~= last_line then
+        table.insert(regions[lang], {})
+      end
+      last_line = line.lnum
+      local last = regions[lang][#regions[lang]]
+      table.insert(last, node)
+    end
+  end
+  context.state.highlightResults = {}
+
+  -- Attach the regions to the buffer
   if not vim.tbl_isempty(regions) then
     treesitter.attach(buf, regions)
   end
 end
 
+M.throttledHighlight = utils.throttle(M.highlight, 40)
 M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)
 
 return M
