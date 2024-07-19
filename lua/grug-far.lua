@@ -41,6 +41,7 @@ local contextCount = 0
 
 ---@class ResultLocation
 ---@field filename string
+---@field ft? string
 ---@field lnum? integer
 ---@field col? integer
 ---@field text? string
