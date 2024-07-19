@@ -36,28 +36,28 @@ local function getHelpVirtLines(virt_lines, actions, context)
     return entry.lhs ~= nil
   end, entries)
 
-  local maxEntryLen = 0
-  for _, entry in ipairs(entries) do
-    local entrySize = #entry.text + #entry.lhs + 4
-    if entrySize > maxEntryLen then
-      maxEntryLen = entrySize
-    end
-  end
-
   local sep = opts.getIcon('actionEntryBullet', context) or '| '
-  local headerMaxWidth = context.options.headerMaxWidth
-  local entries_per_line = math.floor(headerMaxWidth / maxEntryLen)
-
+  local separating_spaces = string.rep(' ', 3)
+  local ellipsis = ' ...'
+  local available_win_width = vim.api.nvim_win_get_width(0) - #ellipsis - 2
+  local current_width = 0
   local line = {}
   for i, entry in ipairs(entries) do
+    local entrySize = #entry.text + #entry.lhs + 4
+    current_width = current_width + (i == 1 and entrySize or entrySize + #separating_spaces)
+    if i > 1 and current_width > available_win_width then
+      table.insert(line, { ellipsis })
+      break
+    end
+
+    if i > 1 then
+      table.insert(line, { separating_spaces })
+    end
     table.insert(line, { sep .. entry.text .. ' ', 'GrugFarHelpHeader' })
     table.insert(line, { entry.lhs, 'GrugFarHelpHeaderKey' })
-    table.insert(line, { string.rep(' ', maxEntryLen - #sep - #entry.text - #entry.lhs + 3) })
-    if i % entries_per_line == 0 or i == #entries then
-      table.insert(virt_lines, line)
-      line = {}
-    end
   end
+
+  table.insert(virt_lines, line)
   return virt_lines
 end
 
