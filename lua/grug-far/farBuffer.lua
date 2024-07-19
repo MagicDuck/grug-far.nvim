@@ -19,54 +19,106 @@ local M = {}
 --- set up all key maps
 ---@param buf integer
 ---@param context GrugFarContext
-local function setupKeymap(buf, context)
+local function getActions(buf, context)
   local keymaps = context.options.keymaps
-  utils.setBufKeymap(buf, 'Grug Far: apply replacements', keymaps.replace, function()
-    replace({ buf = buf, context = context })
-  end)
-  utils.setBufKeymap(
-    buf,
-    'Grug Far: sync result lines to locations',
-    keymaps.syncLocations,
-    function()
-      syncLocations({ buf = buf, context = context })
-    end
-  )
-  utils.setBufKeymap(buf, 'Grug Far: send results to quickfix list', keymaps.qflist, function()
-    qflist({ buf = buf, context = context })
-  end)
-  utils.setBufKeymap(buf, 'Grug Far: go to location', keymaps.gotoLocation, function()
-    gotoLocation({ buf = buf, context = context })
-  end)
-  utils.setBufKeymap(buf, 'Grug Far: open location', keymaps.openLocation, function()
-    openLocation({ buf = buf, context = context })
-  end)
-  utils.setBufKeymap(
-    buf,
-    'Grug Far: sync current result line to location',
-    keymaps.syncLine,
-    function()
-      syncLine({ buf = buf, context = context })
-    end
-  )
-  utils.setBufKeymap(buf, 'Grug Far: close', keymaps.close, function()
-    close({ context = context })
-  end)
-  utils.setBufKeymap(buf, 'Grug Far: refresh search', keymaps.refresh, function()
-    search({ buf = buf, context = context })
-  end)
-  utils.setBufKeymap(buf, 'Grug Far: history open', keymaps.historyOpen, function()
-    historyOpen({ buf = buf, context = context })
-  end)
-  utils.setBufKeymap(buf, 'Grug Far: history add', keymaps.historyAdd, function()
-    historyAdd({ context = context })
-  end)
-  utils.setBufKeymap(buf, 'Grug Far: abort current tasks', keymaps.abort, function()
-    abort({ buf = buf, context = context })
-  end)
-  utils.setBufKeymap(buf, 'Grug Far: actions / help', keymaps.help, function()
-    help({ buf = buf, context = context })
-  end)
+  return {
+    {
+      text = 'Actions / Help',
+      keymap = keymaps.help,
+      description = 'Open up help window.',
+      action = function()
+        help({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Replace',
+      keymap = keymaps.replace,
+      description = "Perform replace. Note that compared to 'Sync All', replace can also handle multiline replacements.",
+      action = function()
+        replace({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Sync All',
+      keymap = keymaps.syncLocations,
+      description = 'Sync all result lines text (potentially manually modified) back to their originating files. You can refine the effect by manually deleting lines to exclude them.',
+      action = function()
+        syncLocations({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Sync Line',
+      keymap = keymaps.syncLine,
+      description = 'Sync current result line text (potentially manually modified) back to its originating file.',
+      action = function()
+        syncLine({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'History Open',
+      keymap = keymaps.historyOpen,
+      description = 'Open history window. The history window allows you to select and edit historical searches/replacements.',
+      action = function()
+        historyOpen({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'History Add',
+      keymap = keymaps.historyAdd,
+      description = 'Add current search/replace as a history entry.',
+      action = function()
+        historyAdd({ context = context })
+      end,
+    },
+    {
+      text = 'Refresh',
+      keymap = keymaps.refresh,
+      description = 'Re-trigger search. This can be useful in situations where files have been changed externally for example.',
+      action = function()
+        search({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Goto',
+      keymap = keymaps.gotoLocation,
+      description = "When cursor is placed on a result file path, go to that file. When it's placed over a result line, go to the file/line/column of the match.",
+      action = function()
+        gotoLocation({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Open',
+      keymap = keymaps.openLocation,
+      description = "Same as 'Goto', but cursor stays in grug-far buffer. This can allow a quicker thumb-through result locations. Alternatively, you can use the '--context <num>' flag to see match contexts.",
+      action = function()
+        openLocation({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Quickfix',
+      keymap = keymaps.qflist,
+      description = 'Send result lines to the quickfix list. Deleting result lines will cause them not to be included. ',
+      action = function()
+        qflist({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Abort',
+      keymap = keymaps.abort,
+      description = "Abort current operation. Can be useful if you've ended up doing too large of a search or if you've changed your mind about a replacement midway.",
+      action = function()
+        abort({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Close',
+      keymap = keymaps.close,
+      description = 'Close grug-far buffer/window. This is the same as `:bd` except that it will also ask you to confirm if there is a replace/sync in progress, as those would be aborted.',
+      action = function()
+        close({ context = context })
+      end,
+    },
+  }
 end
 
 ---@param buf integer
@@ -124,7 +176,10 @@ function M.createBuffer(win, context)
   vim.api.nvim_win_set_buf(win, buf)
 
   setupGlobalOptOverrides(buf, context)
-  setupKeymap(buf, context)
+  context.actions = getActions(buf, context)
+  for _, action in ipairs(context.actions) do
+    utils.setBufKeymap(buf, 'Grug Far: ' .. action.text, action.keymap, action.action)
+  end
 
   local debouncedSearch = utils.debounce(vim.schedule_wrap(search), context.options.debounceMs)
   local function debouncedSearchOnChange()

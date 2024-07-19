@@ -70,6 +70,12 @@ local contextCount = 0
 ---@field abort GrugFarStateAbort
 ---@field bufClosed boolean
 
+---@class GrugFarAction
+---@field text string
+---@field keymap KeymapDef
+---@field description string
+---@field action fun()
+
 ---@class GrugFarContext
 ---@field count integer
 ---@field options GrugFarOptions
@@ -82,6 +88,7 @@ local contextCount = 0
 ---@field state GrugFarState
 ---@field prevWin? integer
 ---@field instanceName? string
+---@field actions GrugFarAction[]
 
 --- generate instance specific context
 ---@param options GrugFarOptions
@@ -97,6 +104,7 @@ local function createContext(options)
     helpHlNamespace = vim.api.nvim_create_namespace(''),
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
     extmarkIds = {},
+    actions = {},
     state = {
       inputs = {},
       headerRow = 0,

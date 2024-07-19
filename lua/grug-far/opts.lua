@@ -114,6 +114,7 @@ M.defaultOptions = {
     resultsChangeIndicator = '┃',
 
     historyTitle = '  ',
+    helpTitle = ' 󰘥  ',
   },
 
   -- placeholders to show in input areas when they are empty

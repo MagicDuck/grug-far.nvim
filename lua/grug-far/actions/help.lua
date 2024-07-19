@@ -1,41 +1,90 @@
 local utils = require('grug-far/utils')
 local opts = require('grug-far/opts')
 
---- appends header text to help buffer
+---@alias HlText string[]
+
+--- adds given highlighted lines to help buffer
 ---@param helpBuf integer
----@param context GrugFarContext
----@param text string
----@param line integer
-local function appendHeader(helpBuf, context, text, line)
-  vim.api.nvim_buf_set_lines(helpBuf, line, line + 1, true, { text })
-  vim.api.nvim_buf_add_highlight(helpBuf, context.helpHlNamespace, 'GrugFarInputLabel', line, 1, -1)
+---@paratem context GrugFarContext
+---@param lines HlText[][]
+---@param indent integer
+local function add_highlighted_lines(helpBuf, context, lines, indent)
+  for i, line in ipairs(lines) do
+    local lineText = string.rep(' ', indent)
+    for _, hlText in ipairs(line) do
+      lineText = lineText .. hlText[1]
+    end
+    vim.api.nvim_buf_set_lines(helpBuf, i - 1, i, false, { lineText })
+
+    local pos = indent
+    for _, hlText in ipairs(line) do
+      local hlGroup = hlText[2]
+      local textLen = #hlText[1]
+      if hlGroup and textLen > 0 then
+        vim.api.nvim_buf_add_highlight(
+          helpBuf,
+          context.helpHlNamespace,
+          hlGroup,
+          i - 1,
+          pos,
+          pos + textLen
+        )
+      end
+      pos = pos + textLen
+    end
+  end
 end
 
 --- renders contents of history buffer
 ---@param helpBuf integer
 ---@param context GrugFarContext
 local function renderHelpBuffer(helpBuf, context)
-  appendHeader(helpBuf, context, 'Keyboard Shortcuts:', 0)
+  local lines = {
+    { { 'Actions:', 'GrugFarHelpWinHeader' } },
+  }
+  local maxActionItemLen = 0
+  for _, action in ipairs(context.actions) do
+    local shortcut = utils.getActionMapping(action.keymap) or '(unbound)'
+    local itemLen = #action.text + #shortcut
+    if maxActionItemLen < itemLen then
+      maxActionItemLen = itemLen
+    end
+  end
+  for _, action in ipairs(context.actions) do
+    local shortcut = utils.getActionMapping(action.keymap) or '(unbound)'
+    table.insert(lines, {
+      { ' - ', 'GrugFarHelpWinActionPrefix' },
+      {
+        action.text,
+        'GrugFarHelpWinActionText',
+      },
+      { ' ' },
+      { shortcut, 'GrugFarHelpWinActionKey' },
+      { string.rep(' ', maxActionItemLen - #action.text - #shortcut + 3) },
+      { action.description, 'GrugFarHelpWinActionDescription' },
+    })
+  end
+  add_highlighted_lines(helpBuf, context, lines, 2)
 end
 
 --- creates help window
----@param buf integer
 ---@param context GrugFarContext
-local function createHelpWindow(buf, context)
+local function createHelpWindow(context)
   local helpBuf = vim.api.nvim_create_buf(false, true)
   local width = vim.api.nvim_win_get_width(0) - 2
   local height = math.floor(vim.api.nvim_win_get_height(0) / 2)
-  local historyWin = vim.api.nvim_open_win(helpBuf, true, {
+  local helpWin = vim.api.nvim_open_win(helpBuf, true, {
     relative = 'win',
     row = 0,
     col = 2,
     width = width,
     height = height,
     border = 'rounded',
-    footer = (opts.getIcon('historyTitle', context) or ' ') .. 'Help ',
+    footer = (opts.getIcon('helpTitle', context) or ' ') .. 'Help (press <q> or <esc> to close)',
     footer_pos = 'center',
     style = 'minimal',
   })
+  vim.api.nvim_set_option_value('wrap', true, { win = helpWin })
 
   -- delete buffer on window close
   vim.api.nvim_create_autocmd({ 'WinClosed' }, {
@@ -46,19 +95,35 @@ local function createHelpWindow(buf, context)
     end,
   })
 
+  -- close on <ESC> and q
+  vim.api.nvim_buf_set_keymap(
+    helpBuf,
+    'n',
+    '<ESC>',
+    ':q<CR>',
+    { noremap = true, nowait = true, silent = true }
+  )
+  vim.api.nvim_buf_set_keymap(
+    helpBuf,
+    'n',
+    'q',
+    ':q<CR>',
+    { noremap = true, nowait = true, silent = true }
+  )
+
   vim.api.nvim_set_option_value('filetype', 'grug-far-help', { buf = helpBuf })
   renderHelpBuffer(helpBuf, context)
+  vim.api.nvim_set_option_value('modifiable', false, { buf = helpBuf })
 
-  return historyWin
+  return helpWin
 end
 
 --- shows help
 ---@param params { buf: integer, context: GrugFarContext }
 local function help(params)
   local context = params.context
-  local buf = params.buf
 
-  createHelpWindow(buf, context)
+  createHelpWindow(context)
 end
 
 return help

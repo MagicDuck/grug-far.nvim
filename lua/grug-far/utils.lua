@@ -296,6 +296,27 @@ function M.abortTasks(context)
   return abortedAny
 end
 
+---@param keymap KeymapDef
+---@return string | nil
+function M.getActionMapping(keymap)
+  local lhs = keymap.n
+  if not lhs or #lhs == 0 then
+    return nil
+  end
+  if vim.g.maplocalleader then
+    lhs = lhs:gsub('<localleader>', vim.g.maplocalleader)
+  end
+  if vim.g.mapleader then
+    lhs = lhs:gsub('<leader>', vim.g.mapleader == ' ' and '<SPC>' or vim.g.mapleader)
+  end
+
+  if not (lhs:sub(1, 1) == '<' and lhs:sub(#lhs, #lhs) == '>') then
+    lhs = '<' .. lhs .. '>'
+  end
+
+  return lhs
+end
+
 M.eol = is_win and '\r\n' or '\n'
 
 return M
