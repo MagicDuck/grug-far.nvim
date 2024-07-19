@@ -36,6 +36,32 @@ T['can search for some string'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search manullay on insert leave'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    searchOnInsertLeave = true,
+  })
+
+  child.type_keys(50, '<esc>cc', 'walks')
+  vim.loop.sleep(100)
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys(50, '<esc>')
+  helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 T['reports error from rg'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
