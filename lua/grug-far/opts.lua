@@ -113,7 +113,7 @@ M.defaultOptions = {
     resultsActionMessage = '  ',
     resultsChangeIndicator = '┃',
 
-    historyTitle = '  ',
+    historyTitle = '   ',
     helpTitle = ' 󰘥  ',
   },
 
