@@ -81,7 +81,6 @@ local function search(params)
       end
 
       renderResultsHeader(buf, context)
-      resultsList.highlight(buf)
     end,
   })
 end

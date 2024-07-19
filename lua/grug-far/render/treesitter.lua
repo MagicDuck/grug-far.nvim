@@ -1,4 +1,5 @@
----@alias trouble.LangRegions table<string, number[][][]>
+---@alias Region (Range4|Range6|TSNode)[]
+---@alias LangRegions table<string, Region[]>
 
 local M = {}
 
@@ -33,17 +34,19 @@ function M.setup()
     on_win = wrap('_on_win'),
     on_line = wrap('_on_line'),
   })
-
-  vim.api.nvim_create_autocmd('BufWipeout', {
-    group = vim.api.nvim_create_augroup('grug.treesitter.hl', { clear = true }),
-    callback = function(ev)
-      M.cache[ev.buf] = nil
-    end,
-  })
 end
 
 ---@param buf number
----@param regions trouble.LangRegions
+function M.clear(buf)
+  for _, hl in pairs(M.cache[buf] or {}) do
+    hl.highlighter:destroy()
+    hl.parser:destroy()
+  end
+  M.cache[buf] = nil
+end
+
+---@param buf number
+---@param regions LangRegions
 function M.attach(buf, regions)
   M.setup()
   M.cache[buf] = M.cache[buf] or {}
@@ -57,9 +60,9 @@ function M.attach(buf, regions)
 end
 
 ---@param buf number
----@param lang? string
+---@param lang string
+---@param regions Region[]
 function M._attach_lang(buf, lang, regions)
-  lang = lang or 'markdown'
   lang = lang == 'markdown' and 'markdown_inline' or lang
 
   M.cache[buf] = M.cache[buf] or {}
@@ -76,7 +79,7 @@ function M._attach_lang(buf, lang, regions)
   end
   M.cache[buf][lang].enabled = true
   local parser = M.cache[buf][lang].parser
-
+  ---@diagnostic disable-next-line: invisible
   parser:set_included_regions(regions)
 end
 
