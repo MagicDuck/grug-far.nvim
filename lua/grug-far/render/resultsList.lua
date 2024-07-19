@@ -76,7 +76,7 @@ function M.appendResultsChunk(buf, context, data)
   -- those are used for actions like quickfix list and go to location
   local state = context.state
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
-  ---@type { filename?: string, lnum?: integer, col?: integer, text?: string, end_col?: integer, ft?: string }?
+  ---@type ResultLocation?
   local lastLocation = nil
   local sign_text = M.isDoingReplace(context) and opts.getIcon('resultsChangeIndicator', context)
     or nil
