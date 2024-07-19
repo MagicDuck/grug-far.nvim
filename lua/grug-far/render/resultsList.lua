@@ -4,8 +4,6 @@ local getArgs = require('grug-far/rg/getArgs')
 local treesitter = require('grug-far/render/treesitter')
 
 local M = {}
----@type table<string, number[][][]>
-M.regions = {}
 
 --- sets buf lines, even when buf is not modifiable
 ---@param buf integer
@@ -28,22 +26,27 @@ end
 ---@param sign_text? string
 ---@return integer markId
 local function setLocationMark(buf, context, line, markId, sign_text)
-  if context.state.resultsLastFileType then
-    local ft = context.state.resultsLastFileType
-    local text = vim.api.nvim_buf_get_lines(buf, line, line + 1, false)[1]
-    local from = (text or ''):match('^(%d+:%d+:)')
-    if text and from then
-      local node = { line, #from, line, #text }
-      M.regions[ft] = M.regions[ft] or {}
-      table.insert(M.regions[ft], { node })
-    end
-  end
   return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
     right_gravity = true,
     id = markId,
     sign_text = sign_text,
     sign_hl_group = sign_text and 'GrugFarResultsChangeIndicator' or nil,
   })
+end
+
+--- sets location mark
+---@param context GrugFarContext
+---@param line integer
+---@param text string
+---@param ft string
+local function addHighlightRegion(context, line, text, ft)
+  local from = (text or ''):match('^(%d+:%d+:)')
+  local lang = vim.treesitter.language.get_lang(ft) or ft
+  if from then
+    local node = { line, #from, line, #text }
+    context.state.highlightRegions[lang] = context.state.highlightRegions[lang] or {}
+    table.insert(context.state.highlightRegions[lang], { node })
+  end
 end
 
 --- append a bunch of result lines to the buffer
@@ -73,6 +76,7 @@ function M.appendResultsChunk(buf, context, data)
   -- those are used for actions like quickfix list and go to location
   local state = context.state
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
+  ---@type { filename?: string, lnum?: integer, col?: integer, text?: string, end_col?: integer, ft?: string }?
   local lastLocation = nil
   local sign_text = M.isDoingReplace(context) and opts.getIcon('resultsChangeIndicator', context)
     or nil
@@ -84,13 +88,15 @@ function M.appendResultsChunk(buf, context, data)
 
     if hl == 'GrugFarResultsPath' then
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
-      state.resultsLastFileType = vim.filetype.match({ filename = state.resultsLastFilename })
 
       local markId = setLocationMark(buf, context, lastline + highlight.start_line)
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl == 'GrugFarResultsLineNo' then
       -- omit ending ':'
       lastLocation = { filename = state.resultsLastFilename }
+      if context.options.resultsHighlight then
+        lastLocation.ft = utils.getFileType(lastLocation.filename)
+      end
       local markId = setLocationMark(buf, context, lastline + highlight.start_line, nil, sign_text)
       resultLocationByExtmarkId[markId] = lastLocation
 
@@ -100,7 +106,18 @@ function M.appendResultsChunk(buf, context, data)
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.text = line
       lastLocation.end_col = highlight.end_col
+      if context.options.resultsHighlight and lastLocation.ft then
+        addHighlightRegion(
+          context,
+          lastline + highlight.start_line,
+          lastLocation.text,
+          lastLocation.ft
+        )
+      end
     end
+  end
+  if context.options.resultsHighlight then
+    M.highlight(buf, context)
   end
 end
 
@@ -277,11 +294,13 @@ function M.clear(buf, context)
   -- remove all lines after heading and add one blank line
   local headerRow = context.state.headerRow
   setBufLines(buf, headerRow, -1, false, { '' })
-  M.regions = {}
-  treesitter.attach(buf, {})
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLastFilename = nil
+  context.state.highlightRegions = {}
+  if context.options.resultsHighlight then
+    treesitter.clear(buf)
+  end
 end
 
 --- force redraws buffer. This is order to apear more responsive to the user
@@ -295,8 +314,10 @@ function M.forceRedrawBuffer(buf)
   end
 end
 
-function M.highlight(buf)
-  local regions = vim.deepcopy(M.regions)
+---@param buf number
+---@param context GrugFarContext
+function M.highlight(buf, context)
+  local regions = vim.deepcopy(context.state.highlightRegions)
   if not vim.tbl_isempty(regions) then
     treesitter.attach(buf, regions)
   end

@@ -67,9 +67,9 @@ local contextCount = 0
 ---@field actionMessage? string
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultsLastFilename? string
----@field resultsLastFileType? string
 ---@field abort GrugFarStateAbort
 ---@field bufClosed boolean
+---@field highlightRegions LangRegions
 
 ---@class GrugFarContext
 ---@field count integer
@@ -102,6 +102,7 @@ local function createContext(options)
       resultLocationByExtmarkId = {},
       abort = {},
       bufClosed = false,
+      highlightRegions = {},
     },
   }
 end
@@ -140,6 +141,7 @@ local function setupCleanup(buf, context)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.historyHlNamespace, 0, -1)
     vim.api.nvim_del_augroup_by_id(context.augroup)
+    require('grug-far/render/treesitter').clear(buf)
   end
 
   local function onBufUnload()

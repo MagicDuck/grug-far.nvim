@@ -71,6 +71,9 @@ M.defaultOptions = {
   -- separator between inputs and results, default depends on nerdfont
   resultsSeparatorLineChar = '',
 
+  -- highlight the results with TreeSitter, if available
+  resultsHighlight = true,
+
   -- spinner states, default depends on nerdfont, set to false to disable
   spinnerStates = {
     '󱑋 ',
@@ -297,6 +300,7 @@ M.defaultOptions = {
 ---@field startCursorRow integer
 ---@field keymaps Keymaps
 ---@field resultsSeparatorLineChar string
+---@field resultsHighlight boolean
 ---@field spinnerStates string[] | false
 ---@field reportDuration boolean
 ---@field headerMaxWidth integer
