@@ -78,7 +78,6 @@ function M._attach_lang(buf, lang, regions)
   local parser = M.cache[buf][lang].parser
 
   parser:set_included_regions(regions)
-  parser:parse(true)
 end
 
 return M
