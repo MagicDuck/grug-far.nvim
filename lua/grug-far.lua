@@ -73,8 +73,8 @@ local contextCount = 0
 ---@class GrugFarAction
 ---@field text string
 ---@field keymap KeymapDef
----@field description string
----@field action fun()
+---@field description? string
+---@field action? fun()
 
 ---@class GrugFarContext
 ---@field count integer
