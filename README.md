@@ -16,19 +16,20 @@ Grug find! Grug replace! Grug happy!
 - Manual/auto-save search history and reload
 
 #### Searching:
-<img width="1260" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/66afe574-f9a7-4aa8-8fbd-2ad763b4b323">
+<img width="1261" alt="image" src="https://github.com/user-attachments/assets/4797b3ae-9243-4ea3-8733-17806b2f6df6">
 
 #### Replacing:
-<img width="1258" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/a768c853-c5d7-497c-8138-08285a5c5714">
+<img width="1260" alt="image" src="https://github.com/user-attachments/assets/6afa304a-1441-4f55-81ca-e5f650fbf0fd">
 
 #### Rg teaching you it's ways
-<img width="1261" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/97651c2c-ea18-4b2d-b735-b52996903803">
+<img width="1240" alt="image" src="https://github.com/user-attachments/assets/c658e4a5-462e-4297-a70b-0a7bced70d27">
 
 #### Help:
-<img width="1247" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/f1f25cd0-bbc6-414c-b0e4-a2be4a1b10e3">
+<img width="1255" alt="image" src="https://github.com/user-attachments/assets/cd5f81e7-add2-4d27-9114-f403fccdd3d6">
 
 #### History:
-<img width="1253" alt="image" src="https://github.com/MagicDuck/grug-far.nvim/assets/95201/c24f0678-640e-4dae-bc00-002fca1c4607">
+<img width="1256" alt="image" src="https://github.com/user-attachments/assets/5c323aef-a66a-4181-a3a5-3cb0fd22f5b9">
+
 
 ## 🤔 Philosophy
 
