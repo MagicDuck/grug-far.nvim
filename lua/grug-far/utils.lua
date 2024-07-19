@@ -37,37 +37,32 @@ function M.clearTimeout(timer)
 end
 
 --- debounce (trailing) given function
----@param callback fun(parms: any)
+---@generic T: fun()
+---@param callback T
 ---@param ms integer milliseconds
----@return fun(params: any) deobuncedCallback
+---@return T debouncedCallback
 function M.debounce(callback, ms)
-  local timer
-  return function(params)
-    M.clearTimeout(timer)
-    timer = M.setTimeout(function()
-      callback(params)
-    end, ms)
+  local timer = uv.new_timer()
+  return function(...)
+    local params = vim.F.pack_len(...)
+    timer:start(ms, 0, function()
+      callback(vim.F.unpack_len(params))
+    end)
   end
 end
 
 --- throttle (leading) given function
----@param callback fun(...)
+---@generic T: fun()
+---@param callback T
 ---@param ms integer
----@return fun(...) throttledCallback
+---@return T throttledCallback
 function M.throttle(callback, ms)
-  local throttlePause = false
-
+  local timer = uv.new_timer()
   return function(...)
-    if throttlePause then
-      return
+    if not timer:is_active() then
+      callback(...)
+      timer:start(ms, 0, function() end)
     end
-    throttlePause = true
-
-    callback(...)
-
-    M.setTimeout(function()
-      throttlePause = false
-    end, ms)
   end
 end
 
