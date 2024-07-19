@@ -91,9 +91,6 @@ M.defaultOptions = {
   -- whether to report duration of replace/sync operations
   reportDuration = true,
 
-  -- maximum width of help header
-  headerMaxWidth = 110,
-
   -- icons for UI, default ones depend on nerdfont
   -- set individual ones to '' to disable, or set enabled = false for complete disable
   icons = {
@@ -303,7 +300,6 @@ M.defaultOptions = {
 ---@field resultsSeparatorLineChar string
 ---@field spinnerStates string[] | false
 ---@field reportDuration boolean
----@field headerMaxWidth integer
 ---@field icons IconsTable
 ---@field placeholders PlaceholdersTable
 ---@field prefills PrefillsTable
@@ -326,7 +322,6 @@ M.defaultOptions = {
 ---@field resultsSeparatorLineChar? string
 ---@field spinnerStates? string[] | false
 ---@field reportDuration? boolean
----@field headerMaxWidth? integer
 ---@field icons? IconsTableOverride
 ---@field placeholders? PlaceholdersTableOverride
 ---@field prefills? PrefillsTableOverride
