@@ -162,8 +162,7 @@ can be quite beefy in size. The advantage of using the `Close` action as opposed
 will ask you to confirm if there is a replace/sync in progress, as those would be aborted.
 
 ### Filetype
-Note that *grug-far.nvim* buffers will have `filetype=grug-far` and history buffers will have `filetype=grug-far-history`
-if you need filter/exclude them in any situations.
+Note that *grug-far.nvim* buffers will have `filetype=grug-far`, history buffers will have `filetype=grug-far-history` and help will have `filetype=grug-far-help` if you need filter/exclude them in any situations.
 
 ### ⚒️  Lua API
 
