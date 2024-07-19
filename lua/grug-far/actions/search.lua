@@ -34,14 +34,18 @@ local function search(params)
   -- note: we clear first time we fetch more info instead of intially
   -- in order to reduce flicker
   local isCleared = false
+  local effectiveArgs
   local function clearResultsIfNeeded()
     if not isCleared then
       isCleared = true
       resultsList.clear(buf, context)
+      if state.showRgCommand and effectiveArgs then
+        resultsList.appendRgSearchCommand(buf, context, effectiveArgs)
+      end
     end
   end
 
-  state.abort.search = fetchResults({
+  state.abort.search, effectiveArgs = fetchResults({
     inputs = state.inputs,
     options = context.options,
     on_fetch_chunk = function(data)
