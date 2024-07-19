@@ -10,6 +10,9 @@ M.defaultOptions = {
   -- prevents performance issues in larger dirs
   minSearchChars = 2,
 
+  -- disable automatic debounced search and trigger search when leaving insert mode instead
+  searchOnInsertLeave = false,
+
   -- max number of parallel replacements tasks
   maxWorkers = 4,
 
@@ -290,6 +293,7 @@ M.defaultOptions = {
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
+---@field searchOnInsertLeave boolean
 ---@field maxWorkers integer
 ---@field rgPath string
 ---@field extraRgArgs string
@@ -312,6 +316,7 @@ M.defaultOptions = {
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
 ---@field minSearchChars? integer
+---@field searchOnInsertLeave? boolean
 ---@field maxWorkers? integer
 ---@field rgPath? string
 ---@field extraRgArgs? string

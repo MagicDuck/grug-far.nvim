@@ -191,7 +191,7 @@ function M.createBuffer(win, context)
   end
 
   local debouncedSearch = utils.debounce(vim.schedule_wrap(search), context.options.debounceMs)
-  local function debouncedSearchOnChange()
+  local function searchOnChange()
     -- only re-issue search when inputs have changed
     local state = context.state
     if vim.deep_equal(state.inputs, state.lastInputs) then
@@ -200,9 +200,10 @@ function M.createBuffer(win, context)
 
     state.lastInputs = vim.deepcopy(state.inputs)
 
-    -- do a "clear" search immediately if empty string to improve responsiveness
-    -- otherwise debounce search
-    if state.inputs.search == '' then
+    -- do a search immediately if either:
+    -- 1. manually searching
+    -- 2. auto debounce searching and query is empty string, to improve responsiveness
+    if context.options.searchOnInsertLeave or state.inputs.search == '' then
       search({ buf = buf, context = context })
     else
       debouncedSearch({ buf = buf, context = context })
@@ -212,7 +213,9 @@ function M.createBuffer(win, context)
   local function handleBufferChange()
     render(buf, context)
     updateBufName(buf, context)
-    debouncedSearchOnChange()
+    if not context.options.searchOnInsertLeave then
+      searchOnChange()
+    end
   end
 
   -- set up re-render on change
@@ -233,6 +236,15 @@ function M.createBuffer(win, context)
       end
     end,
   })
+  if context.options.searchOnInsertLeave then
+    vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
+      group = context.augroup,
+      buffer = buf,
+      callback = function()
+        searchOnChange()
+      end,
+    })
+  end
   vim.api.nvim_buf_attach(buf, false, {
     on_bytes = vim.schedule_wrap(function(_, _, _, start_row, _, _, _, _, _, new_end_row_offset)
       resultsList.markUnsyncedLines(buf, context, start_row, start_row + new_end_row_offset)
@@ -259,7 +271,7 @@ function M.createBuffer(win, context)
     end
 
     -- launch a search in case there are prefills
-    debouncedSearchOnChange()
+    searchOnChange()
   end)
 
   return buf
