@@ -19,6 +19,7 @@ local function render(buf, context)
     buf = buf,
     extmarkName = 'farHelp',
     actions = {
+      { text = 'Actions / Help', keymap = keymaps.help },
       { text = 'Replace', keymap = keymaps.replace },
       { text = 'Sync All', keymap = keymaps.syncLocations },
       { text = 'Sync Line', keymap = keymaps.syncLine },

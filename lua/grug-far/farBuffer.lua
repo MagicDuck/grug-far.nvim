@@ -7,6 +7,7 @@ local openLocation = require('grug-far/actions/openLocation')
 local syncLocations = require('grug-far/actions/syncLocations')
 local syncLine = require('grug-far/actions/syncLine')
 local close = require('grug-far/actions/close')
+local help = require('grug-far/actions/help')
 local abort = require('grug-far/actions/abort')
 local historyOpen = require('grug-far/actions/historyOpen')
 local historyAdd = require('grug-far/actions/historyAdd')
@@ -62,6 +63,9 @@ local function setupKeymap(buf, context)
   end)
   utils.setBufKeymap(buf, 'Grug Far: abort current tasks', keymaps.abort, function()
     abort({ buf = buf, context = context })
+  end)
+  utils.setBufKeymap(buf, 'Grug Far: actions / help', keymaps.help, function()
+    help({ buf = buf, context = context })
   end)
 end
 
@@ -152,6 +156,18 @@ function M.createBuffer(win, context)
     group = context.augroup,
     buffer = buf,
     callback = handleBufferChange,
+  })
+  vim.api.nvim_create_autocmd({ 'WinResized' }, {
+    group = context.augroup,
+    callback = function()
+      local isWindowAffected = vim.iter(vim.v.event.windows or {}):any(function(winId)
+        return winId == win
+      end)
+
+      if isWindowAffected then
+        handleBufferChange()
+      end
+    end,
   })
   vim.api.nvim_buf_attach(buf, false, {
     on_bytes = vim.schedule_wrap(function(_, _, _, start_row, _, _, _, _, _, new_end_row_offset)

@@ -66,6 +66,7 @@ M.defaultOptions = {
     gotoLocation = { n = '<enter>' },
     pickHistoryEntry = { n = '<enter>' },
     abort = { n = '<localleader>b' },
+    help = { n = 'g?' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -192,6 +193,7 @@ M.defaultOptions = {
 ---@field openLocation KeymapDef
 ---@field pickHistoryEntry KeymapDef
 ---@field abort KeymapDef
+---@field help KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -206,6 +208,7 @@ M.defaultOptions = {
 ---@field gotoLocation? KeymapDef
 ---@field pickHistoryEntry? KeymapDef
 ---@field abort? KeymapDef
+---@field help? KeymapDef
 
 ---@class AutoSaveTable
 ---@field enabled boolean

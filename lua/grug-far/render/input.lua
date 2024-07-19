@@ -44,13 +44,19 @@ local function renderInput(params, context)
   if placeholder then
     local placeholderExtmarkName = extmarkName .. '_placeholder'
     if #line == 0 then
+      local ellipsis = ' ...'
+      local available_win_width = vim.api.nvim_win_get_width(0) - #ellipsis - 2
       context.extmarkIds[placeholderExtmarkName] =
         vim.api.nvim_buf_set_extmark(buf, context.namespace, lineNr, 0, {
           id = context.extmarkIds[placeholderExtmarkName],
           end_row = lineNr,
           end_col = 0,
           virt_text = {
-            { placeholder, 'GrugFarInputPlaceholder' },
+            {
+              #placeholder <= available_win_width and placeholder
+                or placeholder:sub(1, available_win_width) .. ellipsis,
+              'GrugFarInputPlaceholder',
+            },
           },
           virt_text_pos = 'overlay',
         })
