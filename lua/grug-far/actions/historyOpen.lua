@@ -101,7 +101,6 @@ local function renderHistoryBuffer(historyBuf, context)
     },
     actions = {
       { text = 'Pick Entry', keymap = keymaps.pickHistoryEntry },
-      { text = 'Close', keymap = { n = ':q' } },
     },
   }, context)
 end
@@ -136,19 +135,18 @@ end
 ---@param context GrugFarContext
 local function createHistoryWindow(buf, context)
   local historyBuf = vim.api.nvim_create_buf(false, true)
-  local horizontal_margin = 5
-  local vertical_margin = 5
-  local width = vim.api.nvim_win_get_width(0) - 2 * horizontal_margin
-  local height = vim.api.nvim_win_get_height(0) - 2 * vertical_margin
+  local width = vim.api.nvim_win_get_width(0) - 2
+  local height = math.floor(vim.api.nvim_win_get_height(0) * 0.66)
   local historyWin = vim.api.nvim_open_win(historyBuf, true, {
     relative = 'win',
-    row = vertical_margin,
-    col = horizontal_margin,
+    row = 0,
+    col = 2,
     width = width,
     height = height,
     border = 'rounded',
-    title = (opts.getIcon('historyTitle', context) or ' ') .. 'History ',
-    title_pos = 'left',
+    footer = (opts.getIcon('historyTitle', context) or ' ')
+      .. 'History (press <:q> or <:bd> to close)',
+    footer_pos = 'center',
     style = 'minimal',
   })
 

@@ -5,6 +5,11 @@ local nvim10 = vim.fn.has('nvim-0.10') > 0
 local highlights = {
   GrugFarHelpHeader = { default = true, link = 'ModeMsg' },
   GrugFarHelpHeaderKey = { default = true, link = 'String' },
+  GrugFarHelpWinHeader = { default = true, link = 'Title' },
+  GrugFarHelpWinActionPrefix = { default = true, link = 'Title' },
+  GrugFarHelpWinActionText = { default = true, link = 'ModeMsg' },
+  GrugFarHelpWinActionKey = { default = true, link = 'Conceal' },
+  GrugFarHelpWinActionDescription = { default = true, link = 'NormalFloat' },
 
   GrugFarInputLabel = { default = true, link = 'Identifier' },
   GrugFarInputPlaceholder = { default = true, link = 'Comment' },
