@@ -1,27 +1,7 @@
 local opts = require('grug-far/opts')
-
----@param keymap KeymapDef
----@return string | nil
-local function getActionMapping(keymap)
-  local lhs = keymap.n
-  if not lhs or #lhs == 0 then
-    return nil
-  end
-  if vim.g.maplocalleader then
-    lhs = lhs:gsub('<localleader>', vim.g.maplocalleader)
-  end
-  if vim.g.mapleader then
-    lhs = lhs:gsub('<leader>', vim.g.mapleader == ' ' and '< >' or vim.g.mapleader)
-  end
-
-  return lhs
-end
+local utils = require('grug-far/utils')
 
 ---@alias VirtText string[]
-
----@class GrugFarAction
----@field text string
----@field keymap KeymapDef
 
 --- gets help virtual text lines
 ---@param virt_lines VirtText[][]
@@ -30,7 +10,7 @@ end
 ---@return VirtText[][]
 local function getHelpVirtLines(virt_lines, actions, context)
   local entries = vim.tbl_map(function(action)
-    return { text = action.text, lhs = getActionMapping(action.keymap) }
+    return { text = action.text, lhs = utils.getActionMapping(action.keymap) }
   end, actions)
   entries = vim.tbl_filter(function(entry)
     return entry.lhs ~= nil
