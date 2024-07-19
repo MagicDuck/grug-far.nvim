@@ -310,7 +310,7 @@ function M.getActionMapping(keymap)
     lhs = lhs:gsub('<leader>', vim.g.mapleader == ' ' and '<SPC>' or vim.g.mapleader)
   end
 
-  if not (lhs:sub(1, 1) == '<' and lhs:sub(#lhs, #lhs) == '>') then
+  if lhs:sub(1, 1) ~= '<' then
     lhs = '<' .. lhs .. '>'
   end
 
