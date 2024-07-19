@@ -36,7 +36,7 @@ T['can search for some string'] = function()
   helpers.childExpectBufLines(child)
 end
 
-T['can search manullay on insert leave'] = function()
+T['can search manually on insert leave'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
     {
