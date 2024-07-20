@@ -43,6 +43,11 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
+      - name: Checkout luvit types
+        uses: actions/checkout@v4
+        with:
+          repository: luvit-meta/library
+          path: deps/luvit
       - name: Setup neovim
         uses: rhysd/action-setup-vim@v1
         with:

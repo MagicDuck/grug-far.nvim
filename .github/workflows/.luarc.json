@@ -2,7 +2,11 @@
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
   "runtime.version": "LuaJIT",
   "runtime.path": ["?.lua", "?/init.lua"],
-  "Lua.workspace.library": ["/home/runner/nvim-v0.10.0/share/nvim/runtime/lua"],
+  "runtime.path.pathStrict": true,
+  "Lua.workspace.library": [
+    "/home/runner/nvim-v0.10.0/share/nvim/runtime/lua/",
+    "/github/workspace/deps/luvit/library"
+  ],
   "Lua.diagnostics.libraryFiles": "Disable",
   "Lua.workspace.checkThirdParty": "Disable"
 }
