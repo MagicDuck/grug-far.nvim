@@ -1,6 +1,7 @@
 local getArgs = require('grug-far/rg/getArgs')
 local blacklistedReplaceFlags = require('grug-far/rg/blacklistedReplaceFlags')
 local fetchWithRg = require('grug-far/rg/fetchWithRg')
+local utils = require('grug-far/utils')
 
 ---@class FetchReplacedFileContentParams
 ---@field inputs GrugFarInputs
@@ -12,15 +13,19 @@ local fetchWithRg = require('grug-far/rg/fetchWithRg')
 ---@param params FetchReplacedFileContentParams
 ---@return nil | fun() abort
 local function fetchReplacedFileContent(params)
-  local args = getArgs(params.inputs, params.options, {
+  local extraFlags = {
     '--passthrough',
     '--no-line-number',
     '--no-column',
     '--color=never',
     '--no-heading',
     '--no-filename',
-    params.file,
-  }, blacklistedReplaceFlags, true)
+  }
+  if not utils.flagsStrContainsFlag(params.inputs.flags, params.file) then
+    table.insert(extraFlags, params.file)
+  end
+
+  local args = getArgs(params.inputs, params.options, extraFlags, blacklistedReplaceFlags, true)
 
   local content = ''
   return fetchWithRg({

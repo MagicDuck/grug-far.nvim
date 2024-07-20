@@ -317,6 +317,22 @@ function M.getActionMapping(keymap)
   return lhs
 end
 
+--- checks if string of flags contains given flag
+---@param flagsStr string
+---@param flagToCheck string
+---@return boolean
+function M.flagsStrContainsFlag(flagsStr, flagToCheck)
+  if #flagsStr > 0 then
+    for flag in string.gmatch(flagsStr, '%S+') do
+      if flag == flagToCheck then
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
 M.eol = is_win and '\r\n' or '\n'
 
 return M
