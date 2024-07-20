@@ -45,15 +45,16 @@ local function addHighlightResult(context, line, loc)
   end
   local results = context.state.highlightResults[loc.filename]
   if not results then
-    local ft = utils.getFileType(loc.filename)
-    if not ft then
-      return
-    end
     results = {
       lines = {},
-      ft = ft,
+      ft = utils.getFileType(loc.filename),
     }
     context.state.highlightResults[loc.filename] = results
+  end
+  if not results.ft then
+    -- we still keep it in results, so that we don't
+    -- try to detect the filetype again
+    return
   end
   table.insert(results.lines, { row = line, col = #from, end_col = #loc.text + 1, lnum = loc.lnum })
 end
@@ -324,18 +325,20 @@ function M.highlight(buf, context)
   -- Process any pending results
   for filename, results in pairs(context.state.highlightResults) do
     results[filename] = nil
-    local lang = vim.treesitter.language.get_lang(results.ft) or results.ft or 'lua'
-    regions[lang] = regions[lang] or {}
-    local last_line ---@type number?
-    for _, line in ipairs(results.lines) do
-      local node = { line.row, line.col, line.row, line.end_col }
-      -- put consecutive lines in the same region
-      if line.lnum - 1 ~= last_line then
-        table.insert(regions[lang], {})
+    if results.ft then
+      local lang = vim.treesitter.language.get_lang(results.ft) or results.ft or 'lua'
+      regions[lang] = regions[lang] or {}
+      local last_line ---@type number?
+      for _, line in ipairs(results.lines) do
+        local node = { line.row, line.col, line.row, line.end_col }
+        -- put consecutive lines in the same region
+        if line.lnum - 1 ~= last_line then
+          table.insert(regions[lang], {})
+        end
+        last_line = line.lnum
+        local last = regions[lang][#regions[lang]]
+        table.insert(last, node)
       end
-      last_line = line.lnum
-      local last = regions[lang][#regions[lang]]
-      table.insert(last, node)
     end
   end
   context.state.highlightResults = {}
