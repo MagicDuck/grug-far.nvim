@@ -54,6 +54,7 @@ jobs:
           which nvim
           nvim --version
           ls -l /home/runner/nvim-v0.10.0/
+          ls -l /home/runner/nvim-v0.10.0/share/nvim/runtime
       - name: Type Check Code Base
         uses: mrcjkb/lua-typecheck-action@v0.1.2
         with:
