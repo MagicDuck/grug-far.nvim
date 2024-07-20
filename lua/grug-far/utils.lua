@@ -283,6 +283,7 @@ function M.getVisualSelectionText()
   end
   lines[#lines] = string.sub(lines[#lines], 0, end_pos[2] + plusEnd)
   lines[1] = string.sub(lines[1], start_pos[2] + plusStart, string.len(lines[1]))
+  ---@diagnostic disable-next-line: param-type-mismatch
   local query = table.concat(lines, '')
   return query
 end
@@ -309,10 +310,14 @@ function M.getActionMapping(keymap)
   if not lhs or #lhs == 0 then
     return nil
   end
+  ---@diagnostic disable-next-line: undefined-field
   if vim.g.maplocalleader then
+    ---@diagnostic disable-next-line: undefined-field
     lhs = lhs:gsub('<localleader>', vim.g.maplocalleader)
   end
+  ---@diagnostic disable-next-line: undefined-field
   if vim.g.mapleader then
+    ---@diagnostic disable-next-line: undefined-field
     lhs = lhs:gsub('<leader>', vim.g.mapleader == ' ' and '<SPC>' or vim.g.mapleader)
   end
 
