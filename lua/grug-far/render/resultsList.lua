@@ -45,9 +45,13 @@ local function addHighlightResult(context, line, loc)
   end
   local results = context.state.highlightResults[loc.filename]
   if not results then
+    local ft = utils.getFileType(loc.filename)
+    if not ft then
+      return
+    end
     results = {
-      ft = utils.getFileType(loc.filename),
       lines = {},
+      ft = ft,
     }
     context.state.highlightResults[loc.filename] = results
   end
@@ -112,9 +116,7 @@ function M.appendResultsChunk(buf, context, data)
       lastLocation.end_col = highlight.end_col
     end
   end
-  if context.options.resultsHighlight then
-    M.throttledHighlight(buf, context)
-  end
+  M.throttledHighlight(buf, context)
 end
 
 --- gets result location at given row if available
@@ -346,11 +348,15 @@ end
 ---@param buf number
 ---@param context GrugFarContext
 function M.highlight(buf, context)
+  if not context.options.resultsHighlight then
+    return
+  end
   local regions = context.state.highlightRegions
 
   -- Process any pending results
-  for _, results in pairs(context.state.highlightResults) do
-    local lang = vim.treesitter.language.get_lang(results.ft) or results.ft
+  for filename, results in pairs(context.state.highlightResults) do
+    results[filename] = nil
+    local lang = vim.treesitter.language.get_lang(results.ft) or results.ft or 'lua'
     regions[lang] = regions[lang] or {}
     local last_line ---@type number?
     for _, line in ipairs(results.lines) do
