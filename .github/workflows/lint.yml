@@ -46,7 +46,7 @@ jobs:
       - name: Checkout luvit types
         uses: actions/checkout@v4
         with:
-          repository: luvit-meta/library
+          repository: Bilal2453/luvit-meta
           path: deps/luvit
       - name: Setup neovim
         uses: rhysd/action-setup-vim@v1
