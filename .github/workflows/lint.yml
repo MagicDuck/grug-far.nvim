@@ -53,13 +53,7 @@ jobs:
         run: |
           which nvim
           nvim --version
-          exit 1
-      - name: Checkout dependency neodev
-        uses: actions/checkout@v3
-        with:
-          repository: "folke/neodev.nvim"
-          path: "deps/neodev.nvim"
-
+          ls -l /home/runner/nvim-v0.10.0/
       - name: Type Check Code Base
         uses: mrcjkb/lua-typecheck-action@v0.1.2
         with:
