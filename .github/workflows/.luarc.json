@@ -4,7 +4,7 @@
   "runtime.path": ["?.lua", "?/init.lua"],
   "runtime.path.pathStrict": true,
   "Lua.workspace.library": [
-    "/home/runner/nvim-v0.10.0/share/nvim/runtime/lua/",
+    "/root/nvim-v0.10.0/share/nvim/runtime/lua/",
     "/github/workspace/deps/luvit/library"
   ],
   "Lua.diagnostics.libraryFiles": "Disable",
