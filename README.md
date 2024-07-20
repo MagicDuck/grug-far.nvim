@@ -36,7 +36,7 @@ Grug find! Grug replace! Grug happy!
 1. *strives for reduced mental overhead.* All actions you can take are in your face. As much help as possible is in your face (some configurable). Grug often forget how to do capture groups or which flag does what.
 2. *transparency.* Does not try to hide away `rg` and shows error messages from it which are actually quite friendly when you mess up your regex. You can gradually learn `rg` flags or use existing knowledge from running it in the CLI. You can even input the `--help` flag to see the full `rg` help. Grug like!
 3. *reuse muscle memory.* Does not try to block any type of buffer edits, such as deleting lines, etc. It's very easy to get such things wrong and when you do, Grug becomes unable to modify text in the middle of writing a large regex. Grug mad!! Only ensures graceful recovery in order to preserve basic UI integrity (possible due to the magic of extmarks). Recovery should be simple undo away. 
-4. *uniformity.* only uses one tool, `rg`, and does not combine with other tools like `sed`. One should not have to worry about compatibility differences when writing regexes. Additionally it opens the door to use to many fancy `rg` flags such as different regex engine that would not be possible in a mixed environment. Replacement is achieved by running `rg --replace=... --passthrough` on each file with configurable number of parallel workers.
+4. *uniformity.* only uses one tool, `rg`, and does not combine with other tools like `sed`. One should not have to worry about compatibility differences when writing regexes. Additionally it opens the door to use many fancy `rg` flags such as different regex engine that would not be possible in a mixed environment. Replacement is achieved by running `rg --replace=... --passthrough` on each file with configurable number of parallel workers.
 
 
 ## ⚡️ Requirements
@@ -124,6 +124,13 @@ _Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
 _Note:_ if you would like sync to work when doing a replacement with empty string, please add `--replace=`
 to the flags.
 
+### Going to / Opening Location for match under cursor
+When the cursor is placed on a result file path, you can go to that file by pressing `<enter>` in normal mode (`Goto` action default keybind).
+When it's placed over a result match line, you will be taken to the file/line/column of the match. By default, the file buffer
+is opened in the last window you were in before opening grug-far, which is typically the other vertical split.
+
+If you would like to do the same thing, but have the cursor stay in place, you can use the `Open` action instead.
+
 ### Opening result lines in quickfix list
 
 Result lines can be opened in the quickfix list. Deleting result lines will cause them not to be included. 
@@ -138,7 +145,7 @@ _Note:_ quickfix list is disabled when doing multiline replacement (`--multiline
 `History Add` action or automatically on certain successful actions like `Replace` and `Sync All`.
 
 When you would like to pick one of your history entries to reuse, you can use the `History Open` action to
-open the search history as a buffer. From there you can either pick an entry that will be auto-filled in.
+open the search history as a buffer. From there you can pick an entry that will be auto-filled in.
 
 Note that you can edit the history buffer and save just like any other buffer if you need to do some cleanup.
 The format of a history entry is:
@@ -153,6 +160,13 @@ History entries are separated by one or more empty lines.
 
 _Note_: **grug-far** will ignore lines that do not start with the prefixes above
 
+### Seeing the full rg search command
+Sometimes, mostly for debug purposes, it's useful to see the full `rg` command that gets executed on search. You
+can toggle that on with the `Toggle Show rg Command` action, and the command will appear as the first thing in the
+search results area.
+
+The command is shell-escaped, so you can copy and execute it in a shell manually if you need to.
+
 ### Aborting
 If you inadvertently launched a wrong search/sync/replace, you can abort early using the `Abort` action.
 
@@ -164,6 +178,7 @@ will ask you to confirm if there is a replace/sync in progress, as those would b
 
 ### Filetype
 Note that *grug-far.nvim* buffers will have `filetype=grug-far`, history buffers will have `filetype=grug-far-history` and help will have `filetype=grug-far-help` if you need filter/exclude them in any situations.
+Excluding seems to be necessary with copilot at the time of writing this.
 
 ### ⚒️  Lua API
 
