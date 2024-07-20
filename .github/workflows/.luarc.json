@@ -5,9 +5,7 @@
   "runtime.path.pathStrict": true,
   "Lua.workspace.library": [
     "/github/workspace/deps/luvit-meta/library",
-    "/github/workspace/deps/neovim/runtime/lua",
-    "/home/folke/.local/share/bob/nightly/nvim-linux64/share/nvim/runtime/lua",
-    "/home/folke/.local/share/nvim/lazy/luvit-meta/library/"
+    "/github/workspace/deps/neovim/runtime/lua"
   ],
   "Lua.diagnostics.libraryFiles": "Disable",
   "Lua.workspace.checkThirdParty": "Disable"
