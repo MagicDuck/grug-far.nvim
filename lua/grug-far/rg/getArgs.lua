@@ -49,6 +49,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   table.insert(args, '--line-number')
   table.insert(args, '--heading')
   table.insert(args, '--column')
+  table.insert(args, '--max-columns=0')
   table.insert(args, '--field-match-separator=:')
   table.insert(args, '--block-buffered')
   table.insert(args, '--with-filename')
