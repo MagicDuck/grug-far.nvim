@@ -73,12 +73,13 @@ local function search(params)
 
       state.abort.search = nil
       clearResultsIfNeeded()
-      resultsList.highlight(buf, context)
 
       state.status = status
       if status == 'error' then
         state.stats = nil
         resultsList.setError(buf, context, errorMessage)
+      else
+        resultsList.highlight(buf, context)
       end
 
       renderResultsHeader(buf, context)
