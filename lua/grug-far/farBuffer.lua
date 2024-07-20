@@ -130,21 +130,45 @@ local function getActions(buf, context)
   }
 end
 
+--- gets next unique buffer name prefix
+---@param buf integer
+---@param prefix string
+---@param initialIncludesCount boolean
+local function getNextUniqueBufName(buf, prefix, initialIncludesCount)
+  local count = 1
+  local title = prefix
+  if initialIncludesCount then
+    title = title .. ' - ' .. count
+  end
+
+  while true do
+    local bufnr = vim.fn.bufnr(title)
+    if bufnr == -1 or bufnr == buf then
+      return title
+    end
+    count = count + 1
+    title = prefix .. ' - ' .. count
+  end
+end
+
 ---@param buf integer
 ---@param context GrugFarContext
 local function updateBufName(buf, context)
   local staticTitle = context.options.staticTitle
-  vim.api.nvim_buf_set_name(
-    buf,
-    (staticTitle and #staticTitle > 0) and staticTitle
-      or 'Grug FAR - '
-        .. context.count
-        .. utils.strEllideAfter(
-          context.state.inputs.search,
-          context.options.maxSearchCharsInTitles,
-          ': '
-        )
-  )
+  local title
+
+  if staticTitle and #staticTitle > 0 then
+    title = getNextUniqueBufName(buf, staticTitle, false)
+  else
+    title = getNextUniqueBufName(buf, 'Grug FAR', true)
+      .. utils.strEllideAfter(
+        context.state.inputs.search,
+        context.options.maxSearchCharsInTitles,
+        ': '
+      )
+  end
+
+  vim.api.nvim_buf_set_name(buf, title)
 end
 
 ---@param buf integer
@@ -182,6 +206,7 @@ function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(true, true)
   vim.api.nvim_set_option_value('filetype', 'grug-far', { buf = buf })
   vim.api.nvim_set_option_value('swapfile', false, { buf = buf })
+  vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
   vim.api.nvim_win_set_buf(win, buf)
 
   setupGlobalOptOverrides(buf, context)
