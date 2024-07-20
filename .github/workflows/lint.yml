@@ -35,11 +35,11 @@ jobs:
 
   typecheck:
     name: Typecheck sources
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [ubuntu-latest]
         neovim_version: ["v0.10.0"]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -47,22 +47,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Bilal2453/luvit-meta
-          path: deps/luvit
-      - name: Setup neovim
-        uses: rhysd/action-setup-vim@v1
+          path: deps/luvit-meta
+      - name: Checkout Neovim Types
+        uses: actions/checkout@v4
         with:
-          neovim: true
-          version: ${{ matrix.neovim_version }}
-      - name: foo
-        shell: bash
-        run: |
-          which nvim
-          nvim --version
-          ls -l /home/runner/nvim-v0.10.0/
-          ls -l /home/runner/nvim-v0.10.0/share/nvim/runtime
-          ls -l /root/nvim-v0.10.0/
-          ls -l /root/nvim-v0.10.0/share/nvim/runtime
-          exit 0
+          repository: neovim/neovim
+          path: deps/neovim
       - name: Type Check Code Base
         uses: mrcjkb/lua-typecheck-action@v0.1.2
         with:
