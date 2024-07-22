@@ -226,7 +226,7 @@ For more API, see [docs][docs]
 #### Create a buffer local keybinding to toggle --fixed-strings flag
 ```lua
 vim.api.nvim_create_autocmd('FileType', {
-  group = augroup('test'),
+  group =   vim.api.nvim_create_augroup('my-grug-far-custom-keybinds', { clear = true }),
   pattern = { 'grug-far' },
   callback = function()
     vim.keymap.set('n', '<localleader>w', function()
