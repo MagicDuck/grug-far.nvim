@@ -343,7 +343,7 @@ M.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
----@field wrap? integer
+---@field wrap? boolean
 ---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
 ---@field keymaps? KeymapsOverride
