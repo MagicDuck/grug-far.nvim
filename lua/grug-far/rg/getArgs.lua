@@ -53,7 +53,11 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   table.insert(args, '--field-match-separator=:')
   table.insert(args, '--block-buffered')
   table.insert(args, '--with-filename')
-  table.insert(args, '--hyperlink-format=none')
+
+  -- note: --hyperlink-format not supported in rg v13
+  if not vim.version.lt(utils.getRgVersion(options), '14') then
+    table.insert(args, '--hyperlink-format=none')
+  end
 
   if #inputs.filesFilter > 0 then
     table.insert(args, '--glob=' .. inputs.filesFilter)
