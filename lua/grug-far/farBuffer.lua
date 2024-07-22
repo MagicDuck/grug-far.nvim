@@ -207,6 +207,10 @@ function M.createBuffer(win, context)
   vim.api.nvim_set_option_value('filetype', 'grug-far', { buf = buf })
   vim.api.nvim_set_option_value('swapfile', false, { buf = buf })
   vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
+  -- automatically wipe hidden non-named instance sessions
+  if not context.options.instanceName then
+    vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = buf })
+  end
   vim.api.nvim_win_set_buf(win, buf)
 
   setupGlobalOptOverrides(buf, context)
