@@ -50,6 +50,9 @@ M.defaultOptions = {
   -- row in the window to position the cursor at at start
   startCursorRow = 3,
 
+  -- whether to wrap text in the grug-far buffer
+  wrap = true,
+
   -- by default, in visual mode, the visual selection is used to prefill the search
   -- setting this option to true disables that behaviour
   ignoreVisualSelection = false,
@@ -310,6 +313,7 @@ M.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode boolean
 ---@field startCursorRow integer
+---@field wrap boolean
 ---@field ignoreVisualSelection boolean
 ---@field keymaps Keymaps
 ---@field resultsSeparatorLineChar string
@@ -335,6 +339,7 @@ M.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
+---@field wrap? integer
 ---@field ignoreVisualSelection? boolean
 ---@field keymaps? KeymapsOverride
 ---@field resultsSeparatorLineChar? string

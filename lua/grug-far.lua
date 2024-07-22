@@ -137,6 +137,8 @@ local function createWindow(context)
     vim.api.nvim_set_option_value('relativenumber', false, { win = win })
   end
 
+  vim.api.nvim_set_option_value('wrap', context.options.wrap, { win = win })
+
   return win
 end
 
