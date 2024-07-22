@@ -53,6 +53,9 @@ M.defaultOptions = {
   -- whether to wrap text in the grug-far buffer
   wrap = true,
 
+  -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
+  transient = false,
+
   -- by default, in visual mode, the visual selection is used to prefill the search
   -- setting this option to true disables that behaviour
   ignoreVisualSelection = false,
@@ -314,6 +317,7 @@ M.defaultOptions = {
 ---@field startInInsertMode boolean
 ---@field startCursorRow integer
 ---@field wrap boolean
+---@field transient boolean
 ---@field ignoreVisualSelection boolean
 ---@field keymaps Keymaps
 ---@field resultsSeparatorLineChar string
@@ -340,6 +344,7 @@ M.defaultOptions = {
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
 ---@field wrap? integer
+---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
 ---@field keymaps? KeymapsOverride
 ---@field resultsSeparatorLineChar? string

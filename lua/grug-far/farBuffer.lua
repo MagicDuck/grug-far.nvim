@@ -203,12 +203,12 @@ end
 ---@param context GrugFarContext
 ---@return integer bufId
 function M.createBuffer(win, context)
-  local buf = vim.api.nvim_create_buf(false, true)
+  local buf = vim.api.nvim_create_buf(context.options.transient, true)
   vim.api.nvim_set_option_value('filetype', 'grug-far', { buf = buf })
   vim.api.nvim_set_option_value('swapfile', false, { buf = buf })
   vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
-  -- automatically wipe hidden non-named instance sessions
-  if not context.options.instanceName then
+  -- settings for transient buffers
+  if context.options.transient then
     vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = buf })
   end
   vim.api.nvim_win_set_buf(win, buf)
