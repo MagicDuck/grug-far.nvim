@@ -2,11 +2,39 @@ local uv = vim.uv
 local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 local M = {}
 
+local ffi = require('ffi')
+
+-- expose API for setting buffer name
+ffi.cdef([[
+  char *xstrdup(const char *str);
+
+  // nvim/buffer_defs.h
+  typedef void *buf_T;
+  buf_T *buflist_findnr(int nr);
+  int setfname(buf_T *buf, char *ffname, char *sfname, bool message);
+]])
+
+local C = ffi.C
+
 ---@type number?
 M.scratch_buf = nil
 
 ---@type string?
 local rg_version = nil
+
+--- sets a given buffer's name without creating alternative buffers
+---@param bufnr number the buffer to change the name of
+---@param name string the new buffer name
+---@return boolean was_successful whether or not the operation was successful
+function M.buf_set_name(bufnr, name)
+  local buf_p = C.buflist_findnr(bufnr)
+  if buf_p == nil then
+    return false
+  end
+
+  -- NB: use xstrdup rather than ffi.new to prevent memory being collected by gc
+  return C.setfname(buf_p, C.xstrdup(name), nil, true) == 1
+end
 
 --- gets the rg version in use.
 ---Only first call does an actual check rest are from cache

@@ -168,7 +168,7 @@ local function updateBufName(buf, context)
       )
   end
 
-  vim.api.nvim_buf_set_name(buf, title)
+  utils.buf_set_name(buf, title)
 end
 
 ---@param buf integer
