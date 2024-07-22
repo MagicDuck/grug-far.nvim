@@ -37,7 +37,7 @@ T['can goto given location'] = function()
 
   child.type_keys(10, '<esc>11G')
   child.type_keys('<esc>' .. keymaps.gotoLocation.n)
-  vim.loop.sleep(50)
+  vim.uv.sleep(50)
   helpers.childExpectScreenshot(child)
 end
 

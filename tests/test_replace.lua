@@ -38,7 +38,7 @@ T['can replace with replace string'] = function()
   helpers.childExpectBufLines(child)
 
   child.type_keys(50, '<esc>cc', 'curly')
-  vim.loop.sleep(50)
+  vim.uv.sleep(50)
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
@@ -65,7 +65,7 @@ T['can replace within one file'] = function()
   helpers.childExpectScreenshot(child)
 
   child.type_keys(50, '<esc>cc', 'curly')
-  vim.loop.sleep(50)
+  vim.uv.sleep(50)
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
@@ -93,7 +93,7 @@ T['can replace with empty string'] = function()
   helpers.childExpectBufLines(child)
 
   child.type_keys(50, '<esc>cc', 'and')
-  vim.loop.sleep(50)
+  vim.uv.sleep(50)
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end

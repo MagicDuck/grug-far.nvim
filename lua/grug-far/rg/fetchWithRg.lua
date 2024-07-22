@@ -1,5 +1,5 @@
 local utils = require('grug-far/utils')
-local uv = vim.loop
+local uv = vim.uv
 
 ---@param handle uv_handle_t | nil
 local function closeHandle(handle)
@@ -70,7 +70,7 @@ local function fetchWithRg(params)
     closeHandle(stderr)
     closeHandle(handle)
     if handle then
-      handle:kill(vim.loop.constants.SIGTERM)
+      handle:kill(vim.uv.constants.SIGTERM)
     end
 
     vim.schedule(function()

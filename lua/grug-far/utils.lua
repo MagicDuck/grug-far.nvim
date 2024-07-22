@@ -1,4 +1,4 @@
-local uv = vim.loop
+local uv = vim.uv
 local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 local M = {}
 

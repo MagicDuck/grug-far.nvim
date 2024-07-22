@@ -1,7 +1,7 @@
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 local utils = require('grug-far/utils')
-local uv = vim.loop
+local uv = vim.uv
 
 ---@class ChangedLine
 ---@field lnum integer

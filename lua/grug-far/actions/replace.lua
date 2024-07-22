@@ -5,7 +5,7 @@ local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 local utils = require('grug-far/utils')
 local history = require('grug-far/history')
-local uv = vim.loop
+local uv = vim.uv
 
 --- performs replacement in given file
 ---@param params { context: GrugFarContext, file: string, on_done: fun(errorMessage: string | nil) }

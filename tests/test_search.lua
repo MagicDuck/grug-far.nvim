@@ -53,7 +53,7 @@ T['can search manually on insert leave'] = function()
   })
 
   child.type_keys(50, '<esc>cc', 'walks')
-  vim.loop.sleep(100)
+  vim.uv.sleep(100)
   helpers.childExpectScreenshot(child)
 
   child.type_keys(50, '<esc>')
