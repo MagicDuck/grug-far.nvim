@@ -203,7 +203,7 @@ end
 ---@param context GrugFarContext
 ---@return integer bufId
 function M.createBuffer(win, context)
-  local buf = vim.api.nvim_create_buf(context.options.transient, true)
+  local buf = vim.api.nvim_create_buf(not context.options.transient, true)
   vim.api.nvim_set_option_value('filetype', 'grug-far', { buf = buf })
   vim.api.nvim_set_option_value('swapfile', false, { buf = buf })
   vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
