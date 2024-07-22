@@ -50,6 +50,10 @@ M.defaultOptions = {
   -- row in the window to position the cursor at at start
   startCursorRow = 3,
 
+  -- by default, in visual mode, the visual selection is used to prefill the search
+  -- setting this option to true disables that behaviour
+  ignoreVisualSelection = false,
+
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' or false to unset. Mappings with no normal mode value will be removed from the help header
   -- you can specify either a string which is then used as the mapping for both normmal and insert mode
@@ -306,6 +310,7 @@ M.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode boolean
 ---@field startCursorRow integer
+---@field ignoreVisualSelection boolean
 ---@field keymaps Keymaps
 ---@field resultsSeparatorLineChar string
 ---@field resultsHighlight boolean
@@ -330,6 +335,7 @@ M.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
+---@field ignoreVisualSelection? boolean
 ---@field keymaps? KeymapsOverride
 ---@field resultsSeparatorLineChar? string
 ---@field spinnerStates? string[] | false
@@ -345,20 +351,7 @@ M.defaultOptions = {
 ---@param defaults GrugFarOptions
 ---@return GrugFarOptions
 function M.with_defaults(options, defaults)
-  local newOptions = vim.tbl_deep_extend('force', defaults, options)
-
-  -- deprecated prop names
-  newOptions.placeholders.filesFilter = (
-    options.placeholders
-    and (options.placeholders.filesFilter or options.placeholders.filesGlob)
-  ) or defaults.placeholders.filesFilter
-
-  if options.placeholders and options.placeholders.filesGlob then
-    vim.notify(
-      'grug-far: options.placeholders.filesGlob deprecated. Please use options.placeholders.filesFilter instead!',
-      vim.log.levels.WARN
-    )
-  end
+  local newOptions = vim.tbl_deep_extend('force', vim.deepcopy(defaults), options)
 
   -- normalize keymaps opts
   for key, value in pairs(newOptions.keymaps) do

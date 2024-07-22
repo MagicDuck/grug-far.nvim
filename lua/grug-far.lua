@@ -17,22 +17,26 @@ local globalOptions = nil
 ---@type table<string, NamedInstance>
 local namedInstances = {}
 
+---@return boolean
+local function is_configured()
+  return globalOptions ~= nil
+end
+
 --- set up grug-far
 ---@param options? GrugFarOptionsOverride
 function M.setup(options)
-  if vim.fn.has('nvim-0.9.0') == 0 then
-    vim.api.nvim_err_writeln('grug-far is guaranteeed to work on at least nvim-0.9.0')
+  if vim.fn.has('nvim-0.9.5') == 0 then
+    vim.api.nvim_err_writeln('grug-far is guaranteeed to work on at least nvim-0.9.5')
     return
   end
 
   globalOptions = opts.with_defaults(options or {}, opts.defaultOptions)
   highlights.setup()
-  vim.api.nvim_create_user_command('GrugFar', M.grug_far, {})
-end
-
----@return boolean
-local function is_configured()
-  return globalOptions ~= nil
+  vim.api.nvim_create_user_command('GrugFar', function(args)
+    local is_visual = args.range > 0
+    local resolvedOpts = opts.with_defaults({}, globalOptions)
+    M._grug_far_internal(resolvedOpts, { is_visual = is_visual })
+  end, { nargs = 0, range = true })
 end
 
 local contextCount = 0
@@ -174,32 +178,59 @@ local function setupCleanup(buf, context)
 end
 
 --- launch grug-far with the given overrides
----@param options? GrugFarOptionsOverride | GrugFarOptions
+---@param options? GrugFarOptionsOverride
 function M.grug_far(options)
+  local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
+  local is_visual = resolvedOpts.ignoreVisualSelection and false
+    or vim.fn.mode():lower():find('v') ~= nil
+  if is_visual then
+    -- needed to make visual selection work
+    vim.cmd([[normal! vv]])
+  end
+
+  M._grug_far_internal(resolvedOpts, { is_visual = is_visual })
+end
+
+--- launch grug-far with the given options and params
+---@param options GrugFarOptions
+---@param params { is_visual: boolean }
+function M._grug_far_internal(options, params)
   if not is_configured() then
-    print(
-      'Please call require("grug-far").setup(...) before executing require("grug-far").grug_far(...)!'
-    )
+    print('Please call require("grug-far").setup(...) before executing grug-far API!')
     return
   end
 
-  local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
-  if resolvedOpts.instanceName and namedInstances[resolvedOpts.instanceName] then
+  if options.instanceName and namedInstances[options.instanceName] then
     print(
       'require("grug-far").grug-far({..., instanceName:...}): A grug-far instance with instanceName="'
-        .. resolvedOpts.instanceName
+        .. options.instanceName
         .. '" already exists!'
     )
     return
   end
 
-  local context = createContext(resolvedOpts)
+  if params.is_visual then
+    --- search with current visual selection. If the visual selection crosses
+    --- multiple lines, lines are joined
+    --- (this is because visual selection can contain special chars, so we need to pass
+    --- --fixed-strings flag to rg. But in that case '\n' is interpreted literally, so we
+    --- can't use it to separate lines)
+
+    options.prefills.search = utils.getVisualSelectionText()
+    local flags = options.prefills.flags or ''
+    if not flags:find('%-%-fixed%-strings') then
+      flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+    end
+    options.prefills.flags = flags
+  end
+
+  local context = createContext(options)
   local win = createWindow(context)
   local buf = farBuffer.createBuffer(win, context)
   setupCleanup(buf, context)
 
-  if resolvedOpts.instanceName then
-    namedInstances[resolvedOpts.instanceName] = { buf = buf, win = win, context = context }
+  if options.instanceName then
+    namedInstances[options.instanceName] = { buf = buf, win = win, context = context }
   end
 end
 
@@ -211,16 +242,8 @@ end
 --- can't use it to separate lines)
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
-  local params = opts.with_defaults(options or {}, globalOptions)
-  params.prefills.search = utils.getVisualSelectionText()
-
-  local flags = params.prefills.flags or ''
-  if not flags:find('%-%-fixed%-strings') then
-    flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
-  end
-  params.prefills.flags = flags
-
-  M.grug_far(params)
+  local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
+  M._grug_far_internal(resolvedOpts, { is_visual = true })
 end
 
 --- toggles given list of flags in the current grug-far buffer
@@ -271,6 +294,7 @@ function M.toggle_instance(options)
   end
 
   if not namedInstances[options.instanceName] then
+    -- TODO (sbadragan): call internal?
     M.grug_far(options)
     return
   end
