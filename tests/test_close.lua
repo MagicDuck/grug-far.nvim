@@ -36,7 +36,7 @@ T['closes without error'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>' .. keymaps.close.n)
-  vim.loop.sleep(100)
+  vim.uv.sleep(100)
   helpers.childExpectScreenshot(child)
 end
 

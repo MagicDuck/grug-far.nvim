@@ -88,7 +88,7 @@ function M.childWaitForCondition(child, condition, timeout, interval)
     if condition() then
       return
     else
-      vim.loop.sleep(inc)
+      vim.uv.sleep(inc)
     end
   end
 
@@ -129,7 +129,7 @@ function M.getSetupOptions()
       pickHistoryEntry = { n = '<enter>' },
     },
     history = {
-      historyDir = vim.loop.cwd() .. '/temp_history_dir',
+      historyDir = vim.uv.cwd() .. '/temp_history_dir',
     },
   }
 end
@@ -178,7 +178,7 @@ end
 
 ---@param child NeovimChild
 function M.cdTempTestDir(child)
-  local cwd = vim.loop.cwd()
+  local cwd = vim.uv.cwd()
   child.lua('vim.api.nvim_set_current_dir("' .. cwd .. '/temp_test_dir")')
 end
 
