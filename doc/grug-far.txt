@@ -28,7 +28,8 @@ your `init` file.
 
 Opens up a grug-far buffer in a vertical split. Multiple such buffers can
 be opened, each with their potentially different searches and they will
-show up in your buffers list.
+show up in your buffers list. In visual mode, it will pre-fill search
+with the current visual selection.
 
 ==============================================================================
 4. API                                                 *grug-far-api*
@@ -48,6 +49,8 @@ require('grug-far').grug_far({config})                *grug-far.grug_far()*
 	config that was passed to require('grug-far).setup(...). 
         Currently supported configuration options are the same as the global
 	plugin config options linked above.
+	If the function is called while in visual mode, it will pre-fill
+	search with the current visual selection.
 
         Parameters: ~
             {config}(optional, table) Table of values; keys as described

@@ -80,8 +80,9 @@ vim.g.maplocalleader = ','
 ## 🚀 Usage
 
 ### Opening and editing
-You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command. But possibly
-best to map a keybind to it for easy triggering.
+You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command.
+In visual mode, the command will pre-fill the search string with the current visual selection.
+Possibly best to map a keybind to it for easy triggering.
 Since it's *just a buffer*, you can edit in it as you see fit. The UI will try to guide
 you along and recover gracefully if you do things like `ggVGd` (delete all lines).
 Ultimately it leaves the power in your hands, and in any case recovery is just a few `u` taps away.
@@ -186,17 +187,19 @@ For more control, you can programmatically open a grug-far buffer like so:
 ```sh
 require('grug-far').grug_far(opts)
 ```
-or if you would like to pre-fill current visual selection as the search text:
+If the above is called while in visual mode, it will pre-fill current visual selection as search text.
 (note, this will also set `--fixed-strings` flag as selection can contain special characters)
+
+Note that if you want to pre-fill current visual selection from command mode, you would have to use: 
 ```
-require('grug-far').with_visual_selection(opts)
+:lua require('grug-far').with_visual_selection(opts)
 ```
 
 where `opts` will be merged with and override the global plugin options configured at setup time.
 
 See here for all the available [options][opts] 
 
-For more details on the API, see [docs][docs]
+For more API, see [docs][docs]
 
 ### 🥪 Cookbook
 

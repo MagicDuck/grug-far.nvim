@@ -294,7 +294,6 @@ function M.toggle_instance(options)
   end
 
   if not namedInstances[options.instanceName] then
-    -- TODO (sbadragan): call internal?
     M.grug_far(options)
     return
   end
