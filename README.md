@@ -10,16 +10,18 @@ Grug find! Grug replace! Grug happy!
 
 - Search using the **full power** of `rg`
 - Replace using almost the **full power** of `rg`. Some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
+- Automatic debounced search or manual search on leaving insert mode
 - Open search results in quickfix list
 - Goto file/line/column of match when pressing `<Enter>` in normal mode on lines in the results output (keybind configurable).
 - Inline edit result lines and sync them back to their originating file locations using a configurable keybinding.
 - Manual/auto-save search history and reload
+- Syntax highlighted search results
 
 #### Searching:
-<img width="1261" alt="image" src="https://github.com/user-attachments/assets/4797b3ae-9243-4ea3-8733-17806b2f6df6">
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/c45d1c0f-4ab8-4b9f-9583-d5d294a76f8d">
 
 #### Replacing:
-<img width="1260" alt="image" src="https://github.com/user-attachments/assets/6afa304a-1441-4f55-81ca-e5f650fbf0fd">
+<img width="1255" alt="image" src="https://github.com/user-attachments/assets/a88e2add-c44a-4010-8b72-7d19162f1c78">
 
 #### Rg teaching you it's ways
 <img width="1240" alt="image" src="https://github.com/user-attachments/assets/c658e4a5-462e-4297-a70b-0a7bced70d27">
@@ -208,6 +210,11 @@ For more API, see [docs][docs]
 :lua require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
 ```
 
+#### Launch as a transient buffer which is both unlisted and fully deletes itself when not in use
+```lua
+:lua require('grug-far').grug_far({ transient = true })
+```
+
 #### Launch with the current file as a flag, which limits search/replace to it
 ```lua
 :lua require('grug-far').grug_far({ prefills = { flags = vim.fn.expand("%") } })
@@ -226,7 +233,7 @@ For more API, see [docs][docs]
 #### Create a buffer local keybinding to toggle --fixed-strings flag
 ```lua
 vim.api.nvim_create_autocmd('FileType', {
-  group =   vim.api.nvim_create_augroup('my-grug-far-custom-keybinds', { clear = true }),
+  group =  vim.api.nvim_create_augroup('my-grug-far-custom-keybinds', { clear = true }),
   pattern = { 'grug-far' },
   callback = function()
     vim.keymap.set('n', '<localleader>w', function()
