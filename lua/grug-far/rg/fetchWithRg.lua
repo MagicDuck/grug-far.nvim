@@ -52,7 +52,7 @@ local function fetchWithRg(params)
     if code > 0 and #errorMessage == 0 then
       errorMessage = 'no matches'
     end
-    local isSuccess = code == 0 and #errorMessage == 0
+    local isSuccess = code == 0
     if not isSuccess then
       -- finish immediately if error, so no more result updates are sent out to the consumer
       finished = true

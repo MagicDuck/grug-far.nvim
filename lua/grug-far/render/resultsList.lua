@@ -161,6 +161,24 @@ function M.setError(buf, context, error)
   end
 end
 
+--- displays results warning
+---@param buf integer
+---@param context GrugFarContext
+---@param warning string | nil
+function M.insertWarning(buf, context, warning)
+  if not (warning and #warning > 0) then
+    return
+  end
+  local startLine = context.state.headerRow + 1
+
+  local warn_lines = vim.split(warning, '\n')
+  setBufLines(buf, startLine, startLine, false, warn_lines)
+
+  for i = startLine, startLine + #warn_lines - 1 do
+    vim.api.nvim_buf_add_highlight(buf, context.namespace, 'DiagnosticWarn', i, 0, -1)
+  end
+end
+
 ---@alias Extmark integer[]
 
 ---@param all_extmarks Extmark[]
