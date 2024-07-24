@@ -53,6 +53,10 @@ local function fetchWithRg(params)
       errorMessage = 'no matches'
     end
     local isSuccess = code == 0 and #errorMessage == 0
+    if not isSuccess then
+      -- finish immediately if error, so no more result updates are sent out to the consumer
+      finished = true
+    end
 
     vim.schedule(function()
       finished = true
