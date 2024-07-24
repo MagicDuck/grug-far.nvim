@@ -79,7 +79,9 @@ local function search(params)
         state.stats = nil
         resultsList.setError(buf, context, errorMessage)
       else
-        resultsList.insertWarning(buf, context, errorMessage)
+        if errorMessage and #errorMessage > 0 then
+          resultsList.insertWarning(buf, context, errorMessage)
+        end
         resultsList.highlight(buf, context)
       end
 
