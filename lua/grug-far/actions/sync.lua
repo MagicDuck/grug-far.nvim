@@ -267,6 +267,10 @@ local function sync(params)
       return
     end
 
+    if errorMessage and #errorMessage > 0 then
+      resultsList.insertWarning(buf, context, errorMessage)
+    end
+
     state.status = status
     vim.cmd.checktime()
 
