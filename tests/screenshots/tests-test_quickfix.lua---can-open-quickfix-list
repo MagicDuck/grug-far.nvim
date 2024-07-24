@@ -5,7 +5,7 @@
 04|  Files Filter:                        │~                                      
 05|ex: *.lua     *.{css,js}    **/docs/*.md│~                                      
 06| 󰮚 Flags:                               │~                                      
-07|ex: --help --ignore-case (-i) <relative-│~                                      
+07|ex: /foo/bar ./src/foo.lua --help --igno│~                                      
 08|                                        │~                                      
 09| STATUS_SUCCESS │~                                      
 10| 5 matches in 2 files                   │~                                      

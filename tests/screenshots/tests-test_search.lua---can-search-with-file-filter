@@ -8,7 +8,7 @@
 07|  Files Filter:                        │~                                      
 08|**/*.txt                                │~                                      
 09| 󰮚 Flags:                               │~                                      
-10|ex: --help --ignore-case (-i) <rel ...  │~                                      
+10|ex: /foo/bar ./src/foo.lua --help  ...  │~                                      
 11|                                        │~                                      
 12| STATUS_SUCCESS │~                                      
 13| 1 matches in 1 files                   │~                                      
