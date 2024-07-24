@@ -145,7 +145,7 @@ M.defaultOptions = {
 
   -- strings to auto-fill in each input area at start
   -- those are not necessarily useful as global defaults but quite useful as overrides
-  -- when launching through the lua api. For example, this is how you would launch grug-far.nvim
+  -- when launching through the lua API. For example, this is how you would launch grug-far.nvim
   -- with the current word under the cursor as the search string
   --
   -- require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
