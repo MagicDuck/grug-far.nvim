@@ -227,7 +227,7 @@ local function replace(params)
     end
 
     if errorMessage and #errorMessage > 0 then
-      resultsList.insertWarning(buf, context, errorMessage)
+      resultsList.appendWarning(buf, context, errorMessage)
     end
 
     state.status = status
