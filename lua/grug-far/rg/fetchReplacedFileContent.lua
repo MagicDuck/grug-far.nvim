@@ -22,8 +22,11 @@ local function fetchReplacedFileContent(params)
   }
 
   local inputs = vim.deepcopy(params.inputs)
-  inputs.paths = params.file
+  inputs.paths = ''
   local args = getArgs(inputs, params.options, extraFlags, blacklistedReplaceFlags, true)
+  if args then
+    table.insert(args, params.file)
+  end
 
   local content = ''
   return fetchWithRg({

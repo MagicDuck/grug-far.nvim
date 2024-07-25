@@ -404,7 +404,8 @@ function M.splitPaths(pathsStr)
     j = string.find(_pathsStr, ' ', j, true)
     if j == nil then
       if i < #_pathsStr then
-        table.insert(paths, _pathsStr:sub(i))
+        local path = string.gsub(_pathsStr:sub(i), '\\ ', ' ')
+        table.insert(paths, path)
       end
       break
     end
@@ -414,7 +415,8 @@ function M.splitPaths(pathsStr)
       i = j + 1
     end
     if not (prevChar == '\\' or prevChar == ' ') then
-      table.insert(paths, _pathsStr:sub(i, j - 1))
+      local path = string.gsub(_pathsStr:sub(i, j - 1), '\\ ', ' ')
+      table.insert(paths, path)
       i = j + 1
     end
     j = j + 1

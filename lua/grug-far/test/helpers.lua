@@ -207,9 +207,16 @@ end
 --- writes files given based on given spec to temp test dir
 --- clears out temp test dir beforehand
 ---@param files {[string]: string}
-function M.writeTestFiles(files)
+---@param dirs? string[]
+function M.writeTestFiles(files, dirs)
   vim.fn.delete('./temp_test_dir', 'rf')
   vim.fn.mkdir('./temp_test_dir')
+  if dirs then
+    for _, dir in ipairs(dirs) do
+      vim.fn.mkdir('./temp_test_dir/' .. dir)
+    end
+  end
+
   for i = 1, #files do
     local file = files[i]
     vim.fn.writefile(vim.split(file.content, '\n'), './temp_test_dir/' .. file.filename)
