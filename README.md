@@ -23,7 +23,7 @@ Grug find! Grug replace! Grug happy!
 #### Replacing:
 <img width="1256" alt="image" src="https://github.com/user-attachments/assets/a1b0dd59-6f2d-4138-abf3-7e4a7454aa18">
 
-#### Rg teaching you it's ways
+#### Rg teaching you its ways
 <img width="1261" alt="image" src="https://github.com/user-attachments/assets/0e09c5ed-1962-4140-afe1-139e08cebc8b">
 
 #### Help:
