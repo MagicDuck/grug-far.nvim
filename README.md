@@ -82,6 +82,7 @@ vim.g.maplocalleader = ','
 
 ### Opening and editing
 You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command.
+Note that command supports the typical `command-modifiers` like `botright`, `aboveleft`, etc. and visual ranges.
 In visual mode, the command will pre-fill the search string with the current visual selection.
 Possibly best to map a keybind to it for easy triggering.
 Since it's *just a buffer*, you can edit in it as you see fit. The UI will try to guide

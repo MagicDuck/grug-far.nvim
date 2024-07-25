@@ -32,9 +32,12 @@ function M.setup(options)
 
   globalOptions = opts.with_defaults(options or {}, opts.defaultOptions)
   highlights.setup()
-  vim.api.nvim_create_user_command('GrugFar', function(args)
-    local is_visual = args.range > 0
+  vim.api.nvim_create_user_command('GrugFar', function(params)
+    local is_visual = params.range > 0
     local resolvedOpts = opts.with_defaults({}, globalOptions)
+    if params.mods and #params.mods > 0 then
+      resolvedOpts.windowCreationCommand = params.mods .. ' split'
+    end
     M._grug_far_internal(resolvedOpts, { is_visual = is_visual })
   end, { nargs = 0, range = true })
 end
