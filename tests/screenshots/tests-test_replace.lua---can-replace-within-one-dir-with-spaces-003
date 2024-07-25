@@ -2,7 +2,7 @@
 01|   Actions / Help <g?> ...             │                                       
 02|                                        │~                                      
 03|  Search:                              │~                                      
-04|  grug                                  │~                                      
+04|  curly                                 │~                                      
 05|  Replace:                             │~                                      
 06|  curly                                 │~                                      
 07|  Files Filter:                        │~                                      
@@ -21,7 +21,7 @@
 20|  ./foo bar/file2.doc                   │~                                      
 21|┃ 2:7:      curly talks and curly drinks│~                                      
 22|┃ 3:12:      then curly thinks          │~                                      
-23|Grug FAR - 1: grug    3,5            All [No Name]            0,1            All
+23|Grug FAR - 1: curly   3,6            All [No Name]            0,1            All
 24|-- INSERT --                                                                    
 
 --|---------|---------|---------|---------|---------|---------|---------|---------|
