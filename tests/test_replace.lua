@@ -56,7 +56,34 @@ T['can replace within one file'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    prefills = { search = 'grug', replacement = 'curly', flags = './file2.doc' },
+    prefills = { search = 'grug', replacement = 'curly', paths = './file2.doc' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys(50, '<esc>cc', 'curly')
+  vim.uv.sleep(50)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can replace within one dir'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'curly', paths = './' },
   })
   helpers.childWaitForFinishedStatus(child)
 
