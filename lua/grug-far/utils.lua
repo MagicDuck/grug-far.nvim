@@ -111,7 +111,7 @@ function M.throttle(callback, ms)
   end
 end
 
---- finds location of given substring in string
+--- finds last location of given substring in string
 ---@param str string
 ---@param substr string
 ---@return integer | nil, integer | nil
@@ -390,5 +390,25 @@ function M.flagsStrContainsFlag(flagsStr, flagToCheck)
 end
 
 M.eol = is_win and '\r\n' or '\n'
+
+function M.splitPaths(pathsStr)
+  local paths = {}
+  local i = 0
+  local j
+  while true do
+    j = string.find(pathsStr, ' ', i + 1, true)
+    if j == nil then
+      if i < #pathsStr then
+        table.insert(paths, pathsStr:sub(i + 1))
+      end
+      break
+    else
+      table.insert(paths, pathsStr:sub(i + 1, j))
+      i = j
+    end
+  end
+
+  return paths
+end
 
 return M

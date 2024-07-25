@@ -60,6 +60,16 @@ local function render(buf, context)
     placeholder = placeholders.enabled and placeholders.flags,
   }, context))
 
+  lineNr = lineNr + 1
+  inputs.paths = vim.trim(renderInput({
+    buf = buf,
+    lineNr = lineNr,
+    extmarkName = 'paths',
+    icon = 'pathsInput',
+    label = 'Paths:',
+    placeholder = placeholders.enabled and placeholders.paths,
+  }, context))
+
   lineNr = lineNr + BEFORE_RESULTS_LINES
   renderResults({
     buf = buf,
