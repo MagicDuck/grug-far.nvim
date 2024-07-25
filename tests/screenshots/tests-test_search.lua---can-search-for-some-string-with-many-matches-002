@@ -7,505 +7,506 @@
 006|
 007|
 008|
-009|file_1
-010|1:9:        grug walks many steps
-011|2:9:        grug talks and grug drinks
-012|3:14:        then grug thinks
-013|
-014|file_10
-015|1:9:        grug walks many steps
-016|2:9:        grug talks and grug drinks
-017|3:14:        then grug thinks
-018|
-019|file_100
-020|1:9:        grug walks many steps
-021|2:9:        grug talks and grug drinks
-022|3:14:        then grug thinks
-023|
-024|file_11
-025|1:9:        grug walks many steps
-026|2:9:        grug talks and grug drinks
-027|3:14:        then grug thinks
-028|
-029|file_12
-030|1:9:        grug walks many steps
-031|2:9:        grug talks and grug drinks
-032|3:14:        then grug thinks
-033|
-034|file_13
-035|1:9:        grug walks many steps
-036|2:9:        grug talks and grug drinks
-037|3:14:        then grug thinks
-038|
-039|file_14
-040|1:9:        grug walks many steps
-041|2:9:        grug talks and grug drinks
-042|3:14:        then grug thinks
-043|
-044|file_15
-045|1:9:        grug walks many steps
-046|2:9:        grug talks and grug drinks
-047|3:14:        then grug thinks
-048|
-049|file_16
-050|1:9:        grug walks many steps
-051|2:9:        grug talks and grug drinks
-052|3:14:        then grug thinks
-053|
-054|file_17
-055|1:9:        grug walks many steps
-056|2:9:        grug talks and grug drinks
-057|3:14:        then grug thinks
-058|
-059|file_18
-060|1:9:        grug walks many steps
-061|2:9:        grug talks and grug drinks
-062|3:14:        then grug thinks
-063|
-064|file_19
-065|1:9:        grug walks many steps
-066|2:9:        grug talks and grug drinks
-067|3:14:        then grug thinks
-068|
-069|file_2
-070|1:9:        grug walks many steps
-071|2:9:        grug talks and grug drinks
-072|3:14:        then grug thinks
-073|
-074|file_20
-075|1:9:        grug walks many steps
-076|2:9:        grug talks and grug drinks
-077|3:14:        then grug thinks
-078|
-079|file_21
-080|1:9:        grug walks many steps
-081|2:9:        grug talks and grug drinks
-082|3:14:        then grug thinks
-083|
-084|file_22
-085|1:9:        grug walks many steps
-086|2:9:        grug talks and grug drinks
-087|3:14:        then grug thinks
-088|
-089|file_23
-090|1:9:        grug walks many steps
-091|2:9:        grug talks and grug drinks
-092|3:14:        then grug thinks
-093|
-094|file_24
-095|1:9:        grug walks many steps
-096|2:9:        grug talks and grug drinks
-097|3:14:        then grug thinks
-098|
-099|file_25
-100|1:9:        grug walks many steps
-101|2:9:        grug talks and grug drinks
-102|3:14:        then grug thinks
-103|
-104|file_26
-105|1:9:        grug walks many steps
-106|2:9:        grug talks and grug drinks
-107|3:14:        then grug thinks
-108|
-109|file_27
-110|1:9:        grug walks many steps
-111|2:9:        grug talks and grug drinks
-112|3:14:        then grug thinks
-113|
-114|file_28
-115|1:9:        grug walks many steps
-116|2:9:        grug talks and grug drinks
-117|3:14:        then grug thinks
-118|
-119|file_29
-120|1:9:        grug walks many steps
-121|2:9:        grug talks and grug drinks
-122|3:14:        then grug thinks
-123|
-124|file_3
-125|1:9:        grug walks many steps
-126|2:9:        grug talks and grug drinks
-127|3:14:        then grug thinks
-128|
-129|file_30
-130|1:9:        grug walks many steps
-131|2:9:        grug talks and grug drinks
-132|3:14:        then grug thinks
-133|
-134|file_31
-135|1:9:        grug walks many steps
-136|2:9:        grug talks and grug drinks
-137|3:14:        then grug thinks
-138|
-139|file_32
-140|1:9:        grug walks many steps
-141|2:9:        grug talks and grug drinks
-142|3:14:        then grug thinks
-143|
-144|file_33
-145|1:9:        grug walks many steps
-146|2:9:        grug talks and grug drinks
-147|3:14:        then grug thinks
-148|
-149|file_34
-150|1:9:        grug walks many steps
-151|2:9:        grug talks and grug drinks
-152|3:14:        then grug thinks
-153|
-154|file_35
-155|1:9:        grug walks many steps
-156|2:9:        grug talks and grug drinks
-157|3:14:        then grug thinks
-158|
-159|file_36
-160|1:9:        grug walks many steps
-161|2:9:        grug talks and grug drinks
-162|3:14:        then grug thinks
-163|
-164|file_37
-165|1:9:        grug walks many steps
-166|2:9:        grug talks and grug drinks
-167|3:14:        then grug thinks
-168|
-169|file_38
-170|1:9:        grug walks many steps
-171|2:9:        grug talks and grug drinks
-172|3:14:        then grug thinks
-173|
-174|file_39
-175|1:9:        grug walks many steps
-176|2:9:        grug talks and grug drinks
-177|3:14:        then grug thinks
-178|
-179|file_4
-180|1:9:        grug walks many steps
-181|2:9:        grug talks and grug drinks
-182|3:14:        then grug thinks
-183|
-184|file_40
-185|1:9:        grug walks many steps
-186|2:9:        grug talks and grug drinks
-187|3:14:        then grug thinks
-188|
-189|file_41
-190|1:9:        grug walks many steps
-191|2:9:        grug talks and grug drinks
-192|3:14:        then grug thinks
-193|
-194|file_42
-195|1:9:        grug walks many steps
-196|2:9:        grug talks and grug drinks
-197|3:14:        then grug thinks
-198|
-199|file_43
-200|1:9:        grug walks many steps
-201|2:9:        grug talks and grug drinks
-202|3:14:        then grug thinks
-203|
-204|file_44
-205|1:9:        grug walks many steps
-206|2:9:        grug talks and grug drinks
-207|3:14:        then grug thinks
-208|
-209|file_45
-210|1:9:        grug walks many steps
-211|2:9:        grug talks and grug drinks
-212|3:14:        then grug thinks
-213|
-214|file_46
-215|1:9:        grug walks many steps
-216|2:9:        grug talks and grug drinks
-217|3:14:        then grug thinks
-218|
-219|file_47
-220|1:9:        grug walks many steps
-221|2:9:        grug talks and grug drinks
-222|3:14:        then grug thinks
-223|
-224|file_48
-225|1:9:        grug walks many steps
-226|2:9:        grug talks and grug drinks
-227|3:14:        then grug thinks
-228|
-229|file_49
-230|1:9:        grug walks many steps
-231|2:9:        grug talks and grug drinks
-232|3:14:        then grug thinks
-233|
-234|file_5
-235|1:9:        grug walks many steps
-236|2:9:        grug talks and grug drinks
-237|3:14:        then grug thinks
-238|
-239|file_50
-240|1:9:        grug walks many steps
-241|2:9:        grug talks and grug drinks
-242|3:14:        then grug thinks
-243|
-244|file_51
-245|1:9:        grug walks many steps
-246|2:9:        grug talks and grug drinks
-247|3:14:        then grug thinks
-248|
-249|file_52
-250|1:9:        grug walks many steps
-251|2:9:        grug talks and grug drinks
-252|3:14:        then grug thinks
-253|
-254|file_53
-255|1:9:        grug walks many steps
-256|2:9:        grug talks and grug drinks
-257|3:14:        then grug thinks
-258|
-259|file_54
-260|1:9:        grug walks many steps
-261|2:9:        grug talks and grug drinks
-262|3:14:        then grug thinks
-263|
-264|file_55
-265|1:9:        grug walks many steps
-266|2:9:        grug talks and grug drinks
-267|3:14:        then grug thinks
-268|
-269|file_56
-270|1:9:        grug walks many steps
-271|2:9:        grug talks and grug drinks
-272|3:14:        then grug thinks
-273|
-274|file_57
-275|1:9:        grug walks many steps
-276|2:9:        grug talks and grug drinks
-277|3:14:        then grug thinks
-278|
-279|file_58
-280|1:9:        grug walks many steps
-281|2:9:        grug talks and grug drinks
-282|3:14:        then grug thinks
-283|
-284|file_59
-285|1:9:        grug walks many steps
-286|2:9:        grug talks and grug drinks
-287|3:14:        then grug thinks
-288|
-289|file_6
-290|1:9:        grug walks many steps
-291|2:9:        grug talks and grug drinks
-292|3:14:        then grug thinks
-293|
-294|file_60
-295|1:9:        grug walks many steps
-296|2:9:        grug talks and grug drinks
-297|3:14:        then grug thinks
-298|
-299|file_61
-300|1:9:        grug walks many steps
-301|2:9:        grug talks and grug drinks
-302|3:14:        then grug thinks
-303|
-304|file_62
-305|1:9:        grug walks many steps
-306|2:9:        grug talks and grug drinks
-307|3:14:        then grug thinks
-308|
-309|file_63
-310|1:9:        grug walks many steps
-311|2:9:        grug talks and grug drinks
-312|3:14:        then grug thinks
-313|
-314|file_64
-315|1:9:        grug walks many steps
-316|2:9:        grug talks and grug drinks
-317|3:14:        then grug thinks
-318|
-319|file_65
-320|1:9:        grug walks many steps
-321|2:9:        grug talks and grug drinks
-322|3:14:        then grug thinks
-323|
-324|file_66
-325|1:9:        grug walks many steps
-326|2:9:        grug talks and grug drinks
-327|3:14:        then grug thinks
-328|
-329|file_67
-330|1:9:        grug walks many steps
-331|2:9:        grug talks and grug drinks
-332|3:14:        then grug thinks
-333|
-334|file_68
-335|1:9:        grug walks many steps
-336|2:9:        grug talks and grug drinks
-337|3:14:        then grug thinks
-338|
-339|file_69
-340|1:9:        grug walks many steps
-341|2:9:        grug talks and grug drinks
-342|3:14:        then grug thinks
-343|
-344|file_7
-345|1:9:        grug walks many steps
-346|2:9:        grug talks and grug drinks
-347|3:14:        then grug thinks
-348|
-349|file_70
-350|1:9:        grug walks many steps
-351|2:9:        grug talks and grug drinks
-352|3:14:        then grug thinks
-353|
-354|file_71
-355|1:9:        grug walks many steps
-356|2:9:        grug talks and grug drinks
-357|3:14:        then grug thinks
-358|
-359|file_72
-360|1:9:        grug walks many steps
-361|2:9:        grug talks and grug drinks
-362|3:14:        then grug thinks
-363|
-364|file_73
-365|1:9:        grug walks many steps
-366|2:9:        grug talks and grug drinks
-367|3:14:        then grug thinks
-368|
-369|file_74
-370|1:9:        grug walks many steps
-371|2:9:        grug talks and grug drinks
-372|3:14:        then grug thinks
-373|
-374|file_75
-375|1:9:        grug walks many steps
-376|2:9:        grug talks and grug drinks
-377|3:14:        then grug thinks
-378|
-379|file_76
-380|1:9:        grug walks many steps
-381|2:9:        grug talks and grug drinks
-382|3:14:        then grug thinks
-383|
-384|file_77
-385|1:9:        grug walks many steps
-386|2:9:        grug talks and grug drinks
-387|3:14:        then grug thinks
-388|
-389|file_78
-390|1:9:        grug walks many steps
-391|2:9:        grug talks and grug drinks
-392|3:14:        then grug thinks
-393|
-394|file_79
-395|1:9:        grug walks many steps
-396|2:9:        grug talks and grug drinks
-397|3:14:        then grug thinks
-398|
-399|file_8
-400|1:9:        grug walks many steps
-401|2:9:        grug talks and grug drinks
-402|3:14:        then grug thinks
-403|
-404|file_80
-405|1:9:        grug walks many steps
-406|2:9:        grug talks and grug drinks
-407|3:14:        then grug thinks
-408|
-409|file_81
-410|1:9:        grug walks many steps
-411|2:9:        grug talks and grug drinks
-412|3:14:        then grug thinks
-413|
-414|file_82
-415|1:9:        grug walks many steps
-416|2:9:        grug talks and grug drinks
-417|3:14:        then grug thinks
-418|
-419|file_83
-420|1:9:        grug walks many steps
-421|2:9:        grug talks and grug drinks
-422|3:14:        then grug thinks
-423|
-424|file_84
-425|1:9:        grug walks many steps
-426|2:9:        grug talks and grug drinks
-427|3:14:        then grug thinks
-428|
-429|file_85
-430|1:9:        grug walks many steps
-431|2:9:        grug talks and grug drinks
-432|3:14:        then grug thinks
-433|
-434|file_86
-435|1:9:        grug walks many steps
-436|2:9:        grug talks and grug drinks
-437|3:14:        then grug thinks
-438|
-439|file_87
-440|1:9:        grug walks many steps
-441|2:9:        grug talks and grug drinks
-442|3:14:        then grug thinks
-443|
-444|file_88
-445|1:9:        grug walks many steps
-446|2:9:        grug talks and grug drinks
-447|3:14:        then grug thinks
-448|
-449|file_89
-450|1:9:        grug walks many steps
-451|2:9:        grug talks and grug drinks
-452|3:14:        then grug thinks
-453|
-454|file_9
-455|1:9:        grug walks many steps
-456|2:9:        grug talks and grug drinks
-457|3:14:        then grug thinks
-458|
-459|file_90
-460|1:9:        grug walks many steps
-461|2:9:        grug talks and grug drinks
-462|3:14:        then grug thinks
-463|
-464|file_91
-465|1:9:        grug walks many steps
-466|2:9:        grug talks and grug drinks
-467|3:14:        then grug thinks
-468|
-469|file_92
-470|1:9:        grug walks many steps
-471|2:9:        grug talks and grug drinks
-472|3:14:        then grug thinks
-473|
-474|file_93
-475|1:9:        grug walks many steps
-476|2:9:        grug talks and grug drinks
-477|3:14:        then grug thinks
-478|
-479|file_94
-480|1:9:        grug walks many steps
-481|2:9:        grug talks and grug drinks
-482|3:14:        then grug thinks
-483|
-484|file_95
-485|1:9:        grug walks many steps
-486|2:9:        grug talks and grug drinks
-487|3:14:        then grug thinks
-488|
-489|file_96
-490|1:9:        grug walks many steps
-491|2:9:        grug talks and grug drinks
-492|3:14:        then grug thinks
-493|
-494|file_97
-495|1:9:        grug walks many steps
-496|2:9:        grug talks and grug drinks
-497|3:14:        then grug thinks
-498|
-499|file_98
-500|1:9:        grug walks many steps
-501|2:9:        grug talks and grug drinks
-502|3:14:        then grug thinks
-503|
-504|file_99
-505|1:9:        grug walks many steps
-506|2:9:        grug talks and grug drinks
-507|3:14:        then grug thinks
+009|
+010|file_1
+011|1:9:        grug walks many steps
+012|2:9:        grug talks and grug drinks
+013|3:14:        then grug thinks
+014|
+015|file_10
+016|1:9:        grug walks many steps
+017|2:9:        grug talks and grug drinks
+018|3:14:        then grug thinks
+019|
+020|file_100
+021|1:9:        grug walks many steps
+022|2:9:        grug talks and grug drinks
+023|3:14:        then grug thinks
+024|
+025|file_11
+026|1:9:        grug walks many steps
+027|2:9:        grug talks and grug drinks
+028|3:14:        then grug thinks
+029|
+030|file_12
+031|1:9:        grug walks many steps
+032|2:9:        grug talks and grug drinks
+033|3:14:        then grug thinks
+034|
+035|file_13
+036|1:9:        grug walks many steps
+037|2:9:        grug talks and grug drinks
+038|3:14:        then grug thinks
+039|
+040|file_14
+041|1:9:        grug walks many steps
+042|2:9:        grug talks and grug drinks
+043|3:14:        then grug thinks
+044|
+045|file_15
+046|1:9:        grug walks many steps
+047|2:9:        grug talks and grug drinks
+048|3:14:        then grug thinks
+049|
+050|file_16
+051|1:9:        grug walks many steps
+052|2:9:        grug talks and grug drinks
+053|3:14:        then grug thinks
+054|
+055|file_17
+056|1:9:        grug walks many steps
+057|2:9:        grug talks and grug drinks
+058|3:14:        then grug thinks
+059|
+060|file_18
+061|1:9:        grug walks many steps
+062|2:9:        grug talks and grug drinks
+063|3:14:        then grug thinks
+064|
+065|file_19
+066|1:9:        grug walks many steps
+067|2:9:        grug talks and grug drinks
+068|3:14:        then grug thinks
+069|
+070|file_2
+071|1:9:        grug walks many steps
+072|2:9:        grug talks and grug drinks
+073|3:14:        then grug thinks
+074|
+075|file_20
+076|1:9:        grug walks many steps
+077|2:9:        grug talks and grug drinks
+078|3:14:        then grug thinks
+079|
+080|file_21
+081|1:9:        grug walks many steps
+082|2:9:        grug talks and grug drinks
+083|3:14:        then grug thinks
+084|
+085|file_22
+086|1:9:        grug walks many steps
+087|2:9:        grug talks and grug drinks
+088|3:14:        then grug thinks
+089|
+090|file_23
+091|1:9:        grug walks many steps
+092|2:9:        grug talks and grug drinks
+093|3:14:        then grug thinks
+094|
+095|file_24
+096|1:9:        grug walks many steps
+097|2:9:        grug talks and grug drinks
+098|3:14:        then grug thinks
+099|
+100|file_25
+101|1:9:        grug walks many steps
+102|2:9:        grug talks and grug drinks
+103|3:14:        then grug thinks
+104|
+105|file_26
+106|1:9:        grug walks many steps
+107|2:9:        grug talks and grug drinks
+108|3:14:        then grug thinks
+109|
+110|file_27
+111|1:9:        grug walks many steps
+112|2:9:        grug talks and grug drinks
+113|3:14:        then grug thinks
+114|
+115|file_28
+116|1:9:        grug walks many steps
+117|2:9:        grug talks and grug drinks
+118|3:14:        then grug thinks
+119|
+120|file_29
+121|1:9:        grug walks many steps
+122|2:9:        grug talks and grug drinks
+123|3:14:        then grug thinks
+124|
+125|file_3
+126|1:9:        grug walks many steps
+127|2:9:        grug talks and grug drinks
+128|3:14:        then grug thinks
+129|
+130|file_30
+131|1:9:        grug walks many steps
+132|2:9:        grug talks and grug drinks
+133|3:14:        then grug thinks
+134|
+135|file_31
+136|1:9:        grug walks many steps
+137|2:9:        grug talks and grug drinks
+138|3:14:        then grug thinks
+139|
+140|file_32
+141|1:9:        grug walks many steps
+142|2:9:        grug talks and grug drinks
+143|3:14:        then grug thinks
+144|
+145|file_33
+146|1:9:        grug walks many steps
+147|2:9:        grug talks and grug drinks
+148|3:14:        then grug thinks
+149|
+150|file_34
+151|1:9:        grug walks many steps
+152|2:9:        grug talks and grug drinks
+153|3:14:        then grug thinks
+154|
+155|file_35
+156|1:9:        grug walks many steps
+157|2:9:        grug talks and grug drinks
+158|3:14:        then grug thinks
+159|
+160|file_36
+161|1:9:        grug walks many steps
+162|2:9:        grug talks and grug drinks
+163|3:14:        then grug thinks
+164|
+165|file_37
+166|1:9:        grug walks many steps
+167|2:9:        grug talks and grug drinks
+168|3:14:        then grug thinks
+169|
+170|file_38
+171|1:9:        grug walks many steps
+172|2:9:        grug talks and grug drinks
+173|3:14:        then grug thinks
+174|
+175|file_39
+176|1:9:        grug walks many steps
+177|2:9:        grug talks and grug drinks
+178|3:14:        then grug thinks
+179|
+180|file_4
+181|1:9:        grug walks many steps
+182|2:9:        grug talks and grug drinks
+183|3:14:        then grug thinks
+184|
+185|file_40
+186|1:9:        grug walks many steps
+187|2:9:        grug talks and grug drinks
+188|3:14:        then grug thinks
+189|
+190|file_41
+191|1:9:        grug walks many steps
+192|2:9:        grug talks and grug drinks
+193|3:14:        then grug thinks
+194|
+195|file_42
+196|1:9:        grug walks many steps
+197|2:9:        grug talks and grug drinks
+198|3:14:        then grug thinks
+199|
+200|file_43
+201|1:9:        grug walks many steps
+202|2:9:        grug talks and grug drinks
+203|3:14:        then grug thinks
+204|
+205|file_44
+206|1:9:        grug walks many steps
+207|2:9:        grug talks and grug drinks
+208|3:14:        then grug thinks
+209|
+210|file_45
+211|1:9:        grug walks many steps
+212|2:9:        grug talks and grug drinks
+213|3:14:        then grug thinks
+214|
+215|file_46
+216|1:9:        grug walks many steps
+217|2:9:        grug talks and grug drinks
+218|3:14:        then grug thinks
+219|
+220|file_47
+221|1:9:        grug walks many steps
+222|2:9:        grug talks and grug drinks
+223|3:14:        then grug thinks
+224|
+225|file_48
+226|1:9:        grug walks many steps
+227|2:9:        grug talks and grug drinks
+228|3:14:        then grug thinks
+229|
+230|file_49
+231|1:9:        grug walks many steps
+232|2:9:        grug talks and grug drinks
+233|3:14:        then grug thinks
+234|
+235|file_5
+236|1:9:        grug walks many steps
+237|2:9:        grug talks and grug drinks
+238|3:14:        then grug thinks
+239|
+240|file_50
+241|1:9:        grug walks many steps
+242|2:9:        grug talks and grug drinks
+243|3:14:        then grug thinks
+244|
+245|file_51
+246|1:9:        grug walks many steps
+247|2:9:        grug talks and grug drinks
+248|3:14:        then grug thinks
+249|
+250|file_52
+251|1:9:        grug walks many steps
+252|2:9:        grug talks and grug drinks
+253|3:14:        then grug thinks
+254|
+255|file_53
+256|1:9:        grug walks many steps
+257|2:9:        grug talks and grug drinks
+258|3:14:        then grug thinks
+259|
+260|file_54
+261|1:9:        grug walks many steps
+262|2:9:        grug talks and grug drinks
+263|3:14:        then grug thinks
+264|
+265|file_55
+266|1:9:        grug walks many steps
+267|2:9:        grug talks and grug drinks
+268|3:14:        then grug thinks
+269|
+270|file_56
+271|1:9:        grug walks many steps
+272|2:9:        grug talks and grug drinks
+273|3:14:        then grug thinks
+274|
+275|file_57
+276|1:9:        grug walks many steps
+277|2:9:        grug talks and grug drinks
+278|3:14:        then grug thinks
+279|
+280|file_58
+281|1:9:        grug walks many steps
+282|2:9:        grug talks and grug drinks
+283|3:14:        then grug thinks
+284|
+285|file_59
+286|1:9:        grug walks many steps
+287|2:9:        grug talks and grug drinks
+288|3:14:        then grug thinks
+289|
+290|file_6
+291|1:9:        grug walks many steps
+292|2:9:        grug talks and grug drinks
+293|3:14:        then grug thinks
+294|
+295|file_60
+296|1:9:        grug walks many steps
+297|2:9:        grug talks and grug drinks
+298|3:14:        then grug thinks
+299|
+300|file_61
+301|1:9:        grug walks many steps
+302|2:9:        grug talks and grug drinks
+303|3:14:        then grug thinks
+304|
+305|file_62
+306|1:9:        grug walks many steps
+307|2:9:        grug talks and grug drinks
+308|3:14:        then grug thinks
+309|
+310|file_63
+311|1:9:        grug walks many steps
+312|2:9:        grug talks and grug drinks
+313|3:14:        then grug thinks
+314|
+315|file_64
+316|1:9:        grug walks many steps
+317|2:9:        grug talks and grug drinks
+318|3:14:        then grug thinks
+319|
+320|file_65
+321|1:9:        grug walks many steps
+322|2:9:        grug talks and grug drinks
+323|3:14:        then grug thinks
+324|
+325|file_66
+326|1:9:        grug walks many steps
+327|2:9:        grug talks and grug drinks
+328|3:14:        then grug thinks
+329|
+330|file_67
+331|1:9:        grug walks many steps
+332|2:9:        grug talks and grug drinks
+333|3:14:        then grug thinks
+334|
+335|file_68
+336|1:9:        grug walks many steps
+337|2:9:        grug talks and grug drinks
+338|3:14:        then grug thinks
+339|
+340|file_69
+341|1:9:        grug walks many steps
+342|2:9:        grug talks and grug drinks
+343|3:14:        then grug thinks
+344|
+345|file_7
+346|1:9:        grug walks many steps
+347|2:9:        grug talks and grug drinks
+348|3:14:        then grug thinks
+349|
+350|file_70
+351|1:9:        grug walks many steps
+352|2:9:        grug talks and grug drinks
+353|3:14:        then grug thinks
+354|
+355|file_71
+356|1:9:        grug walks many steps
+357|2:9:        grug talks and grug drinks
+358|3:14:        then grug thinks
+359|
+360|file_72
+361|1:9:        grug walks many steps
+362|2:9:        grug talks and grug drinks
+363|3:14:        then grug thinks
+364|
+365|file_73
+366|1:9:        grug walks many steps
+367|2:9:        grug talks and grug drinks
+368|3:14:        then grug thinks
+369|
+370|file_74
+371|1:9:        grug walks many steps
+372|2:9:        grug talks and grug drinks
+373|3:14:        then grug thinks
+374|
+375|file_75
+376|1:9:        grug walks many steps
+377|2:9:        grug talks and grug drinks
+378|3:14:        then grug thinks
+379|
+380|file_76
+381|1:9:        grug walks many steps
+382|2:9:        grug talks and grug drinks
+383|3:14:        then grug thinks
+384|
+385|file_77
+386|1:9:        grug walks many steps
+387|2:9:        grug talks and grug drinks
+388|3:14:        then grug thinks
+389|
+390|file_78
+391|1:9:        grug walks many steps
+392|2:9:        grug talks and grug drinks
+393|3:14:        then grug thinks
+394|
+395|file_79
+396|1:9:        grug walks many steps
+397|2:9:        grug talks and grug drinks
+398|3:14:        then grug thinks
+399|
+400|file_8
+401|1:9:        grug walks many steps
+402|2:9:        grug talks and grug drinks
+403|3:14:        then grug thinks
+404|
+405|file_80
+406|1:9:        grug walks many steps
+407|2:9:        grug talks and grug drinks
+408|3:14:        then grug thinks
+409|
+410|file_81
+411|1:9:        grug walks many steps
+412|2:9:        grug talks and grug drinks
+413|3:14:        then grug thinks
+414|
+415|file_82
+416|1:9:        grug walks many steps
+417|2:9:        grug talks and grug drinks
+418|3:14:        then grug thinks
+419|
+420|file_83
+421|1:9:        grug walks many steps
+422|2:9:        grug talks and grug drinks
+423|3:14:        then grug thinks
+424|
+425|file_84
+426|1:9:        grug walks many steps
+427|2:9:        grug talks and grug drinks
+428|3:14:        then grug thinks
+429|
+430|file_85
+431|1:9:        grug walks many steps
+432|2:9:        grug talks and grug drinks
+433|3:14:        then grug thinks
+434|
+435|file_86
+436|1:9:        grug walks many steps
+437|2:9:        grug talks and grug drinks
+438|3:14:        then grug thinks
+439|
+440|file_87
+441|1:9:        grug walks many steps
+442|2:9:        grug talks and grug drinks
+443|3:14:        then grug thinks
+444|
+445|file_88
+446|1:9:        grug walks many steps
+447|2:9:        grug talks and grug drinks
+448|3:14:        then grug thinks
+449|
+450|file_89
+451|1:9:        grug walks many steps
+452|2:9:        grug talks and grug drinks
+453|3:14:        then grug thinks
+454|
+455|file_9
+456|1:9:        grug walks many steps
+457|2:9:        grug talks and grug drinks
+458|3:14:        then grug thinks
+459|
+460|file_90
+461|1:9:        grug walks many steps
+462|2:9:        grug talks and grug drinks
+463|3:14:        then grug thinks
+464|
+465|file_91
+466|1:9:        grug walks many steps
+467|2:9:        grug talks and grug drinks
+468|3:14:        then grug thinks
+469|
+470|file_92
+471|1:9:        grug walks many steps
+472|2:9:        grug talks and grug drinks
+473|3:14:        then grug thinks
+474|
+475|file_93
+476|1:9:        grug walks many steps
+477|2:9:        grug talks and grug drinks
+478|3:14:        then grug thinks
+479|
+480|file_94
+481|1:9:        grug walks many steps
+482|2:9:        grug talks and grug drinks
+483|3:14:        then grug thinks
+484|
+485|file_95
+486|1:9:        grug walks many steps
+487|2:9:        grug talks and grug drinks
+488|3:14:        then grug thinks
+489|
+490|file_96
+491|1:9:        grug walks many steps
+492|2:9:        grug talks and grug drinks
+493|3:14:        then grug thinks
+494|
+495|file_97
+496|1:9:        grug walks many steps
+497|2:9:        grug talks and grug drinks
+498|3:14:        then grug thinks
+499|
+500|file_98
+501|1:9:        grug walks many steps
+502|2:9:        grug talks and grug drinks
+503|3:14:        then grug thinks
+504|
+505|file_99
+506|1:9:        grug walks many steps
+507|2:9:        grug talks and grug drinks
+508|3:14:        then grug thinks
 
 ---|-
 001| 
@@ -1015,3 +1016,4 @@
 505| 
 506| 
 507| 
+508| 
