@@ -128,6 +128,28 @@ T['can search with particular file in paths'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search with particular dir in paths'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'GRUG', flags = '--ignore-case', paths = '.' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search with particular file in flags'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
