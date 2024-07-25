@@ -18,20 +18,19 @@ Grug find! Grug replace! Grug happy!
 - Syntax highlighted search results
 
 #### Searching:
-<img width="1258" alt="image" src="https://github.com/user-attachments/assets/c45d1c0f-4ab8-4b9f-9583-d5d294a76f8d">
+<img width="1257" alt="image" src="https://github.com/user-attachments/assets/c23310c9-5924-4a32-aa3b-a83c042e1910">
 
 #### Replacing:
-<img width="1255" alt="image" src="https://github.com/user-attachments/assets/a88e2add-c44a-4010-8b72-7d19162f1c78">
+<img width="1256" alt="image" src="https://github.com/user-attachments/assets/a1b0dd59-6f2d-4138-abf3-7e4a7454aa18">
 
 #### Rg teaching you it's ways
-<img width="1240" alt="image" src="https://github.com/user-attachments/assets/c658e4a5-462e-4297-a70b-0a7bced70d27">
+<img width="1261" alt="image" src="https://github.com/user-attachments/assets/0e09c5ed-1962-4140-afe1-139e08cebc8b">
 
 #### Help:
-<img width="1255" alt="image" src="https://github.com/user-attachments/assets/cd5f81e7-add2-4d27-9114-f403fccdd3d6">
+<img width="1257" alt="image" src="https://github.com/user-attachments/assets/f4521819-5ba7-4313-9e33-4df01402f28f">
 
 #### History:
-<img width="1256" alt="image" src="https://github.com/user-attachments/assets/5c323aef-a66a-4181-a3a5-3cb0fd22f5b9">
-
+<img width="1252" alt="image" src="https://github.com/user-attachments/assets/e3c5be1c-bee9-48b5-a6d6-f1c2d49de398">
 
 ## 🤔 Philosophy
 
