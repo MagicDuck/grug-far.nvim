@@ -215,14 +215,14 @@ For more API, see [docs][docs]
 :lua require('grug-far').grug_far({ transient = true })
 ```
 
-#### Launch with the current file as a flag, which limits search/replace to it
+#### Launch, limiting search/replace to current file
 ```lua
-:lua require('grug-far').grug_far({ prefills = { flags = vim.fn.expand("%") } })
+:lua require('grug-far').grug_far({ prefills = { paths = vim.fn.expand("%") } })
 ```
 
 #### Launch with the current visual selection, searching only current file
 ```lua
-:<C-u>lua require('grug-far').with_visual_selection({ prefills = { flags = vim.fn.expand("%") } })
+:<C-u>lua require('grug-far').with_visual_selection({ prefills = { paths = vim.fn.expand("%") } })
 ```
 
 #### Toggle visibility of a particular instance and set title to a fixed string

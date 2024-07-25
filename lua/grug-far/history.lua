@@ -46,6 +46,8 @@ function M.addHistoryEntry(context, notify)
       .. inputs.filesFilter
       .. '\nFlags: '
       .. inputs.flags
+      .. '\nPaths: '
+      .. inputs.paths
       .. '\n'
 
     -- dedupe last entry
@@ -92,6 +94,7 @@ end
 ---@field replacement string
 ---@field filesFilter string
 ---@field flags string
+---@field paths string
 
 --- gets history entry from list of lines
 ---@param lines string[]
@@ -102,6 +105,7 @@ function M.getHistoryEntryFromLines(lines)
     replacement = getFirstValueStartingWith(lines, 'Replace:[ ]?'),
     filesFilter = getFirstValueStartingWith(lines, 'Files Filter:[ ]?'),
     flags = getFirstValueStartingWith(lines, 'Flags:[ ]?'),
+    paths = getFirstValueStartingWith(lines, 'Paths:[ ]?'),
   }
 end
 
