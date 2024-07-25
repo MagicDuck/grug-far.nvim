@@ -125,7 +125,33 @@ T['can replace within one dir with spaces'] = function()
   helpers.childExpectScreenshot(child)
 end
 
--- TODO (sbadragan): add test for multiple paths
+T['can replace within multiple dirs with spaces'] = function()
+  helpers.writeTestFiles({
+    { filename = 'foo bar/file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'hello world/file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  }, { 'foo bar', 'hello world' })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'curly', paths = './foo\\ bar ./hello\\ world' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys(50, '<esc>cc', 'curly')
+  vim.uv.sleep(50)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
 
 T['can replace with empty string'] = function()
   helpers.writeTestFiles({
