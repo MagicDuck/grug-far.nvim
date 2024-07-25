@@ -41,6 +41,12 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
     end
   end
 
+  if #inputs.paths > 0 then
+    for path in string.gmatch(inputs.paths, '%S+') do
+      table.insert(args, path)
+    end
+  end
+
   if #blacklisted > 0 then
     return nil, blacklisted
   end

@@ -55,6 +55,7 @@ local contextCount = 0
 ---@field replacement string
 ---@field filesFilter string
 ---@field flags string
+---@field paths string
 
 ---@class GrugFarStateAbort
 ---@field search? fun()

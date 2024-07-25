@@ -120,6 +120,7 @@ M.defaultOptions = {
     replaceInput = ' ',
     filesFilterInput = ' ',
     flagsInput = '󰮚 ',
+    pathsInput = ' ',
 
     resultsStatusReady = '󱩾 ',
     resultsStatusError = ' ',
@@ -140,7 +141,8 @@ M.defaultOptions = {
     search = 'ex: foo    foo([a-z0-9]*)    fun\\(',
     replacement = 'ex: bar    ${1}_foo    $$MY_ENV_VAR ',
     filesFilter = 'ex: *.lua     *.{css,js}    **/docs/*.md',
-    flags = 'ex: /foo/bar ./src/foo.lua --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
+    flags = 'ex: --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
+    paths = 'ex: /foo/bar  ../  ./src/foo.lua',
   },
 
   -- strings to auto-fill in each input area at start
@@ -155,6 +157,8 @@ M.defaultOptions = {
     replacement = '',
     filesFilter = '',
     flags = '',
+    -- TODO (sbadragan): update readme
+    paths = '',
   },
 
   -- search history settings
@@ -280,28 +284,30 @@ M.defaultOptions = {
 ---@field search string
 ---@field replacement string
 ---@field filesFilter string
----@field filesGlob? string deprecated, use filesFilter
 ---@field flags string
+---@field paths string
 
 ---@class PlaceholdersTableOverride
 ---@field enabled? boolean
 ---@field search? string
 ---@field replacement? string
 ---@field filesFilter? string
----@field filesGlob? string deprecated, use filesFilter
 ---@field flags? string
+---@field paths? string
 
 ---@class PrefillsTable
 ---@field search string
 ---@field replacement string
 ---@field filesFilter string
 ---@field flags string
+---@field paths string
 
 ---@class PrefillsTableOverride
 ---@field search? string
 ---@field replacement? string
 ---@field filesFilter? string
 ---@field flags? string
+---@field paths? string
 
 ---@class GrugFarOptions
 ---@field debounceMs integer
