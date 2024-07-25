@@ -290,6 +290,7 @@ function M.createBuffer(win, context)
       prefills.replacement,
       prefills.filesFilter,
       prefills.flags,
+      prefills.paths,
     })
 
     updateBufName(buf, context)

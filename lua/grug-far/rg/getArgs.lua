@@ -42,7 +42,8 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   end
 
   if #inputs.paths > 0 then
-    for path in string.gmatch(inputs.paths, '%S+') do
+    local paths = utils.splitPaths(inputs.paths)
+    for _, path in ipairs(paths) do
       table.insert(args, path)
     end
   end

@@ -78,6 +78,9 @@ local function search(params)
       if status == 'error' then
         state.stats = nil
         resultsList.setError(buf, context, errorMessage)
+        if state.showRgCommand and effectiveArgs then
+          resultsList.appendRgSearchCommand(buf, context, effectiveArgs)
+        end
       else
         if errorMessage and #errorMessage > 0 then
           resultsList.appendWarning(buf, context, errorMessage)

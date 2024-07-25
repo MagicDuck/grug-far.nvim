@@ -391,21 +391,33 @@ end
 
 M.eol = is_win and '\r\n' or '\n'
 
+--- splits string into parts separated by whitespace, ignoring spaces preceded by \
+---@param pathsStr string
+---@return string[]
 function M.splitPaths(pathsStr)
+  local _pathsStr = vim.trim(pathsStr)
   local paths = {}
-  local i = 0
-  local j
+  local i = 1
+  ---@type integer?
+  local j = 1
   while true do
-    j = string.find(pathsStr, ' ', i + 1, true)
+    j = string.find(_pathsStr, ' ', j, true)
     if j == nil then
-      if i < #pathsStr then
-        table.insert(paths, pathsStr:sub(i + 1))
+      if i < #_pathsStr then
+        table.insert(paths, _pathsStr:sub(i))
       end
       break
-    else
-      table.insert(paths, pathsStr:sub(i + 1, j))
-      i = j
     end
+
+    local prevChar = _pathsStr:sub(j - 1, j - 1)
+    if prevChar == ' ' then
+      i = j + 1
+    end
+    if not (prevChar == '\\' or prevChar == ' ') then
+      table.insert(paths, _pathsStr:sub(i, j - 1))
+      i = j + 1
+    end
+    j = j + 1
   end
 
   return paths

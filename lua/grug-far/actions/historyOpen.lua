@@ -60,6 +60,7 @@ local function pickHistoryEntry(historyWin, historyBuf, buf)
     entry.replacement,
     entry.filesFilter,
     entry.flags,
+    entry.paths,
   }
   vim.api.nvim_buf_set_lines(buf, firstInputRow, firstInputRow + #rows, false, rows)
   closeHistoryWindow(historyWin)
@@ -108,7 +109,7 @@ end
 local function highlightHistoryBuffer(historyBuf, context, start_row, end_row)
   local lines = vim.api.nvim_buf_get_lines(historyBuf, start_row, end_row, false)
   vim.api.nvim_buf_clear_namespace(historyBuf, context.historyHlNamespace, start_row, end_row)
-  local inputKeys = { 'Search:', 'Replace:', 'Files Filter:', 'Flags:' }
+  local inputKeys = { 'Search:', 'Replace:', 'Files Filter:', 'Flags:', 'Paths:' }
   for i, line in ipairs(lines) do
     local highlightedLine = false
     for _, inputKey in ipairs(inputKeys) do
