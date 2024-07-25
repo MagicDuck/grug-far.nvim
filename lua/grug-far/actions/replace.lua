@@ -271,7 +271,7 @@ local function replace(params)
 
   if isEmptyStringReplace(args) then
     local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
-    if choice == 2 then
+    if choice ~= 1 then
       on_finish_all(nil, nil, 'replace with empty string canceled!')
       return
     end
