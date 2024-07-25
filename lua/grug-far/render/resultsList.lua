@@ -165,16 +165,16 @@ end
 ---@param buf integer
 ---@param context GrugFarContext
 ---@param warning string | nil
-function M.insertWarning(buf, context, warning)
+function M.appendWarning(buf, context, warning)
   if not (warning and #warning > 0) then
     return
   end
-  local startLine = context.state.headerRow + 1
+  local lastline = vim.api.nvim_buf_line_count(buf)
 
-  local warn_lines = vim.split(warning, '\n')
-  setBufLines(buf, startLine, startLine, false, warn_lines)
+  local warn_lines = vim.split('\n\n' .. warning, '\n')
+  setBufLines(buf, lastline, lastline, false, warn_lines)
 
-  for i = startLine, startLine + #warn_lines - 1 do
+  for i = lastline, lastline + #warn_lines - 1 do
     vim.api.nvim_buf_add_highlight(buf, context.namespace, 'DiagnosticWarn', i, 0, -1)
   end
 end

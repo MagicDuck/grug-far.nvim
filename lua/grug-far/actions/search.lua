@@ -80,7 +80,8 @@ local function search(params)
         resultsList.setError(buf, context, errorMessage)
       else
         if errorMessage and #errorMessage > 0 then
-          resultsList.insertWarning(buf, context, errorMessage)
+          resultsList.appendWarning(buf, context, errorMessage)
+          state.actionMessage = ' warnings, see end of buffer!'
         end
         resultsList.highlight(buf, context)
       end
