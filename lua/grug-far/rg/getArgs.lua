@@ -6,8 +6,9 @@ local utils = require('grug-far/utils')
 ---@param extraArgs string[]
 ---@param blacklistedFlags? string[]
 ---@param forceReplace? boolean
+---@param ignorePaths? boolean
 ---@return string[] | nil args, string[] | nil blacklisted
-local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplace)
+local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplace, ignorePaths)
   if #inputs.search < (options.minSearchChars or 1) then
     return nil
   end
@@ -41,7 +42,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
     end
   end
 
-  if #inputs.paths > 0 then
+  if (not ignorePaths) and #inputs.paths > 0 then
     local paths = utils.splitPaths(inputs.paths)
     for _, path in ipairs(paths) do
       table.insert(args, path)

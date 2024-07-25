@@ -25,7 +25,8 @@ local function fetchReplacedFileContent(params)
     table.insert(extraFlags, params.file)
   end
 
-  local args = getArgs(params.inputs, params.options, extraFlags, blacklistedReplaceFlags, true)
+  local args =
+    getArgs(params.inputs, params.options, extraFlags, blacklistedReplaceFlags, true, true)
 
   local content = ''
   return fetchWithRg({
