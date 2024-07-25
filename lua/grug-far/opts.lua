@@ -157,7 +157,6 @@ M.defaultOptions = {
     replacement = '',
     filesFilter = '',
     flags = '',
-    -- TODO (sbadragan): update readme
     paths = '',
   },
 

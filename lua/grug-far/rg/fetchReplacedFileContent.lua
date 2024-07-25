@@ -1,7 +1,6 @@
 local getArgs = require('grug-far/rg/getArgs')
 local blacklistedReplaceFlags = require('grug-far/rg/blacklistedReplaceFlags')
 local fetchWithRg = require('grug-far/rg/fetchWithRg')
-local utils = require('grug-far/utils')
 
 ---@class FetchReplacedFileContentParams
 ---@field inputs GrugFarInputs
@@ -21,12 +20,10 @@ local function fetchReplacedFileContent(params)
     '--no-heading',
     '--no-filename',
   }
-  if not utils.flagsStrContainsFlag(params.inputs.flags, params.file) then
-    table.insert(extraFlags, params.file)
-  end
 
-  local args =
-    getArgs(params.inputs, params.options, extraFlags, blacklistedReplaceFlags, true, true)
+  local inputs = vim.deepcopy(params.inputs)
+  inputs.paths = params.file
+  local args = getArgs(inputs, params.options, extraFlags, blacklistedReplaceFlags, true)
 
   local content = ''
   return fetchWithRg({
