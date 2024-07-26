@@ -425,4 +425,12 @@ function M.splitPaths(pathsStr)
   return paths
 end
 
+--- closes given uv handle if open
+---@param handle uv_handle_t | nil
+function M.closeHandle(handle)
+  if handle and not handle:is_closing() then
+    handle:close()
+  end
+end
+
 return M

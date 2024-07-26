@@ -21,8 +21,12 @@ local function replaceInFile(params)
     options = context.options,
     file = file,
     on_finish = function(status, errorMessage, content)
-      if status == 'error' then
+      if not status or status == 'error' then
         return on_done(errorMessage)
+      end
+
+      if not content then
+        return on_done('no replaced content!')
       end
 
       utils.overwriteFileAsync(file, content, function(err)
