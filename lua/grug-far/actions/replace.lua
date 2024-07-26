@@ -21,21 +21,25 @@ local function replaceInFile(params)
     options = context.options,
     file = file,
     on_finish = function(status, errorMessage, content)
-      if not status or status == 'error' then
+      if status == 'error' then
         return on_done(errorMessage)
       end
-
-      if not content then
-        return on_done('no replaced content!')
+      if status == nil then
+        -- aborted
+        return on_done(nil)
       end
 
-      utils.overwriteFileAsync(file, content, function(err)
-        if err then
-          return on_done('Could not write: ' .. file .. '\n' .. err)
-        end
+      if status == 'success' and content then
+        return utils.overwriteFileAsync(file, content, function(err)
+          if err then
+            return on_done('Could not write: ' .. file .. '\n' .. err)
+          end
 
-        on_done(nil)
-      end)
+          on_done(nil)
+        end)
+      end
+
+      return on_done(nil)
     end,
   })
 end

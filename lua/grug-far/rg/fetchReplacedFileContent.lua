@@ -39,6 +39,7 @@ local function fetchReplacedFileContent(params)
   local stderr = uv.new_pipe()
   local errorMessage = ''
   local content = nil
+  local finished = false
 
   local handle
   handle = uv.spawn(params.options.rgPath, {
@@ -48,26 +49,41 @@ local function fetchReplacedFileContent(params)
   }, function(
     code -- ,signal
   )
+    if finished then
+      return
+    end
+
     utils.closeHandle(stdout)
     utils.closeHandle(stderr)
     utils.closeHandle(handle)
 
+    finished = true
     local isSuccess = code == 0
     on_finish(isSuccess and 'success' or 'error', errorMessage, content)
   end)
 
   uv.read_start(stdout, function(err, data)
+    if finished then
+      return
+    end
     if err then
       errorMessage = errorMessage .. '\nerror reading from rg stdout!'
       return
     end
 
     if data then
-      content = content and data or content .. data
+      if content then
+        content = content .. data
+      else
+        content = data
+      end
     end
   end)
 
   uv.read_start(stderr, function(err, data)
+    if finished then
+      return
+    end
     if err then
       errorMessage = errorMessage .. '\nerror reading from rg stderr!'
       return
@@ -78,8 +94,23 @@ local function fetchReplacedFileContent(params)
     end
   end)
 
-  -- TODO (sbadragan): can we get abort in a simple way?
-  return nil
+  local on_abort = function()
+    if finished then
+      return
+    end
+
+    finished = true
+    utils.closeHandle(stdout)
+    utils.closeHandle(stderr)
+    utils.closeHandle(handle)
+    if handle then
+      handle:kill(vim.uv.constants.SIGTERM)
+    end
+
+    on_finish(nil, nil, nil)
+  end
+
+  return on_abort
 end
 
 return fetchReplacedFileContent
