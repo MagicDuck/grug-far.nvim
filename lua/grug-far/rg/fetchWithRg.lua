@@ -1,13 +1,6 @@
 local utils = require('grug-far/utils')
 local uv = vim.uv
 
----@param handle uv_handle_t | nil
-local function closeHandle(handle)
-  if handle and not handle:is_closing() then
-    handle:close()
-  end
-end
-
 ---@class FetchWithRgParams
 ---@field args string[] | nil
 ---@field options GrugFarOptions
@@ -45,9 +38,9 @@ local function fetchWithRg(params)
       return
     end
 
-    closeHandle(stdout)
-    closeHandle(stderr)
-    closeHandle(handle)
+    utils.closeHandle(stdout)
+    utils.closeHandle(stderr)
+    utils.closeHandle(handle)
 
     if code > 0 and #errorMessage == 0 then
       errorMessage = 'no matches'
@@ -70,9 +63,9 @@ local function fetchWithRg(params)
     end
 
     finished = true
-    closeHandle(stdout)
-    closeHandle(stderr)
-    closeHandle(handle)
+    utils.closeHandle(stdout)
+    utils.closeHandle(stderr)
+    utils.closeHandle(handle)
     if handle then
       handle:kill(vim.uv.constants.SIGTERM)
     end
