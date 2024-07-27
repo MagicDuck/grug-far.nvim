@@ -11,7 +11,6 @@ local globalOptions = nil
 
 ---@class NamedInstance
 ---@field buf integer
----@field win? integer
 ---@field context GrugFarContext
 
 ---@type table<string, NamedInstance>
@@ -98,7 +97,6 @@ local contextCount = 0
 ---@field extmarkIds {[string]: integer}
 ---@field state GrugFarState
 ---@field prevWin? integer
----@field instanceName? string
 ---@field actions GrugFarAction[]
 
 --- generate instance specific context
@@ -157,8 +155,8 @@ local function setupCleanup(buf, context)
 
     utils.abortTasks(context)
     context.state.bufClosed = true
-    if context.instanceName then
-      namedInstances[context.instanceName] = nil
+    if context.options.instanceName then
+      namedInstances[context.options.instanceName] = nil
     end
 
     vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
@@ -236,7 +234,7 @@ function M._grug_far_internal(options, params)
   setupCleanup(buf, context)
 
   if options.instanceName then
-    namedInstances[options.instanceName] = { buf = buf, win = win, context = context }
+    namedInstances[options.instanceName] = { buf = buf, context = context }
   end
 end
 
@@ -305,14 +303,14 @@ function M.toggle_instance(options)
   end
 
   local inst = namedInstances[options.instanceName]
-  if inst.win then
-    -- toggle it off
-    vim.api.nvim_win_close(inst.win, true)
-    inst.win = nil
-  else
+  local win = vim.fn.bufwinid(inst.buf)
+  if win == -1 then
     -- toggle it on
-    inst.win = createWindow(inst.context)
-    vim.api.nvim_win_set_buf(inst.win, inst.buf)
+    win = createWindow(inst.context)
+    vim.api.nvim_win_set_buf(win, inst.buf)
+  else
+    -- toggle it off
+    vim.api.nvim_win_close(win, true)
   end
 end
 
