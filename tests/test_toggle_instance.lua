@@ -53,4 +53,46 @@ T['can toggle instance'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can toggle instance after deletion of buffer'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+  helpers.cdTempTestDir(child)
+
+  -- toggle on
+  child.lua('GrugFar.toggle_instance(...)', {
+    {
+      instanceName = 'far',
+      staticTitle = 'Find and Replace',
+    },
+  })
+  child.type_keys(50, '<esc>cc', 'walks')
+  helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+
+  -- delete
+  child.type_keys('<esc>:bd<cr>')
+
+  -- toggle on again
+  child.lua('GrugFar.toggle_instance(...)', {
+    {
+      instanceName = 'far',
+      staticTitle = 'Find and Replace',
+    },
+  })
+  helpers.childWaitForScreenshotText(child, 'Find and Replace')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
