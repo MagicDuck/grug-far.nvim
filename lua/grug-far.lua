@@ -141,6 +141,12 @@ local function createWindow(context)
 
   vim.api.nvim_set_option_value('wrap', context.options.wrap, { win = win })
 
+  vim.api.nvim_set_option_value('foldmethod', 'expr', { win = win })
+  vim.api.nvim_set_option_value(
+    'foldexpr',
+    'v:lua.require("grug-far/fold").getFoldLevel(v:lnum)',
+    { win = win }
+  )
   return win
 end
 
