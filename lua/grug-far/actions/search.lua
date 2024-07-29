@@ -1,6 +1,7 @@
 local fetchResults = require('grug-far/rg/fetchResults')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
+local fold = require('grug-far/fold')
 
 --- performs search
 ---@param params { buf: integer, context: GrugFarContext }
@@ -87,14 +88,7 @@ local function search(params)
           state.actionMessage = ' warnings, see end of buffer!'
         end
         resultsList.highlight(buf, context)
-      end
-
-      local win = vim.fn.bufwinid(buf)
-      if win ~= -1 then
-        vim.fn.win_execute(win, 'normal zx')
-        if vim.fn.mode():lower():find('v') ~= nil then
-          vim.fn.win_execute(win, 'startinsert!')
-        end
+        fold.updateFolds(buf)
       end
 
       renderResultsHeader(buf, context)
