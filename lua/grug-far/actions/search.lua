@@ -89,6 +89,14 @@ local function search(params)
         resultsList.highlight(buf, context)
       end
 
+      local win = vim.fn.bufwinid(buf)
+      if win ~= -1 then
+        vim.fn.win_execute(win, 'normal zx')
+        if vim.fn.mode():lower():find('v') ~= nil then
+          vim.fn.win_execute(win, 'startinsert!')
+        end
+      end
+
       renderResultsHeader(buf, context)
     end,
   })
