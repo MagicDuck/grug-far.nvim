@@ -11,10 +11,6 @@ end
 ---@return integer
 M.getFoldLevel = function(lnum)
   local line = vim.fn.getline(lnum)
-  -- TODO (sbadragan): need this?
-  -- local nextline = vim.fn.getline(lnum + 1)
-
-  -- if isPartOfFold(line) or isPartOfFold(nextline) then
   if isPartOfFold(line) then
     return 1
   end
