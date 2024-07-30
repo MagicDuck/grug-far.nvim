@@ -126,7 +126,7 @@ M.defaultOptions = {
     resultsStatusError = ' ',
     resultsStatusSuccess = '󰗡 ',
     resultsActionMessage = '  ',
-    resultsChangeIndicator = '┃',
+    resultsChangeIndicator = '▐',
 
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
@@ -190,6 +190,22 @@ M.defaultOptions = {
   -- As this needs to be unique per instance, this option is meant to be speficied for a particular instance
   -- as opposed to something set in the setup function
   instanceName = nil,
+
+  -- folding related options
+  folding = {
+    -- whether to enable folding
+    -- TODO (sbadragan): implement
+    enabled = true,
+
+    -- sets foldlevel, folds with higher level will be closed.
+    -- result matche lines for each file have fold level 1
+    -- set it to 0 if you would like to have the results initially collapsed
+    -- See :h foldlevel
+    foldlevel = 1,
+
+    -- visual indicator of folds, see :h foldcolumn
+    foldcolumn = 'auto',
+  },
 }
 
 ---@class KeymapTable
