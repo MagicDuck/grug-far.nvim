@@ -7,10 +7,9 @@ local function isPartOfFold(line)
 end
 
 --- gets fold level of line at given number
----@param lnum integer
 ---@return integer
-M.getFoldLevel = function(lnum)
-  local line = vim.fn.getline(lnum)
+M.getFoldLevel = function()
+  local line = vim.fn.getline(vim.v.lnum)
   if isPartOfFold(line) then
     return 1
   end
@@ -26,6 +25,13 @@ M.updateFolds = function(buf)
     vim.fn.win_execute(win, 'normal zx')
     vim.api.nvim_win_set_cursor(win, cursor)
   end
+end
+
+--- gets fold text
+---@return string
+M.getFoldText = function()
+  local linecount = vim.v.foldend - vim.v.foldstart + 1
+  return linecount .. ' matching lines: ' .. vim.fn.getline(vim.v.foldstart)
 end
 
 return M
