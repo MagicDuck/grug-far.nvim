@@ -200,7 +200,7 @@ local function setupGlobalOptOverrides(buf, context)
 end
 
 local FIRST_INPUT_LINE = 2
-local LAST_INPUT_LINE = 6
+local LAST_INPUT_LINE = 7
 
 --- fills in prefills
 ---@param buf integer
