@@ -226,6 +226,7 @@ end
 
 --- launch grug-far with the given overrides
 ---@param options? GrugFarOptionsOverride
+---@return string instanceName
 function M.grug_far(options)
   ensure_configured()
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
@@ -236,12 +237,13 @@ function M.grug_far(options)
     vim.cmd([[normal! vv]])
   end
 
-  M._grug_far_internal(resolvedOpts, { is_visual = is_visual })
+  return M._grug_far_internal(resolvedOpts, { is_visual = is_visual })
 end
 
 --- launch grug-far with the given options and params
 ---@param options GrugFarOptions
 ---@param params { is_visual: boolean }
+---@return string instanceName
 function M._grug_far_internal(options, params)
   if options.instanceName and namedInstances[options.instanceName] then
     error('A grug-far instance with instanceName="' .. options.instanceName .. '" already exists!')
@@ -267,9 +269,12 @@ function M._grug_far_internal(options, params)
   local buf = farBuffer.createBuffer(win, context)
   setupCleanup(buf, context)
 
-  if options.instanceName then
-    namedInstances[options.instanceName] = { buf = buf, context = context }
+  if not options.instanceName then
+    options.instanceName = '__grug_far_instance__' .. context.count
   end
+  namedInstances[options.instanceName] = { buf = buf, context = context }
+
+  return options.instanceName
 end
 
 --- launch grug-far with the given overrides, pre-filling
@@ -342,7 +347,6 @@ end
 ---@param instanceName string
 ---@return boolean
 function M.has_instance(instanceName)
-  ensure_instance_name(instanceName)
   return not not namedInstances[instanceName]
 end
 
