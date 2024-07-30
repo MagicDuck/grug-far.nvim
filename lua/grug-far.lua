@@ -287,7 +287,7 @@ end
 function M.with_visual_selection(options)
   ensure_configured()
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
-  M._grug_far_internal(resolvedOpts, { is_visual = true })
+  return M._grug_far_internal(resolvedOpts, { is_visual = true })
 end
 
 --- toggles given list of flags in the current grug-far buffer
