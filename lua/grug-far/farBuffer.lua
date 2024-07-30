@@ -116,7 +116,7 @@ local function getActions(buf, context)
       keymap = keymaps.close,
       description = 'Close grug-far buffer/window. This is the same as `:bd` except that it will also ask you to confirm if there is a replace/sync in progress, as those would be aborted.',
       action = function()
-        close({ context = context })
+        close({ buf = buf, context = context })
       end,
     },
     {

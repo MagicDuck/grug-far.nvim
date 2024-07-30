@@ -3,6 +3,7 @@ local highlights = require('grug-far/highlights')
 local farBuffer = require('grug-far/farBuffer')
 local history = require('grug-far/history')
 local utils = require('grug-far/utils')
+local close = require('grug-far/actions/close')
 
 local M = {}
 
@@ -19,6 +20,12 @@ local namedInstances = {}
 ---@return boolean
 local function is_configured()
   return globalOptions ~= nil
+end
+
+local function ensure_configured()
+  if not is_configured() then
+    error('Please call require("grug-far").setup(...) beforehand!')
+  end
 end
 
 --- set up grug-far
@@ -200,6 +207,7 @@ end
 --- launch grug-far with the given overrides
 ---@param options? GrugFarOptionsOverride
 function M.grug_far(options)
+  ensure_configured()
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
   local is_visual = resolvedOpts.ignoreVisualSelection and false
     or vim.fn.mode():lower():find('v') ~= nil
@@ -215,11 +223,6 @@ end
 ---@param options GrugFarOptions
 ---@param params { is_visual: boolean }
 function M._grug_far_internal(options, params)
-  if not is_configured() then
-    print('Please call require("grug-far").setup(...) before executing grug-far API!')
-    return
-  end
-
   if options.instanceName and namedInstances[options.instanceName] then
     print(
       'require("grug-far").grug-far({..., instanceName:...}): A grug-far instance with instanceName="'
@@ -262,6 +265,7 @@ end
 --- can't use it to separate lines)
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
+  ensure_configured()
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
   M._grug_far_internal(resolvedOpts, { is_visual = true })
 end
@@ -299,12 +303,7 @@ end
 --- requires options.instanceName to be given in order to identify the grug-far instance to toggle
 ---@param options GrugFarOptionsOverride
 function M.toggle_instance(options)
-  if not is_configured() then
-    print(
-      'Please call require("grug-far").setup(...) before executing require("grug-far").toggle_instance(...)!'
-    )
-    return
-  end
+  ensure_configured()
 
   if not options.instanceName then
     print(
@@ -313,12 +312,12 @@ function M.toggle_instance(options)
     return
   end
 
-  if not namedInstances[options.instanceName] then
+  local inst = namedInstances[options.instanceName]
+  if not inst then
     M.grug_far(options)
     return
   end
 
-  local inst = namedInstances[options.instanceName]
   local win = vim.fn.bufwinid(inst.buf)
   if win == -1 then
     -- toggle it on
@@ -327,6 +326,34 @@ function M.toggle_instance(options)
   else
     -- toggle it off
     vim.api.nvim_win_close(win, true)
+  end
+end
+
+--- checks if grug-far instance with given name exists
+---@param instanceName string
+---@return boolean
+function M.has_instance(instanceName)
+  return not not namedInstances[instanceName]
+end
+
+--- closes grug-far instance with given name
+---@param instanceName string
+function M.close_instance(instanceName)
+  local inst = namedInstances[instanceName]
+  if inst then
+    close({ context = inst.context, buf = inst.buf })
+  end
+end
+
+--- hides grug-far instance with given name
+---@param instanceName string
+function M.hide_instance(instanceName)
+  local inst = namedInstances[instanceName]
+  if inst then
+    local win = vim.fn.bufwinid(inst.buf)
+    if win ~= -1 then
+      vim.api.nvim_win_close(win, true)
+    end
   end
 end
 

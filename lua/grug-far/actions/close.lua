@@ -1,7 +1,8 @@
 --- closes the buffer, thus freeing resources
----@param params { context: GrugFarContext }
+---@param params { context: GrugFarContext, buf: integer }
 local function close(params)
   local context = params.context
+  local buf = params.buf
   local state = context.state
 
   local runningTask = nil
@@ -22,7 +23,11 @@ local function close(params)
     end
   end
 
-  vim.cmd('stopinsert | bdelete')
+  local win = vim.fn.bufwinid(buf)
+  if win ~= -1 then
+    vim.api.nvim_win_close(win, true)
+  end
+  vim.api.nvim_buf_delete(buf, { force = true })
 end
 
 return close
