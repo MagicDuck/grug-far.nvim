@@ -28,6 +28,26 @@ local function ensure_configured()
   end
 end
 
+---@param instanceName string
+local function ensure_instance_name(instanceName)
+  if not instanceName then
+    error(
+      'instanceName is required! This just needs to be any string you want to use to identify the grug-far instance.'
+    )
+  end
+end
+
+---@param instanceName string
+local function ensure_instance(instanceName)
+  ensure_instance_name(instanceName)
+  local inst = namedInstances[instanceName]
+  if not inst then
+    error('No such grug-far instance: ' .. instanceName)
+  end
+
+  return inst
+end
+
 --- set up grug-far
 ---@param options? GrugFarOptionsOverride
 function M.setup(options)
@@ -224,12 +244,7 @@ end
 ---@param params { is_visual: boolean }
 function M._grug_far_internal(options, params)
   if options.instanceName and namedInstances[options.instanceName] then
-    print(
-      'require("grug-far").grug-far({..., instanceName:...}): A grug-far instance with instanceName="'
-        .. options.instanceName
-        .. '" already exists!'
-    )
-    return
+    error('A grug-far instance with instanceName="' .. options.instanceName .. '" already exists!')
   end
 
   if params.is_visual then
@@ -304,13 +319,7 @@ end
 ---@param options GrugFarOptionsOverride
 function M.toggle_instance(options)
   ensure_configured()
-
-  if not options.instanceName then
-    print(
-      'require("grug-far").toggle_instance(options): options.instanceName is required! This just needs to be any string you want to use to identify the grug-far instance.'
-    )
-    return
-  end
+  ensure_instance_name(options.instanceName)
 
   local inst = namedInstances[options.instanceName]
   if not inst then
@@ -333,12 +342,14 @@ end
 ---@param instanceName string
 ---@return boolean
 function M.has_instance(instanceName)
+  ensure_instance_name(instanceName)
   return not not namedInstances[instanceName]
 end
 
 --- closes grug-far instance with given name
 ---@param instanceName string
 function M.close_instance(instanceName)
+  ensure_instance_name(instanceName)
   local inst = namedInstances[instanceName]
   if inst then
     close({ context = inst.context, buf = inst.buf })
@@ -348,12 +359,48 @@ end
 --- hides grug-far instance with given name
 ---@param instanceName string
 function M.hide_instance(instanceName)
+  ensure_instance_name(instanceName)
   local inst = namedInstances[instanceName]
   if inst then
     local win = vim.fn.bufwinid(inst.buf)
     if win ~= -1 then
       vim.api.nvim_win_close(win, true)
     end
+  end
+end
+
+--- opens grug-far instance with given name if window closed
+--- otherwise focuses the window
+---@param instanceName string
+function M.open_instance(instanceName)
+  ensure_configured()
+  local inst = ensure_instance(instanceName)
+
+  local win = vim.fn.bufwinid(inst.buf)
+  if win == -1 then
+    -- toggle it on
+    win = createWindow(inst.context)
+    vim.api.nvim_win_set_buf(win, inst.buf)
+  else
+    -- focus it
+    vim.api.nvim_set_current_win(win)
+  end
+end
+
+-- TODO (sbadragan): update help
+--- updates grug-far instance with given input prefills
+--- if clearOld=true is given, the old input values are ignored
+---@param instanceName string
+---@param prefills PrefillsTableOverride
+---@param clearOld boolean
+function M.update_instance_prefills(instanceName, prefills, clearOld)
+  ensure_configured()
+  local inst = ensure_instance(instanceName)
+
+  if clearOld then
+    farBuffer.fillPrefills(inst.buf, prefills)
+  else
+    farBuffer.updatePrefills(inst.buf, prefills)
   end
 end
 
