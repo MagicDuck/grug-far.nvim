@@ -90,6 +90,47 @@ require('grug-far').toggle_flags({flags})                *grug-far.toggle_flags(
 	Return:
 	    {flags_state}(table) List of boolean flag states
 
+require('grug-far').has_instance({instanceName})               *grug-far.has_instance()*
+        Checks if grug-far instance with given name exists
+
+        Parameters: ~
+            {instanceName}(string) 
+	
+	Return:
+	    {exists}(boolean) 
+
+require('grug-far').is_instance_open({instanceName})           *grug-far.is_instance_open()*
+        Checks if grug-far instance with given name is open.
+
+        Parameters: ~
+            {instanceName}(string) 
+	
+	Return:
+	    {is_open}(boolean) 
+
+require('grug-far').close_instance({instanceName})           *grug-far.close_instance()*
+        Closes (kills) grug-far instance with given name.
+
+        Parameters: ~
+            {instanceName}(string) 
+
+require('grug-far').open_instance({instanceName})           *grug-far.open_instance()*
+        Opens grug-far instance with given name if window is closed.
+	Otherwise focuses the window.
+
+        Parameters: ~
+            {instanceName}(string) 
+
+require('grug-far').update_instance_prefills({instanceName}, {prefills}, {clearOld})
+                                                  *grug-far.update_instance_prefills()*
+        Updates grug-far instance with given input prefill.
+	If clearOld=true is given, the old input values are ignored.
+
+        Parameters: ~
+            {instanceName}(string) 
+            {prefills}(PrefillsTableOverride) table 
+	       {search=, replacement=, filesFilter=, flags=, paths=}
+            {clearOld}(boolean) if given, old input values are ignored
 
 ==============================================================================
 4. Highlights                                          *grug-far-highlights*
