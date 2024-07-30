@@ -346,6 +346,15 @@ function M.has_instance(instanceName)
   return not not namedInstances[instanceName]
 end
 
+--- checks if grug-far instance with given name is open
+---@param instanceName string
+---@return boolean
+function M.is_instance_open(instanceName)
+  local inst = ensure_instance(instanceName)
+  local win = vim.fn.bufwinid(inst.buf)
+  return win ~= -1
+end
+
 --- closes grug-far instance with given name
 ---@param instanceName string
 function M.close_instance(instanceName)
@@ -397,11 +406,13 @@ function M.update_instance_prefills(instanceName, prefills, clearOld)
   ensure_configured()
   local inst = ensure_instance(instanceName)
 
-  if clearOld then
-    farBuffer.fillPrefills(inst.buf, prefills)
-  else
-    farBuffer.updatePrefills(inst.buf, prefills)
-  end
+  vim.schedule(function()
+    if clearOld then
+      farBuffer.fillPrefills(inst.buf, prefills)
+    else
+      farBuffer.updatePrefills(inst.buf, prefills)
+    end
+  end)
 end
 
 return M
