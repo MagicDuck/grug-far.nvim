@@ -194,7 +194,6 @@ M.defaultOptions = {
   -- folding related options
   folding = {
     -- whether to enable folding
-    -- TODO (sbadragan): implement
     enabled = true,
 
     -- sets foldlevel, folds with higher level will be closed.
@@ -204,7 +203,8 @@ M.defaultOptions = {
     foldlevel = 1,
 
     -- visual indicator of folds, see :h foldcolumn
-    foldcolumn = 'auto',
+    -- set to '0' to disable
+    foldcolumn = '1',
   },
 }
 
@@ -324,6 +324,16 @@ M.defaultOptions = {
 ---@field flags? string
 ---@field paths? string
 
+---@class FoldingTable
+---@field enabled boolean
+---@field foldlevel integer
+---@field foldcolumn string
+
+---@class FoldingTableOverride
+---@field enabled? boolean
+---@field foldlevel? integer
+---@field foldcolumn? string | integer
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -350,6 +360,7 @@ M.defaultOptions = {
 ---@field prefills PrefillsTable
 ---@field history HistoryTable
 ---@field instanceName? string
+---@field folding FoldingTable
 
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
@@ -376,6 +387,7 @@ M.defaultOptions = {
 ---@field prefills? PrefillsTableOverride
 ---@field history? HistoryTableOverride
 ---@field instanceName? string
+---@field folding? FoldingTableOverride
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride | GrugFarOptions
