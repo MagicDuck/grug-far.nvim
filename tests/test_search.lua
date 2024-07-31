@@ -36,6 +36,29 @@ T['can search for some string'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search for some string with placeholders on'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+    placeholders = { enabled = true },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search manually on insert leave'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
