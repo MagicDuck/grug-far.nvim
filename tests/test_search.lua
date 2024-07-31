@@ -75,11 +75,12 @@ T['can search manually on insert leave'] = function()
     searchOnInsertLeave = true,
   })
 
-  child.type_keys(50, '<esc>cc', 'walks')
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>cc', 'walks')
   vim.uv.sleep(100)
   helpers.childExpectScreenshot(child)
 
-  child.type_keys(50, '<esc>')
+  child.type_keys('<esc>')
   helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
@@ -303,7 +304,7 @@ T['can search and edit search'] = function()
 
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(50, '<esc>cc', 'walks')
+  child.type_keys('<esc>cc', 'walks')
   helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
 
@@ -326,7 +327,7 @@ T['can search for visual selection inside one line'] = function()
 
   helpers.cdTempTestDir(child)
   child.cmd(':e file2')
-  child.type_keys(50, 'jj', 'vee', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+  child.type_keys(10, 'jj', 'vee', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
 
   helpers.childWaitForFinishedStatus(child)
 
@@ -348,7 +349,7 @@ T['searches full line visual selection'] = function()
 
   helpers.cdTempTestDir(child)
   child.cmd(':e file2')
-  child.type_keys(100, 'j', '0v$', '<esc>:lua GrugFar.with_visual_selection()<CR>')
+  child.type_keys(10, 'j', '0v$', '<esc>:lua GrugFar.with_visual_selection()<CR>')
 
   helpers.childWaitForFinishedStatus(child)
 
@@ -370,7 +371,7 @@ T['searches first line of multiline visual selection'] = function()
 
   helpers.cdTempTestDir(child)
   child.cmd(':e file2')
-  child.type_keys(50, 'j', 'wwwvjj', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+  child.type_keys(10, 'j', 'wwwvjj', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
 
   helpers.childWaitForFinishedStatus(child)
 

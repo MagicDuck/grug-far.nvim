@@ -22,7 +22,7 @@ T['can manually save and reload from history'] = function()
       filename = 'file2.doc',
       content = [[ 
       grug talks and grug drinks
-      then grug thinks
+      then grug thinks and talks
     ]],
     },
   })
@@ -34,14 +34,14 @@ T['can manually save and reload from history'] = function()
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
   helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
-  child.type_keys(100, '<esc>cc', 'walks')
-  vim.uv.sleep(100)
+  child.type_keys('<esc>cc', 'walks')
+  helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
   helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
-  child.type_keys(100, '<esc>cc', 'talks')
-  vim.uv.sleep(100)
+  child.type_keys('<esc>cc', 'talks')
+  helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
   helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
@@ -51,8 +51,8 @@ T['can manually save and reload from history'] = function()
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
-  child.type_keys(100, '<esc>16G', '<enter>')
-  vim.uv.sleep(100)
+  child.type_keys('<esc>16G', '<enter>')
+  helpers.childWaitForScreenshotText(child, '4 matches in 2 files')
   helpers.childExpectScreenshot(child)
 end
 
@@ -77,7 +77,7 @@ T['auto-saves to history on replace'] = function()
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
 
-  vim.uv.sleep(50)
+  vim.uv.sleep(50) -- make sure history entry gets added
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)
@@ -104,7 +104,7 @@ T['auto-saves to history on sync all'] = function()
   helpers.childWaitForUIVirtualText(child, 'sync completed!')
   helpers.childExpectScreenshot(child)
 
-  vim.uv.sleep(50)
+  vim.uv.sleep(50) -- make sure history entry gets added
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)
@@ -131,6 +131,7 @@ T['dedupes last history entry'] = function()
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
   helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
+  vim.uv.sleep(50) -- make sure history entry gets added
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)

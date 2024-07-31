@@ -36,9 +36,9 @@ T['can goto given location'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>11G')
+  child.type_keys('<esc>11G')
   child.type_keys('<esc>' .. keymaps.gotoLocation.n)
-  vim.uv.sleep(50)
+  helpers.childWaitForScreenshotText(child, 'Top file1.txt')
   helpers.childExpectScreenshot(child)
 end
 
