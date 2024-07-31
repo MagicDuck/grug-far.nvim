@@ -131,6 +131,7 @@ function M.getSetupOptions()
     history = {
       historyDir = vim.uv.cwd() .. '/temp_history_dir',
     },
+    windowCreationCommand = 'tab split',
   }
 end
 
