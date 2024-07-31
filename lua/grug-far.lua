@@ -354,14 +354,18 @@ end
 ---@param instanceName string
 ---@return boolean
 function M.is_instance_open(instanceName)
-  local inst = ensure_instance(instanceName)
+  local inst = namedInstances[instanceName]
+  if not inst then
+    return false
+  end
+
   local win = vim.fn.bufwinid(inst.buf)
   return win ~= -1
 end
 
 --- closes grug-far instance with given name
 ---@param instanceName string
-function M.close_instance(instanceName)
+function M.kill_instance(instanceName)
   ensure_instance_name(instanceName)
   local inst = namedInstances[instanceName]
   if inst then
@@ -371,7 +375,7 @@ end
 
 --- hides grug-far instance with given name
 ---@param instanceName string
-function M.hide_instance(instanceName)
+function M.close_instance(instanceName)
   ensure_instance_name(instanceName)
   local inst = namedInstances[instanceName]
   if inst then

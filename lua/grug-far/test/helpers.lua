@@ -167,6 +167,16 @@ function M.childWaitForScreenshotText(child, text)
   end)
 end
 
+--- waits until child screenshot does not contain given virtual text
+---@param child NeovimChild
+---@param text string
+function M.childWaitForScreenshotNotContainingText(child, text)
+  M.childWaitForCondition(child, function()
+    local screenshotText = tostring(child.get_screenshot())
+    return string.find(screenshotText, text, 1, true) == nil
+  end)
+end
+
 --- waits until child buf contains given UI virtual text
 ---@param child NeovimChild
 ---@param text string
@@ -194,12 +204,13 @@ end
 --- run grug_far(options) in child
 ---@param child NeovimChild
 ---@param options GrugFarOptionsOverride
+---@return string instanceName
 function M.childRunGrugFar(child, options)
   vim.fn.delete('./temp_history_dir', 'rf')
   vim.fn.mkdir('./temp_history_dir')
 
   M.cdTempTestDir(child)
-  child.lua('GrugFar.grug_far(...)', {
+  return child.lua_get('GrugFar.grug_far(...)', {
     options,
   })
 end
