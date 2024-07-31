@@ -16,11 +16,11 @@
 15|  replace completed!                                                           
 16|                                                                                
 17|   file1.txt                                                                    
-18|-▐ 1:6: and  walks                                                              
+18|-┃ 1:6: and  walks                                                              
 19|                                                                                
 20|   file2.doc                                                                    
-21|-▐ 2:7:       talks and  drinks                                                 
-22|│▐ 3:16:      and then  thinks                                                  
+21|-┃ 2:7:       talks and  drinks                                                 
+22|│┃ 3:16:      and then  thinks                                                  
 23|Grug FAR - 1: grug                                            3,4            All
 24|grug-far: replace completed!                                                    
 

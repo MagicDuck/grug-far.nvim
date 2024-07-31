@@ -16,11 +16,11 @@
 15| 4 matches in 2 files   replace completed!                                     
 16|                                                                                
 17|   ./foo bar/file1.txt                                                          
-18|-▐ 1:2: curly walks                                                             
+18|-┃ 1:2: curly walks                                                             
 19|                                                                                
 20|   ./foo bar/file2.doc                                                          
-21|-▐ 2:7:      curly talks and curly drinks                                       
-22|│▐ 3:12:      then curly thinks                                                 
+21|-┃ 2:7:      curly talks and curly drinks                                       
+22|│┃ 3:12:      then curly thinks                                                 
 23|Grug FAR - 1: grug                                            3,4            All
 24|grug-far: replace completed!                                                    
 
