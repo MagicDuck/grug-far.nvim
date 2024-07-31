@@ -114,15 +114,21 @@ require('grug-far').is_instance_open({instanceName})           *grug-far.is_inst
 	Return: ~
 	    {is_open}(boolean) 
 
-require('grug-far').close_instance({instanceName})           *grug-far.close_instance()*
-        Closes (kills) grug-far instance with given name.
+require('grug-far').open_instance({instanceName})           *grug-far.open_instance()*
+        Opens grug-far instance with given name if window is closed.
+	Otherwise focuses the window.
 
         Parameters: ~
             {instanceName}(string) 
 
-require('grug-far').open_instance({instanceName})           *grug-far.open_instance()*
-        Opens grug-far instance with given name if window is closed.
-	Otherwise focuses the window.
+require('grug-far').close_instance({instanceName})           *grug-far.hide_instance()*
+        Closes window of grug-far instance with given name if window is open.
+
+        Parameters: ~
+            {instanceName}(string) 
+
+require('grug-far').kill_instance({instanceName})           *grug-far.close_instance()*
+        Kills grug-far instance with given name.
 
         Parameters: ~
             {instanceName}(string) 
