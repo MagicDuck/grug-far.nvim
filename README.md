@@ -244,8 +244,6 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 ```
 
-#### TODO (sbadragan): add more complex example using instance API
-
 ## 📦 Similar Plugins / Inspiration
 
 - [nvim-spectre][spectre]: the OG find and replace in a buffer plugin, great inspiration!
