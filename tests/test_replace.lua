@@ -194,7 +194,7 @@ T['is prevented from replacing with blacklisted flags'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    prefills = { search = 'grug', replace = 'curly', flags = '--json' },
+    prefills = { search = 'grug', replace = 'curly', flags = '--count-matches' },
   })
 
   helpers.childWaitForFinishedStatus(child)
