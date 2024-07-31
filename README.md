@@ -42,7 +42,7 @@ Grug find! Grug replace! Grug happy!
 
 ## ⚡️ Requirements
 
-- Neovim >= **0.9.5** (might work with lower versions)
+- Neovim >= **0.10.0**
 - [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) >= 14 recommended
 - a [Nerd Font](https://www.nerdfonts.com/) **_(optional)_**
 
