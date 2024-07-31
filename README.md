@@ -18,10 +18,10 @@ Grug find! Grug replace! Grug happy!
 - Syntax highlighted search results
 
 #### Searching:
-<img width="1257" alt="image" src="https://github.com/user-attachments/assets/c23310c9-5924-4a32-aa3b-a83c042e1910">
+<img width="1254" alt="image" src="https://github.com/user-attachments/assets/8f6f4342-3ad7-402f-a78b-0fd4dcad55cc">
 
 #### Replacing:
-<img width="1256" alt="image" src="https://github.com/user-attachments/assets/a1b0dd59-6f2d-4138-abf3-7e4a7454aa18">
+<img width="1253" alt="image" src="https://github.com/user-attachments/assets/4b96ee0c-42c1-4da0-ab50-39a40664ce81">
 
 #### Rg teaching you its ways
 <img width="1261" alt="image" src="https://github.com/user-attachments/assets/0e09c5ed-1962-4140-afe1-139e08cebc8b">
