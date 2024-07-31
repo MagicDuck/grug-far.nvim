@@ -31,6 +31,7 @@ T['can open a given location'] = function()
   })
 
   helpers.childRunGrugFar(child, {
+    windowCreationCommand = 'vsplit',
     prefills = { search = 'grug' },
   })
   helpers.childWaitForFinishedStatus(child)
