@@ -126,7 +126,7 @@ M.defaultOptions = {
     resultsStatusError = ' ',
     resultsStatusSuccess = '󰗡 ',
     resultsActionMessage = '  ',
-    resultsChangeIndicator = '▐',
+    resultsChangeIndicator = '┃',
 
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
