@@ -16,8 +16,8 @@
 15| 3 matches in 1 files   replace completed!                                     
 16|                                                                                
 17|   ./file2.doc                                                                  
-18|-▐ 2:7:      curly talks and curly drinks                                       
-19|│▐ 3:12:      then curly thinks                                                 
+18|-┃ 2:7:      curly talks and curly drinks                                       
+19|│┃ 3:12:      then curly thinks                                                 
 20|~                                                                               
 21|~                                                                               
 22|~                                                                               

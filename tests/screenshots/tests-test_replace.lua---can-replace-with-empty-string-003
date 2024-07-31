@@ -15,11 +15,11 @@
 14| STATUS_SUCCESS 
 15|                                                                                
 16|   file1.txt                                                                    
-17|-▐ 1:2:   walks                                                                 
+17|-┃ 1:2:   walks                                                                 
 18|                                                                                
 19|   file2.doc                                                                    
-20|-▐ 2:14:       talks   drinks                                                   
-21|│▐ 3:7:       then  thinks                                                      
+20|-┃ 2:14:       talks   drinks                                                   
+21|│┃ 3:7:       then  thinks                                                      
 22|~                                                                               
 23|Grug FAR - 1: and                                             3,4            All
 24|-- INSERT --                                                                    
