@@ -152,6 +152,7 @@ function M.initChildNeovim(child)
     GrugFar = require('grug-far')
     GrugFar.setup(...)
     Helpers = require('grug-far/test/helpers')
+    vim.cmd('set showtabline=0')
   ]],
     {
       M.getSetupOptions(),
