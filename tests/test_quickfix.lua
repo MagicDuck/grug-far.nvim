@@ -36,7 +36,7 @@ T['can open quickfix list'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>' .. keymaps.qflist.n)
-  vim.uv.sleep(100)
+  helpers.childWaitForScreenshotText(child, 'Quickfix List')
   helpers.childExpectScreenshot(child)
 end
 
@@ -65,7 +65,7 @@ T['can open quickfix list with deleted lines'] = function()
   child.type_keys(10, '<esc>13G', 'dd')
 
   child.type_keys('<esc>' .. keymaps.qflist.n)
-  vim.uv.sleep(100)
+  helpers.childWaitForScreenshotText(child, 'Quickfix List')
   helpers.childExpectScreenshot(child)
 end
 

@@ -76,7 +76,8 @@ T['can toggle instance after deletion of buffer'] = function()
       staticTitle = 'Find and Replace',
     },
   })
-  child.type_keys(50, '<esc>cc', 'walks')
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>cc', 'walks')
   helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
