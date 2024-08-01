@@ -16,12 +16,31 @@ M.defaultOptions = {
   -- max number of parallel replacements tasks
   maxWorkers = 4,
 
+  -- TODO (sbadragan): deprecate and move these into some sort of engine config?
   -- ripgrep executable to use, can be a different path if you need to configure
   rgPath = 'rg',
 
   -- extra args that you always want to pass to rg
   -- like for example if you always want context lines around matches
   extraRgArgs = '',
+
+  -- TODO (sbadragan): use this
+  engines = {
+    ripgrep = {
+      -- ripgrep executable to use, can be a different path if you need to configure
+      path = 'rg',
+
+      -- extra args that you always want to pass to rg
+      -- like for example if you always want context lines around matches
+      extraArgs = '',
+    },
+  },
+
+  -- TODO (sbadragan): use this
+  -- search and replace engines to use.
+  -- Currently only 'ripgrep' is supported but there might be others in the future
+  -- if unset, defaults to 'ripgrep'
+  engine = 'ripgrep',
 
   -- specifies the command to run (with `vim.cmd(...)`) in order to create
   -- the window in which the grug-far buffer will appear
@@ -80,6 +99,7 @@ M.defaultOptions = {
     pickHistoryEntry = { n = '<enter>' },
     abort = { n = '<localleader>b' },
     help = { n = 'g?' },
+    -- TODO (sbadragan): make this generic
     toggleShowRgCommand = { n = '<localleader>p' },
   },
 
