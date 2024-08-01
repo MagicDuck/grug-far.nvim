@@ -24,10 +24,10 @@ local function close(params)
   end
 
   local win = vim.fn.bufwinid(buf)
-  if win ~= -1 then
-    vim.api.nvim_win_close(win, true)
-  end
   vim.api.nvim_buf_delete(buf, { force = true })
+  if win ~= -1 then
+    vim.fn.win_execute(win, 'quit!')
+  end
 end
 
 return close
