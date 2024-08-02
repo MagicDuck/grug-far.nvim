@@ -332,5 +332,5 @@ Small video of it in action: https://github.com/MagicDuck/grug-far.nvim/issues/1
 [lazy]: https://github.com/folke/lazy.nvim
 [spectre]: https://github.com/nvim-pack/nvim-spectre
 [telescope]: https://github.com/nvim-telescope/telescope.nvim
-[blacklistedReplaceFlags]: lua/grug-far/rg/blacklistedReplaceFlags.lua 
+[blacklistedReplaceFlags]: lua/grug-far/engine/ripgrep/blacklistedReplaceFlags.lua 
 [neovim-plugin-template]: https://github.com/m00qek/plugin-template.nvim/tree/main

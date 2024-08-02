@@ -1,6 +1,6 @@
-local getArgs = require('grug-far/rg/getArgs')
+local getArgs = require('grug-far/engine/ripgrep/getArgs')
 local utils = require('grug-far/utils')
-local blacklistedReplaceFlags = require('grug-far/rg/blacklistedReplaceFlags')
+local blacklistedReplaceFlags = require('grug-far/engine/ripgrep/blacklistedReplaceFlags')
 local uv = vim.uv
 
 ---@class FetchReplacedFileContentParams

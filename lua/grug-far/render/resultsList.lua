@@ -1,6 +1,6 @@
 local opts = require('grug-far/opts')
 local utils = require('grug-far/utils')
-local getArgs = require('grug-far/rg/getArgs')
+local getArgs = require('grug-far/engine/ripgrep/getArgs')
 local treesitter = require('grug-far/render/treesitter')
 
 local M = {}
