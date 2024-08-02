@@ -285,7 +285,7 @@ return {
           end
 
           -- escape all spaces in the path with "\ "
-            path = path:gsub(" ", "\\ ")
+          path = path:gsub(" ", "\\ ")
 
           local prefills = {
             paths = path,
