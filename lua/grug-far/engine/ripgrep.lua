@@ -1,7 +1,7 @@
-local fetchWithRg = require('grug-far/rg/fetchWithRg')
-local parseResults = require('grug-far/rg/parseResults')
-local getArgs = require('grug-far/rg/getArgs')
-local colors = require('grug-far/rg/colors')
+local fetchWithRg = require('grug-far/engine/ripgrep/fetchWithRg')
+local parseResults = require('grug-far/engine/ripgrep/parseResults')
+local getArgs = require('grug-far/engine/ripgrep/getArgs')
+local colors = require('grug-far/engine/ripgrep/colors')
 
 -- ripgrep engine API
 ---@type GrugFarEngine
