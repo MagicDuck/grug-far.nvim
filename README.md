@@ -317,6 +317,7 @@ return {
 }
 ```
 </details>
+Small video of it in action: https://github.com/MagicDuck/grug-far.nvim/issues/165#issuecomment-2257439367
 
 ## 📦 Similar Plugins / Inspiration
 
