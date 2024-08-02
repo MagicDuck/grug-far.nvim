@@ -28,25 +28,6 @@ local function getActionMessage(err, count, total, time)
   return msg .. count .. ' / ' .. total .. ' (buffer temporarily not modifiable)'
 end
 
---- are we replacing matches with the empty string?
----@param args string[]
----@return boolean
-local function isEmptyStringReplace(args)
-  local replaceEqArg = '--replace='
-  for i = #args, 1, -1 do
-    local arg = args[i]
-    if vim.startswith(arg, replaceEqArg) then
-      if #arg > #replaceEqArg then
-        return false
-      else
-        return true
-      end
-    end
-  end
-
-  return true
-end
-
 --- performs replace
 ---@param params { buf: integer, context: GrugFarContext }
 local function replace(params)
@@ -133,20 +114,6 @@ local function replace(params)
     local autoSave = context.options.history.autoSave
     if autoSave.enabled and autoSave.onReplace then
       history.addHistoryEntry(context)
-    end
-  end
-
-  local args = getArgs(context.state.inputs, context.options, {})
-  if not args then
-    on_finish_all(nil, nil, 'replace cannot work with the current arguments!')
-    return
-  end
-
-  if isEmptyStringReplace(args) then
-    local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
-    if choice ~= 1 then
-      on_finish_all(nil, nil, 'replace with empty string canceled!')
-      return
     end
   end
 
