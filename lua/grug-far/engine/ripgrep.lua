@@ -1,4 +1,4 @@
-local fetchWithRg = require('grug-far/engine/ripgrep/fetchWithRg')
+local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
 local parseResults = require('grug-far/engine/ripgrep/parseResults')
 local fetchFilesWithMatches = require('grug-far/engine/ripgrep/fetchFilesWithMatches')
 local replaceInMatchedFiles = require('grug-far/engine/ripgrep/replaceInMatchedFiles')
@@ -37,13 +37,19 @@ local RipgrepEngine = {
 
     local args = getArgs(params.inputs, params.options, extraArgs)
 
-    return fetchWithRg({
+    return fetchCommandOutput({
+      cmd_path = params.options.rgPath,
       args = args,
       options = params.options,
       on_fetch_chunk = function(data)
         params.on_fetch_chunk(parseResults(data))
       end,
-      on_finish = params.on_finish,
+      on_finish = function(status, errorMessage)
+        if status == 'error' and errorMessage and #errorMessage == 0 then
+          errorMessage = 'no matches'
+        end
+        params.on_finish(status, errorMessage)
+      end,
     })
   end,
 

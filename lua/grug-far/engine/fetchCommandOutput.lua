@@ -1,18 +1,17 @@
 local utils = require('grug-far/utils')
 local uv = vim.uv
 
--- TODO (sbadragan):  make this generic for engines? fetch_command_output
-
----@class FetchWithRgParams
----@field args string[] | nil
+---@class FetchCommandOutputParams
+---@field cmd_path string
+---@field args string[]?
 ---@field options GrugFarOptions
 ---@field on_fetch_chunk fun(data: string)
----@field on_finish fun(status: GrugFarStatus, errorMesage: string | nil)
+---@field on_finish fun(status: GrugFarStatus, errorMesage: string?)
 
 --- fetch with ripgrep
----@param params FetchWithRgParams
----@return nil | fun(), string[]? abort and args
-local function fetchWithRg(params)
+---@param params FetchCommandOutputParams
+---@return fun()? abort, string[]? effectiveArgs
+local function fetchCommandOutput(params)
   local args = params.args
   local finished = false
   local errorMessage = ''
@@ -29,7 +28,7 @@ local function fetchWithRg(params)
   local stderr = uv.new_pipe()
 
   local handle
-  handle = uv.spawn(params.options.rgPath, {
+  handle = uv.spawn(params.cmd_path, {
     stdio = { nil, stdout, stderr },
     cwd = vim.fn.getcwd(),
     args = args,
@@ -44,9 +43,6 @@ local function fetchWithRg(params)
     utils.closeHandle(stderr)
     utils.closeHandle(handle)
 
-    if code > 0 and #errorMessage == 0 then
-      errorMessage = 'no matches'
-    end
     local isSuccess = code == 0
     if not isSuccess then
       -- finish immediately if error, so no more result updates are sent out to the consumer
@@ -127,4 +123,4 @@ local function fetchWithRg(params)
   return on_abort, args
 end
 
-return fetchWithRg
+return fetchCommandOutput
