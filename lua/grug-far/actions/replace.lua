@@ -75,32 +75,6 @@ local function replace(params)
   state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
   renderResultsHeader(buf, context)
 
-  local reportMatchingFilesUpdate = function(files)
-    if state.bufClosed then
-      return
-    end
-
-    state.status = 'progress'
-    state.progressCount = state.progressCount + 1
-    filesTotal = filesTotal + #files
-    state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
-    renderResultsHeader(buf, context)
-    resultsList.throttledForceRedrawBuffer(buf)
-  end
-
-  local reportReplacedFilesUpdate = function()
-    if state.bufClosed then
-      return
-    end
-
-    state.status = 'progress'
-    state.progressCount = state.progressCount + 1
-    filesCount = filesCount + 1
-    state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
-    renderResultsHeader(buf, context)
-    resultsList.throttledForceRedrawBuffer(buf)
-  end
-
   local reportError = function(errorMessage)
     vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
 
@@ -177,33 +151,27 @@ local function replace(params)
   end
 
   startTime = uv.now()
-  state.abort.replace = fetchFilesWithMatches({
+  state.abort.replace = context.engine.replace({
     inputs = context.state.inputs,
     options = context.options,
-    on_fetch_chunk = reportMatchingFilesUpdate,
-    on_finish = function(status, errorMessage, files, blacklistedArgs)
-      if not status then
-        on_finish_all(
-          nil,
-          nil,
-          blacklistedArgs
-              and 'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', ')
-            or nil
-        )
-        return
-      elseif status == 'error' then
-        on_finish_all(status, errorMessage)
+
+    report_progress = function(update)
+      if state.bufClosed then
         return
       end
 
-      state.abort.replace = replaceInMatchedFiles({
-        files = files,
-        context = context,
-        reportProgress = reportReplacedFilesUpdate,
-        reportError = reportError,
-        on_finish = on_finish_all,
-      })
+      state.status = 'progress'
+      state.progressCount = state.progressCount + 1
+      if update.type == 'update_total' then
+        filesTotal = filesTotal + update.count
+      elseif update.type == 'update_count' then
+        filesCount = filesCount + update.count
+      end
+      state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
+      renderResultsHeader(buf, context)
+      resultsList.throttledForceRedrawBuffer(buf)
     end,
+    on_finish = on_finish_all,
   })
 end
 

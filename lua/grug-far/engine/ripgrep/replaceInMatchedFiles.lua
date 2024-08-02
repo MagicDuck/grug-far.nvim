@@ -1,18 +1,22 @@
 local fetchReplacedFileContent = require('grug-far/engine/ripgrep/fetchReplacedFileContent')
 local utils = require('grug-far/utils')
 
+---@class replaceInFileParams
+---@field inputs GrugFarInputs
+---@field options GrugFarOptions
+---@field file string
+---@field on_done fun(errorMessage: string?)
+
 --- performs replacement in given file
----@param params { context: GrugFarContext, file: string, on_done: fun(errorMessage: string | nil) }
----@return fun() | nil abort
+---@param params replaceInFileParams
+---@return fun()? abort
 local function replaceInFile(params)
-  local context = params.context
-  local state = context.state
   local file = params.file
   local on_done = params.on_done
 
   return fetchReplacedFileContent({
-    inputs = state.inputs,
-    options = context.options,
+    inputs = params.inputs,
+    options = params.options,
     file = file,
     on_finish = function(status, errorMessage, content)
       if status == 'error' then
@@ -39,15 +43,15 @@ local function replaceInFile(params)
 end
 
 ---@class replaceInMatchedFilesParams
----@field context GrugFarContext
+---@field inputs GrugFarInputs
+---@field options GrugFarOptions
 ---@field files string[]
 ---@field report_progress fun(count: integer)
----@field on_finish fun(status: GrugFarStatus, errorMessage: string | nil)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
 
 --- performs replacement in given matched file
 ---@param params replaceInMatchedFilesParams
 local function replaceInMatchedFiles(params)
-  local context = params.context
   local files = vim.deepcopy(params.files)
   local report_progress = params.report_progress
   local on_finish = params.on_finish
@@ -85,7 +89,8 @@ local function replaceInMatchedFiles(params)
     engagedWorkers = engagedWorkers + 1
     abortByFile[file] = replaceInFile({
       file = file,
-      context = context,
+      inputs = params.inputs,
+      options = params.options,
       on_done = vim.schedule_wrap(function(err)
         if err then
           -- optimistically try to continue
@@ -101,7 +106,7 @@ local function replaceInMatchedFiles(params)
     })
   end
 
-  for _ = 1, context.options.maxWorkers do
+  for _ = 1, params.options.maxWorkers do
     replaceNextFile()
   end
 

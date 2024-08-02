@@ -34,7 +34,7 @@ local M = {
     local on_finish = params.on_finish
     local on_abort = nil
 
-    function abort()
+    local function abort()
       if on_abort then
         on_abort()
       end
@@ -44,7 +44,7 @@ local M = {
       inputs = params.inputs,
       options = params.options,
       report_progress = function(count)
-        report_progress('update_total', count)
+        report_progress({ type = 'update_total', count = count })
       end,
       on_finish = function(status, errorMessage, files, blacklistedArgs)
         if not status then
@@ -63,9 +63,10 @@ local M = {
 
         on_abort = replaceInMatchedFiles({
           files = files,
-          context = context,
+          inputs = params.inputs,
+          options = params.options,
           report_progress = function(count)
-            report_progress('update_count', count)
+            report_progress({ type = 'update_count', count = count })
           end,
           on_finish = on_finish,
         })
@@ -73,54 +74,6 @@ local M = {
     })
 
     return abort
-
-    ------------------
-    -- local filesWithMatches = {}
-    --
-    -- local args, blacklistedArgs = getArgs(params.inputs, params.options, {
-    --   '--files-with-matches',
-    --   '--color=never',
-    -- }, blacklistedReplaceFlags)
-    --
-    -- return fetchWithRg({
-    --   args = args,
-    --   options = params.options,
-    --   on_fetch_chunk = function(data)
-    --     local lines = vim.split(data, '\n')
-    --     local count = 0
-    --     for i = 1, #lines do
-    --       if #lines[i] > 0 then
-    --         table.insert(filesWithMatches, lines[i])
-    --         count = count + 1
-    --       end
-    --     end
-    --     reportProgress('update_total', count)
-    --   end,
-    --   on_finish = function(status, errorMessage)
-    --     if not status then
-    --       on_finish(
-    --         nil,
-    --         nil,
-    --         blacklistedArgs
-    --             and 'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', ')
-    --           or nil
-    --       )
-    --       return
-    --     elseif status == 'error' then
-    --       on_finish(status, errorMessage)
-    --       return
-    --     end
-    --
-    --     state.abort.replace = replaceInMatchedFiles({
-    --       files = filesWithMatches,
-    --       context = context,
-    --       reportProgress = reportReplacedFilesUpdate,
-    --       reportProgress = function() end,
-    --       reportError = reportError,
-    --       on_finish = on_finish,
-    --     })
-    --   end,
-    -- })
   end,
 }
 
