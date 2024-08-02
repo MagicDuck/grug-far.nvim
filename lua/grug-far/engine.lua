@@ -16,15 +16,22 @@ local M = {}
 ---@field highlights ResultHighlight[] in source order
 ---@field stats ParsedResultsStats
 
----@class SearchParams
+---@class EngineSearchParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field on_fetch_chunk fun(data: ParsedResultsData)
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string | nil)
 
+---@class EngineReplaceParams
+---@field inputs GrugFarInputs
+---@field options GrugFarOptions
+---@field report_progress fun(type: "update_total" | "update_count", count: integer)
+---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
+
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType
----@field search fun(params: SearchParams): (abort: fun()?, effectiveArgs: string[]?)
+---@field search fun(params: EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?)
+---@field replace fun(params: EngineReplaceParams): (abort: fun()?)
 
 --- returns engine given type
 ---@param type GrugFarEngineType

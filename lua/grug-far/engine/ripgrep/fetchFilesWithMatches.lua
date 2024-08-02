@@ -5,12 +5,12 @@ local fetchWithRg = require('grug-far/engine/ripgrep/fetchWithRg')
 ---@class FetchWithMatchesParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
----@field on_fetch_chunk fun(data: string[])
----@field on_finish fun(status: GrugFarStatus, errorMesage: string | nil, filesWithMatches: string[], blacklistedArgs: string[] | nil)
+---@field report_progress fun(count: integer)
+---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, filesWithMatches: string[], blacklistedArgs: string[]?)
 
 --- fetch list of files that match search
 ---@param params FetchWithMatchesParams
----@return nil | fun() abort
+---@return fun()? abort
 local function fetchFilesWithMatches(params)
   local filesWithMatches = {}
 
@@ -24,12 +24,14 @@ local function fetchFilesWithMatches(params)
     options = params.options,
     on_fetch_chunk = function(data)
       local lines = vim.split(data, '\n')
+      local count = 0
       for i = 1, #lines do
         if #lines[i] > 0 then
           table.insert(filesWithMatches, lines[i])
+          count = count + 1
         end
       end
-      params.on_fetch_chunk(lines)
+      params.report_progress(count)
     end,
     on_finish = function(status, errorMessage)
       params.on_finish(status, errorMessage, filesWithMatches, blacklistedArgs)
