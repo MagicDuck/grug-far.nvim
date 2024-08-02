@@ -1,6 +1,6 @@
 local getArgs = require('grug-far/engine/ripgrep/getArgs')
 local blacklistedReplaceFlags = require('grug-far/engine/ripgrep/blacklistedReplaceFlags')
-local fetchWithRg = require('grug-far/engine/ripgrep/fetchWithRg')
+local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
 
 ---@class FetchWithMatchesParams
 ---@field inputs GrugFarInputs
@@ -19,7 +19,8 @@ local function fetchFilesWithMatches(params)
     '--color=never',
   }, blacklistedReplaceFlags)
 
-  return fetchWithRg({
+  return fetchCommandOutput({
+    cmd_path = params.options.rgPath,
     args = args,
     options = params.options,
     on_fetch_chunk = function(data)
