@@ -82,7 +82,7 @@ local function fetchCommandOutput(params)
       end
 
       if err then
-        errorMessage = errorMessage .. '\nerror reading from rg stdout!'
+        errorMessage = errorMessage .. '\nerror reading from command stdout!'
         return
       end
 
@@ -110,7 +110,7 @@ local function fetchCommandOutput(params)
       end
 
       if err then
-        errorMessage = errorMessage .. '\nerror reading from rg stderr!'
+        errorMessage = errorMessage .. '\nerror reading from command stderr!'
         return
       end
 

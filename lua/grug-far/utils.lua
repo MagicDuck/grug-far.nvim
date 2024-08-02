@@ -250,19 +250,6 @@ function M.overwriteFileAsync(path, data, callback)
   end)
 end
 
----@param context GrugFarContext
-function M.isMultilineSearchReplace(context)
-  local inputs = context.state.inputs
-  local multilineFlags = { '--multiline', '-U', '--multiline-dotall' }
-  if #inputs.flags > 0 then
-    for flag in string.gmatch(inputs.flags, '%S+') do
-      if M.isBlacklistedFlag(flag, multilineFlags) then
-        return true
-      end
-    end
-  end
-end
-
 --- add a keymapping
 ---@param buf integer
 ---@param desc string

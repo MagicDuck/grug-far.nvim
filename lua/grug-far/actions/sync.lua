@@ -1,115 +1,6 @@
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
-local utils = require('grug-far/utils')
 local uv = vim.uv
-
----@class ChangedLine
----@field lnum integer
----@field newLine string
-
----@class ChangedFile
----@field filename string
----@field changedLines ChangedLine[]
-
---- performs sync for given changed file
----@param params { context: GrugFarContext, changedFile: ChangedFile, on_done: fun(errorMessage: string | nil) }
-local function writeChangedFile(params)
-  local changedFile = params.changedFile
-  local on_done = params.on_done
-  local file = changedFile.filename
-
-  utils.readFileAsync(file, function(err1, contents)
-    if err1 then
-      return on_done('Could not read: ' .. file .. '\n' .. err1)
-    end
-
-    local lines = vim.split(contents or '', utils.eol)
-
-    local changedLines = changedFile.changedLines
-    for i = 1, #changedLines do
-      local changedLine = changedLines[i]
-      local lnum = changedLine.lnum
-      if not lines[lnum] then
-        return on_done('File does not have edited row anymore: ' .. file)
-      end
-
-      lines[lnum] = changedLine.newLine
-    end
-
-    local newContents = table.concat(lines, utils.eol)
-    utils.overwriteFileAsync(file, newContents, function(err2)
-      if err2 then
-        return on_done('Could not write: ' .. file .. '\n' .. err2)
-      end
-
-      on_done(nil)
-    end)
-  end)
-end
-
----@class syncChangedFilesParams
----@field context GrugFarContext
----@field changedFiles ChangedFile[]
----@field reportProgress fun()
----@field on_finish fun(status: GrugFarStatus, errorMessage: string | nil)
-
---- sync given changed files
----@param params syncChangedFilesParams
----@return fun() abort
-local function syncChangedFiles(params)
-  local context = params.context
-  local changedFiles = vim.deepcopy(params.changedFiles)
-  local reportProgress = params.reportProgress
-  local on_finish = params.on_finish
-  local engagedWorkers = 0
-  local errorMessages = ''
-  local isAborted = false
-
-  local function abortAll()
-    isAborted = true
-  end
-
-  local function syncNextChangedFile()
-    if isAborted then
-      changedFiles = {}
-    end
-
-    local changedFile = table.remove(changedFiles)
-    if changedFile == nil then
-      if engagedWorkers == 0 then
-        if isAborted then
-          on_finish(nil, nil)
-        else
-          on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
-        end
-      end
-      return
-    end
-
-    engagedWorkers = engagedWorkers + 1
-    writeChangedFile({
-      changedFile = changedFile,
-      on_done = vim.schedule_wrap(function(err)
-        if err then
-          -- optimistically try to continue
-          errorMessages = errorMessages .. '\n' .. err
-        end
-
-        if reportProgress then
-          reportProgress()
-        end
-        engagedWorkers = engagedWorkers - 1
-        syncNextChangedFile()
-      end),
-    })
-  end
-
-  for _ = 1, context.options.maxWorkers do
-    syncNextChangedFile()
-  end
-
-  return abortAll
-end
 
 --- gets action message to display
 ---@param err string | nil
@@ -203,14 +94,6 @@ local function sync(params)
   end
 
   local startTime = uv.now()
-
-  if utils.isMultilineSearchReplace(context) then
-    state.actionMessage = 'sync disabled for multline search/replace!'
-    renderResultsHeader(buf, context)
-    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
-    return
-  end
-
   local changedFiles = getChangedFiles(buf, context, startRow, endRow)
 
   if #changedFiles == 0 then
@@ -230,19 +113,6 @@ local function sync(params)
   state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
   renderResultsHeader(buf, context)
 
-  local reportSyncedFilesUpdate = vim.schedule_wrap(function()
-    if state.bufClosed then
-      return
-    end
-
-    state.status = 'progress'
-    state.progressCount = state.progressCount + 1
-    changesCount = changesCount + 1
-    state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
-    renderResultsHeader(buf, context)
-    resultsList.throttledForceRedrawBuffer(buf)
-  end)
-
   local reportError = function(errorMessage)
     vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
 
@@ -254,64 +124,76 @@ local function sync(params)
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
   end
 
-  local on_finish_all = vim.schedule_wrap(function(status, errorMessage, customActionMessage)
-    if state.bufClosed then
-      return
-    end
-
-    vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
-    state.abort.sync = nil
-
-    if status == 'error' then
-      reportError(errorMessage)
-      return
-    end
-
-    if errorMessage and #errorMessage > 0 then
-      resultsList.appendWarning(buf, context, errorMessage)
-    end
-
-    state.status = status
-    vim.cmd.checktime()
-
-    local wasAborted = status == nil and customActionMessage == nil
-
-    if wasAborted then
-      state.actionMessage = 'sync aborted at ' .. changesCount .. ' / ' .. changesTotal
-    elseif status == nil and customActionMessage then
-      state.actionMessage = customActionMessage
-    else
-      local time = uv.now() - startTime
-      -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-      state.actionMessage = getActionMessage(
-        nil,
-        changesCount,
-        changesCount,
-        context.options.reportDuration and time or nil
-      )
-    end
-
-    renderResultsHeader(buf, context)
-
-    vim.schedule(function()
-      resultsList.markUnsyncedLines(buf, context, startRow, endRow, true)
-    end)
-
-    if wasAborted then
-      return
-    end
-
-    vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
-    if on_success then
-      on_success()
-    end
-  end)
-
-  state.abort.sync = syncChangedFiles({
-    context = context,
+  state.abort.sync = context.engine.sync({
+    inputs = context.state.inputs,
+    options = context.options,
     changedFiles = changedFiles,
-    reportProgress = reportSyncedFilesUpdate,
-    on_finish = on_finish_all,
+    report_progress = function(update)
+      if state.bufClosed then
+        return
+      end
+
+      state.status = 'progress'
+      state.progressCount = state.progressCount + 1
+      if update.type == 'update_count' then
+        changesCount = changesCount + 1
+      end
+      state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
+      renderResultsHeader(buf, context)
+      resultsList.throttledForceRedrawBuffer(buf)
+    end,
+    on_finish = function(status, errorMessage, customActionMessage)
+      if state.bufClosed then
+        return
+      end
+
+      vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
+      state.abort.sync = nil
+
+      if status == 'error' then
+        reportError(errorMessage)
+        return
+      end
+
+      if errorMessage and #errorMessage > 0 then
+        resultsList.appendWarning(buf, context, errorMessage)
+      end
+
+      state.status = status
+      vim.cmd.checktime()
+
+      local wasAborted = status == nil and customActionMessage == nil
+
+      if wasAborted then
+        state.actionMessage = 'sync aborted at ' .. changesCount .. ' / ' .. changesTotal
+      elseif status == nil and customActionMessage then
+        state.actionMessage = customActionMessage
+      else
+        local time = uv.now() - startTime
+        -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
+        state.actionMessage = getActionMessage(
+          nil,
+          changesCount,
+          changesCount,
+          context.options.reportDuration and time or nil
+        )
+      end
+
+      renderResultsHeader(buf, context)
+
+      vim.schedule(function()
+        resultsList.markUnsyncedLines(buf, context, startRow, endRow, true)
+      end)
+
+      if wasAborted or status == nil then
+        return
+      end
+
+      vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
+      if on_success then
+        on_success()
+      end
+    end,
   })
 end
 
