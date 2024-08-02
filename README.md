@@ -244,7 +244,9 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 ```
 
-### Create nvim-tree hotkey `z` that will create/open named instance `tree` of grug-far with the current directory of the file or directory in focus. On the second trigger, path of the `tree` grug-far instance will be updates, leaving other fields intact
+#### Add nvim-tree integration to open search limited to focused directory or file
+
+Create nvim-tree hotkey `z` that will create/open named instance `tree` of grug-far with the current directory of the file or directory in focus. On the second trigger, path of the `tree` grug-far instance will be updates, leaving other fields intact
 
 Nvim tree lazy plugin setup:
 
