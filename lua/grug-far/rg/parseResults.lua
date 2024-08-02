@@ -65,10 +65,6 @@ local function getTokens(data)
   return tokens
 end
 
----@class ParsedResultsStats
----@field files integer
----@field matches integer
-
 --- get results stats
 ---@param tokens ResultsToken[]
 ---@return ParsedResultsStats
@@ -104,18 +100,6 @@ local function getLineWithoutCarriageReturn(line)
 
   return string.sub(line, 1, -2)
 end
-
----@class ResultHighlight
----@field hl string
----@field start_line integer
----@field start_col integer
----@field end_line integer
----@field end_col integer
-
----@class ParsedResultsData
----@field lines string[]
----@field highlights ResultHighlight[] in source order
----@field stats ParsedResultsStats
 
 --- parse results chunk and get info
 ---@param data string

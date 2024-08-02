@@ -1,4 +1,3 @@
-local fetchResults = require('grug-far/rg/fetchResults')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 local fold = require('grug-far/fold')
@@ -46,7 +45,7 @@ local function search(params)
     end
   end
 
-  state.abort.search, effectiveArgs = fetchResults({
+  state.abort.search, effectiveArgs = context.engine.search({
     inputs = state.inputs,
     options = context.options,
     on_fetch_chunk = function(data)

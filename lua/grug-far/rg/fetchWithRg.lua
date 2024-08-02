@@ -1,6 +1,8 @@
 local utils = require('grug-far/utils')
 local uv = vim.uv
 
+-- TODO (sbadragan):  make this generic for engines? fetch_command_output
+
 ---@class FetchWithRgParams
 ---@field args string[] | nil
 ---@field options GrugFarOptions

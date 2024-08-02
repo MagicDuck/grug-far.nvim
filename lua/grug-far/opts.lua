@@ -36,7 +36,6 @@ M.defaultOptions = {
     },
   },
 
-  -- TODO (sbadragan): use this
   -- search and replace engines to use.
   -- Currently only 'ripgrep' is supported but there might be others in the future
   -- if unset, defaults to 'ripgrep'
@@ -354,6 +353,9 @@ M.defaultOptions = {
 ---@field foldlevel? integer
 ---@field foldcolumn? string | integer
 
+---@alias GrugFarEngineType "ripgrep"
+-- note: in the future, we can add other types here, ex: "ripgrep" | "foobar"
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -381,6 +383,7 @@ M.defaultOptions = {
 ---@field history HistoryTable
 ---@field instanceName? string
 ---@field folding FoldingTable
+---@field engine GrugFarEngineType
 
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
@@ -408,6 +411,7 @@ M.defaultOptions = {
 ---@field history? HistoryTableOverride
 ---@field instanceName? string
 ---@field folding? FoldingTableOverride
+---@field engine? GrugFarEngineType
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride | GrugFarOptions
