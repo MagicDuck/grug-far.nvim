@@ -25,7 +25,7 @@ local M = {}
 ---@class EngineReplaceParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
----@field report_progress fun(type: "update_total" | "update_count", count: integer)
+---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
 
 ---@class GrugFarEngine
