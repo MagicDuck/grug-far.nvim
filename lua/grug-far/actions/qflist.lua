@@ -61,14 +61,6 @@ end
 local function qflist(params)
   local buf = params.buf
   local context = params.context
-  local state = context.state
-
-  if utils.isMultilineSearchReplace(context) then
-    state.actionMessage = 'quickfix list disabled for multline search!'
-    renderResultsHeader(buf, context)
-    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
-    return
-  end
 
   local resultsLocations = getResultsLocations(buf, context)
   if #resultsLocations == 0 then
