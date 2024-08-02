@@ -5,9 +5,27 @@ local replaceInMatchedFiles = require('grug-far/engine/ripgrep/replaceInMatchedF
 local getArgs = require('grug-far/engine/ripgrep/getArgs')
 local colors = require('grug-far/engine/ripgrep/colors')
 
--- ripgrep engine API
+--- are we replacing matches with the empty string?
+---@param args string[]
+---@return boolean
+local function isEmptyStringReplace(args)
+  local replaceEqArg = '--replace='
+  for i = #args, 1, -1 do
+    local arg = args[i]
+    if vim.startswith(arg, replaceEqArg) then
+      if #arg > #replaceEqArg then
+        return false
+      else
+        return true
+      end
+    end
+  end
+
+  return true
+end
+
 ---@type GrugFarEngine
-local M = {
+local RipgrepEngine = {
   type = 'ripgrep',
 
   search = function(params)
@@ -32,8 +50,22 @@ local M = {
   replace = function(params)
     local report_progress = params.report_progress
     local on_finish = params.on_finish
-    local on_abort = nil
 
+    local args = getArgs(params.inputs, params.options, {})
+    if not args then
+      on_finish(nil, nil, 'replace cannot work with the current arguments!')
+      return
+    end
+
+    if isEmptyStringReplace(args) then
+      local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
+      if choice ~= 1 then
+        on_finish(nil, nil, 'replace with empty string canceled!')
+        return
+      end
+    end
+
+    local on_abort = nil
     local function abort()
       if on_abort then
         on_abort()
@@ -77,4 +109,4 @@ local M = {
   end,
 }
 
-return M
+return RipgrepEngine
