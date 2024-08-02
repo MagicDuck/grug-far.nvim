@@ -28,10 +28,26 @@ local M = {}
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
 
+---@class ChangedLine
+---@field lnum integer
+---@field newLine string
+
+---@class ChangedFile
+---@field filename string
+---@field changedLines ChangedLine[]
+
+---@class EngineSyncParams
+---@field inputs GrugFarInputs
+---@field options GrugFarOptions
+---@field changedFiles ChangedFile[]
+---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
+---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
+
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType
 ---@field search fun(params: EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?)
 ---@field replace fun(params: EngineReplaceParams): (abort: fun()?)
+---@field sync fun(params: EngineSyncParams): (abort: fun()?)
 
 --- returns engine given type
 ---@param type GrugFarEngineType
