@@ -348,7 +348,7 @@ function M.appendSearchCommand(buf, context, rgArgs)
   vim.api.nvim_buf_add_highlight(
     buf,
     context.helpHlNamespace,
-    'GrugFarResultsRgCmdHeader',
+    'GrugFarResultsCmdHeader',
     lastline,
     0,
     #header

@@ -53,8 +53,9 @@ local M = {}
 ---@param type GrugFarEngineType
 ---@return GrugFarEngine
 function M.getEngine(type)
+  local engine
   if not type or type == 'ripgrep' then
-    return require('grug-far.engine.ripgrep')
+    engine = require('grug-far.engine.ripgrep')
   end
 
   -- Important Note:
@@ -64,7 +65,11 @@ function M.getEngine(type)
   -- 3. add an action to toggle engine?
   -- 4. display the engine somewhere in the UI?
 
-  error('Unsupported engine type: ' .. type)
+  if not engine then
+    error('Unsupported engine type: ' .. type)
+  end
+
+  return engine
 end
 
 return M
