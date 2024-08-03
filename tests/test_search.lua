@@ -1,7 +1,6 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
 
--- TODO (sbadragan): move all engine specific tests into their own dir that runs into a separate gitlab action
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
 
