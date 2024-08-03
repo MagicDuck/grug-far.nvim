@@ -101,6 +101,9 @@ T['is prevented when multiline search'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
+  child.type_keys(10, '<esc>10G', 'dd')
+  child.type_keys(10, 'A', ' a deep depth indeed!')
+
   child.type_keys('<esc>' .. keymaps.syncLocations.n)
 
   helpers.childWaitForUIVirtualText(child, 'sync disabled')
