@@ -103,7 +103,7 @@ local contextCount = 0
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultsLastFilename? string
 ---@field abort GrugFarStateAbort
----@field showRgCommand boolean
+---@field showSearchCommand boolean
 ---@field bufClosed boolean
 ---@field highlightResults FileResults
 ---@field highlightRegions LangRegions
@@ -149,7 +149,7 @@ local function createContext(options)
       headerRow = 0,
       resultLocationByExtmarkId = {},
       abort = {},
-      showRgCommand = false,
+      showSearchCommand = false,
       bufClosed = false,
       highlightRegions = {},
       highlightResults = {},

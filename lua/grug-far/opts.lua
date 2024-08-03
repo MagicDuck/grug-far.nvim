@@ -100,8 +100,7 @@ M.defaultOptions = {
     pickHistoryEntry = { n = '<enter>' },
     abort = { n = '<localleader>b' },
     help = { n = 'g?' },
-    -- TODO (sbadragan): make this generic
-    toggleShowRgCommand = { n = '<localleader>p' },
+    toggleShowCommand = { n = '<localleader>p' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -247,7 +246,7 @@ M.defaultOptions = {
 ---@field gotoLocation KeymapDef
 ---@field openLocation KeymapDef
 ---@field pickHistoryEntry KeymapDef
----@field toggleShowRgCommand KeymapDef
+---@field toggleShowCommand KeymapDef
 ---@field abort KeymapDef
 ---@field help KeymapDef
 
@@ -263,7 +262,7 @@ M.defaultOptions = {
 ---@field open? KeymapDef
 ---@field gotoLocation? KeymapDef
 ---@field pickHistoryEntry? KeymapDef
----@field toggleShowRgCommand? KeymapDef
+---@field toggleShowCommand? KeymapDef
 ---@field abort? KeymapDef
 ---@field help? KeymapDef
 

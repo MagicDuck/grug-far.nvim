@@ -39,8 +39,8 @@ local function search(params)
     if not isCleared then
       isCleared = true
       resultsList.clear(buf, context)
-      if state.showRgCommand and effectiveArgs then
-        resultsList.appendRgSearchCommand(buf, context, effectiveArgs)
+      if state.showSearchCommand and effectiveArgs then
+        resultsList.appendSearchCommand(buf, context, effectiveArgs)
       end
     end
   end
@@ -78,8 +78,8 @@ local function search(params)
       if status == 'error' then
         state.stats = nil
         resultsList.setError(buf, context, errorMessage)
-        if state.showRgCommand and effectiveArgs then
-          resultsList.appendRgSearchCommand(buf, context, effectiveArgs)
+        if state.showSearchCommand and effectiveArgs then
+          resultsList.appendSearchCommand(buf, context, effectiveArgs)
         end
       else
         if errorMessage and #errorMessage > 0 then

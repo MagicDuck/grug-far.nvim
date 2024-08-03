@@ -325,14 +325,15 @@ end
 ---@param buf integer
 ---@param context GrugFarContext
 ---@param rgArgs string[]
-function M.appendRgSearchCommand(buf, context, rgArgs)
+function M.appendSearchCommand(buf, context, rgArgs)
+  local cmd_path = context.options.engines[context.engine.type].path
   local lastline = vim.api.nvim_buf_line_count(buf)
   local header = 'Search Command:'
   local lines = { header }
   for i, arg in ipairs(rgArgs) do
     local line = vim.fn.shellescape(arg)
     if i == 1 then
-      line = 'rg ' .. line
+      line = cmd_path .. ' ' .. line
     end
     if i < #rgArgs then
       line = line .. ' \\'
