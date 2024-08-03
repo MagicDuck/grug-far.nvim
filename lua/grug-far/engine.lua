@@ -57,8 +57,11 @@ function M.getEngine(type)
   local engine
   if not type or type == 'ripgrep' then
     engine = require('grug-far.engine.ripgrep')
+  elseif type == 'astgrep' then
+    engine = require('grug-far.engine.astgrep')
   end
 
+  -- TODO (sbadragan): do / remove some of this
   -- Important Note:
   -- If we add another engine, we should:
   -- 1. add tests for it in a separate directory and run them in a separate github action

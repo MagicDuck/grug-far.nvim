@@ -25,22 +25,31 @@ M.defaultOptions = {
   -- deprecated, please use engines.ripgrep.extraArgs
   extraRgArgs = '',
 
-  -- search and replace engines configuration. Currently only ripgrep engine is supported,
-  -- but there might be more, like say ast-grep in the future
+  -- search and replace engines configuration
   engines = {
+    -- https://github.com/BurntSushi/ripgrep
     ripgrep = {
       -- ripgrep executable to use, can be a different path if you need to configure
       path = 'rg',
 
-      -- extra args that you always want to pass to rg
+      -- extra args that you always want to pass
+      -- like for example if you always want context lines around matches
+      extraArgs = '',
+    },
+    -- https://ast-grep.github.io
+    astgrep = {
+      -- ast-grep executable to use, can be a different path if you need to configure
+      path = 'sg',
+
+      -- extra args that you always want to pass
       -- like for example if you always want context lines around matches
       extraArgs = '',
     },
   },
 
   -- search and replace engine to use.
-  -- Currently only 'ripgrep' is supported but there might be others in the future
-  -- if unset, defaults to 'ripgrep'
+  -- Must be one of 'ripgrep' | 'astgrep' | nil
+  -- if nil, defaults to 'ripgrep'
   engine = 'ripgrep',
 
   -- specifies the command to run (with `vim.cmd(...)`) in order to create
@@ -362,14 +371,23 @@ M.defaultOptions = {
 ---@field path? string
 ---@field extraArgs? string
 
+---@class AstgrepEngineTable
+---@field path string
+---@field extraArgs string
+
+---@class AstgrepEngineTableOverride
+---@field path? string
+---@field extraArgs? string
+
 ---@class EnginesTable
 ---@field ripgrep RipgrepEngineTable
+---@field astgrep AstgrepEngineTable
 
 ---@class EnginesTableOverride
----@field ripgrep? RipgrepEngineTable
+---@field ripgrep? RipgrepEngineTableOverride
+---@field astgrep? AstgrepEngineTableOverride
 
----@alias GrugFarEngineType "ripgrep"
--- note: in the future, we can add other types here, ex: "ripgrep" | "foobar"
+---@alias GrugFarEngineType "ripgrep" | "astgrep"
 
 ---@class GrugFarOptions
 ---@field debounceMs integer
