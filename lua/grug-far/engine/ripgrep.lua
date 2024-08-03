@@ -54,7 +54,7 @@ local RipgrepEngine = {
     local args = getArgs(params.inputs, params.options, extraArgs)
 
     return fetchCommandOutput({
-      cmd_path = params.options.rgPath,
+      cmd_path = params.options.engines.ripgrep.path,
       args = args,
       options = params.options,
       on_fetch_chunk = function(data)

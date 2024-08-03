@@ -16,15 +16,17 @@ M.defaultOptions = {
   -- max number of parallel replacements tasks
   maxWorkers = 4,
 
-  -- TODO (sbadragan): deprecate and move these into some sort of engine config?
   -- ripgrep executable to use, can be a different path if you need to configure
+  -- deprecated, please use engines.ripgrep.path
   rgPath = 'rg',
 
   -- extra args that you always want to pass to rg
   -- like for example if you always want context lines around matches
+  -- deprecated, please use engines.ripgrep.extraArgs
   extraRgArgs = '',
 
-  -- TODO (sbadragan): use this
+  -- search and replace engines configuration. Currently only ripgrep engine is supported,
+  -- but there might be more, like say ast-grep in the future
   engines = {
     ripgrep = {
       -- ripgrep executable to use, can be a different path if you need to configure
@@ -36,7 +38,7 @@ M.defaultOptions = {
     },
   },
 
-  -- search and replace engines to use.
+  -- search and replace engine to use.
   -- Currently only 'ripgrep' is supported but there might be others in the future
   -- if unset, defaults to 'ripgrep'
   engine = 'ripgrep',
@@ -353,6 +355,20 @@ M.defaultOptions = {
 ---@field foldlevel? integer
 ---@field foldcolumn? string | integer
 
+---@class RipgrepEngineTable
+---@field path string
+---@field extraArgs string
+
+---@class RipgrepEngineTableOverride
+---@field path? string
+---@field extraArgs? string
+
+---@class EnginesTable
+---@field ripgrep RipgrepEngineTable
+
+---@class EnginesTableOverride
+---@field ripgrep? RipgrepEngineTable
+
 ---@alias GrugFarEngineType "ripgrep"
 -- note: in the future, we can add other types here, ex: "ripgrep" | "foobar"
 
@@ -383,6 +399,7 @@ M.defaultOptions = {
 ---@field history HistoryTable
 ---@field instanceName? string
 ---@field folding FoldingTable
+---@field engines EnginesTable
 ---@field engine GrugFarEngineType
 
 ---@class GrugFarOptionsOverride
@@ -411,6 +428,7 @@ M.defaultOptions = {
 ---@field history? HistoryTableOverride
 ---@field instanceName? string
 ---@field folding? FoldingTableOverride
+---@field engines? EnginesTableOverride
 ---@field engine? GrugFarEngineType
 
 --- generates merged options
@@ -429,6 +447,21 @@ function M.with_defaults(options, defaults)
     if type(value) == 'string' then
       newOptions.keymaps[key] = { i = value, n = value }
     end
+  end
+
+  if options.rgPath then
+    vim.deprecate('options.rgPath', 'options.engines.ripgrep.path', 'soon', 'grug-far.nvim')
+    newOptions.engines.ripgrep.path = options.rgPath
+  end
+
+  if options.extraRgArgs then
+    vim.deprecate(
+      'options.extraRgArgs',
+      'options.engines.ripgrep.extraArgs',
+      'soon',
+      'grug-far.nvim'
+    )
+    newOptions.engines.ripgrep.extraArgs = options.extraRgArgs
   end
 
   return newOptions

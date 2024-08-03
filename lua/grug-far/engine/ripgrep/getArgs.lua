@@ -20,7 +20,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
 
   -- user overrides
   local blacklisted = {}
-  local extraUserArgs = options.extraRgArgs and vim.trim(options.extraRgArgs) or ''
+  local extraUserArgs = vim.trim(options.engines.ripgrep.extraArgs or '')
   if #extraUserArgs > 0 then
     for arg in string.gmatch(extraUserArgs, '%S+') do
       if utils.isBlacklistedFlag(arg, blacklistedFlags) then

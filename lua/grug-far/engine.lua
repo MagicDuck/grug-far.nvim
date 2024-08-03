@@ -57,6 +57,13 @@ function M.getEngine(type)
     return require('grug-far.engine.ripgrep')
   end
 
+  -- Important Note:
+  -- If we add another engine, we should:
+  -- 1. add tests for it in a separate directory and run them in a separate github action
+  -- 2. update history management so that history entries include an `Engine:` field, and we switch to that engine when history entry is picked
+  -- 3. add an action to toggle engine?
+  -- 4. display the engine somewhere in the UI?
+
   error('Unsupported engine type: ' .. type)
 end
 

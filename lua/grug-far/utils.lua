@@ -30,7 +30,7 @@ end
 ---@return string version
 function M.getRgVersion(options)
   if not rg_version then
-    local handle = io.popen(options.rgPath .. ' --version')
+    local handle = io.popen(options.engines.ripgrep.path .. ' --version')
     if handle then
       rg_version = handle:read('*a')
       local eol = rg_version:find('\n')
