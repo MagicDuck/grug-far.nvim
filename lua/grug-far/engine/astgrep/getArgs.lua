@@ -1,6 +1,6 @@
 local utils = require('grug-far/utils')
 
---- get args for ripgrep or nil if params invalid / insufficient
+--- get args for astgrep or nil if params invalid / insufficient
 ---@param inputs GrugFarInputs
 ---@param options GrugFarOptions
 ---@param extraArgs string[]
@@ -12,15 +12,15 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
     return nil
   end
 
-  local args = {}
+  local args = { 'run' }
 
   if forceReplace or #inputs.replacement > 0 then
-    table.insert(args, '--replace=' .. inputs.replacement)
+    table.insert(args, '--rewrite=' .. inputs.replacement)
   end
 
   -- user overrides
   local blacklisted = {}
-  local extraUserArgs = vim.trim(options.engines.ripgrep.extraArgs or '')
+  local extraUserArgs = vim.trim(options.engines.astgrep.extraArgs or '')
   if #extraUserArgs > 0 then
     for arg in string.gmatch(extraUserArgs, '%S+') do
       if utils.isBlacklistedFlag(arg, blacklistedFlags) then
@@ -53,28 +53,23 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   end
 
   -- required args
-  table.insert(args, '--line-number')
-  table.insert(args, '--heading')
-  table.insert(args, '--column')
-  table.insert(args, '--max-columns=0')
-  table.insert(args, '--field-match-separator=:')
-  table.insert(args, '--block-buffered')
-  table.insert(args, '--with-filename')
+  table.insert(args, '--heading=always')
+  -- TODO (sbadragan): add this
+  -- table.insert(args, '--json=stream')
 
-  -- note: --hyperlink-format not supported in rg v13
-  if not vim.version.lt(utils.getRgVersion(options), '14') then
-    table.insert(args, '--hyperlink-format=none')
-  end
-
-  if #inputs.filesFilter > 0 then
-    table.insert(args, '--glob=' .. inputs.filesFilter)
-  end
+  -- TODO (sbadragan): files filter glob not supported???
+  -- see https://github.com/ast-grep/ast-grep/issues/1062
+  -- we could use ripgrep...
+  -- = vim.split(vim.fn.glob('.deps/**/*.{txt,md}'), '\n') -- too slow
+  -- if #inputs.filesFilter > 0 then
+  --   table.insert(args, '--glob=' .. inputs.filesFilter)
+  -- end
 
   for i = 1, #extraArgs do
     table.insert(args, extraArgs[i])
   end
 
-  table.insert(args, '--regexp=' .. inputs.search)
+  table.insert(args, '--pattern=' .. inputs.search)
 
   return args, nil
 end
