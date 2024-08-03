@@ -1,4 +1,5 @@
 local MiniTest = require('mini.test')
+local ripgrep = require('grug-far.engine.ripgrep')
 local expect = MiniTest.expect
 local screenshot = require('grug-far/test/screenshot')
 local opts = require('grug-far/opts')
@@ -100,10 +101,8 @@ end
 --- gets setup opts
 ---@return GrugFarOptionsOverride
 function M.getSetupOptions()
-  local rgPath = vim.env.RG_PATH or 'rg'
-
   return {
-    rgPath = rgPath,
+    engines = { ripgrep = { path = vim.env.RG_PATH or 'rg' } },
     -- sort by path so that we get things in the same order
     extraRgArgs = '--sort=path',
     icons = {

@@ -42,7 +42,7 @@ local function fetchReplacedFileContent(params)
   local finished = false
 
   local handle
-  handle = uv.spawn(params.options.rgPath, {
+  handle = uv.spawn(params.options.engines.ripgrep.path, {
     stdio = { nil, stdout, stderr },
     cwd = vim.fn.getcwd(),
     args = args,
