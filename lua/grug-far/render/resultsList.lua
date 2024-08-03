@@ -39,6 +39,7 @@ end
 ---@param line integer
 ---@param loc ResultLocation
 local function addHighlightResult(context, line, loc)
+  -- TODO (sbadragan): engine specific logic?
   local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
   if not from then
     return

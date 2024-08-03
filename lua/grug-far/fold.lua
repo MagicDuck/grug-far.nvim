@@ -3,6 +3,7 @@ local M = {}
 ---@param line string
 ---@return boolean
 local function isPartOfFold(line)
+  -- TODO (sbadragan): engine specific logic?
   return line and #line > 0 and (line:match('^(%d+:%d+:)') or line:match('^(%d+%-)'))
 end
 
