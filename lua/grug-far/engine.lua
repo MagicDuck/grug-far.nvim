@@ -43,13 +43,12 @@ local M = {}
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
 
--- TODO (sbadragan): can we add some docs in here?
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType
----@field search fun(params: EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?)
----@field replace fun(params: EngineReplaceParams): (abort: fun()?)
----@field sync fun(params: EngineSyncParams): (abort: fun()?)
----@field getInputPrefillsForVisualSelection fun(initialPrefills: GrugFarPrefills): GrugFarPrefills
+---@field search fun(params: EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?) performs search
+---@field replace fun(params: EngineReplaceParams): (abort: fun()?) performs replace
+---@field sync fun(params: EngineSyncParams): (abort: fun()?) syncs given changes to their originating files
+---@field getInputPrefillsForVisualSelection fun(initialPrefills: GrugFarPrefills): GrugFarPrefills gets prefills updated with visual selection searchand any additional flags that are necessary (for example --fixed-strings for rg)
 
 --- returns engine given type
 ---@param type GrugFarEngineType
