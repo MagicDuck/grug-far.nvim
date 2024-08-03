@@ -11,7 +11,7 @@ local help = require('grug-far/actions/help')
 local abort = require('grug-far/actions/abort')
 local historyOpen = require('grug-far/actions/historyOpen')
 local historyAdd = require('grug-far/actions/historyAdd')
-local toggleShowRgCommand = require('grug-far/actions/toggleShowRgCommand')
+local toggleShowCommand = require('grug-far/actions/toggleShowCommand')
 local utils = require('grug-far/utils')
 local resultsList = require('grug-far/render/resultsList')
 
@@ -120,11 +120,11 @@ local function getActions(buf, context)
       end,
     },
     {
-      text = 'Toggle Show rg Command',
-      keymap = keymaps.toggleShowRgCommand,
-      description = 'Toggle showing rg command. Can be useful for debugging purposes.',
+      text = 'Toggle Show Search Command',
+      keymap = keymaps.toggleShowCommand,
+      description = 'Toggle showing search command. Can be useful for debugging purposes.',
       action = function()
-        toggleShowRgCommand({ buf = buf, context = context })
+        toggleShowCommand({ buf = buf, context = context })
       end,
     },
   }
