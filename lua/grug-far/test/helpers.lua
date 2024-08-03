@@ -101,9 +101,13 @@ end
 ---@return GrugFarOptionsOverride
 function M.getSetupOptions()
   return {
-    engines = { ripgrep = { path = vim.env.RG_PATH or 'rg' } },
-    -- sort by path so that we get things in the same order
-    extraRgArgs = '--sort=path',
+    engines = {
+      ripgrep = {
+        path = vim.env.RG_PATH or 'rg',
+        -- sort by path so that we get things in the same order
+        extraArgs = '--sort=path',
+      },
+    },
     icons = {
       resultsStatusReady = 'STATUS_READY',
       resultsStatusError = 'STATUS_ERROR',
