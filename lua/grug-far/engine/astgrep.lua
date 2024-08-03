@@ -1,26 +1,25 @@
 local utils = require('grug-far/utils')
+local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
+local getArgs = require('grug-far/engine/astgrep/getArgs')
+local parseResults = require('grug-far/engine/astgrep/parseResults')
 
 ---@type GrugFarEngine
 local AstgrepEngine = {
   type = 'astgrep',
 
   search = function(params)
-    local extraArgs = { '--color=ansi' }
-    for k, v in pairs(colors.rg_colors) do
-      table.insert(extraArgs, '--colors=' .. k .. ':none')
-      table.insert(extraArgs, '--colors=' .. k .. ':fg:' .. v.rgb)
-    end
-
+    local extraArgs = {}
     local args = getArgs(params.inputs, params.options, extraArgs)
 
     return fetchCommandOutput({
-      cmd_path = params.options.engines.ripgrep.path,
+      cmd_path = params.options.engines.astgrep.path,
       args = args,
       options = params.options,
       on_fetch_chunk = function(data)
         params.on_fetch_chunk(parseResults(data))
       end,
       on_finish = function(status, errorMessage)
+        -- TODO (sbadragan): anything we can do for no matches?
         if status == 'error' and errorMessage and #errorMessage == 0 then
           errorMessage = 'no matches'
         end
