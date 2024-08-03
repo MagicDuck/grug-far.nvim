@@ -8,19 +8,24 @@ local AstgrepEngine = {
   type = 'astgrep',
 
   search = function(params)
-    local extraArgs = {}
+    local extraArgs = {
+      '--json=stream',
+    }
     local args = getArgs(params.inputs, params.options, extraArgs)
 
+    local hadOutput = false
     return fetchCommandOutput({
       cmd_path = params.options.engines.astgrep.path,
       args = args,
       options = params.options,
       on_fetch_chunk = function(data)
+        hadOutput = true
         params.on_fetch_chunk(parseResults(data))
       end,
       on_finish = function(status, errorMessage)
-        -- TODO (sbadragan): anything we can do for no matches?
-        if status == 'error' and errorMessage and #errorMessage == 0 then
+        -- give the user more feedback when there are no matches
+        if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
+          status = 'error'
           errorMessage = 'no matches'
         end
         params.on_finish(status, errorMessage)
