@@ -56,7 +56,8 @@ local function addHighlightResult(context, line, loc)
     -- try to detect the filetype again
     return
   end
-  table.insert(results.lines, { row = line, col = #from, end_col = #loc.text + 1, lnum = loc.lnum })
+  local res = { row = line, col = #from, end_col = #loc.text, lnum = loc.lnum }
+  table.insert(results.lines, res)
 end
 
 --- append a bunch of result lines to the buffer
