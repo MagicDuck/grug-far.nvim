@@ -153,6 +153,24 @@ local RipgrepEngine = {
       changedFiles = params.changedFiles,
     })
   end,
+
+  getInputPrefillsForVisualSelection = function(initialPrefills)
+    local prefills = vim.deepcopy(initialPrefills)
+
+    --- search with current visual selection. If the visual selection crosses
+    --- multiple lines, lines are joined
+    --- (this is because visual selection can contain special chars, so we need to pass
+    --- --fixed-strings flag to rg. But in that case '\n' is interpreted literally, so we
+    --- can't use it to separate lines)
+    prefills.search = utils.getVisualSelectionText()
+    local flags = prefills.flags or ''
+    if not flags:find('%-%-fixed%-strings') then
+      flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+    end
+    prefills.flags = flags
+
+    return prefills
+  end,
 }
 
 return RipgrepEngine

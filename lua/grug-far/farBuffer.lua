@@ -204,7 +204,7 @@ local LAST_INPUT_LINE = 7
 
 --- fills in prefills
 ---@param buf integer
----@param prefills PrefillsTable | PrefillsTableOverride
+---@param prefills GrugFarPrefills | GrugFarPrefillsOverride
 function M.fillPrefills(buf, prefills)
   vim.api.nvim_buf_set_lines(buf, FIRST_INPUT_LINE, LAST_INPUT_LINE, true, {
     prefills.search or '',
@@ -217,7 +217,7 @@ end
 
 -- updates prefills
 ---@param buf integer
----@param prefills PrefillsTableOverride
+---@param prefills GrugFarPrefillsOverride
 function M.updatePrefills(buf, prefills)
   local oldSearch, oldReplacement, oldFilesFilter, oldFlags, oldPaths =
     unpack(vim.api.nvim_buf_get_lines(buf, FIRST_INPUT_LINE, LAST_INPUT_LINE, false))
