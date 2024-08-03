@@ -1,5 +1,3 @@
-local fetchFilesWithMatches = require('grug-far/engine/ripgrep/fetchFilesWithMatches')
-local getArgs = require('grug-far/engine/ripgrep/getArgs')
 local renderResultsHeader = require('grug-far/render/resultsHeader')
 local resultsList = require('grug-far/render/resultsList')
 local history = require('grug-far/history')

@@ -1,5 +1,4 @@
 local MiniTest = require('mini.test')
-local ripgrep = require('grug-far.engine.ripgrep')
 local expect = MiniTest.expect
 local screenshot = require('grug-far/test/screenshot')
 local opts = require('grug-far/opts')
