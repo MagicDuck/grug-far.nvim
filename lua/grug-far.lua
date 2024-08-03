@@ -252,22 +252,11 @@ function M._grug_far_internal(options, params)
     error('A grug-far instance with instanceName="' .. options.instanceName .. '" already exists!')
   end
 
+  local context = createContext(options)
   if params.is_visual then
-    --- search with current visual selection. If the visual selection crosses
-    --- multiple lines, lines are joined
-    --- (this is because visual selection can contain special chars, so we need to pass
-    --- --fixed-strings flag to rg. But in that case '\n' is interpreted literally, so we
-    --- can't use it to separate lines)
-
-    options.prefills.search = utils.getVisualSelectionText()
-    local flags = options.prefills.flags or ''
-    if not flags:find('%-%-fixed%-strings') then
-      flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
-    end
-    options.prefills.flags = flags
+    options.prefills = context.engine.getInputPrefillsForVisualSelection(options.prefills)
   end
 
-  local context = createContext(options)
   local win = createWindow(context)
   local buf = farBuffer.createBuffer(win, context)
   setupCleanup(buf, context)
@@ -283,9 +272,6 @@ end
 --- launch grug-far with the given overrides, pre-filling
 --- search with current visual selection. If the visual selection crosses
 --- multiple lines, lines are joined
---- (this is because visual selection can contain special chars, so we need to pass
---- --fixed-strings flag to rg. But in that case '\n' is interpreted literally, so we
---- can't use it to separate lines)
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
   ensure_configured()
@@ -410,7 +396,7 @@ end
 --- updates grug-far instance with given input prefills
 --- if clearOld=true is given, the old input values are ignored
 ---@param instanceName string
----@param prefills PrefillsTableOverride
+---@param prefills GrugFarPrefillsOverride
 ---@param clearOld boolean
 function M.update_instance_prefills(instanceName, prefills, clearOld)
   ensure_configured()

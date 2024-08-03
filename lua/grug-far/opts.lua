@@ -330,14 +330,14 @@ M.defaultOptions = {
 ---@field flags? string
 ---@field paths? string
 
----@class PrefillsTable
+---@class GrugFarPrefills
 ---@field search string
 ---@field replacement string
 ---@field filesFilter string
 ---@field flags string
 ---@field paths string
 
----@class PrefillsTableOverride
+---@class GrugFarPrefillsOverride
 ---@field search? string
 ---@field replacement? string
 ---@field filesFilter? string
@@ -394,7 +394,7 @@ M.defaultOptions = {
 ---@field reportDuration boolean
 ---@field icons IconsTable
 ---@field placeholders PlaceholdersTable
----@field prefills PrefillsTable
+---@field prefills GrugFarPrefills
 ---@field history HistoryTable
 ---@field instanceName? string
 ---@field folding FoldingTable
@@ -423,7 +423,7 @@ M.defaultOptions = {
 ---@field reportDuration? boolean
 ---@field icons? IconsTableOverride
 ---@field placeholders? PlaceholdersTableOverride
----@field prefills? PrefillsTableOverride
+---@field prefills? GrugFarPrefillsOverride
 ---@field history? HistoryTableOverride
 ---@field instanceName? string
 ---@field folding? FoldingTableOverride

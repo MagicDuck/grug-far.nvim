@@ -322,7 +322,7 @@ function M.clear(buf, context)
   end
 end
 
---- appends rg search command to results list
+--- appends search command to results list
 ---@param buf integer
 ---@param context GrugFarContext
 ---@param rgArgs string[]
