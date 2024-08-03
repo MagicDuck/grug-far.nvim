@@ -1,6 +1,6 @@
 ---@alias Region (Range4|Range6|TSNode)[]
 ---@alias LangRegions table<string, Region[]>
----@alias FileResults table<string, {ft: string, lines: ResultLine[]}>
+---@alias FileResults table<string, {ft: string?, lines: ResultLine[]}>
 
 ---@class ResultLine
 ---@field row number row in the result buffer for this line
