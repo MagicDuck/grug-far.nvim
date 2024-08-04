@@ -63,6 +63,10 @@ local function parseResults(matches)
         start_col = 0,
         end_line = current_line,
         end_col = #line_no,
+        sign = {
+          icon = 'resultsChangeIndicator',
+          hl = 'GrugFarResultsRemoveIndicator',
+        },
       })
       if col_no then
         table.insert(highlights, {

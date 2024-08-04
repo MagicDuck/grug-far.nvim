@@ -1,7 +1,5 @@
 local M = {}
 
-local nvim10 = vim.fn.has('nvim-0.10') > 0
-
 local highlights = {
   GrugFarHelpHeader = { default = true, link = 'ModeMsg' },
   GrugFarHelpHeaderKey = { default = true, link = 'String' },
@@ -22,7 +20,9 @@ local highlights = {
   GrugFarResultsPath = { default = true, link = '@string.special.path' },
   GrugFarResultsLineNo = { default = true, link = 'Number' },
   GrugFarResultsLineColumn = { default = true, link = 'Number' },
-  GrugFarResultsChangeIndicator = { default = true, link = nvim10 and 'Changed' or 'diffLine' },
+  GrugFarResultsChangeIndicator = { default = true, link = 'Changed' },
+  GrugFarResultsRemoveIndicator = { default = true, link = 'Removed' },
+  GrugFarResultsAddIndicator = { default = true, link = 'Added' },
   GrugFarResultsCmdHeader = { default = true, link = '@text.uri' },
 }
 
