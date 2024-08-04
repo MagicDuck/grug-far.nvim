@@ -26,6 +26,7 @@ local utils = require('grug-far/utils')
 local function parseResults(matches)
   local stats = { files = 0, matches = 0 }
   local lines = {}
+  local highlights = {}
 
   for i = 1, #matches, 1 do
     local match = matches[i]
@@ -38,13 +39,51 @@ local function parseResults(matches)
 
     if isFileBoundary then
       stats.files = stats.files + 1
+      table.insert(highlights, {
+        hl = 'GrugFarResultsPath',
+        start_line = #lines,
+        start_col = 1,
+        end_line = #lines,
+        end_col = #match.file,
+      })
       table.insert(lines, match.file)
     end
 
-    -- TODO (sbadragan): can we tell hl somehow that those are removals and others are additions?
-    -- add match lines
-    for _, matchLine in ipairs(vim.split(match.lines, '\n')) do
-      table.insert(lines, matchLine)
+    local numlines = #lines
+    for j, matchLine in ipairs(vim.split(match.lines, '\n')) do
+      local current_line = numlines + j - 1
+      local isLastLine = j == match.range['end'].line - match.range.start.line + 1
+      local line_no = tostring(match.range.start.line + j - 1)
+      local col_no = j == 1 and tostring(match.range.start.column) or nil
+      local prefix = col_no and line_no .. ':' .. col_no .. ':' or line_no .. '-'
+
+      table.insert(highlights, {
+        hl = 'GrugFarResultsLineNo',
+        start_line = current_line,
+        start_col = 0,
+        end_line = current_line,
+        end_col = #line_no,
+      })
+      if col_no then
+        table.insert(highlights, {
+          hl = 'GrugFarResultsLineColumn',
+          start_line = current_line,
+          start_col = #line_no + 1, -- skip ':'
+          end_line = current_line,
+          end_col = #line_no + 1 + #col_no,
+        })
+      end
+
+      matchLine = prefix .. matchLine
+      table.insert(highlights, {
+        hl = 'GrugFarResultsMatch',
+        start_line = current_line,
+        start_col = j == 1 and #prefix + match.range.start.column or #prefix,
+        end_line = current_line,
+        end_col = isLastLine and #prefix + match.range['end'].column or #matchLine,
+      })
+
+      table.insert(lines, utils.getLineWithoutCarriageReturn(matchLine))
     end
 
     -- add replacements lines
@@ -56,8 +95,15 @@ local function parseResults(matches)
         .. match.replacement
         .. matchLinesStr:sub(matchEnd + 1, -1)
 
+      -- table.insert(highlights, {
+      --   hl = 'GrugFarResultsMatch',
+      --   start_line = #lines,
+      --   start_col = match.range.start.column,
+      --   end_line = #lines + match.range['end'].line - match.range.start.line,
+      --   end_col = match.range['end'].column,
+      -- })
       for _, replacementLine in ipairs(vim.split(replacedStr, '\n')) do
-        table.insert(lines, replacementLine)
+        table.insert(lines, utils.getLineWithoutCarriageReturn(replacementLine))
       end
     end
 
@@ -67,9 +113,8 @@ local function parseResults(matches)
   end
 
   return {
-    lines = vim.iter(lines):map(utils.getLineWithoutCarriageReturn):totable(),
-    -- TODO (sbadragan): fixup
-    highlights = {},
+    lines = lines,
+    highlights = highlights,
     stats = stats,
   }
 end
