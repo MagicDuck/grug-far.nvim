@@ -254,7 +254,7 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
   if not opts.getIcon('resultsChangeIndicator', context) then
     return
   end
-  local sign = {
+  local changedSign = {
     icon = 'resultsChangeIndicator',
     hl = 'GrugFarResultsChangeIndicator',
   }
@@ -289,7 +289,7 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
       if sync then
         location.text = bufLine
       else
-        setLocationMark(buf, context, row, markId, sign)
+        setLocationMark(buf, context, row, markId, location.sign or changedSign)
       end
     end,
     context.engine.isSearchWithReplacement(context.state.inputs, context.options)
