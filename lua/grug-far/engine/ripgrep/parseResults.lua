@@ -1,5 +1,5 @@
 local colors = require('grug-far/engine/ripgrep/colors')
-local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
+local utils = require('grug-far/utils')
 
 --- @enum ResultsTokenType
 local token_types = {
@@ -85,22 +85,6 @@ local function getStats(tokens)
   return stats
 end
 
---- Remove '\r' from the end of a line on Windows
----@param line string
----@return string
-local function getLineWithoutCarriageReturn(line)
-  if not is_win then
-    return line
-  end
-
-  local last_char = string.sub(line, -1)
-  if last_char ~= '\r' then
-    return line
-  end
-
-  return string.sub(line, 1, -2)
-end
-
 --- parse results chunk and get info
 ---@param data string
 ---@return ParsedResultsData
@@ -117,7 +101,7 @@ local function parseResults(data)
     line = line .. string.sub(data, i, token.start - 1)
     i = token.fin + 1
     if token.type == token_types.newline then
-      table.insert(lines, getLineWithoutCarriageReturn(line))
+      table.insert(lines, utils.getLineWithoutCarriageReturn(line))
       line = ''
     elseif token.type == token_types.color then
       highlight = { hl = token.hl, start_line = #lines, start_col = #line }
