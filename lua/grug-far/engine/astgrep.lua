@@ -39,15 +39,38 @@ local function split_last_file_matches(matches)
   return before, after
 end
 
+local function getSearchArgs(inputs, options)
+  local extraArgs = {
+    '--json=stream',
+  }
+  return getArgs(inputs, options, extraArgs)
+end
+
+local function isSearchWithReplacement(args)
+  if not args then
+    return false
+  end
+
+  for i = 1, #args do
+    if vim.startswith(args[i], '--rewrite=') or args[i] == '--rewrite' or args[i] == '-r' then
+      return true
+    end
+  end
+
+  return false
+end
+
 ---@type GrugFarEngine
 local AstgrepEngine = {
   type = 'astgrep',
 
+  isSearchWithReplacement = function(inputs, options)
+    local args = getSearchArgs(inputs, options)
+    return isSearchWithReplacement(args)
+  end,
+
   search = function(params)
-    local extraArgs = {
-      '--json=stream',
-    }
-    local args = getArgs(params.inputs, params.options, extraArgs)
+    local args = getSearchArgs(params.inputs, params.options)
 
     local hadOutput = false
     local matches = {}
