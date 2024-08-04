@@ -90,6 +90,7 @@ function M.appendResultsChunk(buf, context, data)
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
   ---@type ResultLocation?
   local lastLocation = nil
+  -- TODO (sbadragan): this is calling engine specific logic
   local sign_text = M.isDoingReplace(context) and opts.getIcon('resultsChangeIndicator', context)
     or nil
 
@@ -230,11 +231,11 @@ function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forc
       local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
       local isChanged = forceChanged or bufline ~= location.text
       if bufline and isChanged then
-        -- ignore ones where user has messed with row:col: prefix as we can't get actual changed text
-        local numColPrefix = string.sub(location.text, 1, location.end_col + 1)
+        -- ignore ones where user has messed with row:col: or row- prefix as we can't get actual changed text
+        local prefix_end = location.end_col and location.end_col + 1 or #tostring(location.lnum) + 1
+        local numColPrefix = string.sub(location.text, 1, prefix_end + 1)
         if vim.startswith(bufline, numColPrefix) then
-          -- note, skips (:)
-          local newLine = string.sub(bufline, location.end_col + 2, -1)
+          local newLine = string.sub(bufline, prefix_end + 1, -1)
           callback(location, newLine, bufline, markId, row)
         end
       end
@@ -257,6 +258,7 @@ function M.isDoingReplace(context)
   end
 end
 
+-- TODO (sbadragan): disable this for engines that do not support syncing
 --- marks un-synced lines
 ---@param buf integer
 ---@param context GrugFarContext

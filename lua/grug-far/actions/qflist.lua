@@ -38,7 +38,7 @@ local function getResultsLocations(buf, context)
 
     -- get the associated location info
     local location = context.state.resultLocationByExtmarkId[markId]
-    if location and location.text then
+    if location and location.text and location.col then
       -- get the current text on row
       local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
 
