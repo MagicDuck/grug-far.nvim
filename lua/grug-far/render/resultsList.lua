@@ -23,14 +23,15 @@ end
 ---@param context GrugFarContext
 ---@param line integer
 ---@param markId? integer
----@param sign_text? string
+---@param sign? ResultHighlightSign
 ---@return integer markId
-local function setLocationMark(buf, context, line, markId, sign_text)
+local function setLocationMark(buf, context, line, markId, sign)
+  local sign_text = sign and opts.getIcon(sign.icon, context) or nil
   return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
     right_gravity = true,
     id = markId,
     sign_text = sign_text,
-    sign_hl_group = sign_text and 'GrugFarResultsChangeIndicator' or nil,
+    sign_hl_group = sign and sign.hl or nil,
   })
 end
 
@@ -90,9 +91,6 @@ function M.appendResultsChunk(buf, context, data)
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
   ---@type ResultLocation?
   local lastLocation = nil
-  -- TODO (sbadragan): this is calling engine specific logic
-  local sign_text = M.isDoingReplace(context) and opts.getIcon('resultsChangeIndicator', context)
-    or nil
 
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
@@ -106,9 +104,11 @@ function M.appendResultsChunk(buf, context, data)
     elseif hl == 'GrugFarResultsLineNo' then
       -- omit ending ':'
       lastLocation = { filename = state.resultsLastFilename }
-      local markId = setLocationMark(buf, context, lastline + highlight.start_line, nil, sign_text)
+      local markId =
+        setLocationMark(buf, context, lastline + highlight.start_line, nil, highlight.sign)
       resultLocationByExtmarkId[markId] = lastLocation
 
+      lastLocation.sign = highlight.sign
       lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.text = line
       if context.options.resultsHighlight and lastLocation.text then
@@ -243,21 +243,6 @@ function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forc
   end
 end
 
---- is user performing a replacement, ui-wise?
----@param context GrugFarContext
-function M.isDoingReplace(context)
-  local args = getArgs(context.state.inputs, context.options, {})
-  if not args then
-    return false
-  end
-
-  for i = 1, #args do
-    if vim.startswith(args[i], '--replace=') or args[i] == '--replace' or args[i] == '-r' then
-      return true
-    end
-  end
-end
-
 -- TODO (sbadragan): disable this for engines that do not support syncing
 --- marks un-synced lines
 ---@param buf integer
@@ -266,10 +251,13 @@ end
 ---@param endRow? integer
 ---@param sync? boolean whether to sync with current line contents, this removes indicators
 function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
-  local sign_text = opts.getIcon('resultsChangeIndicator', context)
-  if not sign_text then
+  if not opts.getIcon('resultsChangeIndicator', context) then
     return
   end
+  local sign = {
+    icon = 'resultsChangeIndicator',
+    hl = 'GrugFarResultsChangeIndicator',
+  }
 
   local extmarks = vim.api.nvim_buf_get_extmarks(
     buf,
@@ -301,10 +289,10 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
       if sync then
         location.text = bufLine
       else
-        setLocationMark(buf, context, row, markId, sign_text)
+        setLocationMark(buf, context, row, markId, sign)
       end
     end,
-    M.isDoingReplace(context)
+    context.engine.isSearchWithReplacement(context.state.inputs, context.options)
   )
 end
 

@@ -33,7 +33,7 @@ end
 ---@param endRow integer
 ---@return ChangedFile[]
 local function getChangedFiles(buf, context, startRow, endRow)
-  local isReplacing = resultsList.isDoingReplace(context)
+  local isReplacing = context.engine.isSearchWithReplacement(context.state.inputs, context.options)
 
   local changedFilesByFilename = {}
   resultsList.forEachChangedLocation(buf, context, startRow, endRow, function(location, newLine)
