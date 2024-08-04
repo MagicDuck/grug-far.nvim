@@ -1,61 +1,151 @@
+local utils = require('grug-far/utils')
+
 --- parse results chunk and get info
 ---@param data string
 ---@return ParsedResultsData
 local function parseResults(data)
   -- TODO (sbadragan): parse the json=stream data and return it.
-  return { lines = vim.split(data, '\n'), highlights = {}, stats = { files = 1, matches = 1 } }
+  -- return { lines = vim.split(data, '\n'), highlights = {}, stats = { files = 1, matches = 1 } }
+
+  local json_lines = vim.split(data, '\n')
+  local lines = {}
+  local lastRange
+  for _, json_line in ipairs(json_lines) do
+    if #json_line > 0 then
+      local chunk = vim.json.decode(json_line)
+      if lastRange then
+        -- remove duplicated lines
+        for _ = chunk.range.start.line, lastRange['end'].line, 1 do
+          table.remove(lines, #lines)
+        end
+      end
+
+      -- add new lines
+      local newlines = vim.split(chunk.lines, '\n')
+      for _, newline in ipairs(newlines) do
+        table.insert(lines, utils.getLineWithoutCarriageReturn(newline))
+      end
+
+      lastRange = chunk.range
+    end
+  end
+
+  -- TODO (sbadragan): fixup
+  return { lines = lines, highlights = {}, stats = { files = 1, matches = 1 } }
 end
 
 return parseResults
 
 -- Sample output:
--- sg
--- console.log($M)
--- bobo($M)
--- --json=pretty
-
--- [
+-- console.log($A, $B, $C, $D, $E) on multi line
 -- {
---   "text": "console.log('Linting...')",
+--   "text": "console.log(\n        'Error occurred when reading',\n        filePath,\n        filePath,\n        filePath,\n        filePath,\n      )",
 --   "range": {
 --     "byteOffset": {
---
---       "start": 1716,
---       "end": 1741
+--       "start": 1062,
+--       "end": 1193
 --     },
 --     "start": {
---       "line": 63,
---       "column": 2
+--       "line": 24,
+--       "column": 6
 --     },
 --     "end": {
---       "line": 63,
---       "column": 27
+--       "line": 30,
+--       "column": 7
 --     }
 --   },
---   "file": "scripts/parallel-eslint.mjs",
---   "lines": "  console.log('Linting...');",
---   "replacement": "bobo('Linting...')",
+--   "file": "/opt/repos/frontend/scripts/update-tsconfig.mjs",
+--   "lines": "      console.log(\n        'Error occurred when reading',\n        filePath,\n        filePath,\n        filePath,\n        filePath,\n      );",
+--   "replacement": "boborepl.log('Error occurred when reading', filePath, filePath, filePath, filePath)",
 --   "replacementOffsets": {
---     "start": 1716,
---     "end": 1741
+--     "start": 1062,
+--     "end": 1193
 --   },
 --   "language": "JavaScript",
 --   "metaVariables": {
 --     "single": {
---       "M": {
---         "text": "'Linting...'",
+--       "E": {
+--         "text": "filePath",
 --         "range": {
 --           "byteOffset": {
---             "start": 1728,
---             "end": 1740
+--             "start": 1176,
+--             "end": 1184
 --           },
 --           "start": {
---             "line": 63,
---             "column": 14
+--             "line": 29,
+--             "column": 8
 --           },
 --           "end": {
---             "line": 63,
---             "column": 26
+--             "line": 29,
+--             "column": 16
+--           }
+--         }
+--       },
+--       "C": {
+--         "text": "filePath",
+--         "range": {
+--           "byteOffset": {
+--             "start": 1140,
+--             "end": 1148
+--           },
+--           "start": {
+--             "line": 27,
+--             "column": 8
+--           },
+--           "end": {
+--             "line": 27,
+--             "column": 16
+--           }
+--         }
+--       },
+--       "A": {
+--         "text": "'Error occurred when reading'",
+--         "range": {
+--           "byteOffset": {
+--             "start": 1083,
+--             "end": 1112
+--           },
+--           "start": {
+--             "line": 25,
+--             "column": 8
+--           },
+--           "end": {
+--             "line": 25,
+--             "column": 37
+--           }
+--         }
+--       },
+--       "D": {
+--         "text": "filePath",
+--         "range": {
+--           "byteOffset": {
+--             "start": 1158,
+--             "end": 1166
+--           },
+--           "start": {
+--             "line": 28,
+--             "column": 8
+--           },
+--           "end": {
+--             "line": 28,
+--             "column": 16
+--           }
+--         }
+--       },
+--       "B": {
+--         "text": "filePath",
+--         "range": {
+--           "byteOffset": {
+--             "start": 1122,
+--             "end": 1130
+--           },
+--           "start": {
+--             "line": 26,
+--             "column": 8
+--           },
+--           "end": {
+--             "line": 26,
+--             "column": 16
 --           }
 --         }
 --       }
@@ -63,4 +153,112 @@ return parseResults
 --     "multi": {},
 --     "transformed": {}
 --   }
--- },
+-- }
+
+-- multiple things on the same line:
+-- const refs = nodes.map(node => ({
+--   path: path.relative(refNode ? refNode.dir : rootDir, node.dir),
+-- }));
+-- search for:
+-- $A.dir
+-- bob
+--
+--
+-- /opt/repos/frontend/scripts/update-tsconfig.mjs
+-- {
+--   "text": "refNode.dir",
+--   "range": {
+--     "byteOffset": {
+--       "start": 1623,
+--       "end": 1634
+--     },
+--     "start": {
+--       "line": 50,
+--       "column": 34
+--     },
+--     "end": {
+--       "line": 50,
+--       "column": 45
+--     }
+--   },
+--   "file": "/opt/repos/frontend/scripts/update-tsconfig.mjs",
+--   "lines": "    path: path.relative(refNode ? refNode.dir : rootDir, node.dir),",
+--   "replacement": "bob",
+--   "replacementOffsets": {
+--     "start": 1623,
+--     "end": 1634
+--   },
+--   "language": "JavaScript",
+--   "metaVariables": {
+--     "single": {
+--       "A": {
+--         "text": "refNode",
+--         "range": {
+--           "byteOffset": {
+--             "start": 1623,
+--             "end": 1630
+--           },
+--           "start": {
+--             "line": 50,
+--             "column": 34
+--           },
+--           "end": {
+--             "line": 50,
+--             "column": 41
+--           }
+--         }
+--       }
+--     },
+--     "multi": {},
+--     "transformed": {}
+--   }
+-- }
+-- next one
+-- {
+--   "text": "node.dir",
+--   "range": {
+--     "byteOffset": {
+--       "start": 1646,
+--       "end": 1654
+--     },
+--     "start": {
+--       "line": 50,
+--       "column": 57
+--     },
+--     "end": {
+--       "line": 50,
+--       "column": 65
+--     }
+--   },
+--   "file": "/opt/repos/frontend/scripts/update-tsconfig.mjs",
+--   "lines": "    path: path.relative(refNode ? refNode.dir : rootDir, node.dir),",
+--   "replacement": "bob",
+--   "replacementOffsets": {
+--     "start": 1646,
+--     "end": 1654
+--   },
+--   "language": "JavaScript",
+--   "metaVariables": {
+--     "single": {
+--       "A": {
+--         "text": "node",
+--         "range": {
+--           "byteOffset": {
+--             "start": 1646,
+--             "end": 1650
+--           },
+--           "start": {
+--             "line": 50,
+--             "column": 57
+--           },
+--           "end": {
+--             "line": 50,
+--             "column": 61
+--           }
+--         }
+--       }
+--     },
+--     "multi": {},
+--     "transformed": {}
+--   }
+-- }

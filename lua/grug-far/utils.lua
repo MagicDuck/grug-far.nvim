@@ -420,4 +420,20 @@ function M.closeHandle(handle)
   end
 end
 
+--- Remove '\r' from the end of a line on Windows
+---@param line string
+---@return string
+function M.getLineWithoutCarriageReturn(line)
+  if not is_win then
+    return line
+  end
+
+  local last_char = string.sub(line, -1)
+  if last_char ~= '\r' then
+    return line
+  end
+
+  return string.sub(line, 1, -2)
+end
+
 return M
