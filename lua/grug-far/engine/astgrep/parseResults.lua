@@ -23,14 +23,6 @@ local utils = require('grug-far/utils')
 ---@param matches AstgrepMatch[]
 ---@return ParsedResultsData
 local function parseResults(matches)
-  -- return { lines = vim.split(data, '\n'), highlights = {}, stats = { files = 1, matches = 1 } }
-
-  -- TODO (sbadragan): I think we have a problem cause you could get partial data
-  -- for a file and then you are screwed...
-  -- so we json decode before this function and wait until we get all the ones
-  -- for a particular file or do the non-json route
-  -- Then for the ones in a particular file, we can do replacements starting from the end
-
   local stats = { files = 0, matches = 0 }
   local lines = {}
   ---@type AstgrepMatchRange?
@@ -38,9 +30,21 @@ local function parseResults(matches)
   for i = #matches, 1, -1 do
     local match = matches[i]
     stats.matches = stats.matches + 1
-    if i == #matches or match.file ~= matches[i + 1].file then
+    local prevMatch = i == #matches and {} or matches[i + 1]
+    local isFileBoundary = prevMatch.file and match.file ~= prevMatch.file
+    if i == #matches or isFileBoundary then
       stats.files = stats.files + 1
       prevRange = nil
+    end
+
+    -- add file name heading
+    if isFileBoundary then
+      table.insert(lines, 1, prevMatch.file .. ' ' .. i)
+    end
+
+    -- add an empty lines in between each file's matches
+    if i == #matches or isFileBoundary then
+      table.insert(lines, 1, '')
     end
 
     local matchLines = vim.split(match.lines, '\n')
@@ -59,12 +63,18 @@ local function parseResults(matches)
     -- perform replacements
     if match.replacement then
       local matchLinesStr = table.concat(matchLines, '\n')
-      local matchStart = match.range.start.column
-      local matchEnd = matchStart + (match.range.byteOffset['end'] - match.range.byteOffset.start)
-      local replacedStr = matchLinesStr:sub(1, matchStart)
+      local matchStart = match.range.start.column + 1 -- column is zero-based
+      local matchEnd = matchStart + #match.text - 1
+      local replacedStr = matchLinesStr:sub(1, matchStart - 1)
         .. match.replacement
-        .. matchLinesStr:sub(matchEnd + 1, #matchLinesStr)
+        .. matchLinesStr:sub(matchEnd + 1, -1)
+      -- local replacedStr = matchLinesStr:sub(1, -1)
+      P(matchLinesStr:sub(matchEnd + 1, -1))
+      P('str: ' .. matchLinesStr)
+      P({ matchStart = matchStart, matchEnd = matchEnd, size = #matchLinesStr, text = match.text })
+
       matchLines = vim.split(replacedStr, '\n')
+      -- matchLines = vim.split(matchLinesStr, '\n')
     end
 
     -- add new lines
@@ -73,6 +83,11 @@ local function parseResults(matches)
     end
 
     prevRange = match.range
+
+    -- add file name heading for first file
+    if i == 1 then
+      table.insert(lines, 1, match.file .. ' ' .. i)
+    end
   end
 
   return {
