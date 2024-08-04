@@ -40,25 +40,50 @@ local function isMultilineSearchReplace(args)
   return false
 end
 
+local function getSearchArgs(inputs, options)
+  local extraArgs = { '--color=ansi' }
+  for k, v in pairs(colors.rg_colors) do
+    table.insert(extraArgs, '--colors=' .. k .. ':none')
+    table.insert(extraArgs, '--colors=' .. k .. ':fg:' .. v.rgb)
+  end
+
+  return getArgs(inputs, options, extraArgs)
+end
+
+local function isSearchWithReplacement(args)
+  if not args then
+    return false
+  end
+
+  for i = 1, #args do
+    if vim.startswith(args[i], '--replace=') or args[i] == '--replace' or args[i] == '-r' then
+      return true
+    end
+  end
+
+  return false
+end
+
 ---@type GrugFarEngine
 local RipgrepEngine = {
   type = 'ripgrep',
 
-  search = function(params)
-    local extraArgs = { '--color=ansi' }
-    for k, v in pairs(colors.rg_colors) do
-      table.insert(extraArgs, '--colors=' .. k .. ':none')
-      table.insert(extraArgs, '--colors=' .. k .. ':fg:' .. v.rgb)
-    end
+  -- TODO (sbadragan): implement those for astgrep
+  isSearchWithReplacement = function(inputs, options)
+    local args = getSearchArgs(inputs, options)
+    return isSearchWithReplacement(args)
+  end,
 
-    local args = getArgs(params.inputs, params.options, extraArgs)
+  search = function(params)
+    local args = getSearchArgs(params.inputs, params.options)
+    local isSearchWithReplace = isSearchWithReplacement(args)
 
     return fetchCommandOutput({
       cmd_path = params.options.engines.ripgrep.path,
       args = args,
       options = params.options,
       on_fetch_chunk = function(data)
-        params.on_fetch_chunk(parseResults(data))
+        params.on_fetch_chunk(parseResults(data, isSearchWithReplace))
       end,
       on_finish = function(status, errorMessage)
         if status == 'error' and errorMessage and #errorMessage == 0 then

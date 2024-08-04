@@ -14,11 +14,13 @@ local token_types = {
 ---@field name string
 ---@field start integer
 ---@field fin integer
+---@field sign? ResultHighlightSign
 
 --- gets tokens (line number, column, etc.) in results
 ---@param data string
+---@param isSearchWithReplacement boolean
 ---@return ResultsToken[]
-local function getTokens(data)
+local function getTokens(data, isSearchWithReplacement)
   local tokens = {}
   local i
   local j
@@ -30,13 +32,17 @@ local function getTokens(data)
       if i == nil then
         break
       end
-      table.insert(tokens, {
+      local token = {
         type = token_types.color,
         hl = color.hl,
         name = name,
         start = i,
         fin = j,
-      })
+      }
+      if isSearchWithReplacement and color.hl == 'GrugFarResultsLineNo' then
+        token.sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' }
+      end
+      table.insert(tokens, token)
     end
   end
 
@@ -87,9 +93,10 @@ end
 
 --- parse results chunk and get info
 ---@param data string
+---@param isSearchWithReplacement boolean
 ---@return ParsedResultsData
-local function parseResults(data)
-  local tokens = getTokens(data)
+local function parseResults(data, isSearchWithReplacement)
+  local tokens = getTokens(data, isSearchWithReplacement)
 
   local i = 1
   local line = ''
@@ -104,7 +111,7 @@ local function parseResults(data)
       table.insert(lines, utils.getLineWithoutCarriageReturn(line))
       line = ''
     elseif token.type == token_types.color then
-      highlight = { hl = token.hl, start_line = #lines, start_col = #line }
+      highlight = { hl = token.hl, start_line = #lines, start_col = #line, sign = token.sign }
     elseif token.type == token_types.color_ending and highlight then
       highlight.end_line = #lines
       highlight.end_col = #line

@@ -79,6 +79,7 @@ local contextCount = 0
 ---@field col? integer
 ---@field text? string
 ---@field end_col? integer
+---@field sign? ResultHighlightSign
 
 ---@class GrugFarInputs
 ---@field search string
