@@ -1,48 +1,86 @@
 local utils = require('grug-far/utils')
 
+---@class AstgrepMatchPos
+---@field line integer
+---@field column integer
+
+---@class AstgrepMatchOffset
+---@field start integer
+---@field end integer
+
+---@class AstgrepMatchRange
+---@field start AstgrepMatchPos
+---@field end AstgrepMatchPos
+---@field byteOffset AstgrepMatchOffset
+
+---@class AstgrepMatch
+---@field file string
+---@field lines string
+---@field replacement string
+---@field range AstgrepMatchRange
+
 --- parse results data and get info
----@param data string
+---@param matches AstgrepMatch[]
 ---@return ParsedResultsData
-local function parseResults(data)
-  -- TODO (sbadragan): parse the json=stream data and return it.
+local function parseResults(matches)
   -- return { lines = vim.split(data, '\n'), highlights = {}, stats = { files = 1, matches = 1 } }
 
-  local json_lines = vim.split(data, '\n')
+  -- TODO (sbadragan): I think we have a problem cause you could get partial data
+  -- for a file and then you are screwed...
+  -- so we json decode before this function and wait until we get all the ones
+  -- for a particular file or do the non-json route
+  -- Then for the ones in a particular file, we can do replacements starting from the end
+
+  local stats = { files = 0, matches = 0 }
   local lines = {}
-  local lastRange
-  for _, json_line in ipairs(json_lines) do
-    if #json_line > 0 then
-      -- TODO (sbadragan): add a type on this thing
-      local match = vim.json.decode(json_line)
-      local matchLines = vim.split(match.lines, '\n')
-      if lastRange then
-        -- remove duplicated lines
-        for i = 1, lastRange['end'].line - match.range.start.line + 1, 1 do
-          -- use overlapping lines from last match that have replacement performed
-          -- as first lines of this match so that we get stacked replacements
-          -- TODO (sbadragan): but if we do this, the replacement will be become wrong...
-          local lastLine = table.remove(lines, #lines)
-          table.remove(matchLines, i)
-          table.insert(matchLines, 1, lastLine)
-        end
-      end
-
-      -- perform replacements
-      if match.replacement then
-      end
-
-      -- add new lines
-      local newlines = vim.split(matchLines, '\n')
-      for _, newline in ipairs(newlines) do
-        table.insert(lines, utils.getLineWithoutCarriageReturn(newline))
-      end
-
-      lastRange = match.range
+  ---@type AstgrepMatchRange?
+  local prevRange
+  for i = #matches, 1, -1 do
+    local match = matches[i]
+    stats.matches = stats.matches + 1
+    if i == #matches or match.file ~= matches[i + 1].file then
+      stats.files = stats.files + 1
+      prevRange = nil
     end
+
+    local matchLines = vim.split(match.lines, '\n')
+    if prevRange then
+      -- remove overlapping lines
+      local overlap = match.range['end'].line - prevRange.start.line
+      for j = 0, overlap, 1 do
+        local firstLine = table.remove(lines, 1)
+        -- note: use overlapping lines from prev match, that have replacement performed
+        -- as last lines of this match so that we get stacked replacements
+        table.remove(matchLines, #matchLines - j)
+        table.insert(matchLines, firstLine)
+      end
+    end
+
+    -- perform replacements
+    if match.replacement then
+      local matchLinesStr = table.concat(matchLines, '\n')
+      local matchStart = match.range.start.column
+      local matchEnd = matchStart + (match.range.byteOffset['end'] - match.range.byteOffset.start)
+      local replacedStr = matchLinesStr:sub(1, matchStart)
+        .. match.replacement
+        .. matchLinesStr:sub(matchEnd + 1, #matchLinesStr)
+      matchLines = vim.split(replacedStr, '\n')
+    end
+
+    -- add new lines
+    for k, matchLine in ipairs(matchLines) do
+      table.insert(lines, k, matchLine)
+    end
+
+    prevRange = match.range
   end
 
-  -- TODO (sbadragan): fixup
-  return { lines = lines, highlights = {}, stats = { files = 1, matches = 1 } }
+  return {
+    lines = vim.iter(lines):map(utils.getLineWithoutCarriageReturn):totable(),
+    -- TODO (sbadragan): fixup
+    highlights = {},
+    stats = stats,
+  }
 end
 
 return parseResults
