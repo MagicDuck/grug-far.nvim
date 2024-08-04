@@ -1,6 +1,6 @@
 local utils = require('grug-far/utils')
 
---- parse results chunk and get info
+--- parse results data and get info
 ---@param data string
 ---@return ParsedResultsData
 local function parseResults(data)
@@ -12,21 +12,32 @@ local function parseResults(data)
   local lastRange
   for _, json_line in ipairs(json_lines) do
     if #json_line > 0 then
-      local chunk = vim.json.decode(json_line)
+      -- TODO (sbadragan): add a type on this thing
+      local match = vim.json.decode(json_line)
+      local matchLines = vim.split(match.lines, '\n')
       if lastRange then
         -- remove duplicated lines
-        for _ = chunk.range.start.line, lastRange['end'].line, 1 do
-          table.remove(lines, #lines)
+        for i = 1, lastRange['end'].line - match.range.start.line + 1, 1 do
+          -- use overlapping lines from last match that have replacement performed
+          -- as first lines of this match so that we get stacked replacements
+          -- TODO (sbadragan): but if we do this, the replacement will be become wrong...
+          local lastLine = table.remove(lines, #lines)
+          table.remove(matchLines, i)
+          table.insert(matchLines, 1, lastLine)
         end
       end
 
+      -- perform replacements
+      if match.replacement then
+      end
+
       -- add new lines
-      local newlines = vim.split(chunk.lines, '\n')
+      local newlines = vim.split(matchLines, '\n')
       for _, newline in ipairs(newlines) do
         table.insert(lines, utils.getLineWithoutCarriageReturn(newline))
       end
 
-      lastRange = chunk.range
+      lastRange = match.range
     end
   end
 
