@@ -16,6 +16,7 @@ local utils = require('grug-far/utils')
 ---@class AstgrepMatch
 ---@field file string
 ---@field lines string
+---@field text string
 ---@field replacement string
 ---@field range AstgrepMatchRange
 
@@ -25,68 +26,43 @@ local utils = require('grug-far/utils')
 local function parseResults(matches)
   local stats = { files = 0, matches = 0 }
   local lines = {}
-  ---@type AstgrepMatchRange?
-  local prevRange
-  for i = #matches, 1, -1 do
+
+  for i = 1, #matches, 1 do
     local match = matches[i]
     stats.matches = stats.matches + 1
-    local prevMatch = i == #matches and {} or matches[i + 1]
-    local isFileBoundary = prevMatch.file and match.file ~= prevMatch.file
-    if i == #matches or isFileBoundary then
-      stats.files = stats.files + 1
-      prevRange = nil
+    local isFileBoundary = i == 1 or match.file ~= matches[i - 1].file
+
+    if isFileBoundary and i > 1 then
+      table.insert(lines, '')
     end
 
-    -- add file name heading
     if isFileBoundary then
-      table.insert(lines, 1, prevMatch.file .. ' ' .. i)
+      stats.files = stats.files + 1
+      table.insert(lines, match.file)
     end
 
-    -- add an empty lines in between each file's matches
-    if i == #matches or isFileBoundary then
-      table.insert(lines, 1, '')
+    -- TODO (sbadragan): can we tell hl somehow that those are removals and others are additions?
+    -- add match lines
+    for _, matchLine in ipairs(vim.split(match.lines, '\n')) do
+      table.insert(lines, matchLine)
     end
 
-    local matchLines = vim.split(match.lines, '\n')
-    if prevRange then
-      -- remove overlapping lines
-      local overlap = match.range['end'].line - prevRange.start.line
-      for j = 0, overlap, 1 do
-        local firstLine = table.remove(lines, 1)
-        -- note: use overlapping lines from prev match, that have replacement performed
-        -- as last lines of this match so that we get stacked replacements
-        table.remove(matchLines, #matchLines - j)
-        table.insert(matchLines, firstLine)
-      end
-    end
-
-    -- perform replacements
+    -- add replacements lines
     if match.replacement then
-      local matchLinesStr = table.concat(matchLines, '\n')
+      local matchLinesStr = match.lines
       local matchStart = match.range.start.column + 1 -- column is zero-based
       local matchEnd = matchStart + #match.text - 1
       local replacedStr = matchLinesStr:sub(1, matchStart - 1)
         .. match.replacement
         .. matchLinesStr:sub(matchEnd + 1, -1)
-      -- local replacedStr = matchLinesStr:sub(1, -1)
-      P(matchLinesStr:sub(matchEnd + 1, -1))
-      P('str: ' .. matchLinesStr)
-      P({ matchStart = matchStart, matchEnd = matchEnd, size = #matchLinesStr, text = match.text })
 
-      matchLines = vim.split(replacedStr, '\n')
-      -- matchLines = vim.split(matchLinesStr, '\n')
+      for _, replacementLine in ipairs(vim.split(replacedStr, '\n')) do
+        table.insert(lines, replacementLine)
+      end
     end
 
-    -- add new lines
-    for k, matchLine in ipairs(matchLines) do
-      table.insert(lines, k, matchLine)
-    end
-
-    prevRange = match.range
-
-    -- add file name heading for first file
-    if i == 1 then
-      table.insert(lines, 1, match.file .. ' ' .. i)
+    if i == #matches then
+      table.insert(lines, '')
     end
   end
 
