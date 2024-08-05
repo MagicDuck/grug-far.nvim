@@ -66,9 +66,13 @@ local function search(params)
       resultsList.appendResultsChunk(buf, context, data)
       resultsList.throttledForceRedrawBuffer(buf)
     end,
-    on_finish = function(status, errorMessage)
+    on_finish = function(status, errorMessage, customActionMessage)
       if state.bufClosed then
         return
+      end
+
+      if customActionMessage then
+        state.actionMessage = customActionMessage
       end
 
       state.abort.search = nil

@@ -42,6 +42,10 @@ local function split_last_file_matches(matches)
   return before, after
 end
 
+--- gets search args
+---@param inputs GrugFarInputs
+---@param options GrugFarOptions
+---@return string[]?
 local function getSearchArgs(inputs, options)
   local extraArgs = {
     '--json=stream',
@@ -49,6 +53,9 @@ local function getSearchArgs(inputs, options)
   return getArgs(inputs, options, extraArgs, blacklistedSearchFlags)
 end
 
+--- is doing a search iwth replacement?
+---@param args string[]?
+---@return boolean
 local function isSearchWithReplacement(args)
   if not args then
     return false
@@ -73,7 +80,16 @@ local AstgrepEngine = {
   end,
 
   search = function(params)
-    local args = getSearchArgs(params.inputs, params.options)
+    local args, blacklistedArgs = getSearchArgs(params.inputs, params.options)
+
+    if blacklistedArgs and #blacklistedArgs > 0 then
+      params.on_finish(
+        nil,
+        nil,
+        'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', ')
+      )
+      return
+    end
 
     local hadOutput = false
     local matches = {}
@@ -108,8 +124,55 @@ local AstgrepEngine = {
   end,
 
   replace = function(params)
-    -- TODO (sbadragan): implement if  possible
-    -- TODO (sbadragan): blacklist any flags needed
+    local report_progress = params.report_progress
+    local on_finish = params.on_finish
+
+    local extraArgs = {
+      '--update-all',
+    }
+    local args, blacklistedArgs =
+      getArgs(params.inputs, params.options, extraArgs, blacklistedReplaceFlags, true)
+
+    if blacklistedArgs and #blacklistedArgs > 0 then
+      on_finish(nil, nil, 'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', '))
+      return
+    end
+
+    if not args then
+      on_finish(nil, nil, 'replace cannot work with the current arguments!')
+      return
+    end
+
+    if #params.inputs.replacement == 0 then
+      local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
+      if choice ~= 1 then
+        on_finish(nil, nil, 'replace with empty string canceled!')
+        return
+      end
+    end
+
+    local on_abort = nil
+    local function abort()
+      if on_abort then
+        on_abort()
+      end
+    end
+
+    report_progress({
+      type = 'message',
+      message = 'replacing... (buffer temporarily not modifiable)',
+    })
+    on_abort = fetchCommandOutput({
+      cmd_path = params.options.engines.astgrep.path,
+      args = args,
+      options = params.options,
+      on_fetch_chunk = function()
+        -- astgrep does not report progess while replacing
+      end,
+      on_finish = on_finish,
+    })
+
+    return abort
   end,
 
   isSyncSupported = function()
