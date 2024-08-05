@@ -17,8 +17,8 @@ local highlights = {
   GrugFarResultsActionMessage = { default = true, link = 'ModeMsg' },
 
   GrugFarResultsMatch = { default = true, link = '@diff.delta' },
-  GrugFarResultsMatchAdded = { default = true, link = '@diff.plus' },
-  GrugFarResultsMatchRemoved = { default = true, link = '@diff.minus' },
+  GrugFarResultsAdded = { default = true, link = '@diff.plus' },
+  GrugFarResultsRemoved = { default = true, link = '@diff.minus' },
   GrugFarResultsPath = { default = true, link = '@string.special.path' },
   GrugFarResultsLineNo = { default = true, link = 'Number' },
   GrugFarResultsLineColumn = { default = true, link = 'Number' },
