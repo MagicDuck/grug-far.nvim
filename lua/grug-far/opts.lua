@@ -46,7 +46,7 @@ M.defaultOptions = {
         replacement = 'ex: bar    ${1}_foo    $$MY_ENV_VAR ',
         filesFilter = 'ex: *.lua     *.{css,js}    **/docs/*.md',
         flags = 'ex: --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
-        paths = 'ex: /foo/bar  ../  ./hello\\ world/  ./src/foo.lua',
+        paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua',
       },
     },
     -- see https://ast-grep.github.io
@@ -67,7 +67,7 @@ M.defaultOptions = {
         search = 'ex: $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
         replacement = 'ex: $A?.()   blah($$$ARGS)',
         filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (filters via ripgrep)',
-        flags = 'ex: --help (-h) --context (-C) --rewrite= (empty replace) --strictness=<STRICTNESS>',
+        flags = 'ex: --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
         paths = 'ex: /foo/bar  ../  ./hello\\ world/  ./src/foo.lua',
       },
     },
