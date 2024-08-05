@@ -32,9 +32,6 @@ jobs:
           mkdir ripgrep
           cd ripgrep
           wget -O - https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz | tar zxf - --strip-component=1
-          ls
-          cd ..
-          ./ripgrep/rg foo .
       - name: Run tests
         run: | 
           make prepare
