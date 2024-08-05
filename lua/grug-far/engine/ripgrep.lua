@@ -79,7 +79,9 @@ local RipgrepEngine = {
     if not version then
       params.on_finish(
         'error',
-        'ripgrep not found. Using command: ' .. params.options.engines.ripgrep.path
+        'ripgrep not found. Used command: '
+          .. params.options.engines.ripgrep.path
+          .. '\nripgrep needs to be installed, see https://github.com/BurntSushi/ripgrep'
       )
     end
 

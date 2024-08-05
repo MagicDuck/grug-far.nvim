@@ -128,7 +128,9 @@ local AstgrepEngine = {
     if not sg_version then
       on_finish(
         'error',
-        'ast-grep not found. Using command: ' .. params.options.engines.astgrep.path
+        'ast-grep not found. Used command: '
+          .. params.options.engines.astgrep.path
+          .. '\nast-grep needs to be installed, see https://ast-grep.github.io'
       )
     end
 
@@ -136,7 +138,9 @@ local AstgrepEngine = {
     if not rg_version then
       on_finish(
         'error',
-        'ripgrep not found. Using command: ' .. params.options.engines.ripgrep.path
+        'ripgrep not found. Used command: '
+          .. params.options.engines.ripgrep.path
+          .. '\nripgrep needs to be installed, see https://github.com/BurntSushi/ripgrep'
       )
     end
 
