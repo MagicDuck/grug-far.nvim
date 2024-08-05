@@ -1,10 +1,13 @@
+local engine = require('grug-far/engine')
 local M = {}
 
 ---@param line string
 ---@return boolean
 local function isPartOfFold(line)
-  -- TODO (sbadragan): engine specific logic?
-  return line and #line > 0 and (line:match('^(%d+:%d+:)') or line:match('^(%d+%-)'))
+  -- TODO (sbadragan): should only check stuff that is below the results line
+  return line
+    and #line > 0
+    and (line == engine.DiffSeparatorChars or line:match('^(%d+:%d+:)') or line:match('^(%d+%-)'))
 end
 
 --- gets fold level of line at given number
