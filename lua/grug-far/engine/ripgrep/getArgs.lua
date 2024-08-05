@@ -62,7 +62,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   table.insert(args, '--with-filename')
 
   -- note: --hyperlink-format not supported in rg v13
-  if not vim.version.lt(utils.getRgVersion(options), '14') then
+  if not vim.version.lt(utils.getRgVersion(options) or '', '14') then
     table.insert(args, '--hyperlink-format=none')
   end
 

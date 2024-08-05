@@ -56,14 +56,6 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   table.insert(args, '--heading=always')
   table.insert(args, '--color=never')
 
-  -- TODO (sbadragan): files filter glob not supported???
-  -- see https://github.com/ast-grep/ast-grep/issues/1062
-  -- we could use ripgrep...
-  -- = vim.split(vim.fn.glob('.deps/**/*.{txt,md}'), '\n') -- too slow
-  -- if #inputs.filesFilter > 0 then
-  --   table.insert(args, '--glob=' .. inputs.filesFilter)
-  -- end
-
   for i = 1, #extraArgs do
     table.insert(args, extraArgs[i])
   end

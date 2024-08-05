@@ -54,7 +54,7 @@ M.defaultOptions = {
       -- ast-grep executable to use, can be a different path if you need to configure
       -- TODO (sbadragan): need healthcheck
       -- TODO (sbadragan): does it barf if it does not exist?
-      path = 'sg',
+      path = 'sg1',
 
       -- extra args that you always want to pass
       -- like for example if you always want context lines around matches
