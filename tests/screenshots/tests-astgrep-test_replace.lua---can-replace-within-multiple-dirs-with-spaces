@@ -13,7 +13,7 @@
 12|   ./foo\ bar ./hello\ world                                                    
 13|                                                                                
 14| STATUS_SUCCESS ⟪ astgrep ⟫
-15| 4 matches in 2 files                                                           
+15| 2 matches in 1 files                                                           
 16|                                                                                
 17|   hello world/file2.ts                                                         
 18|-▒ 1:10:      if (grug || talks) {                                              
