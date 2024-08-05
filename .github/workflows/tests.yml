@@ -62,12 +62,9 @@ jobs:
         run: |
           mkdir astgrep
           cd astgrep
-          wget https://github.com/ast-grep/ast-grep/releases/download/0.25.6/app-aarch64-unknown-linux-gnu.zip
-          unzip app-aarch64-unknown-linux-gnu.zip
-          ls
-          sg --help
-          sg run -p '$A && $A()' -r '$A?.()'
+          wget https://github.com/ast-grep/ast-grep/releases/download/0.25.6/app-x86_64-unknown-linux-gnu.zip
+          unzip app-x86_64-unknown-linux-gnu.zip
       - name: Run tests
         run: | 
           make prepare
-          env RG_PATH=$(realpath ./ripgrep/rg) make test dir=astgrep
+          env RG_PATH=$(realpath ./ripgrep/rg) SG_PATH=$(realpath ./astgrep/sg) make test dir=astgrep
