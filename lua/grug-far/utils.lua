@@ -5,9 +5,6 @@ local M = {}
 ---@type number?
 M.scratch_buf = nil
 
----@type string?
-local rg_version = nil
-
 --- sets a given buffer's name without creating alternative buffers
 ---@param bufnr number the buffer to change the name of
 ---@param name string the new buffer name
@@ -22,32 +19,6 @@ function M.buf_set_name(bufnr, name)
       pcall(vim.api.nvim_buf_delete, new_buf, { force = true })
     end
   end
-end
-
---- gets the rg version in use.
----Only first call does an actual check rest are from cache
----@param options GrugFarOptions
----@return string version
-function M.getRgVersion(options)
-  if not rg_version then
-    local handle = io.popen(options.engines.ripgrep.path .. ' --version')
-    if handle then
-      rg_version = handle:read('*a')
-      local eol = rg_version:find('\n')
-      if eol then
-        rg_version = rg_version:sub(1, eol - 1)
-      end
-      rg_version = string.gsub(rg_version, 'ripgrep', '')
-      rg_version = string.gsub(rg_version, '[%s]*', '')
-      handle:close()
-    end
-    -- try our best in case version check failed
-    if not rg_version or #rg_version == 0 then
-      rg_version = '14'
-    end
-  end
-
-  return rg_version
 end
 
 --- setTimeout, like in js

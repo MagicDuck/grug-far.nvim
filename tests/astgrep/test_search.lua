@@ -1,0 +1,414 @@
+local MiniTest = require('mini.test')
+local helpers = require('grug-far/test/helpers')
+
+---@type NeovimChild
+local child = MiniTest.new_child_neovim()
+
+local T = MiniTest.new_set({
+  hooks = {
+    pre_case = function()
+      helpers.initChildNeovim(child)
+    end,
+    -- Stop once all test cases are finished
+    post_once = child.stop,
+  },
+})
+
+T['can search for some string'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug.$A' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search for some string with placeholders on'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug' },
+    engines = {
+      astgrep = {
+        placeholders = { enabled = true },
+      },
+    },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['reports error from sg'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    -- note: invalid regex
+    prefills = { search = 'grug', flags = '--strictness' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
+-- TODO (sbadragan): context is broken
+T['can search with flags'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = '$A.walks', flags = '-C 2' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search with particular file in paths'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', paths = './file2.ts' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search with particular dir in paths'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', paths = '.' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search with file filter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', filesFilter = '**/*.ts' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search with replace string'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', replacement = 'curly' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search with no matches'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'george' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search for some string with many matches'] = function()
+  local files = {}
+  for i = 1, 100 do
+    table.insert(files, {
+      filename = 'file_' .. i,
+      content = [[
+        if (grug || talks) {
+          grug.walks(talks)
+        }
+      ]],
+    })
+  end
+  helpers.writeTestFiles(files)
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search for visual selection inside one line'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2.ts')
+  child.type_keys(10, 'jj', 'veee', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
+T['searches full line visual selection'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2.ts')
+  child.type_keys(10, 'j', '0v$', '<esc>:lua GrugFar.with_visual_selection()<CR>')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
+T['searches first line of multiline visual selection'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2.ts')
+  child.type_keys(10, 'j', 'wwwvj', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
+return T
