@@ -1,0 +1,78 @@
+---@class runWithChunkedFilesParams
+---@field files string[]
+---@field chunk_size integer
+---@field options GrugFarOptions
+---@field run_chunk fun(chunk: string, on_done: fun(errorMessage: string?)): (abort: fun()?)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
+
+--- performs replacement in given matched file
+---@param params runWithChunkedFilesParams
+local function runWithChunkedFiles(params)
+  local chunks = {}
+  local current_chunk = nil
+  for i = 1, #params.files do
+    current_chunk = current_chunk == nil and params.files[i]
+      or current_chunk .. '\n' .. params.files[i]
+    if i == #params.files or i % params.chunk_size == 0 then
+      table.insert(chunks, current_chunk)
+      current_chunk = nil
+    end
+  end
+
+  local on_finish = params.on_finish
+  local engagedWorkers = 0
+  local errorMessages = ''
+  local isAborted = false
+  local abortByChunk = {}
+
+  local function abortAll()
+    isAborted = true
+    for _, abort in pairs(abortByChunk) do
+      if abort then
+        abort()
+      end
+    end
+  end
+
+  local function handleNextChunk()
+    if isAborted then
+      chunks = {}
+    end
+
+    local chunk = table.remove(chunks)
+    if chunk == nil then
+      if engagedWorkers == 0 then
+        if isAborted then
+          on_finish(nil, nil)
+        else
+          on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
+        end
+      end
+      return
+    end
+
+    engagedWorkers = engagedWorkers + 1
+    abortByChunk[chunk] = params.run_chunk(
+      chunk,
+      vim.schedule_wrap(function(err)
+        if err then
+          -- optimistically try to continue
+          errorMessages = errorMessages .. '\n' .. err
+        end
+
+        abortByChunk[chunk] = nil
+
+        engagedWorkers = engagedWorkers - 1
+        handleNextChunk()
+      end)
+    )
+  end
+
+  for _ = 1, params.options.maxWorkers do
+    handleNextChunk()
+  end
+
+  return abortAll
+end
+
+return runWithChunkedFiles

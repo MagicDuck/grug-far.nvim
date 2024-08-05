@@ -74,7 +74,9 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
     table.insert(args, extraArgs[i])
   end
 
-  table.insert(args, '--regexp=' .. inputs.search)
+  if #inputs.search > 0 then
+    table.insert(args, '--regexp=' .. inputs.search)
+  end
 
   return args, nil
 end
