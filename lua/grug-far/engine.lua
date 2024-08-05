@@ -76,9 +76,9 @@ M.DiffSeparatorChars = ' '
 ---@return GrugFarEngine
 function M.getEngine(type)
   if type == 'astgrep' then
-    return require('grug-far.engine.astgrep')
+    return require('grug-far/engine/astgrep')
   else
-    return require('grug-far.engine.ripgrep')
+    return require('grug-far/engine/ripgrep')
   end
 end
 
