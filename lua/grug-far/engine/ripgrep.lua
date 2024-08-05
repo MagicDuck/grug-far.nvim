@@ -1,4 +1,5 @@
 local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
+local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 local parseResults = require('grug-far/engine/ripgrep/parseResults')
 local fetchFilesWithMatches = require('grug-far/engine/ripgrep/fetchFilesWithMatches')
 local replaceInMatchedFiles = require('grug-far/engine/ripgrep/replaceInMatchedFiles')
@@ -74,6 +75,14 @@ local RipgrepEngine = {
   end,
 
   search = function(params)
+    local version = getRgVersion(params.options)
+    if not version then
+      params.on_finish(
+        'error',
+        'ripgrep not found. Using command: ' .. params.options.engines.ripgrep.path
+      )
+    end
+
     local args = getSearchArgs(params.inputs, params.options)
     local isSearchWithReplace = isSearchWithReplacement(args)
 

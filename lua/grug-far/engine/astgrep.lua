@@ -4,8 +4,10 @@ local parseResults = require('grug-far/engine/astgrep/parseResults')
 local utils = require('grug-far/utils')
 local blacklistedSearchFlags = require('grug-far/engine/astgrep/blacklistedSearchFlags')
 local blacklistedReplaceFlags = require('grug-far/engine/astgrep/blacklistedReplaceFlags')
+local getAstgrepVersion = require('grug-far/engine/astgrep/getAstgrepVersion')
 local fetchFilteredFilesList = require('grug-far/engine/ripgrep/fetchFilteredFilesList')
 local runWithChunkedFiles = require('grug-far/engine/runWithChunkedFiles')
+local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 
 --- decodes streamed json matches, appending to given table
 ---@param matches AstgrepMatch[]
@@ -122,6 +124,22 @@ local AstgrepEngine = {
 
   search = function(params)
     local on_finish = params.on_finish
+    local sg_version = getAstgrepVersion(params.options)
+    if not sg_version then
+      on_finish(
+        'error',
+        'ast-grep not found. Using command: ' .. params.options.engines.astgrep.path
+      )
+    end
+
+    local rg_version = getRgVersion(params.options)
+    if not rg_version then
+      on_finish(
+        'error',
+        'ripgrep not found. Using command: ' .. params.options.engines.ripgrep.path
+      )
+    end
+
     local args, blacklistedArgs = getSearchArgs(params.inputs, params.options)
 
     if blacklistedArgs and #blacklistedArgs > 0 then

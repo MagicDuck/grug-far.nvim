@@ -1,4 +1,5 @@
 local utils = require('grug-far/utils')
+local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 
 --- get args for ripgrep or nil if params invalid / insufficient
 ---@param inputs GrugFarInputs
@@ -62,7 +63,8 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   table.insert(args, '--with-filename')
 
   -- note: --hyperlink-format not supported in rg v13
-  if not vim.version.lt(utils.getRgVersion(options) or '', '14') then
+  local version = getRgVersion(options)
+  if version and not vim.version.lt(version, '14') then
     table.insert(args, '--hyperlink-format=none')
   end
 
