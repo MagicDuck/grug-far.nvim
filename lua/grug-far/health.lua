@@ -15,6 +15,11 @@ local dependencies = {
     url = '[BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep)',
     optional = false,
   },
+  {
+    name = 'sg',
+    url = '[ast-grep](https://ast-grep.github.io)',
+    optional = true,
+  },
 }
 
 ---@param dep Dependency

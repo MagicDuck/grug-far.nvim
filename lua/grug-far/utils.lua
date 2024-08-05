@@ -42,7 +42,7 @@ function M.getRgVersion(options)
       handle:close()
     end
     -- try our best in case version check failed
-    if not rg_version then
+    if not rg_version or #rg_version == 0 then
       rg_version = '14'
     end
   end
