@@ -1,5 +1,6 @@
 # Run tests
 # use with update_screenshot=true to update the screenshots
+# use with dir=... to test a particular dir under tests/
 # use with file=... to test a particular file
 # use with line=... to target a test at that line in the file 
 test:
