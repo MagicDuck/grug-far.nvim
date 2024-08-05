@@ -75,10 +75,6 @@ M.DiffSeparatorChars = ' '
 ---@param type GrugFarEngineType
 ---@return GrugFarEngine
 function M.getEngine(type)
-  -- TODO (sbadragan): do / remove some of this
-  -- Important Note:
-  -- If we add another engine, we should:
-  -- 1. add tests for it in a separate directory and run them in a separate github action
   if type == 'astgrep' then
     return require('grug-far.engine.astgrep')
   else

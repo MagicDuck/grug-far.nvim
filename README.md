@@ -1,4 +1,5 @@
 # grug-far.nvim
+# TODO (sbadragan): update to mention new engine, astgrep
 
 **F**ind **A**nd **R**eplace plugin for neovim
 
