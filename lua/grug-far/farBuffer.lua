@@ -12,6 +12,7 @@ local abort = require('grug-far/actions/abort')
 local historyOpen = require('grug-far/actions/historyOpen')
 local historyAdd = require('grug-far/actions/historyAdd')
 local toggleShowCommand = require('grug-far/actions/toggleShowCommand')
+local swapEngine = require('grug-far/actions/swapEngine')
 local utils = require('grug-far/utils')
 local resultsList = require('grug-far/render/resultsList')
 
@@ -117,6 +118,14 @@ local function getActions(buf, context)
       description = 'Close grug-far buffer/window. This is the same as `:bd` except that it will also ask you to confirm if there is a replace/sync in progress, as those would be aborted.',
       action = function()
         close({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Swap Engine',
+      keymap = keymaps.swapEngine,
+      description = 'Swap search engine with the next one.',
+      action = function()
+        swapEngine({ buf = buf, context = context })
       end,
     },
     {

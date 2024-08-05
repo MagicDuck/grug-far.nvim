@@ -110,6 +110,7 @@ M.defaultOptions = {
     abort = { n = '<localleader>b' },
     help = { n = 'g?' },
     toggleShowCommand = { n = '<localleader>p' },
+    swapEngine = { n = '<localleader>e' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -262,6 +263,7 @@ M.defaultOptions = {
 ---@field toggleShowCommand KeymapDef
 ---@field abort KeymapDef
 ---@field help KeymapDef
+---@field swapEngine KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -278,6 +280,7 @@ M.defaultOptions = {
 ---@field toggleShowCommand? KeymapDef
 ---@field abort? KeymapDef
 ---@field help? KeymapDef
+---@field swapEngine? KeymapDef
 
 ---@class AutoSaveTable
 ---@field enabled boolean

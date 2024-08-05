@@ -17,7 +17,6 @@ function M.getHistoryFilename(context)
   return file
 end
 
--- TODO (sbadragan): add engine here
 --- adds entry to history
 ---@param context GrugFarContext
 ---@param notify? boolean
