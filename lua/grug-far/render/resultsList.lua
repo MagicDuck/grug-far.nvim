@@ -122,7 +122,6 @@ function M.appendResultsChunk(buf, context, data)
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.end_col = highlight.end_col
     elseif hl_type == ResultHighlightType.DiffSeparator then
-      -- TODO (sbadragan): throw this in a different namespace?
       setLocationMark(buf, context, lastline + highlight.start_line, nil, highlight.sign)
     end
   end

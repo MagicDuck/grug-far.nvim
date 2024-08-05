@@ -1,5 +1,6 @@
 local utils = require('grug-far/utils')
-local ResultHighlightType = require('grug-far.engine').ResultHighlightType
+local engine = require('grug-far/engine')
+local ResultHighlightType = engine.ResultHighlightType
 
 ---@type ResultHighlightSign
 local change_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' }
@@ -149,16 +150,18 @@ local function parseResults(matches)
         added_sign,
         ResultHighlightType.MatchAdded
       )
-      table.insert(highlights, {
-        hl_type = ResultHighlightType.DiffSeparator,
-        hl = HighlightByType[ResultHighlightType.DiffSeparator],
-        start_line = #lines,
-        start_col = 1,
-        end_line = #lines,
-        end_col = 1,
-        sign = separator_sign,
-      })
-      table.insert(lines, '')
+      if i ~= #matches then
+        table.insert(highlights, {
+          hl_type = ResultHighlightType.DiffSeparator,
+          hl = HighlightByType[ResultHighlightType.DiffSeparator],
+          start_line = #lines,
+          start_col = 1,
+          end_line = #lines,
+          end_col = 1,
+          sign = separator_sign,
+        })
+        table.insert(lines, engine.DiffSeparatorChars)
+      end
     end
 
     if i == #matches then
