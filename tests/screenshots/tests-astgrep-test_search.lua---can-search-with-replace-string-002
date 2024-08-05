@@ -1,0 +1,49 @@
+--|
+01|
+02|
+03|grug
+04|curly
+05|
+06|
+07|
+08|
+09|
+10|file1.js
+11|1:8:    if (grug || another_thing) {
+12|1:8:    if (curly || another_thing) {
+13| 
+14|2:18:      console.log(grug)
+15|2:18:      console.log(curly)
+16|
+17|file2.ts
+18|1:8:    if (grug || talks) {
+19|1:8:    if (curly || talks) {
+20| 
+21|2:6:      grug.walks(talks)
+22|2:6:      curly.walks(talks)
+23|
+
+--|-
+01| 
+02| 
+03| 
+04| 
+05| 
+06| 
+07| 
+08| 
+09| 
+10| 
+11| 
+12| 
+13| 
+14| 
+15| 
+16| 
+17| 
+18| 
+19| 
+20| 
+21| 
+22| 
+23| 

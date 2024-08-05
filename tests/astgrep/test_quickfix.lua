@@ -36,6 +36,7 @@ T['can open quickfix list'] = function()
   })
 
   helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
     prefills = { search = 'grug' },
   })
   helpers.childWaitForFinishedStatus(child)
