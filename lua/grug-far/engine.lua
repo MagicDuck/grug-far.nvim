@@ -8,8 +8,17 @@ local M = {}
 ---@field hl string
 ---@field icon string
 
+---@enum ResultHighlightType
+M.ResultHighlightType = {
+  LineNumber = 1,
+  ColumnNumber = 2,
+  FilePath = 3,
+  Match = 4,
+}
+
 ---@class ResultHighlight
 ---@field hl string
+---@field hl_type? ResultHighlightType
 ---@field start_line integer
 ---@field start_col integer
 ---@field end_line integer

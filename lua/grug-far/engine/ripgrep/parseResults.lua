@@ -1,5 +1,6 @@
 local colors = require('grug-far/engine/ripgrep/colors')
 local utils = require('grug-far/utils')
+local ResultHighlightType = require('grug-far.engine').ResultHighlightType
 
 --- @enum ResultsTokenType
 local token_types = {
@@ -8,9 +9,13 @@ local token_types = {
   newline = 3,
 }
 
+---@type ResultHighlightSign
+local change_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' }
+
 ---@class ResultsToken
 ---@field type ResultsTokenType
 ---@field hl string
+---@field hl_type ResultHighlightType
 ---@field name string
 ---@field start integer
 ---@field fin integer
@@ -35,12 +40,13 @@ local function getTokens(data, isSearchWithReplacement)
       local token = {
         type = token_types.color,
         hl = color.hl,
+        hl_type = color.hl_type,
         name = name,
         start = i,
         fin = j,
       }
-      if isSearchWithReplacement and color.hl == 'GrugFarResultsLineNo' then
-        token.sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' }
+      if isSearchWithReplacement and color.hl_type == ResultHighlightType.LineNumber then
+        token.sign = change_sign
       end
       table.insert(tokens, token)
     end
@@ -111,7 +117,13 @@ local function parseResults(data, isSearchWithReplacement)
       table.insert(lines, utils.getLineWithoutCarriageReturn(line))
       line = ''
     elseif token.type == token_types.color then
-      highlight = { hl = token.hl, start_line = #lines, start_col = #line, sign = token.sign }
+      highlight = {
+        hl = token.hl,
+        hl_type = token.hl_type,
+        start_line = #lines,
+        start_col = #line,
+        sign = token.sign,
+      }
     elseif token.type == token_types.color_ending and highlight then
       highlight.end_line = #lines
       highlight.end_col = #line

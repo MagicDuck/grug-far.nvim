@@ -1,5 +1,9 @@
 local utils = require('grug-far/utils')
 
+---@type ResultHighlightSign
+local removed_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsRemoveIndicator' }
+local added_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsAddIndicator' }
+
 ---@class AstgrepMatchPos
 ---@field line integer
 ---@field column integer
@@ -58,15 +62,13 @@ local function parseResults(matches)
       local prefix = col_no and line_no .. ':' .. col_no .. ':' or line_no .. '-'
 
       table.insert(highlights, {
+        -- TODO (sbadragan): reference some enum
         hl = 'GrugFarResultsLineNo',
         start_line = current_line,
         start_col = 0,
         end_line = current_line,
         end_col = #line_no,
-        sign = {
-          icon = 'resultsChangeIndicator',
-          hl = 'GrugFarResultsRemoveIndicator',
-        },
+        sign = removed_sign,
       })
       if col_no then
         table.insert(highlights, {
@@ -99,13 +101,6 @@ local function parseResults(matches)
         .. match.replacement
         .. matchLinesStr:sub(matchEnd + 1, -1)
 
-      -- table.insert(highlights, {
-      --   hl = 'GrugFarResultsMatch',
-      --   start_line = #lines,
-      --   start_col = match.range.start.column,
-      --   end_line = #lines + match.range['end'].line - match.range.start.line,
-      --   end_col = match.range['end'].column,
-      -- })
       for _, replacementLine in ipairs(vim.split(replacedStr, '\n')) do
         table.insert(lines, utils.getLineWithoutCarriageReturn(replacementLine))
       end
