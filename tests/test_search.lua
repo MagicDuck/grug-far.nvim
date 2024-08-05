@@ -50,7 +50,11 @@ T['can search for some string with placeholders on'] = function()
 
   helpers.childRunGrugFar(child, {
     prefills = { search = 'grug' },
-    placeholders = { enabled = true },
+    engines = {
+      ripgrep = {
+        placeholders = { enabled = true },
+      },
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)

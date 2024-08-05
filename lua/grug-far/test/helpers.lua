@@ -106,6 +106,12 @@ function M.getSetupOptions()
         path = vim.env.RG_PATH or 'rg',
         -- sort by path so that we get things in the same order
         extraArgs = '--sort=path',
+        placeholders = { enabled = false },
+      },
+      astgrep = {
+        path = vim.env.SG_PATH or 'sg',
+        -- TODO (sbadragan): need some sort of result sorting?
+        placeholders = { enabled = false },
       },
     },
     icons = {
@@ -136,7 +142,6 @@ function M.getSetupOptions()
       historyDir = vim.uv.cwd() .. '/temp_history_dir',
     },
     windowCreationCommand = 'tab split',
-    placeholders = { enabled = false },
   }
 end
 

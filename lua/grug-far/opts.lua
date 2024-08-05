@@ -35,6 +35,19 @@ M.defaultOptions = {
       -- extra args that you always want to pass
       -- like for example if you always want context lines around matches
       extraArgs = '',
+
+      -- placeholders to show in input areas when they are empty
+      -- set individual ones to '' to disable, or set enabled = false for complete disable
+      placeholders = {
+        -- whether to show placeholders
+        enabled = true,
+
+        search = 'ex: foo    foo([a-z0-9]*)    fun\\(',
+        replacement = 'ex: bar    ${1}_foo    $$MY_ENV_VAR ',
+        filesFilter = 'ex: *.lua     *.{css,js}    **/docs/*.md',
+        flags = 'ex: --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
+        paths = 'ex: /foo/bar  ../  ./hello\\ world/  ./src/foo.lua',
+      },
     },
     -- https://ast-grep.github.io
     astgrep = {
@@ -44,6 +57,19 @@ M.defaultOptions = {
       -- extra args that you always want to pass
       -- like for example if you always want context lines around matches
       extraArgs = '',
+
+      -- placeholders to show in input areas when they are empty
+      -- set individual ones to '' to disable, or set enabled = false for complete disable
+      placeholders = {
+        -- whether to show placeholders
+        enabled = true,
+
+        search = 'ex: $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
+        replacement = 'ex: $A?.()   blah($$$ARGS)',
+        filesFilter = 'ex: *.lua     *.{css,js}    **/docs/*.md',
+        flags = 'ex: --help (-h) --context (-C) --rewrite= (empty replace) --strictness=<STRICTNESS>',
+        paths = 'ex: /foo/bar  ../  ./hello\\ world/  ./src/foo.lua',
+      },
     },
   },
 
@@ -164,20 +190,6 @@ M.defaultOptions = {
     resultsDiffSeparatorIndicator = '┊',
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
-  },
-
-  -- TODO (sbadragan): fix those
-  -- placeholders to show in input areas when they are empty
-  -- set individual ones to '' to disable, or set enabled = false for complete disable
-  placeholders = {
-    -- whether to show placeholders
-    enabled = true,
-
-    search = 'ex: foo    foo([a-z0-9]*)    fun\\(',
-    replacement = 'ex: bar    ${1}_foo    $$MY_ENV_VAR ',
-    filesFilter = 'ex: *.lua     *.{css,js}    **/docs/*.md',
-    flags = 'ex: --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
-    paths = 'ex: /foo/bar  ../  ./hello\\ world/  ./src/foo.lua',
   },
 
   -- strings to auto-fill in each input area at start
@@ -380,18 +392,22 @@ M.defaultOptions = {
 ---@class RipgrepEngineTable
 ---@field path string
 ---@field extraArgs string
+---@field placeholders PlaceholdersTable
 
 ---@class RipgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
+---@field placeholders? PlaceholdersTableOverride
 
 ---@class AstgrepEngineTable
 ---@field path string
 ---@field extraArgs string
+---@field placeholders PlaceholdersTable
 
 ---@class AstgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
+---@field placeholders? PlaceholdersTableOverride
 
 ---@class EnginesTable
 ---@field ripgrep RipgrepEngineTable
@@ -425,7 +441,6 @@ M.defaultOptions = {
 ---@field spinnerStates string[] | false
 ---@field reportDuration boolean
 ---@field icons IconsTable
----@field placeholders PlaceholdersTable
 ---@field prefills GrugFarPrefills
 ---@field history HistoryTable
 ---@field instanceName? string
@@ -454,7 +469,6 @@ M.defaultOptions = {
 ---@field spinnerStates? string[] | false
 ---@field reportDuration? boolean
 ---@field icons? IconsTableOverride
----@field placeholders? PlaceholdersTableOverride
 ---@field prefills? GrugFarPrefillsOverride
 ---@field history? HistoryTableOverride
 ---@field instanceName? string
@@ -483,6 +497,12 @@ function M.with_defaults(options, defaults)
   if options.rgPath then
     vim.deprecate('options.rgPath', 'options.engines.ripgrep.path', 'soon', 'grug-far.nvim')
     newOptions.engines.ripgrep.path = options.rgPath
+  end
+
+  if options['placeholders'] then
+    error(
+      'options.placeholders has been removed in favor of options.engines[engine].placeholders! Please use that one instead!'
+    )
   end
 
   if options.extraRgArgs then

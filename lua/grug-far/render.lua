@@ -10,7 +10,7 @@ local BEFORE_RESULTS_LINES = 2
 ---@param context GrugFarContext
 local function render(buf, context)
   local inputs = context.state.inputs
-  local placeholders = context.options.placeholders
+  local placeholders = context.options.engines[context.engine.type].placeholders
 
   local lineNr = 0
   utils.ensureBufTopEmptyLines(buf, TOP_EMPTY_LINES)
