@@ -10,8 +10,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Run tests
+  test-base:
+    name: Run base tests
     timeout-minutes: 10
     strategy:
       fail-fast: false
@@ -35,4 +35,30 @@ jobs:
       - name: Run tests
         run: | 
           make prepare
-          env RG_PATH=$(realpath ./ripgrep/rg) make test
+          env RG_PATH=$(realpath ./ripgrep/rg) make test dir=base
+  test-astgrep:
+    name: Run astgrep tests
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        neovim_version: ['v0.10.0']
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim_version }}
+      - name: Install ripgrep
+        run: |
+          mkdir ripgrep
+          cd ripgrep
+          wget -O - https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz | tar zxf - --strip-component=1
+      - name: Run tests
+        run: | 
+          make prepare
+          env RG_PATH=$(realpath ./ripgrep/rg) make test dir=astgrep
