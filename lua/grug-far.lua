@@ -5,6 +5,7 @@ local history = require('grug-far/history')
 local utils = require('grug-far/utils')
 local close = require('grug-far/actions/close')
 local engine = require('grug-far/engine')
+local fold = require('grug-far/fold')
 
 local M = {}
 
@@ -177,9 +178,11 @@ local function createWindow(context)
     vim.api.nvim_set_option_value('foldlevel', folding.foldlevel, { win = win })
     vim.api.nvim_set_option_value('foldcolumn', folding.foldcolumn, { win = win })
     vim.api.nvim_set_option_value('foldmethod', 'expr', { win = win })
+
+    fold.getFoldLevelFns[context.options.instanceName] = fold.getFoldLevelGetter(context)
     vim.api.nvim_set_option_value(
       'foldexpr',
-      'v:lua.require("grug-far/fold").getFoldLevel()',
+      'v:lua.require("grug-far/fold").getFoldLevelFns["' .. context.options.instanceName .. '"]',
       { win = win }
     )
     vim.api.nvim_set_option_value(
@@ -254,6 +257,9 @@ function M._grug_far_internal(options, params)
   end
 
   local context = createContext(options)
+  if not options.instanceName then
+    options.instanceName = '__grug_far_instance__' .. context.count
+  end
   if params.is_visual then
     options.prefills = context.engine.getInputPrefillsForVisualSelection(options.prefills)
   end
@@ -261,10 +267,6 @@ function M._grug_far_internal(options, params)
   local win = createWindow(context)
   local buf = farBuffer.createBuffer(win, context)
   setupCleanup(buf, context)
-
-  if not options.instanceName then
-    options.instanceName = '__grug_far_instance__' .. context.count
-  end
   namedInstances[options.instanceName] = { buf = buf, context = context }
 
   return options.instanceName

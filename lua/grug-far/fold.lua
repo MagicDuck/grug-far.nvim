@@ -10,15 +10,23 @@ local function isPartOfFold(line)
     and (line == engine.DiffSeparatorChars or line:match('^(%d+:%d+:)') or line:match('^(%d+%-)'))
 end
 
---- gets fold level of line at given number
----@return integer
-M.getFoldLevel = function()
-  local line = vim.fn.getline(vim.v.lnum)
-  if isPartOfFold(line) then
-    return 1
+--- constructs getter that gets fold level of line at given number
+---@param GrugFarContext
+M.getFoldLevelGetter = function(context)
+  return function()
+    -- ignore stuff in the inputs area
+    if vim.v.lnum <= context.state.headerRow then
+      return 0
+    end
+
+    local line = vim.fn.getline(vim.v.lnum)
+    if isPartOfFold(line) then
+      return 1
+    end
+    return 0
   end
-  return 0
 end
+M.getFoldLevelFns = {}
 
 --- updates folds of first window associated with given buffer
 ---@param buf integer
