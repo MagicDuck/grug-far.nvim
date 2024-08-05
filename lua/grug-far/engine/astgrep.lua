@@ -1,6 +1,7 @@
 local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
 local getArgs = require('grug-far/engine/astgrep/getArgs')
 local parseResults = require('grug-far/engine/astgrep/parseResults')
+local utils = require('grug-far/utils')
 
 --- decodes streamed json matches, appending to given table
 ---@param matches AstgrepMatch[]
@@ -106,6 +107,7 @@ local AstgrepEngine = {
 
   replace = function(params)
     -- TODO (sbadragan): implement if  possible
+    -- TODO (sbadragan): blacklist any flags needed
   end,
 
   isSyncSupported = function()
@@ -117,8 +119,9 @@ local AstgrepEngine = {
   end,
 
   getInputPrefillsForVisualSelection = function(initialPrefills)
-    -- TODO (sbadragan): implement
-    return initialPrefills
+    local prefills = vim.deepcopy(initialPrefills)
+    prefills.search = utils.getVisualSelectionText()
+    return prefills
   end,
 }
 
