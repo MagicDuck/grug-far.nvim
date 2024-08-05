@@ -1,6 +1,6 @@
 local colors = require('grug-far/engine/ripgrep/colors')
 local utils = require('grug-far/utils')
-local ResultHighlightType = require('grug-far.engine').ResultHighlightType
+local ResultHighlightType = require('grug-far/engine').ResultHighlightType
 
 --- @enum ResultsTokenType
 local token_types = {

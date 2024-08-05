@@ -1,7 +1,7 @@
 local opts = require('grug-far/opts')
 local utils = require('grug-far/utils')
 local treesitter = require('grug-far/render/treesitter')
-local ResultHighlightType = require('grug-far.engine').ResultHighlightType
+local ResultHighlightType = require('grug-far/engine').ResultHighlightType
 
 local M = {}
 
