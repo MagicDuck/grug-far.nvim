@@ -18,7 +18,11 @@ local function gotoLocation(params)
   end
   vim.api.nvim_command([[execute "normal! m` "]])
   vim.cmd('e ' .. vim.fn.fnameescape(location.filename))
-  vim.api.nvim_win_set_cursor(0, { location.lnum or 1, location.col and location.col - 1 or 0 })
+  pcall(
+    vim.api.nvim_win_set_cursor,
+    context.prevWin,
+    { location.lnum or 1, location.col and location.col - 1 or 0 }
+  )
 end
 
 return gotoLocation

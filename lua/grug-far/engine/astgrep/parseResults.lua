@@ -122,7 +122,7 @@ local function parseResults(matches)
         hl_type = ResultHighlightType.FilePath,
         hl = HighlightByType[ResultHighlightType.FilePath],
         start_line = #lines,
-        start_col = 1,
+        start_col = 0,
         end_line = #lines,
         end_col = #match.file,
       })
