@@ -54,6 +54,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
 
   -- required args
   table.insert(args, '--heading=always')
+  table.insert(args, '--color=never')
 
   -- TODO (sbadragan): files filter glob not supported???
   -- see https://github.com/ast-grep/ast-grep/issues/1062

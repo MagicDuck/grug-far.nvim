@@ -2,6 +2,8 @@ local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
 local getArgs = require('grug-far/engine/astgrep/getArgs')
 local parseResults = require('grug-far/engine/astgrep/parseResults')
 local utils = require('grug-far/utils')
+local blacklistedSearchFlags = require('grug-far/engine/astgrep/blacklistedSearchFlags')
+local blacklistedReplaceFlags = require('grug-far/engine/astgrep/blacklistedReplaceFlags')
 
 --- decodes streamed json matches, appending to given table
 ---@param matches AstgrepMatch[]
@@ -44,7 +46,7 @@ local function getSearchArgs(inputs, options)
   local extraArgs = {
     '--json=stream',
   }
-  return getArgs(inputs, options, extraArgs)
+  return getArgs(inputs, options, extraArgs, blacklistedSearchFlags)
 end
 
 local function isSearchWithReplacement(args)
