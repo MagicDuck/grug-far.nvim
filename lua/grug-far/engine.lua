@@ -39,13 +39,13 @@ M.DiffSeparatorChars = ' '
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field on_fetch_chunk fun(data: ParsedResultsData)
----@field on_finish fun(status: GrugFarStatus, errorMesage: string | nil)
+---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
 
 ---@class EngineReplaceParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
----@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
----@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
+---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer } | {type: "message", message: string})
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 
 ---@class ChangedLine
 ---@field lnum integer
@@ -79,7 +79,6 @@ function M.getEngine(type)
   -- Important Note:
   -- If we add another engine, we should:
   -- 1. add tests for it in a separate directory and run them in a separate github action
-  -- 3. add an action to toggle engine?
   if type == 'astgrep' then
     return require('grug-far.engine.astgrep')
   else

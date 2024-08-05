@@ -166,6 +166,7 @@ M.defaultOptions = {
     helpTitle = ' 󰘥  ',
   },
 
+  -- TODO (sbadragan): fix those
   -- placeholders to show in input areas when they are empty
   -- set individual ones to '' to disable, or set enabled = false for complete disable
   placeholders = {

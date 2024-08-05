@@ -8,15 +8,16 @@ local uv = vim.uv
 ---@param count? integer
 ---@param total? integer
 ---@param time? integer
+---@param reportDuration? boolean
 ---@return string
-local function getActionMessage(err, count, total, time)
+local function getActionMessage(err, count, total, time, reportDuration)
   local msg = 'replace '
   if err then
     return msg .. 'failed!'
   end
 
-  if count == total and total ~= 0 then
-    if time then
+  if count == total and time ~= nil then
+    if reportDuration then
       return msg .. 'completed in ' .. time .. 'ms!'
     else
       return msg .. 'completed!'
@@ -94,12 +95,8 @@ local function replace(params)
     else
       local time = uv.now() - startTime
       -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-      state.actionMessage = getActionMessage(
-        nil,
-        filesCount,
-        filesCount,
-        context.options.reportDuration and time or nil
-      )
+      state.actionMessage =
+        getActionMessage(nil, filesCount, filesCount, time, context.options.reportDuration)
     end
 
     renderResultsHeader(buf, context)
@@ -129,10 +126,13 @@ local function replace(params)
       state.progressCount = state.progressCount + 1
       if update.type == 'update_total' then
         filesTotal = filesTotal + update.count
+        state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
       elseif update.type == 'update_count' then
         filesCount = filesCount + update.count
+        state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
+      elseif update.type == 'message' then
+        state.actionMessage = update.message
       end
-      state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
       renderResultsHeader(buf, context)
       resultsList.throttledForceRedrawBuffer(buf)
     end,
