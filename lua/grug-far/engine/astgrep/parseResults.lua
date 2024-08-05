@@ -2,14 +2,19 @@ local utils = require('grug-far/utils')
 local ResultHighlightType = require('grug-far.engine').ResultHighlightType
 
 ---@type ResultHighlightSign
-local removed_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsRemoveIndicator' }
-local added_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsAddIndicator' }
+local change_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' }
+---@type ResultHighlightSign
+local removed_sign = { icon = 'resultsRemovedIndicator', hl = 'GrugFarResultsRemoveIndicator' }
+---@type ResultHighlightSign
+local added_sign = { icon = 'resultsAddedIndicator', hl = 'GrugFarResultsAddIndicator' }
 
 local HighlightByType = {
   [ResultHighlightType.LineNumber] = 'GrugFarResultsLineNo',
   [ResultHighlightType.ColumnNumber] = 'GrugFarResultsLineColumn',
-  [ResultHighlightType.Match] = 'GrugFarResultsMatch',
   [ResultHighlightType.FilePath] = 'GrugFarResultsPath',
+  [ResultHighlightType.Match] = 'GrugFarResultsMatch',
+  [ResultHighlightType.MatchAdded] = 'GrugFarResultsMatchAdded',
+  [ResultHighlightType.MatchRemoved] = 'GrugFarResultsMatchRemoved',
 }
 
 ---@class AstgrepMatchPos
@@ -31,6 +36,57 @@ local HighlightByType = {
 ---@field text string
 ---@field replacement string
 ---@field range AstgrepMatchRange
+
+-- TODO (sbadragan): add types
+local function addResultLines(
+  resultLines,
+  range,
+  lines,
+  highlights,
+  lineNumberSign,
+  matchHighlightType
+)
+  local numlines = #lines
+  for j, resultLine in ipairs(resultLines) do
+    local current_line = numlines + j - 1
+    local isLastLine = j == #resultLines
+    local line_no = tostring(range.start.line + j - 1)
+    local col_no = j == 1 and tostring(range.start.column) or nil
+    local prefix = col_no and line_no .. ':' .. col_no .. ':' or line_no .. '-'
+
+    table.insert(highlights, {
+      hl_type = ResultHighlightType.LineNumber,
+      hl = HighlightByType[ResultHighlightType.LineNumber],
+      start_line = current_line,
+      start_col = 0,
+      end_line = current_line,
+      end_col = #line_no,
+      sign = lineNumberSign,
+    })
+    if col_no then
+      table.insert(highlights, {
+        hl_type = ResultHighlightType.ColumnNumber,
+        hl = HighlightByType[ResultHighlightType.ColumnNumber],
+        start_line = current_line,
+        start_col = #line_no + 1, -- skip ':'
+        end_line = current_line,
+        end_col = #line_no + 1 + #col_no,
+      })
+    end
+
+    resultLine = prefix .. resultLine
+    table.insert(highlights, {
+      hl_type = matchHighlightType,
+      hl = HighlightByType[matchHighlightType],
+      start_line = current_line,
+      start_col = j == 1 and #prefix + range.start.column or #prefix,
+      end_line = current_line,
+      end_col = isLastLine and #prefix + range['end'].column or #resultLine,
+    })
+
+    table.insert(lines, utils.getLineWithoutCarriageReturn(resultLine))
+  end
+end
 
 --- parse results data and get info
 ---@param matches AstgrepMatch[]
@@ -62,59 +118,33 @@ local function parseResults(matches)
       table.insert(lines, match.file)
     end
 
-    local numlines = #lines
-    for j, matchLine in ipairs(vim.split(match.lines, '\n')) do
-      local current_line = numlines + j - 1
-      local isLastLine = j == match.range['end'].line - match.range.start.line + 1
-      local line_no = tostring(match.range.start.line + j - 1)
-      local col_no = j == 1 and tostring(match.range.start.column) or nil
-      local prefix = col_no and line_no .. ':' .. col_no .. ':' or line_no .. '-'
-
-      table.insert(highlights, {
-        hl_type = ResultHighlightType.LineNumber,
-        hl = HighlightByType[ResultHighlightType.LineNumber],
-        start_line = current_line,
-        start_col = 0,
-        end_line = current_line,
-        end_col = #line_no,
-        sign = removed_sign,
-      })
-      if col_no then
-        table.insert(highlights, {
-          hl_type = ResultHighlightType.ColumnNumber,
-          hl = HighlightByType[ResultHighlightType.ColumnNumber],
-          start_line = current_line,
-          start_col = #line_no + 1, -- skip ':'
-          end_line = current_line,
-          end_col = #line_no + 1 + #col_no,
-        })
-      end
-
-      matchLine = prefix .. matchLine
-      table.insert(highlights, {
-        hl_type = ResultHighlightType.Match,
-        hl = HighlightByType[ResultHighlightType.Match],
-        start_line = current_line,
-        start_col = j == 1 and #prefix + match.range.start.column or #prefix,
-        end_line = current_line,
-        end_col = isLastLine and #prefix + match.range['end'].column or #matchLine,
-      })
-
-      table.insert(lines, utils.getLineWithoutCarriageReturn(matchLine))
-    end
+    local lineNumberSign = match.replacement and removed_sign or change_sign
+    local matchHighlightType = match.replacement and ResultHighlightType.MatchRemoved
+      or ResultHighlightType.Match
+    local matchLines = vim.split(match.lines, '\n')
+    addResultLines(matchLines, match.range, lines, highlights, lineNumberSign, matchHighlightType)
 
     -- add replacements lines
     if match.replacement then
       local matchLinesStr = match.lines
       local matchStart = match.range.start.column + 1 -- column is zero-based
       local matchEnd = matchStart + #match.text - 1
-      local replacedStr = matchLinesStr:sub(1, matchStart - 1)
-        .. match.replacement
-        .. matchLinesStr:sub(matchEnd + 1, -1)
+      local prefix = matchLinesStr:sub(1, matchStart - 1)
+      local postfix = matchLinesStr:sub(matchEnd + 1, -1)
+      local replacedStr = prefix .. match.replacement .. postfix
+      local replacedLines = vim.split(replacedStr, '\n')
 
-      for _, replacementLine in ipairs(vim.split(replacedStr, '\n')) do
-        table.insert(lines, utils.getLineWithoutCarriageReturn(replacementLine))
-      end
+      -- Note: a bit dirty to modify range data directly, but this is more efficient vs cloning as nothing
+      -- else below this needs it
+      match.range['end'].column = #replacedLines[#replacedLines] - #postfix
+      addResultLines(
+        replacedLines,
+        match.range,
+        lines,
+        highlights,
+        added_sign,
+        ResultHighlightType.MatchAdded
+      )
     end
 
     if i == #matches then

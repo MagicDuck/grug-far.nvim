@@ -14,6 +14,8 @@ M.ResultHighlightType = {
   ColumnNumber = 2,
   FilePath = 3,
   Match = 4,
+  MatchAdded = 5,
+  MatchRemoved = 6,
 }
 
 ---@class ResultHighlight
