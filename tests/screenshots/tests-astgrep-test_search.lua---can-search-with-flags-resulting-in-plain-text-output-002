@@ -1,0 +1,41 @@
+--|
+01|
+02|
+03|grug.$A
+04|
+05|
+06|--lang=ts --debug-query=ast
+07|
+08|
+09|
+10|Debug AST:
+11|program (0,0)-(0,7)
+12|  expression_statement (0,0)-(0,7)
+13|    member_expression (0,0)-(0,7)
+14|      object: identifier (0,0)-(0,4)
+15|      property: property_identifier (0,5)-(0,7)
+16|
+17|
+18|{"text":"grug.walks","range":{"byteOffset":{"start":33,"end":43},"start":{"line":2,"column":6},"end":{"line":2,"column":16}},"file":"file2.ts","lines":"      grug.walks(talks)","language":"TypeScript","metaVariables":{"single":{"A":{"text":"walks","range":{"byteOffset":{"start":38,"end":43},"start":{"line":2,"column":11},"end":{"line":2,"column":16}}}},"multi":{},"transformed":{}}}
+19|
+
+--|-
+01| 
+02| 
+03| 
+04| 
+05| 
+06| 
+07| 
+08| 
+09| 
+10| 
+11| 
+12| 
+13| 
+14| 
+15| 
+16| 
+17| 
+18| 
+19| 
