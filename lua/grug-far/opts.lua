@@ -156,7 +156,6 @@ M.defaultOptions = {
     resultsStatusSuccess = '󰗡 ',
     resultsActionMessage = '  ',
     resultsChangeIndicator = '┃',
-    -- TODO (sbadragan): add types
     resultsAddedIndicator = '▒',
     resultsRemovedIndicator = '▒',
     resultsDiffSeparatorIndicator = '┊',
@@ -312,6 +311,9 @@ M.defaultOptions = {
 ---@field resultsStatusSuccess string
 ---@field resultsActionMessage string
 ---@field resultsChangeIndicator string
+---@field resultsAddedIndicator string
+---@field resultsRemovedIndicator string
+---@field resultsDiffSeparatorIndicator string
 
 ---@class IconsTableOverride
 ---@field enabled? boolean
@@ -325,6 +327,9 @@ M.defaultOptions = {
 ---@field resultsStatusSuccess? string
 ---@field resultsActionMessage? string
 ---@field resultsChangeIndicator? string
+---@field resultsAddedIndicator? string
+---@field resultsRemovedIndicator? string
+---@field resultsDiffSeparatorIndicator? string
 
 ---@class PlaceholdersTable
 ---@field enabled boolean

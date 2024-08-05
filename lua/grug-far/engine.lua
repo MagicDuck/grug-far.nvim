@@ -19,7 +19,7 @@ M.ResultHighlightType = {
   DiffSeparator = 7,
 }
 
-M.DiffSeparatorChars = '   '
+M.DiffSeparatorChars = ' '
 
 ---@class ResultHighlight
 ---@field hl string

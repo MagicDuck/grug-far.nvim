@@ -68,7 +68,6 @@ end
 local RipgrepEngine = {
   type = 'ripgrep',
 
-  -- TODO (sbadragan): implement those for astgrep
   isSearchWithReplacement = function(inputs, options)
     local args = getSearchArgs(inputs, options)
     return isSearchWithReplacement(args)
