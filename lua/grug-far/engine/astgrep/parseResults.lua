@@ -1,8 +1,16 @@
 local utils = require('grug-far/utils')
+local ResultHighlightType = require('grug-far.engine').ResultHighlightType
 
 ---@type ResultHighlightSign
 local removed_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsRemoveIndicator' }
 local added_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsAddIndicator' }
+
+local HighlightByType = {
+  [ResultHighlightType.LineNumber] = 'GrugFarResultsLineNo',
+  [ResultHighlightType.ColumnNumber] = 'GrugFarResultsLineColumn',
+  [ResultHighlightType.Match] = 'GrugFarResultsMatch',
+  [ResultHighlightType.FilePath] = 'GrugFarResultsPath',
+}
 
 ---@class AstgrepMatchPos
 ---@field line integer
@@ -44,7 +52,8 @@ local function parseResults(matches)
     if isFileBoundary then
       stats.files = stats.files + 1
       table.insert(highlights, {
-        hl = 'GrugFarResultsPath',
+        hl_type = ResultHighlightType.FilePath,
+        hl = HighlightByType[ResultHighlightType.FilePath],
         start_line = #lines,
         start_col = 1,
         end_line = #lines,
@@ -62,8 +71,8 @@ local function parseResults(matches)
       local prefix = col_no and line_no .. ':' .. col_no .. ':' or line_no .. '-'
 
       table.insert(highlights, {
-        -- TODO (sbadragan): reference some enum
-        hl = 'GrugFarResultsLineNo',
+        hl_type = ResultHighlightType.LineNumber,
+        hl = HighlightByType[ResultHighlightType.LineNumber],
         start_line = current_line,
         start_col = 0,
         end_line = current_line,
@@ -72,7 +81,8 @@ local function parseResults(matches)
       })
       if col_no then
         table.insert(highlights, {
-          hl = 'GrugFarResultsLineColumn',
+          hl_type = ResultHighlightType.ColumnNumber,
+          hl = HighlightByType[ResultHighlightType.ColumnNumber],
           start_line = current_line,
           start_col = #line_no + 1, -- skip ':'
           end_line = current_line,
@@ -82,7 +92,8 @@ local function parseResults(matches)
 
       matchLine = prefix .. matchLine
       table.insert(highlights, {
-        hl = 'GrugFarResultsMatch',
+        hl_type = ResultHighlightType.Match,
+        hl = HighlightByType[ResultHighlightType.Match],
         start_line = current_line,
         start_col = j == 1 and #prefix + match.range.start.column or #prefix,
         end_line = current_line,
