@@ -28,16 +28,15 @@ end
 local function getSeparator(context)
   -- note: use a large number to ensure it's always > window width
   local separatorLine = context.options.resultsSeparatorLineChar:rep(400)
-  return ' ' .. (getStatusText(context) or '') .. ' ' .. separatorLine
-  -- return ' '
-  --   .. (getStatusText(context) or '')
-  --   .. ' '
-  --   .. opts.getIcon('resultsEngineLeft', context)
-  --   .. ' '
-  --   .. context.engine.type
-  --   .. ' '
-  --   .. opts.getIcon('resultsEngineRight', context)
-  --   .. separatorLine
+  return ' '
+    .. (getStatusText(context) or '')
+    .. ' '
+    .. opts.getIcon('resultsEngineLeft', context)
+    .. ' '
+    .. context.engine.type
+    .. ' '
+    .. opts.getIcon('resultsEngineRight', context)
+    .. separatorLine
 end
 
 --- render stats information line

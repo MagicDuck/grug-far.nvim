@@ -12,7 +12,7 @@
 11|  Paths:                                                                       
 12|   ./foo\ bar ./hello\ world                                                    
 13|                                                                                
-14| STATUS_SUCCESS 
+14| STATUS_SUCCESS ⟪ ripgrep ⟫
 15| 4 matches in 2 files   replace completed!                                     
 16|                                                                                
 17|   ./foo bar/file1.txt                                                          
