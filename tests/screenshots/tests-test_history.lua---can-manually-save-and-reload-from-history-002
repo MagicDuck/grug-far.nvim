@@ -1,26 +1,29 @@
 --|
 01|
 02|
-03|Search: talks
-04|Replace: 
-05|Files Filter: 
-06|Flags: -i
-07|Paths: 
-08|
+03|Engine: ripgrep
+04|Search: talks
+05|Replace: 
+06|Files Filter: 
+07|Flags: -i
+08|Paths: 
 09|
-10|Search: walks
-11|Replace: 
-12|Files Filter: 
-13|Flags: -i
-14|Paths: 
-15|
-16|
-17|Search: grug
-18|Replace: 
-19|Files Filter: 
-20|Flags: -i
-21|Paths: 
-22|
+10|
+11|Engine: ripgrep
+12|Search: walks
+13|Replace: 
+14|Files Filter: 
+15|Flags: -i
+16|Paths: 
+17|
+18|
+19|Engine: ripgrep
+20|Search: grug
+21|Replace: 
+22|Files Filter: 
+23|Flags: -i
+24|Paths: 
+25|
 
 --|-
 01| 
@@ -45,3 +48,6 @@
 20| 
 21| 
 22| 
+23| 
+24| 
+25| 
