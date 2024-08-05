@@ -11,7 +11,7 @@ CONTENTS                                          *grug-far-contents*
 ==============================================================================
 1. INTRODUCTION                               *grug-far-introduction*
 
-grug-far adds search/replace using rg functionality to neovim. 
+grug-far adds search/replace inside a buffer to neovim. 
 
 ==============================================================================
 2. SETUP                                             *grug-far-setup*
