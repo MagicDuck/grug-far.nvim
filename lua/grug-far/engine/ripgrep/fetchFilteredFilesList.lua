@@ -30,7 +30,6 @@ local function fetchFilesList(params)
       '--color=never',
     }
   )
-  P(args)
 
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
