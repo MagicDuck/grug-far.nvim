@@ -4,6 +4,8 @@ local parseResults = require('grug-far/engine/astgrep/parseResults')
 local utils = require('grug-far/utils')
 local blacklistedSearchFlags = require('grug-far/engine/astgrep/blacklistedSearchFlags')
 local blacklistedReplaceFlags = require('grug-far/engine/astgrep/blacklistedReplaceFlags')
+local fetchFilteredFilesList = require('grug-far/engine/ripgrep/fetchFilteredFilesList')
+local runWithChunkedFiles = require('grug-far/engine/runWithChunkedFiles')
 
 --- decodes streamed json matches, appending to given table
 ---@param matches AstgrepMatch[]
@@ -162,15 +164,64 @@ local AstgrepEngine = {
       type = 'message',
       message = 'replacing... (buffer temporarily not modifiable)',
     })
-    on_abort = fetchCommandOutput({
-      cmd_path = params.options.engines.astgrep.path,
-      args = args,
-      options = params.options,
-      on_fetch_chunk = function()
-        -- astgrep does not report progess while replacing
-      end,
-      on_finish = on_finish,
-    })
+
+    local filesFilter = params.inputs.filesFilter
+    if filesFilter and #filesFilter > 0 then
+      -- ast-grep currently does not support --glob type functionality
+      -- see see https://github.com/ast-grep/ast-grep/issues/1062
+      -- this if-branch uses rg to get the files and can be removed if that is implemented
+      on_abort = fetchFilteredFilesList({
+        inputs = params.inputs,
+        options = params.options,
+        report_progress = function() end,
+        on_finish = function(status, errorMessage, files)
+          if not status then
+            on_finish(nil, nil, nil)
+            return
+          elseif status == 'error' then
+            on_finish(status, errorMessage)
+            return
+          end
+
+          on_abort = runWithChunkedFiles({
+            files = files,
+            chunk_size = 200,
+            options = params.options,
+            run_chunk = function(chunk, on_done)
+              local chunk_args = vim.deepcopy(args)
+              for _, file in ipairs(vim.split(chunk, '\n')) do
+                table.insert(chunk_args, file)
+              end
+
+              P(chunk_args)
+
+              return fetchCommandOutput({
+                cmd_path = params.options.engines.astgrep.path,
+                args = chunk_args,
+                options = params.options,
+                on_fetch_chunk = function()
+                  -- astgrep does not report progess while replacing
+                end,
+                on_finish = function(_, _errorMessage)
+                  return on_done((_errorMessage and #_errorMessage > 0) and _errorMessage or nil)
+                end,
+              })
+            end,
+            on_finish = on_finish,
+          })
+        end,
+      })
+    else
+      on_abort = fetchCommandOutput({
+        cmd_path = params.options.engines.astgrep.path,
+        args = args,
+        options = params.options,
+        on_fetch_chunk = function()
+          -- astgrep does not report progess while replacing
+        end,
+        on_finish = on_finish,
+      })
+    end
 
     return abort
   end,

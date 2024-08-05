@@ -27,7 +27,7 @@ M.defaultOptions = {
 
   -- search and replace engines configuration
   engines = {
-    -- https://github.com/BurntSushi/ripgrep
+    -- see https://github.com/BurntSushi/ripgrep
     ripgrep = {
       -- ripgrep executable to use, can be a different path if you need to configure
       path = 'rg',
@@ -49,9 +49,11 @@ M.defaultOptions = {
         paths = 'ex: /foo/bar  ../  ./hello\\ world/  ./src/foo.lua',
       },
     },
-    -- https://ast-grep.github.io
+    -- see https://ast-grep.github.io
     astgrep = {
       -- ast-grep executable to use, can be a different path if you need to configure
+      -- TODO (sbadragan): need healthcheck
+      -- TODO (sbadragan): does it barf if it does not exist?
       path = 'sg',
 
       -- extra args that you always want to pass
