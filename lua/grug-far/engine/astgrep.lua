@@ -57,7 +57,7 @@ local function getSearchArgs(inputs, options)
   return getArgs(inputs, options, extraArgs, blacklistedSearchFlags)
 end
 
---- is doing a search iwth replacement?
+--- is doing a search with replacement?
 ---@param args string[]?
 ---@return boolean
 local function isSearchWithReplacement(args)
@@ -74,6 +74,24 @@ local function isSearchWithReplacement(args)
   return false
 end
 
+local textOutputFlags = { '-h', '--help', '--debug-query' }
+--- is doing a non-json outputting command
+---@param args string[]?
+---@return boolean
+local function isSearchWithTextOutput(args)
+  if not args then
+    return false
+  end
+
+  for _, flag in ipairs(args) do
+    if utils.isBlacklistedFlag(flag, textOutputFlags) then
+      return true
+    end
+  end
+
+  return false
+end
+
 --- runs search
 ---@param args string[]?
 ---@param options GrugFarOptions
@@ -82,6 +100,8 @@ end
 ---@return fun()? abort
 local function run_search(args, options, on_fetch_chunk, on_finish)
   local hadOutput = false
+  local isTextOutput = isSearchWithTextOutput(args)
+
   local matches = {}
   return fetchCommandOutput({
     cmd_path = options.engines.astgrep.path,
@@ -89,6 +109,15 @@ local function run_search(args, options, on_fetch_chunk, on_finish)
     options = options,
     on_fetch_chunk = function(data)
       hadOutput = true
+      if isTextOutput then
+        on_fetch_chunk({
+          lines = vim.iter(vim.split(data, '\n')):map(utils.getLineWithoutCarriageReturn):totable(),
+          highlights = {},
+          stats = { matches = 0, files = 0 },
+        })
+        return
+      end
+
       json_decode_matches(matches, data)
       -- note: we split off last file matches to ensure all matches for a file are processed
       -- at once. This helps with applying replacements
