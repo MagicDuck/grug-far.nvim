@@ -64,6 +64,9 @@ jobs:
           cd astgrep
           wget https://github.com/ast-grep/ast-grep/releases/download/0.25.6/app-aarch64-unknown-linux-gnu.zip
           unzip app-aarch64-unknown-linux-gnu.zip
+          ls
+          sg --help
+          sg run -p '$A && $A()' -r '$A?.()'
       - name: Run tests
         run: | 
           make prepare
