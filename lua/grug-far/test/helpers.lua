@@ -111,7 +111,6 @@ function M.getSetupOptions()
       astgrep = {
         path = vim.env.SG_PATH or 'sg',
         rgPath = vim.env.RG_PATH or 'rg',
-        -- TODO (sbadragan): need some sort of result sorting?
         placeholders = { enabled = false },
       },
     },

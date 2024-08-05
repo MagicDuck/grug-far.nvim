@@ -36,9 +36,9 @@ T['can open a given location'] = function()
   })
 
   helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
     windowCreationCommand = 'vsplit',
     prefills = { search = 'grug.$A' },
-    engine = 'astgrep',
   })
   helpers.childWaitForFinishedStatus(child)
 
