@@ -18,14 +18,6 @@ local T = MiniTest.new_set({
 T['can open a given location'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {

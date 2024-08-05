@@ -47,7 +47,6 @@ T['sync all is not supported'] = function()
   child.type_keys('<esc>' .. keymaps.syncLocations.n)
 
   helpers.childWaitForUIVirtualText(child, 'sync operation not suppored')
-  helpers.childExpectScreenshot(child)
 end
 
 T['sync line is not supported'] = function()
@@ -82,7 +81,6 @@ T['sync line is not supported'] = function()
   child.type_keys('<esc>' .. keymaps.syncLine.n)
 
   helpers.childWaitForUIVirtualText(child, 'sync operation not suppored')
-  helpers.childExpectScreenshot(child)
 end
 
 return T

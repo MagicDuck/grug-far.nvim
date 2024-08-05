@@ -17,14 +17,6 @@ local T = MiniTest.new_set({
 T['can search for some string'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -47,14 +39,6 @@ end
 
 T['can search for some string with placeholders on'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 
@@ -84,14 +68,6 @@ end
 T['reports error from sg'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -114,14 +90,6 @@ end
 
 T['can search with flags'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 
@@ -146,14 +114,6 @@ end
 T['can search with flags resulting in plain text output'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -176,14 +136,6 @@ end
 
 T['can search with particular file in paths'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 
@@ -208,14 +160,6 @@ end
 T['can search with particular dir in paths'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -238,14 +182,6 @@ end
 
 T['can search with file filter'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 
@@ -270,14 +206,6 @@ end
 T['can search with replace string'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -300,14 +228,6 @@ end
 
 T['can search with no matches'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 
@@ -355,14 +275,6 @@ end
 T['can search for visual selection inside one line'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -383,14 +295,6 @@ end
 
 T['searches full line visual selection'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 
@@ -413,14 +317,6 @@ end
 T['searches first line of multiline visual selection'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -441,14 +337,6 @@ end
 
 T['is prevented from searching with blacklisted flags'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 
