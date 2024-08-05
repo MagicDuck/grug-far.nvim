@@ -154,6 +154,10 @@ local RipgrepEngine = {
     return abort
   end,
 
+  isSyncSupported = function()
+    return true
+  end,
+
   sync = function(params)
     local on_finish = params.on_finish
 

@@ -105,11 +105,15 @@ local AstgrepEngine = {
   end,
 
   replace = function(params)
-    -- TODO (sbadragan): implement
+    -- TODO (sbadragan): implement if  possible
   end,
 
-  sync = function(params)
-    -- TODO (sbadragan): implement if  possible
+  isSyncSupported = function()
+    return false
+  end,
+
+  sync = function()
+    -- not supported
   end,
 
   getInputPrefillsForVisualSelection = function(initialPrefills)

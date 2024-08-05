@@ -248,7 +248,6 @@ function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forc
   end
 end
 
--- TODO (sbadragan): disable this for engines that do not support syncing
 --- marks un-synced lines
 ---@param buf integer
 ---@param context GrugFarContext
@@ -256,6 +255,9 @@ end
 ---@param endRow? integer
 ---@param sync? boolean whether to sync with current line contents, this removes indicators
 function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
+  if not context.engine.isSyncSupported() then
+    return
+  end
   if not opts.getIcon('resultsChangeIndicator', context) then
     return
   end
