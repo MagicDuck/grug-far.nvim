@@ -42,7 +42,13 @@ local HighlightByType = {
 ---@field replacement string
 ---@field range AstgrepMatchRange
 
--- TODO (sbadragan): add types
+--- adds result lines
+---@param resultLines string[] lines to add
+---@param range AstgrepMatchRange
+---@param lines string[] lines table to add to
+---@param highlights ResultHighlight[] highlights table to add to
+---@param lineNumberSign ResultHighlightSign
+---@param matchHighlightType ResultHighlightType
 local function addResultLines(
   resultLines,
   range,
