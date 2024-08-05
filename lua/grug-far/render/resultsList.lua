@@ -121,6 +121,9 @@ function M.appendResultsChunk(buf, context, data)
       -- omit ending ':', use first match on that line
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.end_col = highlight.end_col
+    elseif hl_type == ResultHighlightType.DiffSeparator then
+      -- TODO (sbadragan): throw this in a different namespace?
+      setLocationMark(buf, context, lastline + highlight.start_line, nil, highlight.sign)
     end
   end
   M.throttledHighlight(buf, context)
@@ -277,7 +280,7 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
   for i = 1, #extmarks do
     local markId, row = unpack(extmarks[i]) --[[@as integer, integer]]
     local location = context.state.resultLocationByExtmarkId[markId]
-    if location.text then
+    if location and location.text then
       setLocationMark(buf, context, row, markId)
     end
   end
