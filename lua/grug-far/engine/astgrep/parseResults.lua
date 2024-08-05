@@ -7,6 +7,9 @@ local change_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChang
 local removed_sign = { icon = 'resultsRemovedIndicator', hl = 'GrugFarResultsRemoveIndicator' }
 ---@type ResultHighlightSign
 local added_sign = { icon = 'resultsAddedIndicator', hl = 'GrugFarResultsAddIndicator' }
+---@type ResultHighlightSign
+local separator_sign =
+  { icon = 'resultsDiffSeparatorIndicator', hl = 'GrugFarResultsDiffSeparatorIndicator' }
 
 local HighlightByType = {
   [ResultHighlightType.LineNumber] = 'GrugFarResultsLineNo',
@@ -15,6 +18,7 @@ local HighlightByType = {
   [ResultHighlightType.Match] = 'GrugFarResultsMatch',
   [ResultHighlightType.MatchAdded] = 'GrugFarResultsMatchAdded',
   [ResultHighlightType.MatchRemoved] = 'GrugFarResultsMatchRemoved',
+  [ResultHighlightType.DiffSeparator] = 'Normal',
 }
 
 ---@class AstgrepMatchPos
@@ -145,6 +149,16 @@ local function parseResults(matches)
         added_sign,
         ResultHighlightType.MatchAdded
       )
+      table.insert(highlights, {
+        hl_type = ResultHighlightType.DiffSeparator,
+        hl = HighlightByType[ResultHighlightType.DiffSeparator],
+        start_line = #lines,
+        start_col = 1,
+        end_line = #lines,
+        end_col = 1,
+        sign = separator_sign,
+      })
+      table.insert(lines, '')
     end
 
     if i == #matches then

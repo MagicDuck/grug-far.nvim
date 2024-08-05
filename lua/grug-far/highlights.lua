@@ -25,6 +25,7 @@ local highlights = {
   GrugFarResultsChangeIndicator = { default = true, link = 'Changed' },
   GrugFarResultsRemoveIndicator = { default = true, link = 'Removed' },
   GrugFarResultsAddIndicator = { default = true, link = 'Added' },
+  GrugFarResultsDiffSeparatorIndicator = { default = true, link = 'Normal' },
   GrugFarResultsCmdHeader = { default = true, link = '@text.uri' },
 }
 

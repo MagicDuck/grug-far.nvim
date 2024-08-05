@@ -157,10 +157,9 @@ M.defaultOptions = {
     resultsActionMessage = '  ',
     resultsChangeIndicator = '┃',
     -- TODO (sbadragan): add types
-    -- resultsAddedIndicator = '░',
-    -- resultsRemovedIndicator = '░',
     resultsAddedIndicator = '▒',
     resultsRemovedIndicator = '▒',
+    resultsDiffSeparatorIndicator = '┃',
 
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',

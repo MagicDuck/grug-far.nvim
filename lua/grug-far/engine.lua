@@ -16,6 +16,7 @@ M.ResultHighlightType = {
   Match = 4,
   MatchAdded = 5,
   MatchRemoved = 6,
+  DiffSeparator = 7,
 }
 
 ---@class ResultHighlight
