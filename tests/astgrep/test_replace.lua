@@ -153,7 +153,7 @@ T['can replace within one dir with spaces'] = function()
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, 'curly || another_thing')
+  helpers.childWaitForScreenshotText(child, '(curly || talks)')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
@@ -182,7 +182,7 @@ T['can replace within multiple dirs with spaces'] = function()
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, 'curly || another_thing')
+  helpers.childWaitForScreenshotText(child, '(curly || talks)')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
