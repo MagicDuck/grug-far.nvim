@@ -52,9 +52,7 @@ M.defaultOptions = {
     -- see https://ast-grep.github.io
     astgrep = {
       -- ast-grep executable to use, can be a different path if you need to configure
-      -- TODO (sbadragan): need healthcheck
-      -- TODO (sbadragan): does it barf if it does not exist?
-      path = 'sg1',
+      path = 'sg',
 
       -- extra args that you always want to pass
       -- like for example if you always want context lines around matches
@@ -68,7 +66,7 @@ M.defaultOptions = {
 
         search = 'ex: $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
         replacement = 'ex: $A?.()   blah($$$ARGS)',
-        filesFilter = 'ex: *.lua     *.{css,js}    **/docs/*.md',
+        filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (filters via ripgrep)',
         flags = 'ex: --help (-h) --context (-C) --rewrite= (empty replace) --strictness=<STRICTNESS>',
         paths = 'ex: /foo/bar  ../  ./hello\\ world/  ./src/foo.lua',
       },
