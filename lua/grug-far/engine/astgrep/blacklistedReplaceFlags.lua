@@ -6,8 +6,6 @@ local blacklistedReplaceFlags = {
   '-h',
   '--help',
   '--json',
-  '--rewrite',
-  '-r',
 }
 
 for _, flag in ipairs(blacklistedSearchFlags) do

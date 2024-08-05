@@ -1,5 +1,10 @@
 local utils = require('grug-far/utils')
 
+local rewriteFlags = {
+  '--rewrite',
+  '-r',
+}
+
 --- get args for astgrep or nil if params invalid / insufficient
 ---@param inputs GrugFarInputs
 ---@param options GrugFarOptions
@@ -33,10 +38,14 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
 
   if #inputs.flags > 0 then
     for flag in string.gmatch(inputs.flags, '%S+') do
-      if utils.isBlacklistedFlag(flag, blacklistedFlags) then
-        table.insert(blacklisted, flag)
-      else
-        table.insert(args, flag)
+      local skipCheck = forceReplace and utils.isBlacklistedFlag(flag, rewriteFlags)
+
+      if not skipCheck then
+        if utils.isBlacklistedFlag(flag, blacklistedFlags) then
+          table.insert(blacklisted, flag)
+        else
+          table.insert(args, flag)
+        end
       end
     end
   end

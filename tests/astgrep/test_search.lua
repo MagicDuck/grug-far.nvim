@@ -439,4 +439,33 @@ T['searches first line of multiline visual selection'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['is prevented from searching with blacklisted flags'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', flags = '--stdin' },
+  })
+
+  helpers.childWaitForScreenshotText(child, 'search cannot work')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
