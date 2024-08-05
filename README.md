@@ -19,19 +19,30 @@ Grug find! Grug replace! Grug happy!
 - Search results folding
 
 #### Searching:
-<img width="1254" alt="image" src="https://github.com/user-attachments/assets/8f6f4342-3ad7-402f-a78b-0fd4dcad55cc">
+<img width="1259" alt="image" src="https://github.com/user-attachments/assets/a0ff931b-8e73-4828-b0fd-b9fea94124d0">
 
 #### Replacing:
-<img width="1257" alt="image" src="https://github.com/user-attachments/assets/ce5ed894-3927-4614-8eb6-1951c42bf0bf">
+<img width="1255" alt="image" src="https://github.com/user-attachments/assets/d348753a-e71d-4f28-bd4a-b99162de6537">
+
+<details>
+<summary>More screenshots:</summary>
 
 #### Rg teaching you its ways
-<img width="1261" alt="image" src="https://github.com/user-attachments/assets/0e09c5ed-1962-4140-afe1-139e08cebc8b">
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/ad95f913-1029-47de-b43c-7607bda60878">
 
 #### Help:
-<img width="1257" alt="image" src="https://github.com/user-attachments/assets/f4521819-5ba7-4313-9e33-4df01402f28f">
+<img width="1259" alt="image" src="https://github.com/user-attachments/assets/86231d5e-1f48-487b-97e0-a4059b6c2a47">
 
 #### History:
-<img width="1252" alt="image" src="https://github.com/user-attachments/assets/e3c5be1c-bee9-48b5-a6d6-f1c2d49de398">
+<img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
+
+#### Ast-grep serch and replace:
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/c35fc118-14e5-416e-b11d-2146ed6aeab9">
+
+#### Ast-grep debug-query
+<img width="1254" alt="image" src="https://github.com/user-attachments/assets/60ab0161-4da8-45ee-9d6e-6e23251a857b">
+
+</details>
 
 ## 🤔 Philosophy
 
