@@ -72,6 +72,45 @@ local function isSearchWithReplacement(args)
   return false
 end
 
+--- runs search
+---@param args string[]?
+---@param options GrugFarOptions
+---@param on_fetch_chunk fun(data: ParsedResultsData)
+---@param on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
+---@return fun()? abort
+local function run_search(args, options, on_fetch_chunk, on_finish)
+  local hadOutput = false
+  local matches = {}
+  return fetchCommandOutput({
+    cmd_path = options.engines.astgrep.path,
+    args = args,
+    options = options,
+    on_fetch_chunk = function(data)
+      hadOutput = true
+      json_decode_matches(matches, data)
+      -- note: we split off last file matches to ensure all matches for a file are processed
+      -- at once. This helps with applying replacements
+      local before, after = split_last_file_matches(matches)
+      matches = after
+      on_fetch_chunk(parseResults(before))
+    end,
+    on_finish = function(status, errorMessage)
+      if #matches > 0 then
+        -- do the last few
+        on_fetch_chunk(parseResults(matches))
+        matches = {}
+      end
+
+      -- give the user more feedback when there are no matches
+      if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
+        status = 'error'
+        errorMessage = 'no matches'
+      end
+      on_finish(status, errorMessage)
+    end,
+  })
+end
+
 ---@type GrugFarEngine
 local AstgrepEngine = {
   type = 'astgrep',
@@ -82,47 +121,73 @@ local AstgrepEngine = {
   end,
 
   search = function(params)
+    local on_finish = params.on_finish
     local args, blacklistedArgs = getSearchArgs(params.inputs, params.options)
 
     if blacklistedArgs and #blacklistedArgs > 0 then
-      params.on_finish(
-        nil,
-        nil,
-        'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', ')
-      )
+      on_finish(nil, nil, 'search cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', '))
       return
     end
 
-    local hadOutput = false
-    local matches = {}
-    return fetchCommandOutput({
-      cmd_path = params.options.engines.astgrep.path,
-      args = args,
-      options = params.options,
-      on_fetch_chunk = function(data)
-        hadOutput = true
-        json_decode_matches(matches, data)
-        -- note: we split off last file matches to ensure all matches for a file are processed
-        -- at once. This helps with applying replacements
-        local before, after = split_last_file_matches(matches)
-        matches = after
-        params.on_fetch_chunk(parseResults(before))
-      end,
-      on_finish = function(status, errorMessage)
-        if #matches > 0 then
-          -- do the last few
-          params.on_fetch_chunk(parseResults(matches))
-          matches = {}
-        end
+    if not args then
+      on_finish(nil, nil, nil)
+      return
+    end
 
-        -- give the user more feedback when there are no matches
-        if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
-          status = 'error'
-          errorMessage = 'no matches'
+    local filesFilter = params.inputs.filesFilter
+    if filesFilter and #filesFilter > 0 then
+      -- ast-grep currently does not support --glob type functionality
+      -- see see https://github.com/ast-grep/ast-grep/issues/1062
+      -- this if-branch uses rg to get the files and can be removed if that is implemented
+
+      local on_abort = nil
+      local function abort()
+        if on_abort then
+          on_abort()
         end
-        params.on_finish(status, errorMessage)
-      end,
-    })
+      end
+
+      on_abort = fetchFilteredFilesList({
+        inputs = params.inputs,
+        options = params.options,
+        report_progress = function() end,
+        on_finish = function(status, errorMessage, files)
+          if not status then
+            on_finish(nil, nil, nil)
+            return
+          elseif status == 'error' then
+            on_finish(status, errorMessage)
+            return
+          end
+
+          on_abort = runWithChunkedFiles({
+            files = files,
+            chunk_size = 200,
+            options = params.options,
+            run_chunk = function(chunk, on_done)
+              local chunk_args = vim.deepcopy(args)
+              for _, file in ipairs(vim.split(chunk, '\n')) do
+                table.insert(chunk_args, file)
+              end
+
+              return run_search(
+                chunk_args,
+                params.options,
+                params.on_fetch_chunk,
+                function(_, _errorMessage)
+                  return on_done((_errorMessage and #_errorMessage > 0) and _errorMessage or nil)
+                end
+              )
+            end,
+            on_finish = on_finish,
+          })
+        end,
+      })
+
+      return abort
+    else
+      return run_search(args, params.options, params.on_fetch_chunk, params.on_finish)
+    end
   end,
 
   replace = function(params)
@@ -192,8 +257,6 @@ local AstgrepEngine = {
               for _, file in ipairs(vim.split(chunk, '\n')) do
                 table.insert(chunk_args, file)
               end
-
-              P(chunk_args)
 
               return fetchCommandOutput({
                 cmd_path = params.options.engines.astgrep.path,
