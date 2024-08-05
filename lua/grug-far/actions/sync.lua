@@ -93,6 +93,13 @@ local function sync(params)
     return
   end
 
+  if not context.engine.isSyncSupported() then
+    state.actionMessage = 'sync operation not suppored by current engine!'
+    renderResultsHeader(buf, context)
+    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
+    return
+  end
+
   local startTime = uv.now()
   local changedFiles = getChangedFiles(buf, context, startRow, endRow)
 
