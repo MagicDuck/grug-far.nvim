@@ -143,6 +143,37 @@ T['can search with flags'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search with flags resulting in plain text output'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.js',
+      content = [[ 
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug.$A', flags = '--lang=ts --debug-query=ast' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search with particular file in paths'] = function()
   helpers.writeTestFiles({
     {
@@ -318,9 +349,7 @@ T['can search for some string with many matches'] = function()
   })
 
   helpers.childWaitForFinishedStatus(child)
-
-  helpers.childExpectScreenshot(child)
-  helpers.childExpectBufLines(child)
+  helpers.childWaitForScreenshotText(child, '200 matches in 100 files')
 end
 
 T['can search for visual selection inside one line'] = function()

@@ -8,7 +8,7 @@
 07|  Files Filter:                                                                
 08|   ex: *.lua   *.{css,js}   **/docs/*.md   (filters via ripgrep)                
 09| 󰮚 Flags:                                                                       
-10|   ex: --help (-h) --context (-C) --rewrite= (empty replace) --strictness=<ST ..
+10|   ex: --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness= ..
 11|  Paths:                                                                       
 12|   ex: /foo/bar  ../  ./hello\ world/  ./src/foo.lua                            
 13|                                                                                
