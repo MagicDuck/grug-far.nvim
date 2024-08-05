@@ -173,24 +173,8 @@ local function createWindow(context)
 
   vim.api.nvim_set_option_value('wrap', context.options.wrap, { win = win })
 
-  local folding = context.options.folding
-  if folding.enabled then
-    vim.api.nvim_set_option_value('foldlevel', folding.foldlevel, { win = win })
-    vim.api.nvim_set_option_value('foldcolumn', folding.foldcolumn, { win = win })
-    vim.api.nvim_set_option_value('foldmethod', 'expr', { win = win })
+  fold.setup(context, win)
 
-    fold.getFoldLevelFns[context.options.instanceName] = fold.getFoldLevelGetter(context)
-    vim.api.nvim_set_option_value(
-      'foldexpr',
-      'v:lua.require("grug-far/fold").getFoldLevelFns["' .. context.options.instanceName .. '"]',
-      { win = win }
-    )
-    vim.api.nvim_set_option_value(
-      'foldtext',
-      'v:lua.require("grug-far/fold").getFoldText()',
-      { win = win }
-    )
-  end
   return win
 end
 
@@ -215,6 +199,7 @@ local function setupCleanup(buf, context)
     vim.api.nvim_buf_clear_namespace(buf, context.helpHlNamespace, 0, -1)
     vim.api.nvim_del_augroup_by_id(context.augroup)
     require('grug-far/render/treesitter').clear(buf)
+    fold.cleanup(context)
   end
 
   local function onBufUnload()
