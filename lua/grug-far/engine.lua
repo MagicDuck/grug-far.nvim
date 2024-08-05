@@ -74,13 +74,6 @@ M.DiffSeparatorChars = ' '
 ---@param type GrugFarEngineType
 ---@return GrugFarEngine
 function M.getEngine(type)
-  local engine
-  if not type or type == 'ripgrep' then
-    engine = require('grug-far.engine.ripgrep')
-  elseif type == 'astgrep' then
-    engine = require('grug-far.engine.astgrep')
-  end
-
   -- TODO (sbadragan): do / remove some of this
   -- Important Note:
   -- If we add another engine, we should:
@@ -88,12 +81,11 @@ function M.getEngine(type)
   -- 2. update history management so that history entries include an `Engine:` field, and we switch to that engine when history entry is picked
   -- 3. add an action to toggle engine?
   -- 4. display the engine somewhere in the UI?
-
-  if not engine then
-    error('Unsupported engine type: ' .. type)
+  if type == 'astgrep' then
+    return require('grug-far.engine.astgrep')
+  else
+    return require('grug-far.engine.ripgrep')
   end
-
-  return engine
 end
 
 return M

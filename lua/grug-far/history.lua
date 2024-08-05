@@ -17,6 +17,7 @@ function M.getHistoryFilename(context)
   return file
 end
 
+-- TODO (sbadragan): add engine here
 --- adds entry to history
 ---@param context GrugFarContext
 ---@param notify? boolean
@@ -38,7 +39,9 @@ function M.addHistoryEntry(context, notify)
       callback(err)
     end
 
-    local entry = '\n\nSearch: '
+    local entry = '\n\nEngine: '
+      .. context.engine.type
+      .. '\nSearch: '
       .. inputs.search
       .. '\nReplace: '
       .. inputs.replacement
@@ -90,6 +93,7 @@ local function getFirstValueStartingWith(entryLines, pattern)
 end
 
 ---@class HistoryEntry
+---@field engine string
 ---@field search string
 ---@field replacement string
 ---@field filesFilter string
@@ -101,6 +105,7 @@ end
 ---@return HistoryEntry
 function M.getHistoryEntryFromLines(lines)
   return {
+    engine = getFirstValueStartingWith(lines, 'Engine:[ ]?'),
     search = getFirstValueStartingWith(lines, 'Search:[ ]?'),
     replacement = getFirstValueStartingWith(lines, 'Replace:[ ]?'),
     filesFilter = getFirstValueStartingWith(lines, 'Files Filter:[ ]?'),

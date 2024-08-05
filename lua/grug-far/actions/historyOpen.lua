@@ -2,6 +2,7 @@ local renderHelp = require('grug-far/render/help')
 local history = require('grug-far/history')
 local utils = require('grug-far/utils')
 local opts = require('grug-far/opts')
+local engine = require('grug-far/engine')
 
 --- gets history entry at given 0-based buffer row
 ---@param historyBuf integer
@@ -47,13 +48,15 @@ end
 ---@param historyWin integer
 ---@param historyBuf integer
 ---@param buf integer
-local function pickHistoryEntry(historyWin, historyBuf, buf)
+---@param context GrugFarContext
+local function pickHistoryEntry(historyWin, historyBuf, buf, context)
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0)) - 1
   local entry = getHistoryEntryAtRow(historyBuf, cursor_row)
   if not entry then
     return
   end
 
+  context.engine = engine.getEngine(entry.engine)
   local firstInputRow = 2
   local rows = {
     entry.search,
@@ -78,7 +81,7 @@ local function setupKeymap(historyWin, historyBuf, buf, context)
     'Grug Far: pick history entry',
     keymaps.pickHistoryEntry,
     function()
-      pickHistoryEntry(historyWin, historyBuf, buf)
+      pickHistoryEntry(historyWin, historyBuf, buf, context)
     end
   )
 end
@@ -109,7 +112,7 @@ end
 local function highlightHistoryBuffer(historyBuf, context, start_row, end_row)
   local lines = vim.api.nvim_buf_get_lines(historyBuf, start_row, end_row, false)
   vim.api.nvim_buf_clear_namespace(historyBuf, context.historyHlNamespace, start_row, end_row)
-  local inputKeys = { 'Search:', 'Replace:', 'Files Filter:', 'Flags:', 'Paths:' }
+  local inputKeys = { 'Engine:', 'Search:', 'Replace:', 'Files Filter:', 'Flags:', 'Paths:' }
   for i, line in ipairs(lines) do
     local highlightedLine = false
     for _, inputKey in ipairs(inputKeys) do
