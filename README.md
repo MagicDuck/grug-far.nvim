@@ -1,5 +1,4 @@
 # grug-far.nvim
-# TODO (sbadragan): update to mention new engine, astgrep
 
 **F**ind **A**nd **R**eplace plugin for neovim
 
@@ -9,14 +8,15 @@ Grug find! Grug replace! Grug happy!
 
 ## ✨ Features
 
-- Search using the **full power** of `rg`
-- Replace using almost the **full power** of `rg`. Some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
+- Search using the **full power** of `rg` or `ast-grep`
+- Replace using almost the **full power** of `rg` or `ast-grep`. For example, for `rg`, some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
 - Automatic debounced search or manual search on leaving insert mode
 - Open search results in quickfix list
 - Goto file/line/column of match when pressing `<Enter>` in normal mode on lines in the results output (keybind configurable).
 - Inline edit result lines and sync them back to their originating file locations using a configurable keybinding.
 - Manual/auto-save search history and reload
 - Syntax highlighted search results
+- Search results folding
 
 #### Searching:
 <img width="1254" alt="image" src="https://github.com/user-attachments/assets/8f6f4342-3ad7-402f-a78b-0fd4dcad55cc">
@@ -35,17 +35,17 @@ Grug find! Grug replace! Grug happy!
 
 ## 🤔 Philosophy
 
-1. *strives for reduced mental overhead.* All actions you can take are in your face. As much help as possible is in your face (some configurable). Grug often forget how to do capture groups or which flag does what.
-2. *transparency.* Does not try to hide away `rg` and shows error messages from it which are actually quite friendly when you mess up your regex. You can gradually learn `rg` flags or use existing knowledge from running it in the CLI. You can even input the `--help` flag to see the full `rg` help. Grug like!
+1. *strives for reduced mental overhead.* All actions you can take and as much help as possible is in your face (some configurable). Grug often forget how to do capture groups or which flag does what.
+2. *transparency.* Does not try to hide away the underlying tool. For instance, error messages from `rg` are shown as they are actually quite friendly when you mess up your regex. You can gradually learn `rg` or `ast-grep` flags or use existing knowledge from running it in the CLI. You can even input the `--help` flag to see the full `rg` help or the `--debug-query=ast` flag to debug your `ast-grep` query. Grug like!
 3. *reuse muscle memory.* Does not try to block any type of buffer edits, such as deleting lines, etc. It's very easy to get such things wrong and when you do, Grug becomes unable to modify text in the middle of writing a large regex. Grug mad!! Only ensures graceful recovery in order to preserve basic UI integrity (possible due to the magic of extmarks). Recovery should be simple undo away. 
-4. *uniformity.* only uses one tool, `rg`, and does not combine with other tools like `sed`. One should not have to worry about compatibility differences when writing regexes. Additionally it opens the door to use many fancy `rg` flags such as different regex engine that would not be possible in a mixed environment. Replacement is achieved by running `rg --replace=... --passthrough` on each file with configurable number of parallel workers.
-
+4. *uniformity.* only uses one tool for both search and applying replace to keep things consistent. For example, does not combine `rg` with other tools like `sed`, even though `rg` does not support replacement directly. One should not have to worry about compatibility differences when writing regexes. Additionally it opens the door to use many fancy `rg` flags such as different regex engine that would not be possible in a mixed environment. There is currently one small exception for this due to the fact that `ast-grep` does not currently support something like a `--glob` flag, so we have to filter files through `rg`, but hopefully that can be rectified in the future.
 
 ## ⚡️ Requirements
 
 - Neovim >= **0.10.0**
 - [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) >= 14 recommended
 - a [Nerd Font](https://www.nerdfonts.com/) **_(optional)_**
+- [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine
 
 Run `:checkhealth grug-far` if you see unexpected issues.
 
@@ -59,6 +59,7 @@ Using [lazy.nvim][lazy]:
       require('grug-far').setup({
         ... options, see Configuration section below ...
         ... there are no required options atm...
+        ... engine = 'ripgrep' is default, but 'astgrep' can be specified...
       });
     end
   },
@@ -105,6 +106,7 @@ visible in the results area due to UI considering it just a search. If you
 would like to see the actual replacement in the results area, add `--replace=` to the flags.
 
 ### Syncing results lines back to originating files
+
 It is possible to sync the text of the lines in the results area back to their originating files.
 This operation is either done on the current cursor line (`Sync Line`), or on all lines (`Sync All`). 
 
@@ -114,6 +116,8 @@ either a replacement taking place or you have manually edited it.
 Deleting result lines will cause them to be excluded from being synced by `Sync All` action.
 This can be a nice way to refine a replacement in some situations if you want to exclude a particular file
 or some particular matches.
+
+_Note:_ sync is only supported by `ripgrep` engine. The following explanation is `ripgrep` engine specific:
 
 If you don't edit the results list, `Sync All` and `Replace` have equivalent outcomes, except for one case. 
 When you do multi-line replace with `--multiline` and `--multiline-dot-all` flags, sync won't work so you 
@@ -174,6 +178,9 @@ The command is shell-escaped, so you can copy and execute it in a shell manually
 ### Aborting
 If you inadvertently launched a wrong search/sync/replace, you can abort early using the `Abort` action.
 
+### Swapping search engine
+You can swap search engines with the `Swap Engine` action. Currently `ripgrep` (default) and `astgrep` are supported. 
+
 ### Closing
 When you are done, it is recommended to close the buffer with the configured keybinding 
 (see Configuration section above) or just `:bd` in order to save on resources as some search results
@@ -209,6 +216,11 @@ For more API, see [docs][docs]
 #### Launch with the current word under the cursor as the search string
 ```lua
 :lua require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
+```
+
+#### Launch with ast-grep engine
+```lua
+:lua require('grug-far').grug_far({ engine = 'astgrep' })
 ```
 
 #### Launch as a transient buffer which is both unlisted and fully deletes itself when not in use
