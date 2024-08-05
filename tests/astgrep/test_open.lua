@@ -17,28 +17,34 @@ local T = MiniTest.new_set({
 
 T['can open a given location'] = function()
   helpers.writeTestFiles({
-    { filename = 'file1.txt', content = [[ 
-       grug walks
-       then grug swims
-      ]] },
     {
-      filename = 'file2.doc',
+      filename = 'file1.js',
       content = [[ 
-      grug talks and grug drinks
-      then grug thinks
+    if (grug || another_thing) {
+      console.log(grug)
+    }
+      ]],
+    },
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
     ]],
     },
   })
 
   helpers.childRunGrugFar(child, {
     windowCreationCommand = 'vsplit',
-    prefills = { search = 'grug' },
+    prefills = { search = 'grug.$A' },
+    engine = 'astgrep',
   })
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>11G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, 'Top file1.txt')
+  helpers.childWaitForScreenshotText(child, 'All file2.ts')
   helpers.childExpectScreenshot(child)
 end
 
