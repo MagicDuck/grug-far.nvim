@@ -112,7 +112,6 @@ T['reports error from sg'] = function()
   helpers.childExpectScreenshot(child)
 end
 
--- TODO (sbadragan): context is broken
 T['can search with flags'] = function()
   helpers.writeTestFiles({
     {
@@ -135,7 +134,7 @@ T['can search with flags'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    prefills = { search = '$A.walks', flags = '-C 2' },
+    prefills = { search = 'grug', flags = '--lang=ts' },
   })
 
   helpers.childWaitForFinishedStatus(child)
