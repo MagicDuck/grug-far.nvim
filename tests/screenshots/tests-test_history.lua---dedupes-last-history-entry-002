@@ -1,12 +1,13 @@
 -|
 1|
 2|
-3|Search: grug
-4|Replace: curly
-5|Files Filter: 
-6|Flags: -i
-7|Paths: 
-8|
+3|Engine: ripgrep
+4|Search: grug
+5|Replace: curly
+6|Files Filter: 
+7|Flags: -i
+8|Paths: 
+9|
 
 -|-
 1| 
@@ -17,3 +18,4 @@
 6| 
 7| 
 8| 
+9| 

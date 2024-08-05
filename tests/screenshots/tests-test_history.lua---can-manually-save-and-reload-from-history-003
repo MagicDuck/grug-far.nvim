@@ -8,7 +8,7 @@
 07|  Files Filter:                                                                
 08|                                                                                
 09| 󰮚 Flags:                                                                       
-10|                                                                                
+10| -i                                                                             
 11|  Paths:                                                                       
 12|                                                                                
 13|                                                                                
@@ -22,7 +22,7 @@
 21|-2:7:      grug talks and grug drinks                                           
 22|│3:12:      then grug thinks and talks                                          
 23|Grug FAR - 1: grug                                            3,4            All
-24|grug-far: added current search to history!                    16,0-1        25% 
+24|grug-far: added current search to history!                    24,1          90% 
 
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|01111111111111111111112221111111111111122211111111111111122222222222222222222222
