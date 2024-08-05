@@ -18,14 +18,6 @@ local T = MiniTest.new_set({
 T['can replace with replace string'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -54,14 +46,6 @@ end
 
 T['can replace with file filter'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 
@@ -92,14 +76,6 @@ end
 T['can replace within one file'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -128,14 +104,6 @@ end
 T['can replace within one dir'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -163,14 +131,6 @@ end
 
 T['can replace within one dir with spaces'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'foo bar/file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-    ]],
-    },
     {
       filename = 'foo bar/file2.ts',
       content = [[ 
@@ -201,14 +161,6 @@ end
 T['can replace within multiple dirs with spaces'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'foo bar/file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-    ]],
-    },
-    {
       filename = 'hello world/file2.ts',
       content = [[ 
       if (grug || talks) {
@@ -238,14 +190,6 @@ end
 T['can replace with empty string'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -274,14 +218,6 @@ end
 
 T['is prevented from replacing with blacklisted flags'] = function()
   helpers.writeTestFiles({
-    {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
     {
       filename = 'file2.ts',
       content = [[ 

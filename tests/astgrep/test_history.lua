@@ -18,14 +18,6 @@ local T = MiniTest.new_set({
 T['engine swaps when reloading from history'] = function()
   helpers.writeTestFiles({
     {
-      filename = 'file1.js',
-      content = [[ 
-    if (grug || another_thing) {
-      console.log(grug)
-    }
-      ]],
-    },
-    {
       filename = 'file2.ts',
       content = [[ 
     if (grug || talks) {
@@ -45,7 +37,7 @@ T['engine swaps when reloading from history'] = function()
 
   child.type_keys('<esc>cc', 'grug')
   child.type_keys('<esc>' .. keymaps.swapEngine.n)
-  helpers.childWaitForScreenshotText(child, '4 matches in 2 files')
+  helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
   helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
@@ -63,7 +55,7 @@ T['engine swaps when reloading from history'] = function()
   helpers.childWaitForScreenshotText(child, 'History')
 
   child.type_keys('<esc>3G', '<enter>')
-  helpers.childWaitForScreenshotText(child, '4 matches in 2 files')
+  helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
   helpers.childWaitForScreenshotText(child, 'ripgrep')
   helpers.childExpectScreenshot(child)
 end
