@@ -1,7 +1,7 @@
 local opts = require('grug-far/opts')
 local utils = require('grug-far/utils')
-local getArgs = require('grug-far/engine/ripgrep/getArgs')
 local treesitter = require('grug-far/render/treesitter')
+local ResultHighlightType = require('grug-far.engine').ResultHighlightType
 
 local M = {}
 
@@ -40,7 +40,6 @@ end
 ---@param line integer
 ---@param loc ResultLocation
 local function addHighlightResult(context, line, loc)
-  -- TODO (sbadragan): engine specific logic?
   local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
   if not from then
     return
@@ -94,14 +93,14 @@ function M.appendResultsChunk(buf, context, data)
 
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
-    local hl = highlight.hl
+    local hl_type = highlight.hl_type
     local line = data.lines[highlight.start_line + 1]
 
-    if hl == 'GrugFarResultsPath' then
+    if hl_type == ResultHighlightType.FilePath then
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
       local markId = setLocationMark(buf, context, lastline + highlight.start_line)
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
-    elseif hl == 'GrugFarResultsLineNo' then
+    elseif hl_type == ResultHighlightType.LineNumber then
       -- omit ending ':'
       lastLocation = { filename = state.resultsLastFilename }
       local markId =
@@ -114,7 +113,11 @@ function M.appendResultsChunk(buf, context, data)
       if context.options.resultsHighlight and lastLocation.text then
         addHighlightResult(context, lastline + highlight.start_line, lastLocation)
       end
-    elseif hl == 'GrugFarResultsLineColumn' and lastLocation and not lastLocation.col then
+    elseif
+      hl_type == ResultHighlightType.ColumnNumber
+      and lastLocation
+      and not lastLocation.col
+    then
       -- omit ending ':', use first match on that line
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.end_col = highlight.end_col
