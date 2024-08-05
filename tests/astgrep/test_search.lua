@@ -302,7 +302,7 @@ T['can search for some string with many matches'] = function()
   local files = {}
   for i = 1, 100 do
     table.insert(files, {
-      filename = 'file_' .. i,
+      filename = 'file_' .. i .. '.js',
       content = [[
         if (grug || talks) {
           grug.walks(talks)
