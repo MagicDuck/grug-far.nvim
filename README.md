@@ -37,7 +37,7 @@ Grug find! Grug replace! Grug happy!
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
 
 #### Ast-grep serch and replace:
-<img width="1258" alt="image" src="https://github.com/user-attachments/assets/c35fc118-14e5-416e-b11d-2146ed6aeab9">
+<img width="1253" alt="image" src="https://github.com/user-attachments/assets/cbd751b5-9801-4c60-98ea-b8f47b3299a7">
 
 #### Ast-grep debug-query
 <img width="1254" alt="image" src="https://github.com/user-attachments/assets/60ab0161-4da8-45ee-9d6e-6e23251a857b">
