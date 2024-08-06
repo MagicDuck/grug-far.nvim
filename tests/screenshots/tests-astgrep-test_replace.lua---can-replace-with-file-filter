@@ -16,11 +16,11 @@
 15| 2 matches in 1 files   replace completed!                                     
 16|                                                                                
 17|   file2.ts                                                                     
-18|-▒ 1:8:    if (grug || talks) {                                                 
-19|│▒ 1:8:    if (curly || talks) {                                                
+18|-▒ 1:9:    if (grug || talks) {                                                 
+19|│▒ 1:9:    if (curly || talks) {                                                
 20|│┊                                                                              
-21|│▒ 2:6:      grug.walks(talks)                                                  
-22|│▒ 2:6:      curly.walks(talks)                                                 
+21|│▒ 2:7:      grug.walks(talks)                                                  
+22|│▒ 2:7:      curly.walks(talks)                                                 
 23|Grug FAR - 1: grug                                            3,4            Top
 24|grug-far: replace completed!                                                    
 

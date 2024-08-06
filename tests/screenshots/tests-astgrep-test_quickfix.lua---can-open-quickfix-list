@@ -11,8 +11,8 @@
 10|                                                                                
 11| STATUS_SUCCESS ⟪ astgrep ⟫
 12|Grug FAR - 1: grug                                            3,4            37%
-13| file2.ts|2 col 6-3| grug.walks(talks)                                          
-14| file2.ts|1 col 8-3| if (grug || talks) {                                       
+13| file2.ts|2 col 7-3| grug.walks(talks)                                          
+14| file2.ts|1 col 9-3| if (grug || talks) {                                       
 15|~                                                                               
 16|~                                                                               
 17|~                                                                               
