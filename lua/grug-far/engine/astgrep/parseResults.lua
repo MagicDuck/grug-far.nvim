@@ -2,6 +2,8 @@ local utils = require('grug-far/utils')
 local engine = require('grug-far/engine')
 local ResultHighlightType = engine.ResultHighlightType
 
+local M = {}
+
 ---@type ResultHighlightSign
 local removed_sign = { icon = 'resultsRemovedIndicator', hl = 'GrugFarResultsRemoveIndicator' }
 ---@type ResultHighlightSign
@@ -99,10 +101,29 @@ local function addResultLines(
   end
 end
 
+function M.splitMatchLines(lines, leading, trailing)
+  local leadingStr = lines:sub(1, leading)
+  local trailingStr = lines:sub(-trailing, -1)
+
+  local last_leading_newline = utils.strFindLast(leadingStr, '\n')
+  local leadingLines = last_leading_newline and leadingStr:sub(1, last_leading_newline - 1) or ''
+
+  local first_trailing_newline = string.find(trailingStr, '\n', 1, true)
+  local trailingLines = first_trailing_newline and trailingStr:sub(first_trailing_newline + 1, -1)
+    or ''
+
+  local matchLines = lines:sub(
+    last_leading_newline and #leadingLines + 2 or 1,
+    first_trailing_newline and -#trailingLines - 2 or -1
+  )
+
+  return leadingLines, matchLines, trailingLines
+end
+
 --- parse results data and get info
 ---@param matches AstgrepMatch[]
 ---@return ParsedResultsData
-local function parseResults(matches)
+function M.parseResults(matches)
   local stats = { files = 0, matches = 0 }
   local lines = {}
   local highlights = {}
@@ -129,14 +150,12 @@ local function parseResults(matches)
       table.insert(lines, match.file)
     end
 
-    local leading = match.charCount and match.charCount.leading or 0
-    local leadingLinesEnd = leading - match.range.start.column + 1
-    local leadingLinesStr = match.lines:sub(1, leadingLinesEnd - 1)
-    leadingLinesStr = leadingLinesStr:sub(-1, -1) == '\n' and leadingLinesStr:sub(1, -2)
-      or leadingLinesStr
-    local matchLineEnd = string.find(match.lines, '\n', leadingLinesEnd, true)
-    local matchLinesStr = match.lines:sub(leadingLinesEnd, matchLineEnd and matchLineEnd - 1 or -1)
-    local trailingLinesStr = matchLineEnd and match.lines:sub(matchLineEnd + 1, -1) or ''
+    local leading = match.charCount and match.charCount.leading or match.range.start.column
+    local trailing = match.charCount and match.charCount.trailing
+      or (#match.lines - match.range.start.column - #match.text)
+
+    local leadingLinesStr, matchLinesStr, trailingLinesStr =
+      M.splitMatchLines(match.lines, leading, trailing)
 
     -- add leading lines
     if #leadingLinesStr > 0 then
@@ -215,4 +234,4 @@ local function parseResults(matches)
   }
 end
 
-return parseResults
+return M
