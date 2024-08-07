@@ -57,14 +57,27 @@ local function search(params)
 
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
-      state.stats = {
-        matches = state.stats.matches + data.stats.matches,
-        files = state.stats.files + data.stats.files,
-      }
+      state.stats.matches = state.stats.matches + data.stats.matches
+      state.stats.files = state.stats.files + data.stats.files
+
+      local shouldAbortEarly = context.options.maxSearchMatches
+        and state.stats.matches > context.options.maxSearchMatches
+
+      if shouldAbortEarly then
+        state.actionMessage = 'aborted early after '
+          .. context.options.maxSearchMatches
+          .. ' matches'
+      end
       renderResultsHeader(buf, context)
 
       resultsList.appendResultsChunk(buf, context, data)
       resultsList.throttledForceRedrawBuffer(buf)
+
+      if shouldAbortEarly then
+        if state.abort.search then
+          state.abort.search()
+        end
+      end
     end,
     on_finish = function(status, errorMessage, customActionMessage)
       if state.bufClosed then
