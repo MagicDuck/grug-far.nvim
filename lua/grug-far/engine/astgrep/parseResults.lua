@@ -5,6 +5,8 @@ local ResultHighlightType = engine.ResultHighlightType
 local M = {}
 
 ---@type ResultHighlightSign
+local change_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' }
+---@type ResultHighlightSign
 local removed_sign = { icon = 'resultsRemovedIndicator', hl = 'GrugFarResultsRemoveIndicator' }
 ---@type ResultHighlightSign
 local added_sign = { icon = 'resultsAddedIndicator', hl = 'GrugFarResultsAddIndicator' }
@@ -163,11 +165,11 @@ function M.parseResults(matches)
       local leadingRange = vim.deepcopy(match.range)
       leadingRange.start.column = nil
       leadingRange.start.line = match.range.start.line - #leadingLines
-      addResultLines(leadingLines, leadingRange, lines, highlights)
+      addResultLines(leadingLines, leadingRange, lines, highlights, change_sign)
     end
 
     -- add match lines
-    local lineNumberSign = match.replacement and removed_sign or nil
+    local lineNumberSign = match.replacement and removed_sign or change_sign
     local matchHighlightType = match.replacement and ResultHighlightType.MatchRemoved
       or ResultHighlightType.Match
     local matchLines = vim.split(matchLinesStr, '\n')
@@ -202,7 +204,7 @@ function M.parseResults(matches)
       local trailingRange = vim.deepcopy(match.range)
       trailingRange.start.column = nil
       trailingRange.start.line = match.range['end'].line + 1
-      addResultLines(trailingLines, trailingRange, lines, highlights)
+      addResultLines(trailingLines, trailingRange, lines, highlights, change_sign)
     end
 
     -- add separator
