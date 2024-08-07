@@ -222,8 +222,10 @@ end
 function M.grug_far(options)
   ensure_configured()
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
-  local is_visual = resolvedOpts.ignoreVisualSelection and false
-    or vim.fn.mode():lower():find('v') ~= nil
+  local is_visual = false
+  if not resolvedOpts.ignoreVisualSelection and vim.fn.mode():lower():find('v') ~= nil then
+    is_visual = true
+  end
   if is_visual then
     -- needed to make visual selection work
     vim.cmd([[normal! vv]])
