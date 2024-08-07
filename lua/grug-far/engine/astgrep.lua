@@ -96,10 +96,9 @@ end
 ---@param args string[]?
 ---@param options GrugFarOptions
 ---@param on_fetch_chunk fun(data: ParsedResultsData)
----@param on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
+---@param on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 ---@return fun()? abort
 local function run_search(args, options, on_fetch_chunk, on_finish)
-  local hadOutput = false
   local isTextOutput = isSearchWithTextOutput(args)
 
   local matches = {}
@@ -108,7 +107,6 @@ local function run_search(args, options, on_fetch_chunk, on_finish)
     args = args,
     options = options,
     on_fetch_chunk = function(data)
-      hadOutput = true
       if isTextOutput then
         on_fetch_chunk({
           lines = vim.iter(vim.split(data, '\n')):map(utils.getLineWithoutCarriageReturn):totable(),
@@ -130,12 +128,6 @@ local function run_search(args, options, on_fetch_chunk, on_finish)
         -- do the last few
         on_fetch_chunk(parseResults(matches))
         matches = {}
-      end
-
-      -- give the user more feedback when there are no matches
-      if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
-        status = 'error'
-        errorMessage = 'no matches'
       end
       on_finish(status, errorMessage)
     end,
@@ -185,6 +177,7 @@ local AstgrepEngine = {
       return
     end
 
+    local hadOutput = false
     local filesFilter = params.inputs.filesFilter
     if filesFilter and #filesFilter > 0 then
       -- ast-grep currently does not support --glob type functionality
@@ -221,23 +214,48 @@ local AstgrepEngine = {
                 table.insert(chunk_args, file)
               end
 
-              return run_search(
-                chunk_args,
-                params.options,
-                params.on_fetch_chunk,
-                function(_, _errorMessage)
-                  return on_done((_errorMessage and #_errorMessage > 0) and _errorMessage or nil)
-                end
-              )
+              return run_search(chunk_args, params.options, function(data)
+                hadOutput = true
+                params.on_fetch_chunk(data)
+              end, function(_, _errorMessage)
+                return on_done((_errorMessage and #_errorMessage > 0) and _errorMessage or nil)
+              end)
             end,
-            on_finish = on_finish,
+            on_finish = function(_status, _errorMessage)
+              -- give the user more feedback when there are no matches
+              if
+                _status == 'success'
+                and not (_errorMessage and #_errorMessage > 0)
+                and not hadOutput
+              then
+                _status = 'error'
+                _errorMessage = 'no matches'
+              end
+
+              on_finish(_status, _errorMessage)
+            end,
           })
         end,
       })
 
       return abort
     else
-      return run_search(args, params.options, params.on_fetch_chunk, params.on_finish)
+      return run_search(args, params.options, function(data)
+        hadOutput = true
+        params.on_fetch_chunk(data)
+      end, function(_status, _errorMessage)
+        -- give the user more feedback when there are no matches
+        if
+          _status == 'success'
+          and not (_errorMessage and #_errorMessage > 0)
+          and not hadOutput
+        then
+          _status = 'error'
+          _errorMessage = 'no matches'
+        end
+
+        on_finish(_status, _errorMessage)
+      end)
     end
   end,
 
