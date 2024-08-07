@@ -33,16 +33,21 @@ local HighlightByType = {
 ---@field end AstgrepMatchPos
 ---@field byteOffset AstgrepMatchOffset
 
+---@class AstgrepMatchCharCount
+---@field leading integer
+---@field trailing integer
+
 ---@class AstgrepMatch
 ---@field file string
 ---@field lines string
 ---@field text string
 ---@field replacement string
 ---@field range AstgrepMatchRange
+---@field charCount AstgrepMatchCharCount
 
 --- adds result lines
 ---@param resultLines string[] lines to add
----@param range AstgrepMatchRange
+---@param match AstgrepMatch
 ---@param lines string[] lines table to add to
 ---@param highlights ResultHighlight[] highlights table to add to
 ---@param lineNumberSign ResultHighlightSign
