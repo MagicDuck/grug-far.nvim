@@ -105,7 +105,7 @@ end
 
 function M.splitMatchLines(lines, leading, trailing)
   local leadingStr = lines:sub(1, leading)
-  local trailingStr = lines:sub(-trailing, -1)
+  local trailingStr = trailing > 0 and lines:sub(-trailing, -1) or ''
 
   local last_leading_newline = utils.strFindLast(leadingStr, '\n')
   local leadingLines = last_leading_newline and leadingStr:sub(1, last_leading_newline - 1) or ''
@@ -154,7 +154,7 @@ function M.parseResults(matches)
 
     local leading = match.charCount and match.charCount.leading or match.range.start.column
     local trailing = match.charCount and match.charCount.trailing
-      or (#match.lines - match.range.start.column - #match.text)
+      or (#match.lines - #match.text - leading)
 
     local leadingLinesStr, matchLinesStr, trailingLinesStr =
       M.splitMatchLines(match.lines, leading, trailing)

@@ -13,6 +13,36 @@ describe('splitMatchLines', function()
     expect.equality(matchLines, '<pre><match><post>')
     expect.equality(trailingLines, '')
   end)
+  it('splits when multiline match with no trailing', function()
+    local lead = '<pre>'
+    local match = '<match1>\n<match2>\n<match3>'
+    local trail = ''
+    local leadingLines, matchLines, trailingLines =
+      parseResults.splitMatchLines(lead .. match .. trail, #lead, #trail)
+    expect.equality(leadingLines, '')
+    expect.equality(matchLines, '<pre><match1>\n<match2>\n<match3>')
+    expect.equality(trailingLines, '')
+  end)
+  it('splits when multiline match with no leading', function()
+    local lead = ''
+    local match = '<match1>\n<match2>\n<match3>'
+    local trail = '<post>'
+    local leadingLines, matchLines, trailingLines =
+      parseResults.splitMatchLines(lead .. match .. trail, #lead, #trail)
+    expect.equality(leadingLines, '')
+    expect.equality(matchLines, '<match1>\n<match2>\n<match3><post>')
+    expect.equality(trailingLines, '')
+  end)
+  it('splits when no leading or trailing', function()
+    local lead = ''
+    local match = '<match>'
+    local trail = ''
+    local leadingLines, matchLines, trailingLines =
+      parseResults.splitMatchLines(lead .. match .. trail, #lead, #trail)
+    expect.equality(leadingLines, '')
+    expect.equality(matchLines, '<match>')
+    expect.equality(trailingLines, '')
+  end)
   it('splits when match has multiple lines', function()
     local lead = '<pre>'
     local match = '<match1>\n<match2>'
