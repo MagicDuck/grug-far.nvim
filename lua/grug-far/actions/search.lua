@@ -64,9 +64,9 @@ local function search(params)
         and state.stats.matches > context.options.maxSearchMatches
 
       if shouldAbortEarly then
-        state.actionMessage = 'aborted early after '
+        state.actionMessage = 'exceeded '
           .. context.options.maxSearchMatches
-          .. ' matches'
+          .. ' matches, aborting early!'
       end
       renderResultsHeader(buf, context)
 
