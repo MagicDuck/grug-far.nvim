@@ -16,7 +16,7 @@ M.defaultOptions = {
   -- to type your search string
   -- note that it can overshoot a little bit, but should not really matter in practice
   -- set to nil to disable
-  maxSearchMatches = 10000,
+  maxSearchMatches = 2000,
 
   -- disable automatic debounced search and trigger search when leaving insert mode instead
   searchOnInsertLeave = false,
