@@ -190,7 +190,7 @@ function M.parseResults(matches)
       replaceRange['end'].column = #replacedLines[#replacedLines] - #postfix
       addResultLines(
         replacedLines,
-        match.range,
+        replaceRange,
         lines,
         highlights,
         added_sign,
