@@ -205,8 +205,9 @@ function M.parseResults(matches)
       addResultLines(trailingLines, trailingRange, lines, highlights)
     end
 
+    -- add separator
     if
-      (#leadingLinesStr > 0 or #trailingLinesStr > 0)
+      (match.replacement or #leadingLinesStr > 0 or #trailingLinesStr > 0)
       and i ~= #matches
       and match.file == matches[i + 1].file
     then
