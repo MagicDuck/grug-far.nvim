@@ -10,6 +10,14 @@ M.defaultOptions = {
   -- prevents performance issues in larger dirs
   minSearchChars = 2,
 
+  -- stops search after this number of matches as getting millions of matches is most likely pointless
+  -- and can even freeze the search buffer sometimes
+  -- can help prevent performance issues when searching for very common strings or when slowly starting
+  -- to type your search string
+  -- note that it can overshoot a little bit, but should not really matter in practice
+  -- set to nil to disable
+  maxSearchMatches = 10000,
+
   -- disable automatic debounced search and trigger search when leaving insert mode instead
   searchOnInsertLeave = false,
 
@@ -422,6 +430,7 @@ M.defaultOptions = {
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
+---@field maxSearchMatches integer
 ---@field searchOnInsertLeave boolean
 ---@field maxWorkers integer
 ---@field rgPath string
@@ -451,6 +460,7 @@ M.defaultOptions = {
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
 ---@field minSearchChars? integer
+---@field maxSearchMatches? integer
 ---@field searchOnInsertLeave? boolean
 ---@field maxWorkers? integer
 ---@field rgPath? string

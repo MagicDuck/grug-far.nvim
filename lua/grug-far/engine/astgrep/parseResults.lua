@@ -3,8 +3,6 @@ local engine = require('grug-far/engine')
 local ResultHighlightType = engine.ResultHighlightType
 
 ---@type ResultHighlightSign
-local change_sign = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' }
----@type ResultHighlightSign
 local removed_sign = { icon = 'resultsRemovedIndicator', hl = 'GrugFarResultsRemoveIndicator' }
 ---@type ResultHighlightSign
 local added_sign = { icon = 'resultsAddedIndicator', hl = 'GrugFarResultsAddIndicator' }
@@ -129,7 +127,7 @@ local function parseResults(matches)
       table.insert(lines, match.file)
     end
 
-    local lineNumberSign = match.replacement and removed_sign or change_sign
+    local lineNumberSign = match.replacement and removed_sign or nil
     local matchHighlightType = match.replacement and ResultHighlightType.MatchRemoved
       or ResultHighlightType.Match
     local matchLines = vim.split(match.lines, '\n')
