@@ -122,12 +122,12 @@ local function run_astgrep_search(args, options, on_fetch_chunk, on_finish)
       -- at once. This helps with applying replacements
       local before, after = split_last_file_matches(matches)
       matches = after
-      on_fetch_chunk(parseResults(before))
+      on_fetch_chunk(parseResults.parseResults(before))
     end,
     on_finish = function(status, errorMessage)
       if #matches > 0 then
         -- do the last few
-        on_fetch_chunk(parseResults(matches))
+        on_fetch_chunk(parseResults.parseResults(matches))
         matches = {}
       end
       vim.schedule(function()
