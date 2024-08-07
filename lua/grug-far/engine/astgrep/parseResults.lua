@@ -24,14 +24,9 @@ local HighlightByType = {
 ---@field line integer
 ---@field column integer
 
----@class AstgrepMatchOffset
----@field start integer
----@field end integer
-
 ---@class AstgrepMatchRange
 ---@field start AstgrepMatchPos
 ---@field end AstgrepMatchPos
----@field byteOffset AstgrepMatchOffset
 
 ---@class AstgrepMatchCharCount
 ---@field leading integer
@@ -43,15 +38,15 @@ local HighlightByType = {
 ---@field text string
 ---@field replacement string
 ---@field range AstgrepMatchRange
----@field charCount AstgrepMatchCharCount
+---@field charCount? AstgrepMatchCharCount
 
 --- adds result lines
 ---@param resultLines string[] lines to add
----@param match AstgrepMatch
+---@param range AstgrepMatchRange
 ---@param lines string[] lines table to add to
 ---@param highlights ResultHighlight[] highlights table to add to
----@param lineNumberSign ResultHighlightSign
----@param matchHighlightType ResultHighlightType
+---@param lineNumberSign? ResultHighlightSign
+---@param matchHighlightType? ResultHighlightType
 local function addResultLines(
   resultLines,
   range,
@@ -64,9 +59,9 @@ local function addResultLines(
   for j, resultLine in ipairs(resultLines) do
     local current_line = numlines + j - 1
     local isLastLine = j == #resultLines
-    local line_no = tostring(range.start.line + j - 1)
-    local col_no = tostring(range.start.column + 1)
-    local prefix = string.format('%-7s', line_no .. ':' .. col_no .. ':')
+    local line_no = tostring(range.start.line + j)
+    local col_no = range.start.column and tostring(range.start.column + 1) or nil
+    local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))
 
     table.insert(highlights, {
       hl_type = ResultHighlightType.LineNumber,
@@ -89,14 +84,16 @@ local function addResultLines(
     end
 
     resultLine = prefix .. resultLine
-    table.insert(highlights, {
-      hl_type = matchHighlightType,
-      hl = HighlightByType[matchHighlightType],
-      start_line = current_line,
-      start_col = j == 1 and #prefix + range.start.column or #prefix,
-      end_line = current_line,
-      end_col = isLastLine and #prefix + range['end'].column or #resultLine,
-    })
+    if matchHighlightType then
+      table.insert(highlights, {
+        hl_type = matchHighlightType,
+        hl = HighlightByType[matchHighlightType],
+        start_line = current_line,
+        start_col = j == 1 and #prefix + range.start.column or #prefix,
+        end_line = current_line,
+        end_col = isLastLine and #prefix + range['end'].column or #resultLine,
+      })
+    end
 
     table.insert(lines, utils.getLineWithoutCarriageReturn(resultLine))
   end
@@ -132,15 +129,33 @@ local function parseResults(matches)
       table.insert(lines, match.file)
     end
 
+    local leading = match.charCount and match.charCount.leading or 0
+    local leadingLinesEnd = leading - match.range.start.column + 1
+    local leadingLinesStr = match.lines:sub(1, leadingLinesEnd - 1)
+    leadingLinesStr = leadingLinesStr:sub(-1, -1) == '\n' and leadingLinesStr:sub(1, -2)
+      or leadingLinesStr
+    local matchLineEnd = string.find(match.lines, '\n', leadingLinesEnd, true)
+    local matchLinesStr = match.lines:sub(leadingLinesEnd, matchLineEnd and matchLineEnd - 1 or -1)
+    local trailingLinesStr = matchLineEnd and match.lines:sub(matchLineEnd + 1, -1) or ''
+
+    -- add leading lines
+    if #leadingLinesStr > 0 then
+      local leadingLines = vim.split(leadingLinesStr, '\n')
+      local leadingRange = vim.deepcopy(match.range)
+      leadingRange.start.column = nil
+      leadingRange.start.line = match.range.start.line - #leadingLines
+      addResultLines(leadingLines, leadingRange, lines, highlights)
+    end
+
+    -- add match lines
     local lineNumberSign = match.replacement and removed_sign or nil
     local matchHighlightType = match.replacement and ResultHighlightType.MatchRemoved
       or ResultHighlightType.Match
-    local matchLines = vim.split(match.lines, '\n')
+    local matchLines = vim.split(matchLinesStr, '\n')
     addResultLines(matchLines, match.range, lines, highlights, lineNumberSign, matchHighlightType)
 
     -- add replacements lines
     if match.replacement then
-      local matchLinesStr = match.lines
       local matchStart = match.range.start.column + 1 -- column is zero-based
       local matchEnd = matchStart + #match.text - 1
       local prefix = matchLinesStr:sub(1, matchStart - 1)
@@ -150,7 +165,8 @@ local function parseResults(matches)
 
       -- Note: a bit dirty to modify range data directly, but this is more efficient vs cloning as nothing
       -- else below this needs it
-      match.range['end'].column = #replacedLines[#replacedLines] - #postfix
+      local replaceRange = vim.deepcopy(match.range)
+      replaceRange['end'].column = #replacedLines[#replacedLines] - #postfix
       addResultLines(
         replacedLines,
         match.range,
@@ -159,18 +175,32 @@ local function parseResults(matches)
         added_sign,
         ResultHighlightType.MatchAdded
       )
-      if i ~= #matches then
-        table.insert(highlights, {
-          hl_type = ResultHighlightType.DiffSeparator,
-          hl = HighlightByType[ResultHighlightType.DiffSeparator],
-          start_line = #lines,
-          start_col = 1,
-          end_line = #lines,
-          end_col = 1,
-          sign = separator_sign,
-        })
-        table.insert(lines, engine.DiffSeparatorChars)
-      end
+    end
+
+    -- add trailing lines
+    if #trailingLinesStr > 0 then
+      local trailingLines = vim.split(trailingLinesStr, '\n')
+      local trailingRange = vim.deepcopy(match.range)
+      trailingRange.start.column = nil
+      trailingRange.start.line = match.range['end'].line + 1
+      addResultLines(trailingLines, trailingRange, lines, highlights)
+    end
+
+    if
+      (#leadingLinesStr > 0 or #trailingLinesStr > 0)
+      and i ~= #matches
+      and match.file == matches[i + 1].file
+    then
+      table.insert(highlights, {
+        hl_type = ResultHighlightType.DiffSeparator,
+        hl = HighlightByType[ResultHighlightType.DiffSeparator],
+        start_line = #lines,
+        start_col = 1,
+        end_line = #lines,
+        end_col = 1,
+        sign = separator_sign,
+      })
+      table.insert(lines, engine.DiffSeparatorChars)
     end
 
     if i == #matches then
