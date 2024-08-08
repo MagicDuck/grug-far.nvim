@@ -209,37 +209,6 @@ local function setupGlobalOptOverrides(buf, context)
   onBufEnter()
 end
 
-local FIRST_INPUT_LINE = 2
-local LAST_INPUT_LINE = 7
-
---- fills in prefills
----@param buf integer
----@param prefills GrugFarPrefills | GrugFarPrefillsOverride
-function M.fillPrefills(buf, prefills)
-  vim.api.nvim_buf_set_lines(buf, FIRST_INPUT_LINE, LAST_INPUT_LINE, true, {
-    prefills.search or '',
-    prefills.replacement or '',
-    prefills.filesFilter or '',
-    prefills.flags or '',
-    prefills.paths or '',
-  })
-end
-
--- updates prefills
----@param buf integer
----@param prefills GrugFarPrefillsOverride
-function M.updatePrefills(buf, prefills)
-  local oldSearch, oldReplacement, oldFilesFilter, oldFlags, oldPaths =
-    unpack(vim.api.nvim_buf_get_lines(buf, FIRST_INPUT_LINE, LAST_INPUT_LINE, false))
-  vim.api.nvim_buf_set_lines(buf, FIRST_INPUT_LINE, LAST_INPUT_LINE, true, {
-    prefills.search or oldSearch,
-    prefills.replacement or oldReplacement,
-    prefills.filesFilter or oldFilesFilter,
-    prefills.flags or oldFlags,
-    prefills.paths or oldPaths,
-  })
-end
-
 ---@param win integer
 ---@param context GrugFarContext
 ---@return integer bufId
