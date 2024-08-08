@@ -65,6 +65,7 @@ local function pickHistoryEntry(historyWin, historyBuf, buf, context)
     entry.flags,
     entry.paths,
   }
+  -- TODO (sbadragan): use inputs.fill instead
   vim.api.nvim_buf_set_lines(buf, firstInputRow, firstInputRow + #rows, false, rows)
   closeHistoryWindow(historyWin)
 end

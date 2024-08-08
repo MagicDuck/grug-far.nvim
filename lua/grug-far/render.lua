@@ -2,6 +2,8 @@ local renderHelp = require('grug-far/render/help')
 local renderInput = require('grug-far/render/input')
 local renderResults = require('grug-far/render/results')
 local utils = require('grug-far/utils')
+local inputs = require('grug-far/inputs')
+local InputNames = inputs.InputNames
 
 local TOP_EMPTY_LINES = 2
 local BEFORE_RESULTS_LINES = 2
@@ -9,7 +11,7 @@ local BEFORE_RESULTS_LINES = 2
 ---@param buf integer
 ---@param context GrugFarContext
 local function render(buf, context)
-  local inputs = context.state.inputs
+  local state = context.state
   local placeholders = context.options.engines[context.engine.type].placeholders
 
   local lineNr = 0
@@ -21,58 +23,58 @@ local function render(buf, context)
   }, context)
 
   lineNr = lineNr + TOP_EMPTY_LINES
-  inputs.search = renderInput({
+  state.inputs.search = renderInput({
     buf = buf,
     lineNr = lineNr,
-    extmarkName = 'search',
-    nextExtmarkName = 'replace',
+    extmarkName = InputNames.search,
+    nextExtmarkName = InputNames.replacement,
     icon = 'searchInput',
     label = 'Search:',
     placeholder = placeholders.enabled and placeholders.search,
   }, context)
 
   lineNr = lineNr + 1
-  inputs.replacement = renderInput({
+  state.inputs.replacement = renderInput({
     buf = buf,
     lineNr = lineNr,
-    prevExtmarkName = 'search',
-    extmarkName = 'replace',
-    nextExtmarkName = 'files_glob',
+    prevExtmarkName = InputNames.search,
+    extmarkName = InputNames.replacement,
+    nextExtmarkName = InputNames.filesFilter,
     icon = 'replaceInput',
     label = 'Replace:',
     placeholder = placeholders.enabled and placeholders.replacement,
   }, context)
 
   lineNr = lineNr + 1
-  inputs.filesFilter = vim.trim(renderInput({
+  state.inputs.filesFilter = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
-    prevExtmarkName = 'replace',
-    extmarkName = 'files_glob',
-    nextExtmarkName = 'flags',
+    prevExtmarkName = InputNames.replacement,
+    extmarkName = InputNames.filesFilter,
+    nextExtmarkName = InputNames.flags,
     icon = 'filesFilterInput',
     label = 'Files Filter:',
     placeholder = placeholders.enabled and placeholders.filesFilter,
   }, context))
 
   lineNr = lineNr + 1
-  inputs.flags = vim.trim(renderInput({
+  state.inputs.flags = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
-    prevExtmarkName = 'files_glob',
-    extmarkName = 'flags',
-    nextExtmarkName = 'paths',
+    prevExtmarkName = InputNames.filesFilter,
+    extmarkName = InputNames.flags,
+    nextExtmarkName = InputNames.paths,
     icon = 'flagsInput',
     label = 'Flags:',
     placeholder = placeholders.enabled and placeholders.flags,
   }, context))
 
   lineNr = lineNr + 1
-  inputs.paths = vim.trim(renderInput({
+  state.inputs.paths = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
-    prevExtmarkName = 'flags',
-    extmarkName = 'paths',
+    prevExtmarkName = InputNames.flags,
+    extmarkName = InputNames.paths,
     nextExtmarkName = 'results_header',
     icon = 'pathsInput',
     label = 'Paths:',
