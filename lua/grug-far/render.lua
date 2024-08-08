@@ -25,6 +25,7 @@ local function render(buf, context)
     buf = buf,
     lineNr = lineNr,
     extmarkName = 'search',
+    nextExtmarkName = 'replace',
     icon = 'searchInput',
     label = 'Search:',
     placeholder = placeholders.enabled and placeholders.search,
@@ -34,7 +35,9 @@ local function render(buf, context)
   inputs.replacement = renderInput({
     buf = buf,
     lineNr = lineNr,
+    prevExtmarkName = 'search',
     extmarkName = 'replace',
+    nextExtmarkName = 'files_glob',
     icon = 'replaceInput',
     label = 'Replace:',
     placeholder = placeholders.enabled and placeholders.replacement,
@@ -44,7 +47,9 @@ local function render(buf, context)
   inputs.filesFilter = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
+    prevExtmarkName = 'replace',
     extmarkName = 'files_glob',
+    nextExtmarkName = 'flags',
     icon = 'filesFilterInput',
     label = 'Files Filter:',
     placeholder = placeholders.enabled and placeholders.filesFilter,
@@ -54,7 +59,9 @@ local function render(buf, context)
   inputs.flags = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
+    prevExtmarkName = 'files_glob',
     extmarkName = 'flags',
+    nextExtmarkName = 'paths',
     icon = 'flagsInput',
     label = 'Flags:',
     placeholder = placeholders.enabled and placeholders.flags,
@@ -64,7 +71,9 @@ local function render(buf, context)
   inputs.paths = vim.trim(renderInput({
     buf = buf,
     lineNr = lineNr,
+    prevExtmarkName = 'flags',
     extmarkName = 'paths',
+    nextExtmarkName = 'results_header',
     icon = 'pathsInput',
     label = 'Paths:',
     placeholder = placeholders.enabled and placeholders.paths,
