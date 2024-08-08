@@ -273,7 +273,7 @@ end
 function M.getVisualSelectionLines()
   local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, '<'))
   local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(0, '>'))
-  local lines = vim.fn.getline(start_row, end_row)
+  local lines = vim.fn.getline(start_row, end_row) --[[ @as string[] ]]
   if #lines > 0 and start_col and end_col then
     if start_row == end_row then
       lines[1] = lines[1]:sub(start_col + 1, end_col + 1)
@@ -282,7 +282,6 @@ function M.getVisualSelectionLines()
       lines[#lines] = lines[#lines]:sub(1, end_col + 1)
     end
   end
-  ---@type string[]
   return lines
 end
 
