@@ -175,6 +175,12 @@ Replace: <text>
 Files Filter: <text>
 Flags: <text>
 ```
+where `<text>` can span multiple line with the aid of a "continuation prefix" (`| `). ex:
+```
+Replace: something
+| additional replace text
+| more replace text
+```
 History entries are separated by one or more empty lines.
 
 _Note_: **grug-far** will ignore lines that do not start with the prefixes above
