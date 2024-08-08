@@ -15,7 +15,6 @@ local opts = require('grug-far/opts')
 ---@return string textContent
 local function renderInput(params, context)
   local buf = params.buf
-  -- TODO (sbadragan): rename
   local minLineNr = params.lineNr
   local extmarkName = params.extmarkName
   local labelExtmarkName = extmarkName .. '_label'
@@ -42,7 +41,7 @@ local function renderInput(params, context)
 
   -- get current pos
   local currentStartRow = minLineNr
-  if context.extmarkIds[labelExtmarkName] then
+  if context.extmarkIds[labelExtmarkName] and prevLabelExtmarkName then
     local row = unpack(
       vim.api.nvim_buf_get_extmark_by_id(
         buf,
@@ -79,15 +78,6 @@ local function renderInput(params, context)
     vim.api.nvim_buf_set_lines(buf, currentStartRow, currentStartRow, false, { '' })
     input_lines = { '' }
   end
-
-  P({
-    extmarkName = extmarkName,
-    currentStartRow = currentStartRow,
-    currentEndRow = currentEndRow,
-    minLineNr = minLineNr,
-    input_lines = input_lines,
-    lineNr = params.lineNr,
-  })
 
   context.extmarkIds[labelExtmarkName] =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {

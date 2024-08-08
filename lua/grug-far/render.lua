@@ -83,6 +83,8 @@ local function render(buf, context)
   renderResults({
     buf = buf,
     minLineNr = lineNr,
+    numLinesAbove = BEFORE_RESULTS_LINES,
+    prevLabelExtmarkName = 'paths',
   }, context)
 end
 
