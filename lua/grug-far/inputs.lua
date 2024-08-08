@@ -44,11 +44,12 @@ end
 ---@param values GrugFarPrefills | GrugFarPrefillsOverride
 ---@param clearOld boolean
 function M.fill(context, buf, values, clearOld)
-  fillInput(context, buf, M.InputNames.search, values.search, clearOld)
-  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
-  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
-  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
+  -- filling in reverse order as it's more reliable with the left gravity extmarks
   fillInput(context, buf, M.InputNames.paths, values.paths, clearOld)
+  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
+  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
+  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
+  fillInput(context, buf, M.InputNames.search, values.search, clearOld)
 end
 
 return M
