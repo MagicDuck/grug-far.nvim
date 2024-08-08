@@ -6,7 +6,6 @@ local inputs = require('grug-far/inputs')
 local InputNames = inputs.InputNames
 
 local TOP_EMPTY_LINES = 2
-local BEFORE_RESULTS_LINES = 2
 
 ---@param buf integer
 ---@param context GrugFarContext
@@ -81,11 +80,10 @@ local function render(buf, context)
     placeholder = placeholders.enabled and placeholders.paths,
   }, context))
 
-  lineNr = lineNr + BEFORE_RESULTS_LINES
+  lineNr = lineNr + 1
   renderResults({
     buf = buf,
     minLineNr = lineNr,
-    numLinesAbove = BEFORE_RESULTS_LINES,
     prevLabelExtmarkName = 'paths',
   }, context)
 end
