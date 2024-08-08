@@ -193,8 +193,6 @@ local RipgrepEngine = {
     })
   end,
 
-  -- TODO (sbadragan): help and readme udpate regarding history
-
   getInputPrefillsForVisualSelection = function(initialPrefills)
     local prefills = vim.deepcopy(initialPrefills)
 
