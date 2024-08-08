@@ -21,6 +21,7 @@ local function fillInput(context, buf, name, value, clearOld)
   end
 
   local extmarkId = context.extmarkIds[name]
+  P(context.extmarkIds)
   local inputRow
   if extmarkId then
     inputRow = unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, extmarkId, {})) --[[@as integer?]]
@@ -28,14 +29,13 @@ local function fillInput(context, buf, name, value, clearOld)
 
   if inputRow then
     local oldValue = context.state.inputs[name]
-    local numInputLines = #vim.split(oldValue, '\n')
-    vim.api.nvim_buf_set_lines(
-      buf,
-      inputRow,
-      inputRow + numInputLines,
-      true,
-      vim.split(value or '', '\n')
-    )
+    local oldNumInputLines = #vim.split(oldValue, '\n')
+    local newLines = vim.split(value or '', '\n')
+    P({ oldValue = oldValue, numInputLines = oldNumInputLines, value = value, inputRow = inputRow })
+    -- note: we need to adopt this tricky way of inserting the value in order to move
+    -- the next inputs extmark position down appropriately
+    vim.api.nvim_buf_set_lines(buf, inputRow, inputRow + oldNumInputLines - 1, true, newLines)
+    vim.api.nvim_buf_set_lines(buf, inputRow + #newLines, inputRow + #newLines + 1, true, {})
   end
 end
 
@@ -46,11 +46,12 @@ end
 ---@param values GrugFarPrefills | GrugFarPrefillsOverride
 ---@param clearOld boolean
 function M.fill(context, buf, values, clearOld)
-  fillInput(context, buf, M.InputNames.search, values.search, clearOld)
-  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
-  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
-  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
+  -- Note: filling in reverse order in order to preserve extmarks
   fillInput(context, buf, M.InputNames.paths, values.paths, clearOld)
+  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
+  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
+  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
+  fillInput(context, buf, M.InputNames.search, values.search, clearOld)
 end
 
 return M
