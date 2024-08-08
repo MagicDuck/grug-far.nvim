@@ -15,6 +15,7 @@ local toggleShowCommand = require('grug-far/actions/toggleShowCommand')
 local swapEngine = require('grug-far/actions/swapEngine')
 local utils = require('grug-far/utils')
 local resultsList = require('grug-far/render/resultsList')
+local inputs = require('grug-far/inputs')
 
 local M = {}
 
@@ -324,7 +325,7 @@ function M.createBuffer(win, context)
   vim.schedule(function()
     render(buf, context)
 
-    M.fillPrefills(buf, context.options.prefills)
+    inputs.fill(context, buf, context.options.prefills, true)
     updateBufName(buf, context)
 
     pcall(vim.api.nvim_win_set_cursor, win, { context.options.startCursorRow, 0 })

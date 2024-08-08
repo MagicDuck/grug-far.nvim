@@ -6,6 +6,7 @@ local utils = require('grug-far/utils')
 local close = require('grug-far/actions/close')
 local engine = require('grug-far/engine')
 local fold = require('grug-far/fold')
+local inputs = require('grug-far/inputs')
 
 local M = {}
 
@@ -393,11 +394,8 @@ function M.update_instance_prefills(instanceName, prefills, clearOld)
   local inst = ensure_instance(instanceName)
 
   vim.schedule(function()
-    if clearOld then
-      farBuffer.fillPrefills(inst.buf, prefills)
-    else
-      farBuffer.updatePrefills(inst.buf, prefills)
-    end
+    -- TODO (sbadragan): fix this up
+    inputs.fill(context, inst.buf, prefills, clearOld)
   end)
 end
 
