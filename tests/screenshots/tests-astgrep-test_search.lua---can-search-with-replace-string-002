@@ -7,14 +7,13 @@
 06|
 07|
 08|
-09|
-10|file2.ts
-11|2:9:       if (grug || talks) {
-12|2:9:       if (curly || talks) {
-13| 
-14|3:7:         grug.walks(talks)
-15|3:7:         curly.walks(talks)
-16|
+09|file2.ts
+10|2:9:       if (grug || talks) {
+11|2:9:       if (curly || talks) {
+12| 
+13|3:7:         grug.walks(talks)
+14|3:7:         curly.walks(talks)
+15|
 
 --|-
 01| 
@@ -32,4 +31,3 @@
 13| 
 14| 
 15| 
-16| 
