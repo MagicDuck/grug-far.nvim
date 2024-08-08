@@ -36,8 +36,8 @@ Grug find! Grug replace! Grug happy!
 #### History:
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
 
-#### Ast-grep serch and replace:
-<img width="1253" alt="image" src="https://github.com/user-attachments/assets/cbd751b5-9801-4c60-98ea-b8f47b3299a7">
+#### Ast-grep multiline search and replace:
+<img width="1254" alt="image" src="https://github.com/user-attachments/assets/b15bbe33-cb27-4b8e-8b9d-241b64218fdc">
 
 #### Ast-grep debug-query
 <img width="1254" alt="image" src="https://github.com/user-attachments/assets/60ab0161-4da8-45ee-9d6e-6e23251a857b">
