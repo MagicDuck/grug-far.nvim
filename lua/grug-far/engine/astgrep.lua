@@ -42,7 +42,8 @@ local AstgrepEngine = {
 
   getInputPrefillsForVisualSelection = function(initialPrefills)
     local prefills = vim.deepcopy(initialPrefills)
-    prefills.search = utils.getVisualSelectionText()
+    local selection_lines = utils.getVisualSelectionLines()
+    prefills.search = vim.fn.join(selection_lines, '\n')
     return prefills
   end,
 }
