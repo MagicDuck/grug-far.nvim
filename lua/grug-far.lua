@@ -261,8 +261,7 @@ function M._grug_far_internal(options, params)
 end
 
 --- launch grug-far with the given overrides, pre-filling
---- search with current visual selection. If the visual selection crosses
---- multiple lines, lines are joined
+--- search with current visual selection.
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
   ensure_configured()
