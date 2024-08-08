@@ -268,27 +268,22 @@ function M.ensureBufTopEmptyLines(buf, count)
   end
 end
 
---- get text in visual selection
---- if multiline, lines are joined
----@return string
-function M.getVisualSelectionText()
-  local start_pos = vim.api.nvim_buf_get_mark(0, '<')
-  local end_pos = vim.api.nvim_buf_get_mark(0, '>')
-  local lines = vim.fn.getline(start_pos[1], end_pos[1])
-  -- add when only select in 1 line
-  local plusEnd = 0
-  local plusStart = 1
-  if #lines == 0 then
-    return ''
-  elseif #lines == 1 then
-    plusEnd = 1
-    plusStart = 1
+--- get text lines in visual selection
+---@return string[]
+function M.getVisualSelectionLines()
+  local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, '<'))
+  local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(0, '>'))
+  local lines = vim.fn.getline(start_row, end_row)
+  if #lines > 0 and start_col and end_col then
+    if start_row == end_row then
+      lines[1] = lines[1]:sub(start_col + 1, end_col + 1)
+    else
+      lines[1] = lines[1]:sub(start_col + 1, -1)
+      lines[#lines] = lines[#lines]:sub(1, end_col + 1)
+    end
   end
-  lines[#lines] = string.sub(lines[#lines], 0, end_pos[2] + plusEnd)
-  lines[1] = string.sub(lines[1], start_pos[2] + plusStart, string.len(lines[1]))
-  ---@diagnostic disable-next-line: param-type-mismatch
-  local query = table.concat(lines, '')
-  return query
+  ---@type string[]
+  return lines
 end
 
 --- aborts all tasks

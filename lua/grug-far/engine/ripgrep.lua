@@ -193,18 +193,20 @@ local RipgrepEngine = {
     })
   end,
 
+  -- TODO (sbadragan): check that other inputs can work with multiple lines
+  -- TODO (sbadragan): help and readme udpate regarding history
+
   getInputPrefillsForVisualSelection = function(initialPrefills)
     local prefills = vim.deepcopy(initialPrefills)
 
-    --- search with current visual selection. If the visual selection crosses
-    --- multiple lines, lines are joined
-    --- (this is because visual selection can contain special chars, so we need to pass
-    --- --fixed-strings flag to rg. But in that case '\n' is interpreted literally, so we
-    --- can't use it to separate lines)
-    prefills.search = utils.getVisualSelectionText()
+    local selection_lines = utils.getVisualSelectionLines()
+    prefills.search = vim.fn.join(selection_lines, '\n')
     local flags = prefills.flags or ''
     if not flags:find('%-%-fixed%-strings') then
       flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+    end
+    if #selection_lines > 1 and not flags:find('%-%-multiline') then
+      flags = (#flags > 0 and flags .. ' ' or flags) .. '--multiline'
     end
     prefills.flags = flags
 
