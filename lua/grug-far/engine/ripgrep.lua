@@ -193,7 +193,6 @@ local RipgrepEngine = {
     })
   end,
 
-  -- TODO (sbadragan): check that other inputs can work with multiple lines
   -- TODO (sbadragan): help and readme udpate regarding history
 
   getInputPrefillsForVisualSelection = function(initialPrefills)
