@@ -31,7 +31,6 @@ local function fillInput(context, buf, name, value, clearOld)
     local oldValue = context.state.inputs[name]
     local oldNumInputLines = #vim.split(oldValue, '\n')
     local newLines = vim.split(value or '', '\n')
-    P({ oldValue = oldValue, numInputLines = oldNumInputLines, value = value, inputRow = inputRow })
     -- note: we need to adopt this tricky way of inserting the value in order to move
     -- the next inputs extmark position down appropriately
     vim.api.nvim_buf_set_lines(buf, inputRow, inputRow + oldNumInputLines - 1, true, newLines)
@@ -46,12 +45,11 @@ end
 ---@param values GrugFarPrefills | GrugFarPrefillsOverride
 ---@param clearOld boolean
 function M.fill(context, buf, values, clearOld)
-  -- Note: filling in reverse order in order to preserve extmarks
-  fillInput(context, buf, M.InputNames.paths, values.paths, clearOld)
-  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
-  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
-  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
   fillInput(context, buf, M.InputNames.search, values.search, clearOld)
+  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
+  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
+  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
+  fillInput(context, buf, M.InputNames.paths, values.paths, clearOld)
 end
 
 return M
