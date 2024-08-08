@@ -348,7 +348,7 @@ M.eol = is_win and '\r\n' or '\n'
 ---@param pathsStr string
 ---@return string[]
 function M.splitPaths(pathsStr)
-  local _pathsStr = vim.trim(pathsStr)
+  local _pathsStr = vim.trim(pathsStr:gsub('\n', ' '))
   local paths = {}
   local i = 1
   ---@type integer?

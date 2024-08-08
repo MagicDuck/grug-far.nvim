@@ -23,7 +23,6 @@ local function renderInput(params, context)
   local placeholder = params.placeholder
   local icon = opts.getIcon(params.icon, context) or ''
 
-  -- TODO (sbadragan): paths does not show placeholder appropriately
   -- make sure we don't go beyond prev input pos
   if prevExtmarkName then
     local prevInputRow = unpack(

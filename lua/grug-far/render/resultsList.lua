@@ -330,7 +330,7 @@ function M.appendSearchCommand(buf, context, rgArgs)
   local header = 'Search Command:'
   local lines = { header }
   for i, arg in ipairs(rgArgs) do
-    local line = vim.fn.shellescape(arg)
+    local line = vim.fn.shellescape(arg:gsub('\n', '\\n'))
     if i == 1 then
       line = cmd_path .. ' ' .. line
     end
