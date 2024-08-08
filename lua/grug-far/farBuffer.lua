@@ -184,29 +184,28 @@ end
 ---@param buf integer
 ---@param context GrugFarContext
 local function setupGlobalOptOverrides(buf, context)
-  local originalBackspaceOpt = vim.opt.backspace:get()
-  local function onBufEnter()
+  local originalBackspaceOpt = vim.deepcopy(vim.opt.backspace:get())
+  local function onInsertEnter()
     -- this prevents backspacing over eol when clearing an input line
     -- for a better user experience
-    originalBackspaceOpt = vim.opt.backspace:get()
     vim.opt.backspace:remove('eol')
   end
-  local function onBufLeave()
+  local function onInsertLeave()
     vim.opt.backspace = originalBackspaceOpt
   end
 
-  vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+  vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
     group = context.augroup,
     buffer = buf,
-    callback = onBufEnter,
+    callback = onInsertEnter,
   })
-  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+  vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
     group = context.augroup,
     buffer = buf,
-    callback = onBufLeave,
+    callback = onInsertLeave,
   })
 
-  onBufEnter()
+  onInsertEnter()
 end
 
 ---@param win integer
