@@ -1,7 +1,6 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
 
--- TODO (sbadragan): add tests for sg
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
 
