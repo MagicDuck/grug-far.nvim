@@ -4,8 +4,10 @@ local renderResultsHeader = require('grug-far/render/resultsHeader')
 ---@param buf integer
 ---@param context GrugFarContext
 ---@param minLineNr integer
+---@param prevLabelExtmarkName string
+---@param numLinesAbove integer
 ---@return integer headerRow
-local function ensureMinLineNr(buf, context, minLineNr)
+local function ensureMinLineNr(buf, context, minLineNr, prevLabelExtmarkName, numLinesAbove)
   local headerRow = nil
   if context.extmarkIds.results_header then
     headerRow = unpack(
@@ -18,20 +20,19 @@ local function ensureMinLineNr(buf, context, minLineNr)
     )
   end
 
-  local prevLabelExtmarkName = 'path_label'
   -- make sure we don't go beyond prev input pos
-  if prevLabelExtmarkName and context.extmarkIds[prevLabelExtmarkName] then
+  if prevLabelExtmarkName and context.extmarkIds[prevLabelExtmarkName .. '_label'] then
     local prevInputRow = unpack(
       vim.api.nvim_buf_get_extmark_by_id(
         buf,
         context.namespace,
-        context.extmarkIds[prevLabelExtmarkName],
+        context.extmarkIds[prevLabelExtmarkName .. '_label'],
         {}
       )
     )
-    -- TODO (sbadragan): pass in number 2
-    if prevInputRow and prevInputRow + 2 >= headerRow then
-      minLineNr = prevInputRow + 2
+    P({ numLinesAbove = numLinesAbove, headerRow = headerRow })
+    if not headerRow or (prevInputRow and prevInputRow + numLinesAbove >= headerRow) then
+      minLineNr = prevInputRow + numLinesAbove
     end
   end
 
@@ -47,13 +48,14 @@ local function ensureMinLineNr(buf, context, minLineNr)
   return headerRow --[[@as integer]]
 end
 
----@param params { buf: integer, minLineNr: integer }
+---@param params { buf: integer, minLineNr: integer, prevLabelExtmarkName: string, numLinesAbove: integer }
 ---@param context GrugFarContext
 local function renderResults(params, context)
   local buf = params.buf
   local minLineNr = params.minLineNr
 
-  context.state.headerRow = ensureMinLineNr(buf, context, minLineNr)
+  context.state.headerRow =
+    ensureMinLineNr(buf, context, minLineNr, params.prevLabelExtmarkName, params.numLinesAbove)
 
   renderResultsHeader(buf, context)
 end
