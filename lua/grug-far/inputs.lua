@@ -21,7 +21,6 @@ local function fillInput(context, buf, name, value, clearOld)
   end
 
   local extmarkId = context.extmarkIds[name]
-  P(context.extmarkIds)
   local inputRow
   if extmarkId then
     inputRow = unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, extmarkId, {})) --[[@as integer?]]

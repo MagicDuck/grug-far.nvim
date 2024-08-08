@@ -1,6 +1,8 @@
 local utils = require('grug-far/utils')
 local M = {}
 
+local continuation_prefix = '| '
+
 ---@param context GrugFarContext
 ---@return string
 function M.getHistoryFilename(context)
@@ -15,6 +17,18 @@ function M.getHistoryFilename(context)
   end
 
   return file
+end
+
+--- formats input value for history entry, handling multiline appropriately
+---@param value string
+---@return string
+local function formatInputValue(value)
+  local lines = vim.split(value, '\n')
+  local result = {}
+  for i, line in ipairs(lines) do
+    table.insert(result, i == 1 and line or continuation_prefix .. line)
+  end
+  return vim.fn.join(result, '\n')
 end
 
 --- adds entry to history
@@ -38,57 +52,71 @@ function M.addHistoryEntry(context, notify)
       callback(err)
     end
 
-    local entry = '\n\nEngine: '
-      .. context.engine.type
-      .. '\nSearch: '
-      .. inputs.search
-      .. '\nReplace: '
-      .. inputs.replacement
-      .. '\nFiles Filter: '
-      .. inputs.filesFilter
-      .. '\nFlags: '
-      .. inputs.flags
-      .. '\nPaths: '
-      .. inputs.paths
-      .. '\n'
+    vim.schedule(function()
+      local entry = '\n\nEngine: '
+        .. context.engine.type
+        .. '\nSearch: '
+        .. formatInputValue(inputs.search)
+        .. '\nReplace: '
+        .. formatInputValue(inputs.replacement)
+        .. '\nFiles Filter: '
+        .. formatInputValue(inputs.filesFilter)
+        .. '\nFlags: '
+        .. formatInputValue(inputs.flags)
+        .. '\nPaths: '
+        .. formatInputValue(inputs.paths)
+        .. '\n'
 
-    -- dedupe last entry
-    local newContents = contents or ''
-    if not vim.startswith(newContents, entry) then
-      newContents = entry .. contents
-    end
-
-    -- ensure max history lines
-    local lines = vim.split(newContents, '\n')
-    local maxHistoryLines = context.options.history.maxHistoryLines
-    if #lines > maxHistoryLines then
-      local firstEmptyLine
-      for i = maxHistoryLines, 1, -1 do
-        if #lines[i] == 0 then
-          firstEmptyLine = i
-          break
-        end
+      -- dedupe last entry
+      local newContents = contents or ''
+      if not vim.startswith(newContents, entry) then
+        newContents = entry .. contents
       end
-      lines = vim.list_slice(lines, 1, firstEmptyLine)
-      newContents = table.concat(lines, '\n')
-    end
 
-    utils.overwriteFileAsync(historyFilename, newContents, callback)
+      -- ensure max history lines
+      local lines = vim.split(newContents, '\n')
+      local maxHistoryLines = context.options.history.maxHistoryLines
+      if #lines > maxHistoryLines then
+        local firstEmptyLine
+        for i = maxHistoryLines, 1, -1 do
+          if #lines[i] == 0 then
+            firstEmptyLine = i
+            break
+          end
+        end
+        lines = vim.list_slice(lines, 1, firstEmptyLine)
+        newContents = table.concat(lines, '\n')
+      end
+
+      utils.overwriteFileAsync(historyFilename, newContents, callback)
+    end)
   end)
 end
 
 --- gets first value on entry line starting with given pattern
+--- values can be continued on follow up lines by prefixing them with the continuation_prefix
 ---@param entryLines string[]
 ---@param pattern string
 local function getFirstValueStartingWith(entryLines, pattern)
+  local value = ''
+  local foundStart = false
   for _, line in ipairs(entryLines) do
-    local i, j = string.find(line, pattern)
-    if i == 1 then
-      return line:sub(j + 1)
+    if foundStart then
+      if line:sub(1, #continuation_prefix) == continuation_prefix then
+        value = value .. '\n' .. line:sub(3, -1)
+      else
+        break
+      end
+    else
+      local i, j = string.find(line, pattern)
+      if i == 1 then
+        value = line:sub(j + 1)
+        foundStart = true
+      end
     end
   end
 
-  return ''
+  return value
 end
 
 ---@class HistoryEntry

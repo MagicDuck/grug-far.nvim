@@ -3,6 +3,7 @@ local history = require('grug-far/history')
 local utils = require('grug-far/utils')
 local opts = require('grug-far/opts')
 local engine = require('grug-far/engine')
+local inputs = require('grug-far/inputs')
 
 --- gets history entry at given 0-based buffer row
 ---@param historyBuf integer
@@ -57,16 +58,14 @@ local function pickHistoryEntry(historyWin, historyBuf, buf, context)
   end
 
   context.engine = engine.getEngine(entry.engine)
-  local firstInputRow = 2
-  local rows = {
-    entry.search,
-    entry.replacement,
-    entry.filesFilter,
-    entry.flags,
-    entry.paths,
-  }
-  -- TODO (sbadragan): use inputs.fill instead
-  vim.api.nvim_buf_set_lines(buf, firstInputRow, firstInputRow + #rows, false, rows)
+  inputs.fill(context, buf, {
+    search = entry.search,
+    replacement = entry.replacement,
+    filesFilter = entry.filesFilter,
+    flags = entry.flags,
+    paths = entry.paths,
+  }, true)
+
   closeHistoryWindow(historyWin)
 end
 
