@@ -394,8 +394,7 @@ function M.update_instance_prefills(instanceName, prefills, clearOld)
   local inst = ensure_instance(instanceName)
 
   vim.schedule(function()
-    -- TODO (sbadragan): fix this up
-    inputs.fill(context, inst.buf, prefills, clearOld)
+    inputs.fill(inst.context, inst.buf, prefills, clearOld)
   end)
 end
 
