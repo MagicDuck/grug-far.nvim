@@ -17,20 +17,19 @@ local function renderInput(params, context)
   local buf = params.buf
   local minLineNr = params.lineNr
   local extmarkName = params.extmarkName
-  local labelExtmarkName = extmarkName .. '_label'
-  local prevLabelExtmarkName = params.prevExtmarkName and params.prevExtmarkName .. '_label' or nil
-  local nextLabelExtmarkName = params.nextExtmarkName and params.nextExtmarkName .. '_label' or nil
+  local prevExtmarkName = params.prevExtmarkName
+  local nextExtmarkName = params.nextExtmarkName
   local label = params.label
   local placeholder = params.placeholder
   local icon = opts.getIcon(params.icon, context) or ''
 
   -- make sure we don't go beyond prev input pos
-  if prevLabelExtmarkName then
+  if prevExtmarkName then
     local prevInputRow = unpack(
       vim.api.nvim_buf_get_extmark_by_id(
         buf,
         context.namespace,
-        context.extmarkIds[prevLabelExtmarkName],
+        context.extmarkIds[prevExtmarkName],
         {}
       )
     )
@@ -41,12 +40,12 @@ local function renderInput(params, context)
 
   -- get current pos
   local currentStartRow = minLineNr
-  if context.extmarkIds[labelExtmarkName] and prevLabelExtmarkName then
+  if context.extmarkIds[extmarkName] and prevExtmarkName then
     local row = unpack(
       vim.api.nvim_buf_get_extmark_by_id(
         buf,
         context.namespace,
-        context.extmarkIds[labelExtmarkName],
+        context.extmarkIds[extmarkName],
         {}
       )
     ) --[[@as integer?]]
@@ -57,12 +56,12 @@ local function renderInput(params, context)
 
   local currentEndRow = currentStartRow
   -- calculate end by next input start
-  if nextLabelExtmarkName and context.extmarkIds[nextLabelExtmarkName] then
+  if nextExtmarkName and context.extmarkIds[nextExtmarkName] then
     local nextInputRow = unpack(
       vim.api.nvim_buf_get_extmark_by_id(
         buf,
         context.namespace,
-        context.extmarkIds[nextLabelExtmarkName],
+        context.extmarkIds[nextExtmarkName],
         {}
       )
     )
@@ -79,9 +78,9 @@ local function renderInput(params, context)
     input_lines = { '' }
   end
 
-  context.extmarkIds[labelExtmarkName] =
+  context.extmarkIds[extmarkName] =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
-      id = context.extmarkIds[labelExtmarkName],
+      id = context.extmarkIds[extmarkName],
       end_row = currentStartRow,
       end_col = 0,
       virt_lines = {

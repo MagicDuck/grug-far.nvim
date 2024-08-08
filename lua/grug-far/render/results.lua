@@ -21,16 +21,15 @@ local function ensureMinLineNr(buf, context, minLineNr, prevLabelExtmarkName, nu
   end
 
   -- make sure we don't go beyond prev input pos
-  if prevLabelExtmarkName and context.extmarkIds[prevLabelExtmarkName .. '_label'] then
+  if prevLabelExtmarkName and context.extmarkIds[prevLabelExtmarkName] then
     local prevInputRow = unpack(
       vim.api.nvim_buf_get_extmark_by_id(
         buf,
         context.namespace,
-        context.extmarkIds[prevLabelExtmarkName .. '_label'],
+        context.extmarkIds[prevLabelExtmarkName],
         {}
       )
     )
-    P({ numLinesAbove = numLinesAbove, headerRow = headerRow })
     if not headerRow or (prevInputRow and prevInputRow + numLinesAbove >= headerRow) then
       minLineNr = prevInputRow + numLinesAbove
     end
