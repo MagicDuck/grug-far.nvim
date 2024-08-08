@@ -88,6 +88,7 @@ local function renderResultsHeader(buf, context)
       end_row = headerRow,
       end_col = 0,
       virt_lines = {
+        { { '', 'Normal' } },
         { { getSeparator(context), 'GrugFarResultsHeader' } },
       },
       virt_lines_leftcol = true,
