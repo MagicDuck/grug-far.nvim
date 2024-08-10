@@ -54,7 +54,7 @@ local function renderInput(params, context)
     end
   end
 
-  local currentEndRow = currentStartRow
+  local currentEndRow = nil
   -- calculate end by next input start
   if nextExtmarkName and context.extmarkIds[nextExtmarkName] then
     local nextInputRow = unpack(
@@ -65,18 +65,40 @@ local function renderInput(params, context)
         {}
       )
     )
-    if nextInputRow and nextInputRow > currentStartRow then
+    if nextInputRow then
       currentEndRow = nextInputRow - 1
     end
   end
 
+  -- ensure minimal lines
+  if not currentEndRow or currentEndRow < currentStartRow then
+    vim.api.nvim_buf_set_lines(buf, currentStartRow, currentStartRow, false, { '' })
+    currentEndRow = currentStartRow
+  end
+
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
 
-  -- ensure minimal lines
-  if #input_lines == 0 then
-    vim.api.nvim_buf_set_lines(buf, currentStartRow, currentStartRow, false, { '' })
-    input_lines = { '' }
-  end
+  P({ currentStartRow = currentStartRow, currentEndRow = currentEndRow, extmarkName = extmarkName })
+  -- if currentStartRow > currentEndRow or #input_lines == 0 then
+  --   vim.api.nvim_buf_set_lines(buf, currentStartRow, currentStartRow, false, { '' })
+  --
+  --   if nextExtmarkName and #input_lines > 0 then
+  --     context.extmarkIds[nextExtmarkName] =
+  --       vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow + 1, 0, {
+  --         id = context.extmarkIds[nextExtmarkName],
+  --         end_row = currentStartRow + 1,
+  --         end_col = 0,
+  --         virt_lines = {
+  --           { { ' ' .. icon .. label, 'GrugFarInputLabel' } },
+  --         },
+  --         virt_lines_leftcol = true,
+  --         virt_lines_above = true,
+  --         right_gravity = false,
+  --       })
+  --   end
+  --
+  --   input_lines = { '' }
+  -- end
 
   context.extmarkIds[extmarkName] =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
