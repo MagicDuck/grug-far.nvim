@@ -78,28 +78,6 @@ local function renderInput(params, context)
 
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
 
-  P({ currentStartRow = currentStartRow, currentEndRow = currentEndRow, extmarkName = extmarkName })
-  -- if currentStartRow > currentEndRow or #input_lines == 0 then
-  --   vim.api.nvim_buf_set_lines(buf, currentStartRow, currentStartRow, false, { '' })
-  --
-  --   if nextExtmarkName and #input_lines > 0 then
-  --     context.extmarkIds[nextExtmarkName] =
-  --       vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow + 1, 0, {
-  --         id = context.extmarkIds[nextExtmarkName],
-  --         end_row = currentStartRow + 1,
-  --         end_col = 0,
-  --         virt_lines = {
-  --           { { ' ' .. icon .. label, 'GrugFarInputLabel' } },
-  --         },
-  --         virt_lines_leftcol = true,
-  --         virt_lines_above = true,
-  --         right_gravity = false,
-  --       })
-  --   end
-  --
-  --   input_lines = { '' }
-  -- end
-
   context.extmarkIds[extmarkName] =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
       id = context.extmarkIds[extmarkName],
