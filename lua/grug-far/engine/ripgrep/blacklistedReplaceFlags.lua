@@ -11,8 +11,6 @@ return {
   '-a',
   '--text',
   '--binary',
-  ' -L',
-  '--follow',
   '-b',
   '--byte-offset',
   '--line-buffered',
