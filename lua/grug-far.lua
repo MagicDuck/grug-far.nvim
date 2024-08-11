@@ -52,6 +52,7 @@ local function ensure_instance(instanceName)
 end
 
 -- note: unfortunatly has to be global so it can be passed to command complete= opt
+-- selene: allow(unused_variable)
 function GrugFarCompleteEngine()
   return vim.fn.join({ 'astgrep', 'ripgrep' }, '\n')
 end
