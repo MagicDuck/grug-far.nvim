@@ -24,4 +24,15 @@ T['can disable keymaps and they disappear from UI'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can launch with :GrugFar'] = function()
+  child.type_keys('<esc>:GrugFar<cr>')
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  helpers.childExpectScreenshot(child)
+end
+
+T['can launch with :GrugFar ripgrep'] = function()
+  child.type_keys('<esc>:GrugFar<cr>')
+  helpers.childWaitForScreenshotText(child, 'ripgrep')
+end
+
 return T
