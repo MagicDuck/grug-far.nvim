@@ -276,6 +276,13 @@ end
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
   ensure_configured()
+
+  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
+  if isVisualMode then
+    -- needed to make visual selection work
+    vim.cmd([[normal! vv]])
+  end
+
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
   return M._grug_far_internal(resolvedOpts, { is_visual = true })
 end
