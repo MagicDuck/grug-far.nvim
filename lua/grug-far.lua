@@ -51,6 +51,11 @@ local function ensure_instance(instanceName)
   return inst
 end
 
+-- note: unfortunatly has to be global so it can be passed to command complete= opt
+function GrugFarCompleteEngine()
+  return vim.fn.join({ 'astgrep', 'ripgrep' }, '\n')
+end
+
 --- set up grug-far
 ---@param options? GrugFarOptionsOverride
 function M.setup(options)
@@ -62,13 +67,18 @@ function M.setup(options)
   globalOptions = opts.with_defaults(options or {}, opts.defaultOptions)
   highlights.setup()
   vim.api.nvim_create_user_command('GrugFar', function(params)
+    local engineParam = params.fargs[1]
     local is_visual = params.range > 0
-    local resolvedOpts = opts.with_defaults({}, globalOptions)
+    local resolvedOpts = opts.with_defaults({ engine = engineParam }, globalOptions)
     if params.mods and #params.mods > 0 then
       resolvedOpts.windowCreationCommand = params.mods .. ' split'
     end
     M._grug_far_internal(resolvedOpts, { is_visual = is_visual })
-  end, { nargs = 0, range = true })
+  end, {
+    nargs = '?',
+    range = true,
+    complete = 'custom,v:lua.GrugFarCompleteEngine',
+  })
 end
 
 local contextCount = 0
