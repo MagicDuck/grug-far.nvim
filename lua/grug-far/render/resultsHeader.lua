@@ -31,11 +31,11 @@ local function getSeparator(context)
   return ' '
     .. (getStatusText(context) or '')
     .. ' '
-    .. opts.getIcon('resultsEngineLeft', context)
+    .. (opts.getIcon('resultsEngineLeft', context) or '')
     .. ' '
     .. context.engine.type
     .. ' '
-    .. opts.getIcon('resultsEngineRight', context)
+    .. (opts.getIcon('resultsEngineRight', context) or '')
     .. separatorLine
 end
 
