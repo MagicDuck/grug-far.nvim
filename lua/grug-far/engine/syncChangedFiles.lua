@@ -19,7 +19,12 @@ local function writeChangedFile(params)
       local changedLine = changedLines[i]
       local lnum = changedLine.lnum
       if not lines[lnum] then
-        return on_done('File does not have edited row anymore: ' .. file)
+        return on_done(
+          'File was changed externally and does not have edited row anymore: line '
+            .. lnum
+            .. ' in '
+            .. file
+        )
       end
 
       lines[lnum] = changedLine.newLine
