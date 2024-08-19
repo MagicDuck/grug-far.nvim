@@ -17,6 +17,7 @@ Grug find! Grug replace! Grug happy!
 - Manual/auto-save search history and reload
 - Syntax highlighted search results
 - Search results folding
+- Multiline search & replace
 
 #### Searching:
 <img width="1259" alt="image" src="https://github.com/user-attachments/assets/a0ff931b-8e73-4828-b0fd-b9fea94124d0">
@@ -170,6 +171,7 @@ Note that you can edit the history buffer and save just like any other buffer if
 The format of a history entry is:
 ```
 <optional comment, ex: My special search>
+Engine: <astgrep|ripgrep>
 Search: <text>
 Replace: <text>
 Files Filter: <text>
