@@ -251,7 +251,9 @@ function M.createBuffer(win, context)
   local function handleBufferChange()
     render(buf, context)
     updateBufName(buf, context)
-    if not context.options.searchOnInsertLeave then
+
+    local isInsertMode = vim.fn.mode():lower():find('i') ~= nil
+    if not (context.options.searchOnInsertLeave and isInsertMode) then
       searchOnChange()
     end
   end

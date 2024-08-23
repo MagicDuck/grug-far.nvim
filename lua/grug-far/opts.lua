@@ -18,7 +18,8 @@ M.defaultOptions = {
   -- set to nil to disable
   maxSearchMatches = 2000,
 
-  -- disable automatic debounced search and trigger search when leaving insert mode instead
+  -- disable automatic debounced search and trigger search when leaving insert mode or making normal mode changes instead
+  -- Note that normal mode changes such as `diw`, `rF`, etc will still trigger a search
   searchOnInsertLeave = false,
 
   -- max number of parallel replacements tasks

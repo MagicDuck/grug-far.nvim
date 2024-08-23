@@ -10,7 +10,7 @@ Grug find! Grug replace! Grug happy!
 
 - Search using the **full power** of `rg` or `ast-grep`
 - Replace using almost the **full power** of `rg` or `ast-grep`. For example, for `rg`, some flags such as `--binary` and `--json`, etc. are [blacklisted][blacklistedReplaceFlags] in order to prevent unexpected output. The UI will warn you and prevent replace when using such flags.
-- Automatic debounced search or manual search on leaving insert mode
+- Automatic debounced search or manual search on leaving insert mode (and normal mode changes)
 - Open search results in quickfix list
 - Goto file/line/column of match when pressing `<Enter>` in normal mode on lines in the results output (keybind configurable).
 - Inline edit result lines and sync them back to their originating file locations using a configurable keybinding.
