@@ -42,4 +42,36 @@ T['can launch with :GrugFar ripgrep'] = function()
   helpers.childWaitForScreenshotText(child, 'ripgrep')
 end
 
+T['can search manually on insert leave or normal mode change'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    searchOnInsertLeave = true,
+  })
+
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>cc', 'walks')
+  vim.uv.sleep(100)
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys('<esc>')
+  helpers.childWaitForUIVirtualText(child, '1 matches in 1 files')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys('0x')
+  helpers.childWaitForUIVirtualText(child, '2 matches in 2 files')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T
