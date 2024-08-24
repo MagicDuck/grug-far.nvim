@@ -21,24 +21,21 @@ end
 ---@param context GrugFarContext
 ---@return ResultLocation[]
 local function getResultsLocations(buf, context)
-  local all_extmarks = vim.api.nvim_buf_get_extmarks(
+  local extmarks = vim.api.nvim_buf_get_extmarks(
     0,
     context.locationsNamespace,
     { 0, 0 },
     { -1, -1 },
-    {}
+    { details = true }
   )
 
-  -- filter out extraneous extmarks caused by deletion of lines
-  local extmarks = resultsList.filterDeletedLinesExtmarks(all_extmarks)
-
   local locations = {}
-  for i = 1, #extmarks do
-    local markId, row = unpack(extmarks[i])
+  for _, mark in ipairs(extmarks) do
+    local markId, row, _, details = unpack(mark)
 
     -- get the associated location info
     local location = context.state.resultLocationByExtmarkId[markId]
-    if location and location.text and location.col then
+    if (not details.invalid) and location and location.text and location.col then
       -- get the current text on row
       local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
 

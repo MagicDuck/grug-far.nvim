@@ -10,6 +10,8 @@ local function open(params)
   local grugfar_win = vim.api.nvim_get_current_win()
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
 
+  -- TODO (sbadragan): remove this
+  P(vim.v.count)
   local location = resultsList.getResultLocation(cursor_row - 1, buf, context)
   if not location then
     return

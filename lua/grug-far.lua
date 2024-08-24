@@ -93,6 +93,7 @@ local contextCount = 0
 ---@field text? string
 ---@field end_col? integer
 ---@field sign? ResultHighlightSign
+---@field count? integer
 
 ---@class GrugFarInputs
 ---@field search string
@@ -115,6 +116,7 @@ local contextCount = 0
 ---@field stats? { matches: integer, files: integer }
 ---@field actionMessage? string
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
+---@field resultMatchLineCount integer
 ---@field resultsLastFilename? string
 ---@field abort GrugFarStateAbort
 ---@field showSearchCommand boolean
@@ -162,6 +164,7 @@ local function createContext(options)
       inputs = {},
       headerRow = 0,
       resultLocationByExtmarkId = {},
+      resultMatchLineCount = 0,
       abort = {},
       showSearchCommand = false,
       bufClosed = false,
