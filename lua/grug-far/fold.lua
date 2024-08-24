@@ -14,24 +14,11 @@ end
 M.updateFolds = function(buf)
   local win = vim.fn.bufwinid(buf)
   if win ~= -1 then
-    -- Note: the following is a workaround with the side effect of the block cursor
-    -- appearing sometimes for brief second. It's due to a which-key bug,
+    -- Note: the following does not work when which-key is enabled for grug-far file type
     -- see https://github.com/folke/which-key.nvim/issues/830
-    -- when that is fixed, use the following instead:
-    --     local cursor = vim.api.nvim_win_get_cursor(win)
-    --     vim.fn.win_execute(win, 'normal zx')
-    --     vim.api.nvim_win_set_cursor(win, cursor)
-    local currentWin = vim.api.nvim_get_current_win()
-    vim.api.nvim_set_current_win(win)
-
-    vim.api.nvim_feedkeys(
-      -- note: if in insert mode, <C-\><C-o> does a normal mode command without moving cursor
-      -- see help ins-special-special
-      vim.api.nvim_replace_termcodes('<c-\\><c-o><cmd>normal zx<cr>', true, false, true),
-      'n',
-      false
-    )
-    vim.api.nvim_set_current_win(currentWin)
+    local cursor = vim.api.nvim_win_get_cursor(win)
+    vim.fn.win_execute(win, 'normal zx')
+    vim.api.nvim_win_set_cursor(win, cursor)
   end
 end
 
