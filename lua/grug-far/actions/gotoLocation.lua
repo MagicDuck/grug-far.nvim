@@ -51,28 +51,22 @@ local function gotoLocation(params)
 
   vim.api.nvim_command([[execute "normal! m` "]])
 
-  if context.prevWin ~= nil then
-    vim.fn.win_gotoid(context.prevWin)
-  end
-
   ---@diagnostic disable-next-line
   local bufnr = vim.fn.bufnr(location.filename)
+  local targetWin = context.prevWin or grugfar_win
 
   if bufnr == -1 then
-    vim.api.nvim_command('e ' .. vim.fn.fnameescape(location.filename))
+    vim.fn.win_execute(targetWin, 'e ' .. vim.fn.fnameescape(location.filename), true)
   else
-    vim.api.nvim_set_current_buf(bufnr)
+    vim.api.nvim_win_set_buf(targetWin, bufnr)
   end
 
-  vim.api.nvim_win_set_cursor(0, { location.lnum or 1, location.col and location.col - 1 or 0 })
+  vim.api.nvim_win_set_cursor(
+    targetWin,
+    { location.lnum or 1, location.col and location.col - 1 or 0 }
+  )
 
-  -- vim.fn.win_execute(
-  --   context.prevWin or grugfar_win,
-  --   'e ' .. vim.fn.fnameescape(location.filename),
-  --   true
-  -- )
-  -- vim.cmd('e ' .. vim.fn.fnameescape(location.filename))
-  --
+  vim.api.nvim_set_current_win(targetWin)
 end
 
 return gotoLocation
