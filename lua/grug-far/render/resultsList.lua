@@ -31,6 +31,7 @@ end
 ---@return integer markId
 local function addLocationMark(buf, context, line, end_col, options)
   local sign_text = options.sign and opts.getIcon(options.sign.icon, context) or nil
+  local resultLocationOpts = context.options.resultLocation
 
   return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
     end_col = end_col,
@@ -40,17 +41,19 @@ local function addLocationMark(buf, context, line, end_col, options)
     -- TODO (sbadragan): undo capability?
     sign_text = sign_text,
     sign_hl_group = options.sign and options.sign.hl or nil,
-    virt_text = options.matchLineCount
-        and {
-          -- TODO (sbadragan): use config
-          { '  [ ' .. options.matchLineCount .. ' ]', 'GrugFarInputLabel' },
-        }
+    virt_text = resultLocationOpts.showNumberLabel and options.matchLineCount and {
+      {
+        resultLocationOpts.numberLabelFormat:format(options.matchLineCount),
+        'GrugFarResultsNumberLabel',
+      },
+    } or nil,
+    virt_text_pos = resultLocationOpts.showNumberLabel
+        and options.matchLineCount
+        and resultLocationOpts.numberLabelPosition
       or nil,
-    virt_text_pos = 'right_align',
   })
 end
 
---- sets location mark
 ---@param context GrugFarContext
 ---@param line integer
 ---@param loc ResultLocation
@@ -73,7 +76,9 @@ local function addHighlightResult(context, line, loc)
     return
   end
   local res = { row = line, col = #from, end_col = #loc.text, lnum = loc.lnum }
-  table.insert(results.lines, res)
+  if res.col < res.end_col then
+    table.insert(results.lines, res)
+  end
 end
 
 --- append a bunch of result lines to the buffer
@@ -154,7 +159,6 @@ function M.appendResultsChunk(buf, context, data)
   end
   M.throttledHighlight(buf, context)
 end
--- TODO (sbadragan): for some reason it looks like the folds are broken
 
 --- gets result location at given row if available
 --- note: row is zero-based
@@ -163,7 +167,7 @@ end
 ---@param row integer
 ---@param buf integer
 ---@param context GrugFarContext
----@return ResultLocation | nil
+---@return ResultLocation?
 function M.getResultLocation(row, buf, context)
   local marks = vim.api.nvim_buf_get_extmarks(
     buf,
@@ -178,6 +182,27 @@ function M.getResultLocation(row, buf, context)
     if not details.invalid then
       return context.state.resultLocationByExtmarkId[markId]
     end
+  end
+
+  return nil
+end
+
+--- If count > 0, returns location corresponding to <count> result line
+--- otherwise returns location corresponding to current cursor position
+---@param buf integer
+---@param context GrugFarContext
+---@param count integer
+---@return ResultLocation?
+function M.getResultLineLocation(buf, context, count)
+  if count > 0 then
+    for _, location in pairs(context.state.resultLocationByExtmarkId) do
+      if location.count == count then
+        return location
+      end
+    end
+  else
+    local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
+    return M.getResultLocation(cursor_row - 1, buf, context)
   end
 
   return nil

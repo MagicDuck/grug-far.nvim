@@ -84,7 +84,7 @@ local function getActions(buf, context)
     {
       text = 'Goto',
       keymap = keymaps.gotoLocation,
-      description = "When cursor is placed on a result file path, go to that file. When it's placed over a result line, go to the file/line/column of the match.",
+      description = "When cursor is placed on a result file path, go to that file. When it's placed over a result line, go to the file/line/column of the match. If a <count> is entered beforehand, go to the location corresponding to <count> result line.",
       action = function()
         gotoLocation({ buf = buf, context = context })
       end,
@@ -92,7 +92,7 @@ local function getActions(buf, context)
     {
       text = 'Open',
       keymap = keymaps.openLocation,
-      description = "Same as 'Goto', but cursor stays in grug-far buffer. This can allow a quicker thumb-through result locations. Alternatively, you can use the '--context <num>' flag to see match contexts.",
+      description = "Same as 'Goto', but cursor stays in grug-far buffer. This can allow a quicker thumb-through result locations. Alternatively, you can use the '--context <num>' flag to see match contexts. If a <count> is entered beforehand, open the location corresponding to <count> result line.",
       action = function()
         openLocation({ buf = buf, context = context })
       end,
