@@ -18,20 +18,35 @@ local function setBufLines(buf, start, ending, strict_indexing, replacement)
   vim.api.nvim_set_option_value('modifiable', isModifiable, { buf = buf })
 end
 
---- sets location mark
+---@class addLocationMarkOpts
+---@field sign? ResultHighlightSign
+---@field matchLineCount? integer
+
+--- adds location mark
 ---@param buf integer
 ---@param context GrugFarContext
 ---@param line integer
----@param markId? integer
----@param sign? ResultHighlightSign
+---@param end_col integer
+---@param options addLocationMarkOpts
 ---@return integer markId
-local function setLocationMark(buf, context, line, markId, sign)
-  local sign_text = sign and opts.getIcon(sign.icon, context) or nil
+local function addLocationMark(buf, context, line, end_col, options)
+  local sign_text = options.sign and opts.getIcon(options.sign.icon, context) or nil
+
   return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
+    end_col = end_col,
+    end_row = line,
+    invalidate = true,
     right_gravity = true,
-    id = markId,
+    -- TODO (sbadragan): undo capability?
     sign_text = sign_text,
-    sign_hl_group = sign and sign.hl or nil,
+    sign_hl_group = options.sign and options.sign.hl or nil,
+    virt_text = options.matchLineCount
+        and {
+          -- TODO (sbadragan): use config
+          { '  [ ' .. options.matchLineCount .. ' ]', 'GrugFarInputLabel' },
+        }
+      or nil,
+    virt_text_pos = 'right_align',
   })
 end
 
@@ -98,13 +113,19 @@ function M.appendResultsChunk(buf, context, data)
 
     if hl_type == ResultHighlightType.FilePath then
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
-      local markId = setLocationMark(buf, context, lastline + highlight.start_line)
+      local markId = addLocationMark(buf, context, lastline + highlight.start_line, #line, {})
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl_type == ResultHighlightType.LineNumber then
       -- omit ending ':'
-      lastLocation = { filename = state.resultsLastFilename }
-      local markId =
-        setLocationMark(buf, context, lastline + highlight.start_line, nil, highlight.sign)
+      state.resultMatchLineCount = state.resultMatchLineCount + 1
+      lastLocation = { filename = state.resultsLastFilename, count = state.resultMatchLineCount }
+      local markId = addLocationMark(
+        buf,
+        context,
+        lastline + highlight.start_line,
+        #line,
+        { sign = highlight.sign, matchLineCount = state.resultMatchLineCount }
+      )
       resultLocationByExtmarkId[markId] = lastLocation
 
       lastLocation.sign = highlight.sign
@@ -122,16 +143,23 @@ function M.appendResultsChunk(buf, context, data)
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.end_col = highlight.end_col
     elseif hl_type == ResultHighlightType.DiffSeparator then
-      setLocationMark(buf, context, lastline + highlight.start_line, nil, highlight.sign)
+      addLocationMark(
+        buf,
+        context,
+        lastline + highlight.start_line,
+        #line,
+        { sign = highlight.sign }
+      )
     end
   end
   M.throttledHighlight(buf, context)
 end
+-- TODO (sbadragan): for some reason it looks like the folds are broken
 
 --- gets result location at given row if available
 --- note: row is zero-based
 --- additional note: sometimes there are mulltiple marks on the same row, like when lines
---- before this line are deleted, but the last mark should be the correct one.
+--- before this line are deleted, those will be marked as invalid
 ---@param row integer
 ---@param buf integer
 ---@param context GrugFarContext
@@ -142,11 +170,14 @@ function M.getResultLocation(row, buf, context)
     context.locationsNamespace,
     { row, 0 },
     { row, 0 },
-    {}
+    { details = true }
   )
-  if #marks > 0 then
-    local markId = unpack(marks[#marks])
-    return context.state.resultLocationByExtmarkId[markId]
+
+  for _, mark in ipairs(marks) do
+    local markId, _, _, details = unpack(mark)
+    if not details.invalid then
+      return context.state.resultLocationByExtmarkId[markId]
+    end
   end
 
   return nil
@@ -187,51 +218,29 @@ function M.appendWarning(buf, context, warning)
   end
 end
 
----@alias Extmark integer[]
-
----@param all_extmarks Extmark[]
----@return Extmark[]
-function M.filterDeletedLinesExtmarks(all_extmarks)
-  local marksByRow = {}
-  for i = 1, #all_extmarks do
-    local mark = all_extmarks[i]
-    marksByRow[mark[2]] = mark
-  end
-
-  local marks = {}
-  for _, mark in pairs(marksByRow) do
-    table.insert(marks, mark)
-  end
-
-  return marks
-end
-
 --- iterates over each location in the results list that has text which
 --- has been changed by the user
 ---@param buf integer
 ---@param context GrugFarContext
 ---@param startRow integer
 ---@param endRow integer
----@param callback fun(location: ResultLocation, newLine: string, bufline: string, markId: integer, row: integer)
+---@param callback fun(location: ResultLocation, newLine: string, bufline: string, markId: integer, row: integer, details: vim.api.keyset.extmark_details)
 ---@param forceChanged? boolean
 function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forceChanged)
-  local all_extmarks = vim.api.nvim_buf_get_extmarks(
+  local extmarks = vim.api.nvim_buf_get_extmarks(
     buf,
     context.locationsNamespace,
     { startRow, 0 },
     { endRow, -1 },
-    {}
+    { details = true }
   )
 
-  -- filter out extraneous extmarks caused by deletion of lines
-  local extmarks = M.filterDeletedLinesExtmarks(all_extmarks)
-
-  for i = 1, #extmarks do
-    local markId, row = unpack(extmarks[i])
+  for _, mark in ipairs(extmarks) do
+    local markId, row, _, details = unpack(mark)
 
     -- get the associated location info
     local location = context.state.resultLocationByExtmarkId[markId]
-    if location and location.text then
+    if (not details.invalid) and location and location.text then
       -- get the current text on row
       local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
       local isChanged = forceChanged or bufline ~= location.text
@@ -241,7 +250,8 @@ function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forc
         local numColPrefix = string.sub(location.text, 1, prefix_end + 1)
         if vim.startswith(bufline, numColPrefix) then
           local newLine = string.sub(bufline, prefix_end + 1, -1)
-          callback(location, newLine, bufline, markId, row)
+          ---@cast markId integer
+          callback(location, newLine, bufline, markId, row, details)
         end
       end
     end
@@ -271,18 +281,24 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
     context.locationsNamespace,
     { startRow or 0, 0 },
     { endRow or -1, -1 },
-    {}
+    { details = true }
   )
   if #extmarks == 0 then
     return
   end
 
   -- reset marks
-  for i = 1, #extmarks do
-    local markId, row = unpack(extmarks[i]) --[[@as integer, integer]]
-    local location = context.state.resultLocationByExtmarkId[markId]
-    if location and location.text then
-      setLocationMark(buf, context, row, markId)
+  for _, mark in ipairs(extmarks) do
+    local markId, row, _, details = unpack(mark)
+    if not details.invalid then
+      local location = context.state.resultLocationByExtmarkId[markId]
+      if location and location.text then
+        ---@cast markId integer
+        details.id = markId
+        details.sign_text = nil
+        details.ns_id = nil
+        vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, row, 0, details)
+      end
     end
   end
 
@@ -292,11 +308,17 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
     context,
     startRow or 0,
     endRow or -1,
-    function(location, _, bufLine, markId, row)
+    function(location, _, bufLine, markId, row, details)
       if sync then
         location.text = bufLine
       else
-        setLocationMark(buf, context, row, markId, location.sign or changedSign)
+        local sign = location.sign or changedSign
+        details.ns_id = nil
+        ---@cast details vim.api.keyset.set_extmark
+        details.id = markId
+        details.sign_text = sign and opts.getIcon(sign.icon, context) or nil
+        details.sign_hl_group = sign and sign.hl or nil
+        vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, row, 0, details)
       end
     end,
     context.engine.isSearchWithReplacement(context.state.inputs, context.options)
@@ -313,6 +335,7 @@ function M.clear(buf, context)
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLastFilename = nil
+  context.state.resultMatchLineCount = 0
   context.state.highlightResults = {}
   context.state.highlightRegions = {}
   if context.options.resultsHighlight then
