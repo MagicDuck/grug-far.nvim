@@ -259,6 +259,12 @@ function M._grug_far_internal(options, params)
   if not options.instanceName then
     options.instanceName = '__grug_far_instance__' .. context.count
   end
+  if options.startWithFixedStringsOn then
+    local flags = options.prefills.flags or ''
+    if not flags:find('%-%-fixed%-strings') then
+      options.prefills.flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+    end
+  end
   if params.is_visual then
     options.prefills = context.engine.getInputPrefillsForVisualSelection(options.prefills)
   end

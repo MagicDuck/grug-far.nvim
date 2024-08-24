@@ -429,6 +429,7 @@ M.defaultOptions = {
 ---@alias GrugFarEngineType "ripgrep" | "astgrep"
 
 ---@class GrugFarOptions
+---@field startWithFixedStringsOn? boolean
 ---@field debounceMs integer
 ---@field minSearchChars integer
 ---@field maxSearchMatches integer
