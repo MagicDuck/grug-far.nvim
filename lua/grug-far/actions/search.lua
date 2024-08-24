@@ -104,12 +104,13 @@ local function search(params)
           state.actionMessage = ' warnings, see end of buffer!'
         end
         resultsList.highlight(buf, context)
-        if context.options.folding.enabled then
-          fold.updateFolds(buf)
-        end
       end
 
       renderResultsHeader(buf, context)
+
+      if context.options.folding.enabled then
+        fold.updateFolds(buf)
+      end
     end,
   })
 end
