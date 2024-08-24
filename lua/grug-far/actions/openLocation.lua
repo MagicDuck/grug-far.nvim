@@ -11,8 +11,7 @@ local function getLocation(buf, context, cursor_row, increment, count)
   if increment then
     local start_location = resultsList.getResultLocation(cursor_row - 1, buf, context)
 
-    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-    local num_lines = #lines
+    local num_lines = vim.api.nvim_buf_line_count(buf)
     for i = cursor_row + increment, increment > 0 and num_lines or 1, increment do
       local location = resultsList.getResultLocation(i - 1, buf, context)
       if
@@ -74,22 +73,20 @@ local function open(params)
 
   vim.api.nvim_command([[execute "normal! m` "]])
 
-  if context.prevWin ~= nil then
-    vim.fn.win_gotoid(context.prevWin)
-  end
-
   ---@diagnostic disable-next-line
   local bufnr = vim.fn.bufnr(location.filename)
+  local targetWin = context.prevWin or grugfar_win
 
   if bufnr == -1 then
-    vim.api.nvim_command('e ' .. vim.fn.fnameescape(location.filename))
+    vim.fn.win_execute(targetWin, 'e ' .. vim.fn.fnameescape(location.filename), true)
   else
-    vim.api.nvim_set_current_buf(bufnr)
+    vim.api.nvim_win_set_buf(targetWin, bufnr)
   end
 
-  vim.api.nvim_win_set_cursor(0, { location.lnum or 1, location.col and location.col - 1 or 0 })
-
-  vim.api.nvim_set_current_win(grugfar_win)
+  vim.api.nvim_win_set_cursor(
+    targetWin,
+    { location.lnum or 1, location.col and location.col - 1 or 0 }
+  )
 end
 
 return open
