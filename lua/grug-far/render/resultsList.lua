@@ -187,27 +187,6 @@ function M.getResultLocation(row, buf, context)
   return nil
 end
 
---- If count > 0, returns location corresponding to <count> result line
---- otherwise returns location corresponding to current cursor position
----@param buf integer
----@param context GrugFarContext
----@param count integer
----@return ResultLocation?
-function M.getResultLineLocation(buf, context, count)
-  if count > 0 then
-    for _, location in pairs(context.state.resultLocationByExtmarkId) do
-      if location.count == count then
-        return location
-      end
-    end
-  else
-    local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
-    return M.getResultLocation(cursor_row - 1, buf, context)
-  end
-
-  return nil
-end
-
 --- displays results error
 ---@param buf integer
 ---@param context GrugFarContext
