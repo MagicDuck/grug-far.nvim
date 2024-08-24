@@ -140,6 +140,8 @@ M.defaultOptions = {
     historyAdd = { n = '<localleader>a' },
     refresh = { n = '<localleader>f' },
     openLocation = { n = '<localleader>o' },
+    openNextLocation = { n = '<down>' },
+    openPrevLocation = { n = '<up>' },
     gotoLocation = { n = '<enter>' },
     pickHistoryEntry = { n = '<enter>' },
     abort = { n = '<localleader>b' },
@@ -293,6 +295,8 @@ M.defaultOptions = {
 ---@field close KeymapDef
 ---@field gotoLocation KeymapDef
 ---@field openLocation KeymapDef
+---@field openNextLocation KeymapDef
+---@field openPrevLocation KeymapDef
 ---@field pickHistoryEntry KeymapDef
 ---@field toggleShowCommand KeymapDef
 ---@field abort KeymapDef
@@ -310,6 +314,9 @@ M.defaultOptions = {
 ---@field close? KeymapDef
 ---@field open? KeymapDef
 ---@field gotoLocation? KeymapDef
+---@field openLocation? KeymapDef
+---@field openNextLocation? KeymapDef
+---@field openPrevLocation? KeymapDef
 ---@field pickHistoryEntry? KeymapDef
 ---@field toggleShowCommand? KeymapDef
 ---@field abort? KeymapDef

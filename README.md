@@ -18,6 +18,7 @@ Grug find! Grug replace! Grug happy!
 - Syntax highlighted search results
 - Search results folding
 - Multiline search & replace
+- "Preview" result source while "scrolling" through results 
 
 #### Searching:
 <img width="1259" alt="image" src="https://github.com/user-attachments/assets/a0ff931b-8e73-4828-b0fd-b9fea94124d0">
@@ -144,7 +145,7 @@ _Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
 _Note:_ if you would like sync to work when doing a replacement with empty string, please add `--replace=`
 to the flags.
 
-### Going to / Opening Location for match under cursor
+### Going to / Opening Result Location 
 When the cursor is placed on a result file path, you can go to that file by pressing `<enter>` in normal mode (`Goto` action default keybind).
 When it's placed over a result match line, you will be taken to the file/line/column of the match. By default, the file buffer
 is opened in the last window you were in before opening grug-far, which is typically the other vertical split.
@@ -152,6 +153,8 @@ is opened in the last window you were in before opening grug-far, which is typic
 If you would like to do the same thing, but have the cursor stay in place, you can use the `Open` action instead.
 
 _Note:_ for both `Goto` and `Open` actions, if a `<count>` is entered beforehand, the location corresponding to `<count>` result line is used instead of the current cursor line. You can set the option `resultLocation.showNumberLabel = true` if you would like to have a visual indication of the `<count>`.
+
+In order to smoothly `Open` each result location in sequence, you can use the `Open Next` and `Open Prev` actions.
 
 ### Opening result lines in quickfix list
 

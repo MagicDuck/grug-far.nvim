@@ -2,12 +2,13 @@ local resultsList = require('grug-far/render/resultsList')
 
 --- opens location at current cursor line (if there is one) in previous window
 --- that is the window user was in before creating the grug-far split window
----@param params { buf: integer, context: GrugFarContext }
+--- if count > 0 given, it will use the result location with that number instead
+---@param params { buf: integer, context: GrugFarContext, count: number? }
 local function gotoLocation(params)
   local buf = params.buf
   local context = params.context
 
-  local location = resultsList.getResultLineLocation(buf, context, vim.v.count)
+  local location = resultsList.getResultLineLocation(buf, context, params.count or 0)
   if not location then
     return
   end
