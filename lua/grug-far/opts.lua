@@ -431,7 +431,7 @@ M.defaultOptions = {
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
----@field maxSearchMatches integer
+---@field maxSearchMatches integer?
 ---@field searchOnInsertLeave boolean
 ---@field maxWorkers integer
 ---@field rgPath string
