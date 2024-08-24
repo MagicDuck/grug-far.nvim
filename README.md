@@ -151,6 +151,8 @@ is opened in the last window you were in before opening grug-far, which is typic
 
 If you would like to do the same thing, but have the cursor stay in place, you can use the `Open` action instead.
 
+_Note:_ for both `Goto` and `Open` actions, if a `<count>` is entered beforehand, the location corresponding to `<count>` result line is used instead of the current cursor line. You can set the option `resultLocation.showNumberLabel = true` if you would like to have a visual indication of the `<count>`.
+
 ### Opening result lines in quickfix list
 
 Result lines can be opened in the quickfix list. Deleting result lines will cause them not to be included. 

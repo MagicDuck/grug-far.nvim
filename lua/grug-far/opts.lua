@@ -262,6 +262,18 @@ M.defaultOptions = {
     -- set to '0' to disable
     foldcolumn = '1',
   },
+
+  resultLocation = {
+    -- whether to show the result location number
+    showNumberLabel = true,
+
+    -- position of the number when visible, acceptable values are:
+    -- 'right_align', 'eol' and 'inline'
+    numberLabelPosition = 'right_align',
+
+    -- format for the number label, by default it displays as for example:  [42]
+    numberLabelFormat = '  [%d]',
+  },
 }
 
 ---@class KeymapTable
@@ -428,6 +440,18 @@ M.defaultOptions = {
 
 ---@alias GrugFarEngineType "ripgrep" | "astgrep"
 
+---@alias NumberLabelPosition "right_align" | "eol" | "inline"
+
+---@class ResultLocationTable
+---@field showNumberLabel boolean
+---@field numberLabelPosition NumberLabelPosition
+---@field numberLabelFormat string
+
+---@class ResultLocationTableOverride
+---@field showNumberLabel? boolean
+---@field numberLabelPosition? NumberLabelPosition
+---@field numberLabelFormat? string
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -457,6 +481,7 @@ M.defaultOptions = {
 ---@field folding FoldingTable
 ---@field engines EnginesTable
 ---@field engine GrugFarEngineType
+---@field resultLocation ResultLocationTable
 
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
@@ -486,6 +511,7 @@ M.defaultOptions = {
 ---@field folding? FoldingTableOverride
 ---@field engines? EnginesTableOverride
 ---@field engine? GrugFarEngineType
+---@field resultLocation? ResultLocationTableOverride
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride | GrugFarOptions

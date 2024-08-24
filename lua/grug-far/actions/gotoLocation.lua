@@ -7,8 +7,7 @@ local function gotoLocation(params)
   local buf = params.buf
   local context = params.context
 
-  local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
-  local location = resultsList.getResultLocation(cursor_row - 1, buf, context)
+  local location = resultsList.getResultLineLocation(buf, context, vim.v.count)
   if not location then
     return
   end
