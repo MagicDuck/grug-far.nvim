@@ -351,6 +351,27 @@ return {
 </details>
 Small video of it in action: https://github.com/MagicDuck/grug-far.nvim/issues/165#issuecomment-2257439367
 
+## ❓ Q&A
+
+### 1. Getting RPC[Error] ... Document for URI could not be found: file:///.../Grug%20FAR%20-%20...
+Chances are that you are using copilot.nvim and the fix is to exclude `grug-far` file types in copilot config:
+```lua
+filetypes = {
+  ["grug-far"] = false,
+  ["grug-far-history"] = false,
+  ["grug-far-help"] = false,
+}
+```
+
+### 2. Folds do not appear and using which-key plugin
+This is a known issue in which-key v3. See https://github.com/folke/which-key.nvim/issues/830
+The workaround is to exclude main `grug-far` filetype in which-key plugin config:
+```lua
+disable = {
+  ft = { 'grug-far' },
+},
+```
+
 ## 📦 Similar Plugins / Inspiration
 
 - [nvim-spectre][spectre]: the OG find and replace in a buffer plugin, great inspiration!
