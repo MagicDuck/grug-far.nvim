@@ -38,7 +38,6 @@ local function addLocationMark(buf, context, line, end_col, options)
     end_row = line,
     invalidate = true,
     right_gravity = true,
-    -- TODO (sbadragan): undo capability?
     sign_text = sign_text,
     sign_hl_group = options.sign and options.sign.hl or nil,
     virt_text = resultLocationOpts.showNumberLabel and options.matchLineCount and {
