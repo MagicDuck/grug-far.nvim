@@ -54,7 +54,7 @@ end
 -- note: unfortunatly has to be global so it can be passed to command complete= opt
 -- selene: allow(unused_variable)
 function GrugFarCompleteEngine()
-  return vim.fn.join({ 'astgrep', 'ripgrep' }, '\n')
+  return vim.fn.join(vim.fn.keys(opts.defaultOptions.engines), '\n')
 end
 
 --- set up grug-far
