@@ -42,4 +42,30 @@ T['can open a given location'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can open a location with count'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    windowCreationCommand = 'vsplit',
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>2' .. keymaps.openLocation.n)
+  helpers.childWaitForScreenshotText(child, 'Top file1.txt')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
