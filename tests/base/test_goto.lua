@@ -38,7 +38,7 @@ T['can goto given location'] = function()
 
   child.type_keys('<esc>11G')
   child.type_keys('<esc>' .. keymaps.gotoLocation.n)
-  helpers.childWaitForScreenshotText(child, 'Top file1.txt')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 end
 
@@ -64,7 +64,33 @@ T['can goto given location with count'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>2' .. keymaps.gotoLocation.n)
-  helpers.childWaitForScreenshotText(child, 'Top file1.txt')
+  helpers.childWaitForScreenshotText(child, '3,13')
+  helpers.childExpectScreenshot(child)
+end
+
+T['can goto given location when only window in tabpage'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>11G')
+  child.type_keys('<esc>' .. keymaps.gotoLocation.n)
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 end
 
