@@ -1,5 +1,4 @@
 local utils = require('grug-far/utils')
-local resultsList = require('grug-far/render/resultsList')
 
 --- opens quickfix list
 ---@param context GrugFarContext
