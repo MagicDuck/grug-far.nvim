@@ -44,7 +44,7 @@ require('grug-far').setup({config})                  *grug-far.setup()*
             {config}(optional, table) Table of values; keys as described
                 above. Accept defaults by omitting the relevant key.
 
-require('grug-far').grug_far({config})                *grug-far.grug_far()*
+require('grug-far').open({config})                *grug-far.open()*
         Launches grug-far, where the given config overrides the global plugin
 	config that was passed to require('grug-far).setup(...). 
         Currently supported configuration options are the same as the global

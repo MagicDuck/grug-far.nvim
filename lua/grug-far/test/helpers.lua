@@ -215,7 +215,7 @@ function M.childWaitForFinishedStatus(child)
   end)
 end
 
---- run grug_far(options) in child
+--- run open(options) in child
 ---@param child NeovimChild
 ---@param options GrugFarOptionsOverride
 ---@return string instanceName
@@ -224,7 +224,7 @@ function M.childRunGrugFar(child, options)
   vim.fn.mkdir('./temp_history_dir')
 
   M.cdTempTestDir(child)
-  return child.lua_get('GrugFar.grug_far(...)', {
+  return child.lua_get('GrugFar.open(...)', {
     options,
   })
 end
