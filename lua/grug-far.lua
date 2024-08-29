@@ -74,7 +74,7 @@ function M.setup(options)
     if params.mods and #params.mods > 0 then
       resolvedOpts.windowCreationCommand = params.mods .. ' split'
     end
-    M._grug_far_internal(resolvedOpts, { is_visual = is_visual })
+    M._open_internal(resolvedOpts, { is_visual = is_visual })
   end, {
     nargs = '?',
     range = true,
@@ -234,7 +234,7 @@ end
 --- launch grug-far with the given overrides
 ---@param options? GrugFarOptionsOverride
 ---@return string instanceName
-function M.grug_far(options)
+function M.open(options)
   ensure_configured()
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
   local is_visual = false
@@ -246,14 +246,14 @@ function M.grug_far(options)
     vim.cmd([[normal! vv]])
   end
 
-  return M._grug_far_internal(resolvedOpts, { is_visual = is_visual })
+  return M._open_internal(resolvedOpts, { is_visual = is_visual })
 end
 
 --- launch grug-far with the given options and params
 ---@param options GrugFarOptions
 ---@param params { is_visual: boolean }
 ---@return string instanceName
-function M._grug_far_internal(options, params)
+function M._open_internal(options, params)
   if options.instanceName and namedInstances[options.instanceName] then
     error('A grug-far instance with instanceName="' .. options.instanceName .. '" already exists!')
   end
@@ -272,22 +272,6 @@ function M._grug_far_internal(options, params)
   namedInstances[options.instanceName] = { buf = buf, context = context }
 
   return options.instanceName
-end
-
---- launch grug-far with the given overrides, pre-filling
---- search with current visual selection.
----@param options? GrugFarOptionsOverride
-function M.with_visual_selection(options)
-  ensure_configured()
-
-  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
-  if isVisualMode then
-    -- needed to make visual selection work
-    vim.cmd([[normal! vv]])
-  end
-
-  local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
-  return M._grug_far_internal(resolvedOpts, { is_visual = true })
 end
 
 --- toggles given list of flags in the current grug-far buffer
@@ -328,7 +312,7 @@ function M.toggle_instance(options)
 
   local inst = namedInstances[options.instanceName]
   if not inst then
-    M.grug_far(options)
+    M.open(options)
     return
   end
 
@@ -416,6 +400,30 @@ function M.update_instance_prefills(instanceName, prefills, clearOld)
   vim.schedule(function()
     inputs.fill(inst.context, inst.buf, prefills, clearOld)
   end)
+end
+
+--- launch grug-far with the given overrides, pre-filling
+--- search with current visual selection.
+---@param options? GrugFarOptionsOverride
+function M.with_visual_selection(options)
+  ensure_configured()
+
+  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
+  if isVisualMode then
+    -- needed to make visual selection work
+    vim.cmd([[normal! vv]])
+  end
+
+  local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
+  return M._open_internal(resolvedOpts, { is_visual = true })
+end
+
+---@deprecated use open(same options) instead
+--- launch grug-far with the given overrides
+---@param options? GrugFarOptionsOverride
+---@return string instanceName
+function M.grug_far(options)
+  return M.open(options)
 end
 
 return M

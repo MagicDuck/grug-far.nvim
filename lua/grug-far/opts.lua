@@ -208,7 +208,7 @@ M.defaultOptions = {
   -- when launching through the lua API. For example, this is how you would launch grug-far.nvim
   -- with the current word under the cursor as the search string
   --
-  -- require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
+  -- require('grug-far').open({ prefills = { search = vim.fn.expand("<cword>") } })
   --
   prefills = {
     search = '',

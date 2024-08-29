@@ -219,7 +219,7 @@ Excluding seems to be necessary with copilot at the time of writing this.
 
 For more control, you can programmatically open a grug-far buffer like so:
 ```sh
-require('grug-far').grug_far(opts)
+require('grug-far').open(opts)
 ```
 If the above is called while in visual mode, it will pre-fill current visual selection as search text.
 (note, this will also set `--fixed-strings` flag as selection can contain special characters)
@@ -228,6 +228,7 @@ Note that if you want to pre-fill current visual selection from command mode, yo
 ```
 :lua require('grug-far').with_visual_selection(opts)
 ```
+(command mode is the only case where this is necessary in order to force using the visual selection)
 
 where `opts` will be merged with and override the global plugin options configured at setup time.
 
@@ -239,22 +240,22 @@ For more API, see [docs][docs]
 
 #### Launch with the current word under the cursor as the search string
 ```lua
-:lua require('grug-far').grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
+:lua require('grug-far').open({ prefills = { search = vim.fn.expand("<cword>") } })
 ```
 
 #### Launch with ast-grep engine
 ```lua
-:lua require('grug-far').grug_far({ engine = 'astgrep' })
+:lua require('grug-far').open({ engine = 'astgrep' })
 ```
 
 #### Launch as a transient buffer which is both unlisted and fully deletes itself when not in use
 ```lua
-:lua require('grug-far').grug_far({ transient = true })
+:lua require('grug-far').open({ transient = true })
 ```
 
 #### Launch, limiting search/replace to current file
 ```lua
-:lua require('grug-far').grug_far({ prefills = { paths = vim.fn.expand("%") } })
+:lua require('grug-far').open({ prefills = { paths = vim.fn.expand("%") } })
 ```
 
 #### Launch with the current visual selection, searching only current file
@@ -331,7 +332,7 @@ return {
 
           -- instance check
           if not grugFar.has_instance("tree") then
-            grugFar.grug_far({
+            grugFar.open({
               instanceName = "tree",
               prefills = prefills,
               staticTitle = "Find and Replace from Tree",
