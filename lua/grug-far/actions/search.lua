@@ -71,7 +71,7 @@ local function search(params)
       renderResultsHeader(buf, context)
 
       resultsList.appendResultsChunk(buf, context, data)
-      resultsList.throttledForceRedrawBuffer(buf)
+      resultsList.throttledForceRedrawBuffer(buf, context)
 
       if shouldAbortEarly then
         if state.abort.search then

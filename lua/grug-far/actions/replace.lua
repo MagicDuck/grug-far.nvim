@@ -134,7 +134,7 @@ local function replace(params)
         state.actionMessage = update.message
       end
       renderResultsHeader(buf, context)
-      resultsList.throttledForceRedrawBuffer(buf)
+      resultsList.throttledForceRedrawBuffer(buf, context)
     end,
     on_finish = on_finish_all,
   })

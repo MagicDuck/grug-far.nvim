@@ -381,12 +381,16 @@ end
 
 --- force redraws buffer. This is order to apear more responsive to the user
 --- and quickly give user feedback as results come in / data is updated
+--- note that only the "top" range of lines is redrawn, including a bunch of lines
+--- after headerRow so that we immediately get error messages to show up
 ---@param buf integer
-function M.forceRedrawBuffer(buf)
+---@param context GrugFarContext
+function M.forceRedrawBuffer(buf, context)
   ---@diagnostic disable-next-line
   if vim.api.nvim__redraw then
     ---@diagnostic disable-next-line
-    vim.api.nvim__redraw({ buf = buf, flush = true })
+    vim.api.nvim__redraw({ buf = buf, flush = true, range = { 0, context.state.headerRow + 100 } })
+    -- vim.api.nvim__redraw({ buf = buf, flush = true })
   end
 end
 
