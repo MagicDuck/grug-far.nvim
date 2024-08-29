@@ -147,7 +147,7 @@ local function sync(params)
       end
       state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
       renderResultsHeader(buf, context)
-      resultsList.throttledForceRedrawBuffer(buf)
+      resultsList.throttledForceRedrawBuffer(buf, context)
     end,
     on_finish = function(status, errorMessage, customActionMessage)
       if state.bufClosed then
