@@ -266,8 +266,9 @@ M.defaultOptions = {
   },
 
   resultLocation = {
+    -- TODO (sbadragan): turn this back
     -- whether to show the result location number
-    showNumberLabel = true,
+    showNumberLabel = false,
 
     -- position of the number when visible, acceptable values are:
     -- 'right_align', 'eol' and 'inline'

@@ -1,4 +1,5 @@
 local resultsList = require('grug-far/render/resultsList')
+local utils = require('grug-far/utils')
 
 --- gets result location that we should open and row in buffer where it is referenced
 ---@param buf integer
@@ -75,7 +76,7 @@ local function open(params)
 
   ---@diagnostic disable-next-line
   local bufnr = vim.fn.bufnr(location.filename)
-  local targetWin = context.prevWin or grugfar_win
+  local targetWin = utils.getOpenTargetWin(context, buf)
 
   if bufnr == -1 then
     vim.fn.win_execute(targetWin, 'e ' .. vim.fn.fnameescape(location.filename), true)

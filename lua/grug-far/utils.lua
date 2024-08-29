@@ -401,4 +401,47 @@ function M.getLineWithoutCarriageReturn(line)
   return string.sub(line, 1, -2)
 end
 
+--- gets companion window in which open files
+---@param context GrugFarContext
+---@param buf integer
+---@return integer window
+function M.getOpenTargetWin(context, buf)
+  local grugfar_win = vim.fn.bufwinid(buf)
+  local tabpage = vim.api.nvim_win_get_tabpage(grugfar_win)
+  local tabpage_windows = vim.api.nvim_tabpage_list_wins(tabpage)
+  local target_windows = vim
+    .iter(tabpage_windows)
+    :filter(function(w)
+      local b = vim.api.nvim_win_get_buf(w)
+      if not b then
+        return false
+      end
+
+      local buftype = vim.api.nvim_get_option_value('buftype', { buf = buf })
+      return buftype and buftype ~= ''
+    end)
+    :totable()
+
+  if #target_windows > 1 then
+    -- use prevWin if it's in current tab page
+    for _, win in ipairs(target_windows) do
+      if win == context.prevWin then
+        return context.prevWin
+      end
+    end
+
+    -- use another window in the tab page
+    for _, win in ipairs(target_windows) do
+      if win ~= grugfar_win then
+        return win
+      end
+    end
+  end
+
+  -- no other window apart from grug-far one, create one
+  vim.cmd('leftabove vertical split')
+
+  return vim.api.nvim_get_current_win()
+end
+
 return M
