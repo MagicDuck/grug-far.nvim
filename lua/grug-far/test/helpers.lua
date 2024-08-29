@@ -133,6 +133,8 @@ function M.getSetupOptions()
       historyAdd = { n = ',a' },
       refresh = { n = ',f' },
       openLocation = { n = ',o' },
+      openNextLocation = { n = '<down>' },
+      openPrevLocation = { n = '<up>' },
       gotoLocation = { n = '<enter>' },
       pickHistoryEntry = { n = '<enter>' },
       toggleShowCommand = { n = ',p' },

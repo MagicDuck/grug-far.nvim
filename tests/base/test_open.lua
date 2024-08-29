@@ -68,4 +68,48 @@ T['can open a location with count'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can open next location'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    windowCreationCommand = 'vsplit',
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>')
+  child.type_keys(keymaps.openNextLocation.n)
+  helpers.childWaitForScreenshotText(child, '2,8')
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys(keymaps.openNextLocation.n)
+  helpers.childWaitForScreenshotText(child, '3,13')
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys(keymaps.openNextLocation.n)
+  helpers.childWaitForScreenshotText(child, '2,7')
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys(keymaps.openNextLocation.n)
+  helpers.childWaitForScreenshotText(child, '3,12')
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys(keymaps.openNextLocation.n)
+  vim.uv.sleep(100)
+  helpers.childWaitForScreenshotText(child, '3,12')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
