@@ -265,17 +265,20 @@ M.defaultOptions = {
     foldcolumn = '1',
   },
 
+  -- options related to locations in results list
   resultLocation = {
-    -- TODO (sbadragan): turn this back
-    -- whether to show the result location number
-    showNumberLabel = false,
+    -- whether to show the result location number label
+    -- this can be useful for example if you would like to use that number
+    -- as a count to goto directly to a result
+    -- (for instance `3<enter>` would goto the third result's location)
+    showNumberLabel = true,
 
     -- position of the number when visible, acceptable values are:
     -- 'right_align', 'eol' and 'inline'
     numberLabelPosition = 'right_align',
 
     -- format for the number label, by default it displays as for example:  [42]
-    numberLabelFormat = '  [%d]',
+    numberLabelFormat = ' [%d]',
   },
 }
 
