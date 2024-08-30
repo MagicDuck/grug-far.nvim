@@ -334,8 +334,8 @@ end
 function M.clear(buf, context)
   -- remove all lines after heading and add one blank line
   local headerRow = context.state.headerRow
-  setBufLines(buf, headerRow, -1, false, { '' })
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
+  setBufLines(buf, headerRow, -1, false, { '' })
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLastFilename = nil
   context.state.resultMatchLineCount = 0
