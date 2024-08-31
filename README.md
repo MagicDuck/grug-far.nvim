@@ -282,6 +282,18 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 ```
 
+#### Create a buffer local keybinding to open a result location and immediately close grug-far.nvim
+```lua
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('grug-far-keybindings', { clear = true }),
+  pattern = { 'grug-far' },
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, 'n', '<C-enter>', '<localleader>o<localleader>c', {})
+  end,
+})
+```
+(where `<localleader>o` and `<localleader>c` are the default keybindings for Open and Close actions. You will need to change them if you set them to something different)
+
 #### Add nvim-tree integration to open search limited to focused directory or file
 
 Create nvim-tree hotkey `z` that will create/open named instance `tree` of grug-far with the current directory of the file or directory in focus. On the second trigger, path of the `tree` grug-far instance will be updates, leaving other fields intact
