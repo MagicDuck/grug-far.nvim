@@ -145,7 +145,7 @@ _Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
 _Note:_ if you would like sync to work when doing a replacement with empty string, please add `--replace=`
 to the flags.
 
-### Going to / Opening Result Location 
+### Going to / Opening / Previewing Result Location
 When the cursor is placed on a result file path, you can go to that file by pressing `<enter>` in normal mode (`Goto` action default keybind).
 When it's placed over a result match line, you will be taken to the file/line/column of the match. By default, the file buffer
 is opened in the last window you were in before opening grug-far, which is typically the other vertical split.
@@ -155,6 +155,8 @@ If you would like to do the same thing, but have the cursor stay in place, you c
 _Note:_ for both `Goto` and `Open` actions, if a `<count>` is entered beforehand, the location corresponding to `<count>` result line is used instead of the current cursor line. You can set the option `resultLocation.showNumberLabel = true` if you would like to have a visual indication of the `<count>`.
 
 In order to smoothly `Open` each result location in sequence, you can use the `Open Next` and `Open Prev` actions.
+
+If you would like to keep the buffers layout, you can use the `Preview` action instead, which will open location in a floating window.
 
 ### Opening result lines in quickfix list
 
