@@ -13,6 +13,7 @@ local historyOpen = require('grug-far/actions/historyOpen')
 local historyAdd = require('grug-far/actions/historyAdd')
 local toggleShowCommand = require('grug-far/actions/toggleShowCommand')
 local swapEngine = require('grug-far/actions/swapEngine')
+local previewLocation = require('grug-far/actions/previewLocation')
 local utils = require('grug-far/utils')
 local resultsList = require('grug-far/render/resultsList')
 local inputs = require('grug-far/inputs')
@@ -151,6 +152,14 @@ local function getActions(buf, context)
       description = 'Toggle showing search command. Can be useful for debugging purposes.',
       action = function()
         toggleShowCommand({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Preview',
+      keymap = keymaps.previewLocation,
+      description = 'Preview location in floating window.',
+      action = function()
+        previewLocation({ buf = buf, context = context })
       end,
     },
   }

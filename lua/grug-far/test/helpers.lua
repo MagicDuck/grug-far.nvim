@@ -139,6 +139,7 @@ function M.getSetupOptions()
       pickHistoryEntry = { n = '<enter>' },
       toggleShowCommand = { n = ',p' },
       swapEngine = { n = ',e' },
+      previewLocation = { n = ',i' },
     },
     history = {
       historyDir = vim.uv.cwd() .. '/temp_history_dir',
