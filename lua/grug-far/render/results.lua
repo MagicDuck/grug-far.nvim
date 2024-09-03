@@ -7,6 +7,12 @@ local renderResultsHeader = require('grug-far/render/resultsHeader')
 ---@param prevExtmarkName string
 ---@return integer headerRow
 local function ensureMinLineNr(buf, context, initialMinLineNr, prevExtmarkName)
+  local last_line = vim.api.nvim_buf_line_count(buf) - 1
+  local num_lines_to_add = 0
+  if last_line < initialMinLineNr then
+    num_lines_to_add = initialMinLineNr - last_line
+  end
+
   local minLineNr = initialMinLineNr
 
   -- make sure we don't go beyond prev input pos
@@ -24,6 +30,13 @@ local function ensureMinLineNr(buf, context, initialMinLineNr, prevExtmarkName)
     end
   end
 
+  if minLineNr < initialMinLineNr then
+    if initialMinLineNr - minLineNr > num_lines_to_add then
+      num_lines_to_add = initialMinLineNr - minLineNr
+    end
+    minLineNr = initialMinLineNr
+  end
+
   local headerRow = minLineNr
   if context.extmarkIds.results_header and prevExtmarkName then
     local row = unpack(
@@ -39,10 +52,12 @@ local function ensureMinLineNr(buf, context, initialMinLineNr, prevExtmarkName)
     end
   end
 
-  -- ensure minimal line
-  local line = unpack(vim.api.nvim_buf_get_lines(buf, headerRow, headerRow + 1, false))
-  if not line then
-    vim.api.nvim_buf_set_lines(buf, headerRow, headerRow, false, { '' })
+  if num_lines_to_add > 0 then
+    local lines = {}
+    for _ = 1, num_lines_to_add, 1 do
+      table.insert(lines, '')
+    end
+    vim.api.nvim_buf_set_lines(buf, headerRow, headerRow, false, lines)
   end
 
   return headerRow
