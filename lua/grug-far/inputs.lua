@@ -52,4 +52,119 @@ function M.fill(context, buf, values, clearOld)
   fillInput(context, buf, M.InputNames.search, values.search, clearOld)
 end
 
+---@class InputMark
+---@field start_row integer
+---@field start_col integer
+---@field end_row integer
+---@field name string
+---@field value string
+---@field details vim.api.keyset.set_extmark
+
+--- gets input mark at given row if there is one there
+---@param context GrugFarContext
+---@param buf integer
+---@param row integer
+---@return InputMark?
+function M.getInputMarkAtRow(context, buf, row)
+  local names = {
+    M.InputNames.search,
+    M.InputNames.replacement,
+    M.InputNames.filesFilter,
+    M.InputNames.flags,
+    M.InputNames.paths,
+  }
+  for i, input_name in ipairs(names) do
+    local extmarkId = context.extmarkIds[input_name]
+    local nextExtmarkId = context.extmarkIds[i < #names and names[i + 1] or 'results_header']
+
+    if extmarkId and nextExtmarkId then
+      -- TODO (sbadragan): remove details?
+      local start_row, start_col, details = unpack(
+        vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, extmarkId, { details = true })
+      )
+      local end_boundary_row = unpack(
+        vim.api.nvim_buf_get_extmark_by_id(
+          buf,
+          context.namespace,
+          nextExtmarkId,
+          { details = true }
+        )
+      )
+
+      if start_row and end_boundary_row then
+        local end_row = end_boundary_row - 1
+        local value_lines = vim.api.nvim_buf_get_lines(buf, start_row, end_row + 1, false)
+        local value = vim.fn.join(value_lines, '\n')
+        if row >= start_row and row <= end_row then
+          details.ns_id = nil
+          details.id = extmarkId
+          ---@cast details vim.api.keyset.set_extmark
+          return {
+            name = input_name,
+            value = value,
+            start_row = start_row,
+            start_col = start_col,
+            end_row = end_row,
+            details = details,
+          }
+        end
+      end
+    end
+  end
+end
+
+--- special logic for paste below if in the context of an input
+--- if input is empty, prevents extra newline
+--- if on last line of input, temporarily adds a newline in order to prevent breaking out of it
+---@param context GrugFarContext
+---@param buf integer
+local function pasteBelow(context, buf)
+  local win = vim.fn.bufwinid(buf)
+  local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
+  local mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
+  if not mark then
+    return
+  end
+  if mark.end_row > mark.start_row and cursor_row - 1 < mark.end_row then
+    -- we have a trailing line, nothing extra to do
+    vim.api.nvim_feedkeys('p', 'n', false)
+    return
+  end
+
+  local pasteCmd = mark.value == '' and 'P' or 'p'
+  if pasteCmd == 'p' then
+    -- add a blank line at bottom to force paste into the input
+    fillInput(context, buf, mark.name, mark.value .. '\n', true)
+    vim.api.nvim_win_set_cursor(win, { cursor_row, cursor_col })
+  end
+
+  M._pasteBelowCallback = function()
+    mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
+    if mark then
+      -- remove blank line
+      vim.api.nvim_buf_set_lines(buf, mark.end_row, mark.end_row + 1, true, {})
+    end
+  end
+  local keys = vim.api.nvim_replace_termcodes(
+    pasteCmd .. '<esc><cmd>lua require("grug-far/inputs")._pasteBelowCallback()<cr>',
+    true,
+    false,
+    true
+  )
+  vim.api.nvim_feedkeys(keys, 'n', false)
+end
+
+--- some key rebinds that improve quality of life in the inputs area
+---@param context GrugFarContext
+---@param buf integer
+function M.bindInputSaavyKeys(context, buf)
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'p', '', {
+    noremap = true,
+    nowait = true,
+    callback = function()
+      pasteBelow(context, buf)
+    end,
+  })
+end
+
 return M

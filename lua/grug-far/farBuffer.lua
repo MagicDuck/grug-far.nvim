@@ -243,6 +243,7 @@ function M.createBuffer(win, context)
   for _, action in ipairs(context.actions) do
     utils.setBufKeymap(buf, 'Grug Far: ' .. action.text, action.keymap, action.action)
   end
+  inputs.bindInputSaavyKeys(context, buf)
 
   local debouncedSearch = utils.debounce(vim.schedule_wrap(search), context.options.debounceMs)
   local function searchOnChange()

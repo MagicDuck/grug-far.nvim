@@ -73,22 +73,22 @@ local function renderInput(params, context)
   end
 
   -- ensure minimal lines
-  if not currentEndRow then
+  if not currentEndRow or currentEndRow < currentStartRow then
     vim.api.nvim_buf_set_lines(buf, currentStartRow, currentStartRow, false, { '' })
     currentEndRow = currentStartRow
-  elseif currentEndRow < currentStartRow then
-    if isLast and context.state.headerRow then
-      vim.api.nvim_buf_set_lines(
-        buf,
-        context.state.headerRow - 1,
-        context.state.headerRow - 1,
-        false,
-        { '' }
-      )
-    end
-    vim.schedule(function()
-      renderInput(params, context)
-    end)
+    -- elseif currentEndRow < currentStartRow then
+    --   if isLast and context.state.headerRow then
+    --     vim.api.nvim_buf_set_lines(
+    --       buf,
+    --       context.state.headerRow - 1,
+    --       context.state.headerRow - 1,
+    --       false,
+    --       { '' }
+    --     )
+    --   end
+    --   vim.schedule(function()
+    --     renderInput(params, context)
+    --   end)
   end
 
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
