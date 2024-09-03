@@ -118,20 +118,28 @@ end
 --- if on last line of input, temporarily adds a newline in order to prevent breaking out of it
 ---@param context GrugFarContext
 ---@param buf integer
-local function pasteBelow(context, buf)
+---@param is_visual? boolean
+local function pasteBelow(context, buf, is_visual)
   local win = vim.fn.bufwinid(buf)
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
   local mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
   if not mark then
     return
   end
-  if mark.end_row > mark.start_row and cursor_row - 1 < mark.end_row then
-    -- we have a trailing line, nothing extra to do
-    vim.api.nvim_feedkeys('p', 'n', false)
-    return
+
+  local pasteCmd = 'p'
+  if not is_visual then
+    if mark.end_row > mark.start_row and cursor_row - 1 < mark.end_row then
+      -- we have a trailing line, nothing extra to do
+      vim.api.nvim_feedkeys('p', 'n', false)
+      return
+    end
+
+    if mark.value == '' then
+      pasteCmd = 'P'
+    end
   end
 
-  local pasteCmd = mark.value == '' and 'P' or 'p'
   if pasteCmd == 'p' then
     -- add a blank line at bottom to force paste into the input
     fillInput(context, buf, mark.name, mark.value .. '\n', true)
@@ -163,6 +171,13 @@ function M.bindInputSaavyKeys(context, buf)
     nowait = true,
     callback = function()
       pasteBelow(context, buf)
+    end,
+  })
+  vim.api.nvim_buf_set_keymap(buf, 'v', 'p', '', {
+    noremap = true,
+    nowait = true,
+    callback = function()
+      pasteBelow(context, buf, true)
     end,
   })
 end
