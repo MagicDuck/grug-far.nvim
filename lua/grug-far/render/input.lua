@@ -76,19 +76,21 @@ local function renderInput(params, context)
   if not currentEndRow then
     vim.api.nvim_buf_set_lines(buf, currentStartRow, currentStartRow, false, { '' })
     currentEndRow = currentStartRow
-    -- elseif isLast and currentEndRow < currentStartRow and context.state.headerRow then
-    --   vim.api.nvim_buf_set_lines(
-    --     buf,
-    --     context.state.headerRow - 1,
-    --     context.state.headerRow - 1,
-    --     false,
-    --     { '' }
-    --   )
+  elseif currentEndRow < currentStartRow then
+    if isLast and context.state.headerRow then
+      vim.api.nvim_buf_set_lines(
+        buf,
+        context.state.headerRow - 1,
+        context.state.headerRow - 1,
+        false,
+        { '' }
+      )
+    end
+    vim.schedule(function()
+      renderInput(params, context)
+    end)
   end
 
-  -- local input_lines = currentEndRow >= currentStartRow
-  --     and vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
-  --   or { '' }
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
 
   context.extmarkIds[extmarkName] =
@@ -105,34 +107,32 @@ local function renderInput(params, context)
     })
 
   if placeholder then
-    vim.schedule(function()
-      local placeholderExtmarkName = extmarkName .. '_placeholder'
-      if #input_lines == 1 and #input_lines[1] == 0 then
-        local ellipsis = ' ...'
-        local available_win_width = vim.api.nvim_win_get_width(0) - #ellipsis - 2
-        context.extmarkIds[placeholderExtmarkName] =
-          vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
-            id = context.extmarkIds[placeholderExtmarkName],
-            end_row = currentStartRow,
-            end_col = 0,
-            virt_text = {
-              {
-                #placeholder <= available_win_width and placeholder
-                  or placeholder:sub(1, available_win_width) .. ellipsis,
-                'GrugFarInputPlaceholder',
-              },
+    local placeholderExtmarkName = extmarkName .. '_placeholder'
+    if #input_lines == 1 and #input_lines[1] == 0 then
+      local ellipsis = ' ...'
+      local available_win_width = vim.api.nvim_win_get_width(0) - #ellipsis - 2
+      context.extmarkIds[placeholderExtmarkName] =
+        vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
+          id = context.extmarkIds[placeholderExtmarkName],
+          end_row = currentStartRow,
+          end_col = 0,
+          virt_text = {
+            {
+              #placeholder <= available_win_width and placeholder
+                or placeholder:sub(1, available_win_width) .. ellipsis,
+              'GrugFarInputPlaceholder',
             },
-            virt_text_pos = 'overlay',
-          })
-      elseif context.extmarkIds[placeholderExtmarkName] then
-        vim.api.nvim_buf_del_extmark(
-          buf,
-          context.namespace,
-          context.extmarkIds[placeholderExtmarkName]
-        )
-        context.extmarkIds[placeholderExtmarkName] = nil
-      end
-    end)
+          },
+          virt_text_pos = 'overlay',
+        })
+    elseif context.extmarkIds[placeholderExtmarkName] then
+      vim.api.nvim_buf_del_extmark(
+        buf,
+        context.namespace,
+        context.extmarkIds[placeholderExtmarkName]
+      )
+      context.extmarkIds[placeholderExtmarkName] = nil
+    end
   end
 
   return vim.fn.join(input_lines, '\n')
