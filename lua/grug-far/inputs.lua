@@ -52,7 +52,7 @@ function M.fill(context, buf, values, clearOld)
   fillInput(context, buf, M.InputNames.search, values.search, clearOld)
 end
 
----@class InputMark
+---@class InputDetails
 ---@field start_row integer
 ---@field start_col integer
 ---@field end_row integer
@@ -63,8 +63,8 @@ end
 ---@param context GrugFarContext
 ---@param buf integer
 ---@param row integer
----@return InputMark?
-function M.getInputMarkAtRow(context, buf, row)
+---@return InputDetails?
+function M.getInputAtRow(context, buf, row)
   local names = {
     M.InputNames.search,
     M.InputNames.replacement,
@@ -115,35 +115,35 @@ end
 local function pasteBelow(context, buf, is_visual)
   local win = vim.fn.bufwinid(buf)
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
-  local mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
-  if not mark then
+  local input = M.getInputAtRow(context, buf, cursor_row - 1)
+  if not input then
     return
   end
 
   local pasteCmd = 'p'
   if not is_visual then
-    if mark.end_row > mark.start_row and cursor_row - 1 < mark.end_row then
+    if input.end_row > input.start_row and cursor_row - 1 < input.end_row then
       -- we have a trailing line, nothing extra to do
       vim.api.nvim_feedkeys('p', 'n', false)
       return
     end
 
-    if mark.value == '' then
+    if input.value == '' then
       pasteCmd = 'P'
     end
   end
 
   if pasteCmd == 'p' then
     -- add a blank line at bottom to force paste into the input
-    fillInput(context, buf, mark.name, mark.value .. '\n', true)
+    fillInput(context, buf, input.name, input.value .. '\n', true)
     vim.api.nvim_win_set_cursor(win, { cursor_row, cursor_col })
   end
 
   M._pasteBelowCallback = function()
-    mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
-    if mark and string.sub(mark.value, -1) == '\n' then
+    input = M.getInputAtRow(context, buf, cursor_row - 1)
+    if input and string.sub(input.value, -1) == '\n' then
       -- remove blank line
-      vim.api.nvim_buf_set_lines(buf, mark.end_row, mark.end_row + 1, true, {})
+      vim.api.nvim_buf_set_lines(buf, input.end_row, input.end_row + 1, true, {})
     end
   end
   local keys = vim.api.nvim_replace_termcodes(
@@ -164,37 +164,37 @@ end
 local function pasteAbove(context, buf, is_visual)
   local win = vim.fn.bufwinid(buf)
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
-  local mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
-  if not mark then
+  local input = M.getInputAtRow(context, buf, cursor_row - 1)
+  if not input then
     return
   end
 
   local delete_newline = false
 
   if not is_visual then
-    if mark.end_row > mark.start_row and cursor_row - 1 < mark.end_row then
+    if input.end_row > input.start_row and cursor_row - 1 < input.end_row then
       -- we have a trailing line, nothing extra to do
       vim.api.nvim_feedkeys('P', 'n', false)
       return
     end
 
-    if mark.value == '' then
+    if input.value == '' then
       delete_newline = true
     end
   end
 
   if is_visual then
     -- add a blank line at bottom to force paste into the input
-    fillInput(context, buf, mark.name, mark.value .. '\n', true)
+    fillInput(context, buf, input.name, input.value .. '\n', true)
     vim.api.nvim_win_set_cursor(win, { cursor_row, cursor_col })
     delete_newline = true
   end
 
   M._pasteAboveCallback = function()
-    mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
-    if mark and delete_newline and string.sub(mark.value, -1) == '\n' then
+    input = M.getInputAtRow(context, buf, cursor_row - 1)
+    if input and delete_newline and string.sub(input.value, -1) == '\n' then
       -- remove blank line
-      vim.api.nvim_buf_set_lines(buf, mark.end_row, mark.end_row + 1, true, {})
+      vim.api.nvim_buf_set_lines(buf, input.end_row, input.end_row + 1, true, {})
     end
   end
   local keys = vim.api.nvim_replace_termcodes(
@@ -213,8 +213,8 @@ end
 local function openBelow(context, buf)
   local win = vim.fn.bufwinid(buf)
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
-  local mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
-  if not mark then
+  local input = M.getInputAtRow(context, buf, cursor_row - 1)
+  if not input then
     return
   end
 
