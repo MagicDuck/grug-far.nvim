@@ -58,7 +58,6 @@ end
 ---@field end_row integer
 ---@field name string
 ---@field value string
----@field details vim.api.keyset.set_extmark
 
 --- gets input mark at given row if there is one there
 ---@param context GrugFarContext
@@ -78,10 +77,8 @@ function M.getInputMarkAtRow(context, buf, row)
     local nextExtmarkId = context.extmarkIds[i < #names and names[i + 1] or 'results_header']
 
     if extmarkId and nextExtmarkId then
-      -- TODO (sbadragan): remove details?
-      local start_row, start_col, details = unpack(
-        vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, extmarkId, { details = true })
-      )
+      local start_row, start_col =
+        unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, extmarkId, {}))
       local end_boundary_row = unpack(
         vim.api.nvim_buf_get_extmark_by_id(
           buf,
@@ -96,16 +93,12 @@ function M.getInputMarkAtRow(context, buf, row)
         local value_lines = vim.api.nvim_buf_get_lines(buf, start_row, end_row + 1, false)
         local value = vim.fn.join(value_lines, '\n')
         if row >= start_row and row <= end_row then
-          details.ns_id = nil
-          details.id = extmarkId
-          ---@cast details vim.api.keyset.set_extmark
           return {
             name = input_name,
             value = value,
             start_row = start_row,
             start_col = start_col,
             end_row = end_row,
-            details = details,
           }
         end
       end
