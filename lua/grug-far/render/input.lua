@@ -8,7 +8,6 @@ local opts = require('grug-far/opts')
 ---@field nextExtmarkName? string
 ---@field label string
 ---@field placeholder? string | false
----@field isLast? boolean
 ---@field icon? string
 
 ---@param params InputRenderParams
@@ -22,7 +21,6 @@ local function renderInput(params, context)
   local nextExtmarkName = params.nextExtmarkName
   local label = params.label
   local placeholder = params.placeholder
-  local isLast = params.isLast
   local icon = opts.getIcon(params.icon, context) or ''
 
   -- make sure we don't go beyond prev input pos
@@ -76,19 +74,6 @@ local function renderInput(params, context)
   if not currentEndRow or currentEndRow < currentStartRow then
     vim.api.nvim_buf_set_lines(buf, currentStartRow, currentStartRow, false, { '' })
     currentEndRow = currentStartRow
-    -- elseif currentEndRow < currentStartRow then
-    --   if isLast and context.state.headerRow then
-    --     vim.api.nvim_buf_set_lines(
-    --       buf,
-    --       context.state.headerRow - 1,
-    --       context.state.headerRow - 1,
-    --       false,
-    --       { '' }
-    --     )
-    --   end
-    --   vim.schedule(function()
-    --     renderInput(params, context)
-    --   end)
   end
 
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)

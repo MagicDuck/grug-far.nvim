@@ -78,7 +78,6 @@ local function render(buf, context)
     icon = 'pathsInput',
     label = 'Paths:',
     placeholder = placeholders.enabled and placeholders.paths,
-    isLast = true,
   }, context))
 
   lineNr = lineNr + 1
