@@ -390,7 +390,6 @@ function M.forceRedrawBuffer(buf, context)
   if vim.api.nvim__redraw then
     ---@diagnostic disable-next-line
     vim.api.nvim__redraw({ buf = buf, flush = true, range = { 0, context.state.headerRow + 100 } })
-    -- vim.api.nvim__redraw({ buf = buf, flush = true })
   end
 end
 
