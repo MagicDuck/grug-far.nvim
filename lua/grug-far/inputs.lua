@@ -164,7 +164,7 @@ end
 
 --- special logic for paste above if in the context of an input
 --- if input is empty, prevents extra newline
---- if on last line of input, temporarily adds a newline in order to prevent breaking out of it
+--- if on last line of input in visual mode, temporarily adds a newline in order to prevent breaking out of it
 ---@param context GrugFarContext
 ---@param buf integer
 ---@param is_visual? boolean
@@ -213,6 +213,22 @@ local function pasteAbove(context, buf, is_visual)
   vim.api.nvim_feedkeys(keys, 'n', false)
 end
 
+--- special logic for open below in the context of an input
+--- if cursor is on last line of input, prevent breaking into next input
+---@param context GrugFarContext
+---@param buf integer
+local function openBelow(context, buf)
+  local win = vim.fn.bufwinid(buf)
+  local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
+  local mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
+  if not mark then
+    return
+  end
+
+  local keys = vim.api.nvim_replace_termcodes('A<cr>', true, false, true)
+  vim.api.nvim_feedkeys(keys, 'n', false)
+end
+
 --- some key rebinds that improve quality of life in the inputs area
 ---@param context GrugFarContext
 ---@param buf integer
@@ -243,6 +259,13 @@ function M.bindInputSaavyKeys(context, buf)
     nowait = true,
     callback = function()
       pasteAbove(context, buf, true)
+    end,
+  })
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'o', '', {
+    noremap = true,
+    nowait = true,
+    callback = function()
+      openBelow(context, buf)
     end,
   })
 end
