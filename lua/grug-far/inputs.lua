@@ -148,13 +148,64 @@ local function pasteBelow(context, buf, is_visual)
 
   M._pasteBelowCallback = function()
     mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
-    if mark then
+    if mark and string.sub(mark.value, -1) == '\n' then
       -- remove blank line
       vim.api.nvim_buf_set_lines(buf, mark.end_row, mark.end_row + 1, true, {})
     end
   end
   local keys = vim.api.nvim_replace_termcodes(
     pasteCmd .. '<esc><cmd>lua require("grug-far/inputs")._pasteBelowCallback()<cr>',
+    true,
+    false,
+    true
+  )
+  vim.api.nvim_feedkeys(keys, 'n', false)
+end
+
+--- special logic for paste above if in the context of an input
+--- if input is empty, prevents extra newline
+--- if on last line of input, temporarily adds a newline in order to prevent breaking out of it
+---@param context GrugFarContext
+---@param buf integer
+---@param is_visual? boolean
+local function pasteAbove(context, buf, is_visual)
+  local win = vim.fn.bufwinid(buf)
+  local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
+  local mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
+  if not mark then
+    return
+  end
+
+  local delete_newline = false
+
+  if not is_visual then
+    if mark.end_row > mark.start_row and cursor_row - 1 < mark.end_row then
+      -- we have a trailing line, nothing extra to do
+      vim.api.nvim_feedkeys('P', 'n', false)
+      return
+    end
+
+    if mark.value == '' then
+      delete_newline = true
+    end
+  end
+
+  if is_visual then
+    -- add a blank line at bottom to force paste into the input
+    fillInput(context, buf, mark.name, mark.value .. '\n', true)
+    vim.api.nvim_win_set_cursor(win, { cursor_row, cursor_col })
+    delete_newline = true
+  end
+
+  M._pasteAboveCallback = function()
+    mark = M.getInputMarkAtRow(context, buf, cursor_row - 1)
+    if mark and delete_newline and string.sub(mark.value, -1) == '\n' then
+      -- remove blank line
+      vim.api.nvim_buf_set_lines(buf, mark.end_row, mark.end_row + 1, true, {})
+    end
+  end
+  local keys = vim.api.nvim_replace_termcodes(
+    'P<esc><cmd>lua require("grug-far/inputs")._pasteAboveCallback()<cr>',
     true,
     false,
     true
@@ -178,6 +229,20 @@ function M.bindInputSaavyKeys(context, buf)
     nowait = true,
     callback = function()
       pasteBelow(context, buf, true)
+    end,
+  })
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'P', '', {
+    noremap = true,
+    nowait = true,
+    callback = function()
+      pasteAbove(context, buf)
+    end,
+  })
+  vim.api.nvim_buf_set_keymap(buf, 'v', 'P', '', {
+    noremap = true,
+    nowait = true,
+    callback = function()
+      pasteAbove(context, buf, true)
     end,
   })
 end
