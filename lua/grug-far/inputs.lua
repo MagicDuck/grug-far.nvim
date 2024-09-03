@@ -89,6 +89,8 @@ function M.getInputAtRow(context, buf, row)
       )
 
       if start_row and end_boundary_row then
+        ---@cast start_row integer
+        ---@cast end_boundary_row integer
         local end_row = end_boundary_row - 1
         local value_lines = vim.api.nvim_buf_get_lines(buf, start_row, end_row + 1, false)
         local value = vim.fn.join(value_lines, '\n')
