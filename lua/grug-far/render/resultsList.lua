@@ -87,6 +87,7 @@ end
 function M.appendResultsChunk(buf, context, data)
   -- add text
   local lastline = vim.api.nvim_buf_line_count(buf)
+  vim.cmd('undojoin')
   setBufLines(buf, lastline, lastline, false, data.lines)
   -- add highlights
   for i = 1, #data.highlights do
@@ -195,6 +196,7 @@ function M.setError(buf, context, error)
 
   local startLine = context.state.headerRow + 1
 
+  vim.cmd('undojoin')
   local err_lines = vim.split((error and #error > 0) and error or 'Unexpected error!', '\n')
   setBufLines(buf, startLine, startLine, false, err_lines)
 
@@ -213,6 +215,7 @@ function M.appendWarning(buf, context, warning)
   end
   local lastline = vim.api.nvim_buf_line_count(buf)
 
+  vim.cmd('undojoin')
   local warn_lines = vim.split('\n\n' .. warning, '\n')
   setBufLines(buf, lastline, lastline, false, warn_lines)
 
@@ -368,6 +371,7 @@ function M.appendSearchCommand(buf, context, rgArgs)
   table.insert(lines, '')
   table.insert(lines, '')
 
+  vim.cmd('undojoin')
   setBufLines(buf, lastline, lastline, false, lines)
   vim.api.nvim_buf_add_highlight(
     buf,
