@@ -145,4 +145,68 @@ T['Vp on last line of input will work'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+----------------------------
+T['P (above) in empty input will not include newline'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'j', 'P')
+  helpers.childExpectScreenshot(child)
+end
+
+T['P (above) - multiline in empty input will not include newline'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug\nsomething' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>Vjy', '2j', 'P')
+  helpers.childExpectScreenshot(child)
+end
+
+T['P (above) on last line of input will work'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'something' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'j', 'P')
+  helpers.childExpectScreenshot(child)
+end
+
+T['P (above) in middle of input will work'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'something' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>viwy', 'jl', 'P')
+  helpers.childExpectScreenshot(child)
+end
+
+T['P (above) on first line of multiline input will work'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'something\nother' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'j', 'P')
+  helpers.childExpectScreenshot(child)
+end
+
+T['VP (above) in empty input will not include newline'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'j', 'VP')
+  helpers.childExpectScreenshot(child)
+end
+
+T['VP (above) on last line of input will work'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'something\nelse' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'jj', 'VP')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
