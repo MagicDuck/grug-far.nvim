@@ -209,4 +209,22 @@ T['VP (above) on last line of input will work'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['o in empty input does not break into next input'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = '' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>o')
+  helpers.childExpectScreenshot(child)
+end
+
+T['o on last line of input does not break into next input'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'bob\ngrug' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>jo')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
