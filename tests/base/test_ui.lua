@@ -82,4 +82,67 @@ T['can search manually on insert leave or normal mode change'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['p in empty input will not include newline'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'j', 'p')
+  helpers.childExpectScreenshot(child)
+end
+
+T['p - multiline in empty input will not include newline'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug\nsomething' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>Vjy', '2j', 'p')
+  helpers.childExpectScreenshot(child)
+end
+
+T['p on last line of input will work'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'something' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'j', 'p')
+  helpers.childExpectScreenshot(child)
+end
+
+T['p in middle of input will work'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'something' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>viwy', 'j$', 'p')
+  helpers.childExpectScreenshot(child)
+end
+
+T['p on first line of multiline input will work'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'something\nother' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'j', 'p')
+  helpers.childExpectScreenshot(child)
+end
+
+T['Vp in empty input will not include newline'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'j', 'Vp')
+  helpers.childExpectScreenshot(child)
+end
+
+T['Vp on last line of input will work'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'something\nelse' },
+  })
+  helpers.childWaitForScreenshotText(child, 'Search:')
+  child.type_keys('<esc>yy', 'jj', 'Vp')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
