@@ -2,17 +2,17 @@ local M = {}
 
 ---@class FileIconsProvider
 ---@field type FileIconsProviderType
----@field _inst? any
----@field get_inst fun():(inst: any)
----@field get_icon fun(inst: any, path: string):(icon:string, icon_hl: string)
+---@field _lib? any
+---@field get_lib fun():(lib: any)
+---@field get_icon fun(lib: any, path: string):(icon:string, icon_hl: string)
 
 ---@type FileIconsProvider[]
 local providers = {
   {
     type = 'mini.icons',
-    get_inst = function()
-      local _, inst = pcall(require, 'mini.icons')
-      if not inst then
+    get_lib = function()
+      local _, lib = pcall(require, 'mini.icons')
+      if not lib then
         return nil
       end
       -- according to mini.icons docs, need to check this
@@ -21,30 +21,30 @@ local providers = {
         return nil
       end
 
-      return inst
+      return lib
     end,
     get_icon = function(self, path)
-      return self._inst.get('file', path)
+      return self._lib.get('file', path)
     end,
   },
   {
     type = 'nvim-web-devicons',
-    get_inst = function()
-      local _, inst = pcall(require, 'nvim-web-devicons')
-      if not inst then
+    get_lib = function()
+      local _, lib = pcall(require, 'nvim-web-devicons')
+      if not lib then
         return nil
       end
 
       -- check if setup() called
-      if not inst.has_loaded() then
+      if not lib.has_loaded() then
         return nil
       end
 
-      return inst
+      return lib
     end,
     get_icon = function(self, path)
       local extension = string.match(path, '.+%.(.+)$')
-      return self._inst.get_icon(path, extension, { default = true })
+      return self._lib.get_icon(path, extension, { default = true })
     end,
   },
 }
@@ -57,12 +57,12 @@ function M.getProvider(type)
   end
 
   for _, provider in ipairs(providers) do
-    local inst = provider.get_inst()
+    local lib = provider.get_lib()
 
-    if inst then
+    if lib then
       if type == 'first_available' or provider.type == type then
         local new_provider = vim.deepcopy(provider)
-        new_provider._inst = inst
+        new_provider._lib = lib
         return new_provider
       end
     else
