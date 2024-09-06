@@ -30,7 +30,10 @@ end
 ---@param options addLocationMarkOpts
 ---@return integer markId
 local function addLocationMark(buf, context, line, end_col, options)
-  local sign_text = options.sign and opts.getIcon(options.sign.icon, context) or nil
+  local sign_text = nil
+  if options.sign then
+    sign_text = options.sign.text or opts.getIcon(options.sign.icon, context)
+  end
   local resultLocationOpts = context.options.resultLocation
 
   return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
@@ -117,7 +120,14 @@ function M.appendResultsChunk(buf, context, data)
 
     if hl_type == ResultHighlightType.FilePath then
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
-      local markId = addLocationMark(buf, context, lastline + highlight.start_line, #line, {})
+      local sign = nil
+      if context.fileIconsProvider then
+        local icon, icon_hl = context.fileIconsProvider:get_icon(state.resultsLastFilename)
+        sign = { text = icon, hl = icon_hl }
+      end
+
+      local markId =
+        addLocationMark(buf, context, lastline + highlight.start_line, #line, { sign = sign })
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl_type == ResultHighlightType.LineNumber then
       -- omit ending ':'
