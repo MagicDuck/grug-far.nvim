@@ -182,7 +182,7 @@ M.defaultOptions = {
     -- whether to show icons
     enabled = true,
 
-    -- provider to use for file icons.
+    -- provider to use for file icons
     -- acceptable values: 'first_available', 'nvim-web-devicons', 'mini.icons', false (to disable)
     fileIconsProvider = 'first_available',
 

@@ -11,8 +11,8 @@ local providers = {
   {
     type = 'nvim-web-devicons',
     get_lib = function()
-      local _, lib = pcall(require, 'nvim-web-devicons')
-      if not lib then
+      local found, lib = pcall(require, 'nvim-web-devicons')
+      if not found then
         return nil
       end
 
@@ -24,6 +24,14 @@ local providers = {
       return lib
     end,
     get_icon = function(self, path)
+      -- first, try to match extensions like .spec.js
+      local basename = vim.fs.basename(path)
+      local multi_dot_extension = basename:match('[^.]*%.(.+)$')
+      local icon, hl = self._lib.get_icon(path, multi_dot_extension, { default = false })
+      if icon then
+        return icon, hl
+      end
+
       local extension = string.match(path, '.+%.(.+)$')
       return self._lib.get_icon(path, extension, { default = true })
     end,
@@ -31,12 +39,14 @@ local providers = {
   {
     type = 'mini.icons',
     get_lib = function()
-      local _, lib = pcall(require, 'mini.icons')
-      if not lib then
+      local found, lib = pcall(require, 'mini.icons')
+      if not found then
         return nil
       end
       -- according to mini.icons docs, need to check this
       -- to make sure setup has been called!
+      -- selene: allow(global_usage)
+      ---@diagnostic disable-next-line
       if not _G.MiniIcons then
         return nil
       end
