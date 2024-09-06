@@ -7,6 +7,7 @@ local close = require('grug-far/actions/close')
 local engine = require('grug-far/engine')
 local fold = require('grug-far/fold')
 local inputs = require('grug-far/inputs')
+local fileIconsProvider = require('grug-far/fileIconsProvider')
 
 local M = {}
 
@@ -143,6 +144,7 @@ local contextCount = 0
 ---@field prevWin? integer
 ---@field actions GrugFarAction[]
 ---@field engine GrugFarEngine
+---@field fileIconsProvider? FileIconsProvider
 
 --- generate instance specific context
 ---@param options GrugFarOptions
@@ -160,6 +162,9 @@ local function createContext(options)
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
     extmarkIds = {},
     actions = {},
+    fileIconsProvider = options.icons.enabled and fileIconsProvider.getProvider(
+      options.icons.fileIconsProvider
+    ) or nil,
     state = {
       inputs = {},
       headerRow = 0,

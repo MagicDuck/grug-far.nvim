@@ -182,6 +182,10 @@ M.defaultOptions = {
     -- whether to show icons
     enabled = true,
 
+    -- provider to use for file icons.
+    -- acceptable values: 'first_available', 'mini.icons', 'nvim-web-devicons', false (to disable)
+    fileIconsProvider = 'first_available',
+
     actionEntryBullet = ' ',
 
     searchInput = ' ',
@@ -352,8 +356,11 @@ M.defaultOptions = {
 ---@field historyDir? string
 ---@field autoSave? AutoSaveTable
 
+---@alias FileIconsProviderType "first_available" | "mini.icons" |  "nvim-web-devicons" | false
+
 ---@class IconsTable
 ---@field enabled boolean
+---@field fileIconsProvider FileIconsProviderType
 ---@field searchInput string
 ---@field actionEntryBullet string
 ---@field replaceInput string
@@ -370,6 +377,7 @@ M.defaultOptions = {
 
 ---@class IconsTableOverride
 ---@field enabled? boolean
+---@field fileIconsProvider? FileIconsProviderType
 ---@field searchInput? string
 ---@field actionEntryBullet? string
 ---@field replaceInput? string
