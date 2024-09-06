@@ -183,7 +183,7 @@ M.defaultOptions = {
     enabled = true,
 
     -- provider to use for file icons.
-    -- acceptable values: 'first_available', 'mini.icons', 'nvim-web-devicons', false (to disable)
+    -- acceptable values: 'first_available', 'nvim-web-devicons', 'mini.icons', false (to disable)
     fileIconsProvider = 'first_available',
 
     actionEntryBullet = ' ',

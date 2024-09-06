@@ -9,25 +9,6 @@ local M = {}
 ---@type FileIconsProvider[]
 local providers = {
   {
-    type = 'mini.icons',
-    get_lib = function()
-      local _, lib = pcall(require, 'mini.icons')
-      if not lib then
-        return nil
-      end
-      -- according to mini.icons docs, need to check this
-      -- to make sure setup has been called!
-      if not _G.MiniIcons then
-        return nil
-      end
-
-      return lib
-    end,
-    get_icon = function(self, path)
-      return self._lib.get('file', path)
-    end,
-  },
-  {
     type = 'nvim-web-devicons',
     get_lib = function()
       local _, lib = pcall(require, 'nvim-web-devicons')
@@ -45,6 +26,25 @@ local providers = {
     get_icon = function(self, path)
       local extension = string.match(path, '.+%.(.+)$')
       return self._lib.get_icon(path, extension, { default = true })
+    end,
+  },
+  {
+    type = 'mini.icons',
+    get_lib = function()
+      local _, lib = pcall(require, 'mini.icons')
+      if not lib then
+        return nil
+      end
+      -- according to mini.icons docs, need to check this
+      -- to make sure setup has been called!
+      if not _G.MiniIcons then
+        return nil
+      end
+
+      return lib
+    end,
+    get_icon = function(self, path)
+      return self._lib.get('file', path)
     end,
   },
 }

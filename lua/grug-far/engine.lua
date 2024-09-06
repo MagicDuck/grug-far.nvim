@@ -6,7 +6,8 @@ local M = {}
 
 ---@class ResultHighlightSign
 ---@field hl string
----@field icon string
+---@field icon? string
+---@field text? string
 
 ---@enum ResultHighlightType
 M.ResultHighlightType = {
