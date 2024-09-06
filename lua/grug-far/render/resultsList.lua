@@ -21,6 +21,8 @@ end
 ---@class addLocationMarkOpts
 ---@field sign? ResultHighlightSign
 ---@field matchLineCount? integer
+---@field virt_text? string[][]
+---@field virt_text_pos? string
 
 --- adds location mark
 ---@param buf integer
@@ -48,11 +50,11 @@ local function addLocationMark(buf, context, line, end_col, options)
         resultLocationOpts.numberLabelFormat:format(options.matchLineCount),
         'GrugFarResultsNumberLabel',
       },
-    } or nil,
+    } or options.virt_text,
     virt_text_pos = resultLocationOpts.showNumberLabel
         and options.matchLineCount
         and resultLocationOpts.numberLabelPosition
-      or nil,
+      or options.virt_text_pos,
   })
 end
 
@@ -120,14 +122,14 @@ function M.appendResultsChunk(buf, context, data)
 
     if hl_type == ResultHighlightType.FilePath then
       state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
-      local sign = nil
+      local options = {}
       if context.fileIconsProvider then
         local icon, icon_hl = context.fileIconsProvider:get_icon(state.resultsLastFilename)
-        sign = { text = icon, hl = icon_hl }
+        options.virt_text = { { icon .. '  ', icon_hl } }
+        options.virt_text_pos = 'inline'
       end
 
-      local markId =
-        addLocationMark(buf, context, lastline + highlight.start_line, #line, { sign = sign })
+      local markId = addLocationMark(buf, context, lastline + highlight.start_line, #line, options)
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl_type == ResultHighlightType.LineNumber then
       -- omit ending ':'
