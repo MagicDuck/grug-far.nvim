@@ -21,10 +21,10 @@ Grug find! Grug replace! Grug happy!
 - "Preview" result source while "scrolling" through results 
 
 #### Searching:
-<img width="1259" alt="image" src="https://github.com/user-attachments/assets/a0ff931b-8e73-4828-b0fd-b9fea94124d0">
+<img width="1261" alt="image" src="https://github.com/user-attachments/assets/b6ac09cf-1444-4050-bfa9-53428915a9a5">
 
 #### Replacing:
-<img width="1255" alt="image" src="https://github.com/user-attachments/assets/d348753a-e71d-4f28-bd4a-b99162de6537">
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/3bacfd16-6bec-4a0d-b284-9fc8cb4ae13b">
 
 <details>
 <summary>More screenshots:</summary>
@@ -39,7 +39,7 @@ Grug find! Grug replace! Grug happy!
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
 
 #### Ast-grep multiline search and replace:
-<img width="1254" alt="image" src="https://github.com/user-attachments/assets/b15bbe33-cb27-4b8e-8b9d-241b64218fdc">
+<img width="1257" alt="image" src="https://github.com/user-attachments/assets/d725dac6-0012-426a-9b42-21e615ad7a29">
 
 #### Ast-grep debug-query
 <img width="1254" alt="image" src="https://github.com/user-attachments/assets/60ab0161-4da8-45ee-9d6e-6e23251a857b">
