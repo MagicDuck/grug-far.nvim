@@ -21,7 +21,7 @@ Grug find! Grug replace! Grug happy!
 - "Preview" result source while "scrolling" through results 
 
 #### Searching:
-<img width="1261" alt="image" src="https://github.com/user-attachments/assets/b6ac09cf-1444-4050-bfa9-53428915a9a5">
+<img width="1255" alt="image" src="https://github.com/user-attachments/assets/c5427c66-f23b-4f0e-b79c-9018fd72535e">
 
 #### Replacing:
 <img width="1258" alt="image" src="https://github.com/user-attachments/assets/3bacfd16-6bec-4a0d-b284-9fc8cb4ae13b">
