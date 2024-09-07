@@ -45,6 +45,11 @@ M.defaultOptions = {
       -- like for example if you always want context lines around matches
       extraArgs = '',
 
+      -- whether to show diff of the match being replaced as oppose to just the
+      -- replaced result. Can be a bit slower but taking the hit might be worth
+      -- as it makes it easier to understand the change being made
+      showDiffOnReplace = true,
+
       -- placeholders to show in input areas when they are empty
       -- set individual ones to '' to disable, or set enabled = false for complete disable
       placeholders = {
@@ -435,11 +440,13 @@ M.defaultOptions = {
 ---@class RipgrepEngineTable
 ---@field path string
 ---@field extraArgs string
+---@field showDiffOnReplace boolean
 ---@field placeholders PlaceholdersTable
 
 ---@class RipgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
+---@field showDiffOnReplace? boolean
 ---@field placeholders? PlaceholdersTableOverride
 
 ---@class AstgrepEngineTable
