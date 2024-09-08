@@ -15,8 +15,6 @@ M.__index = M
 ---@param args string[]
 ---@param on_err fun(err: string)
 function M.new(options, args, on_err)
-  -- TODO (sbadragan): cleanup
-  table.insert(args, '-')
   local self = setmetatable({}, M)
   self._stdin = uv.new_pipe()
   self._replaced_lines = nil
@@ -26,7 +24,9 @@ function M.new(options, args, on_err)
   fetchCommandOutput({
     cmd_path = options.engines.ripgrep.path,
     args = args,
+    stdin = self._stdin,
     on_fetch_chunk = function(data)
+      P('on_fetch_chunk')
       if not self._on_done then
         return
       end
@@ -58,8 +58,8 @@ end
 function M:get_replaced_lines(lines, on_done)
   self._replaced_lines = nil
   self._on_done = on_done
-  P({ write_lines = lines })
-  uv.write(self._stdin, lines .. 'XXX')
+  P(lines)
+  uv.write(self._stdin, lines .. '\0')
 end
 
 function M:destroy()
