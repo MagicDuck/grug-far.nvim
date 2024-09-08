@@ -37,11 +37,34 @@ function M.isSearchWithReplacement(args)
   return false
 end
 
+---@param args string[]?
+---@return string[]? newArgs
+local function stripReplaceArgs(args)
+  if not args then
+    return nil
+  end
+  local newArgs = {}
+  local stripNextArg = false
+  for _, arg in ipairs(args) do
+    local isOneArgReplace = vim.startswith(arg, '--replace=')
+    local isTwoArgReplace = arg == '--replace' or arg == '-r'
+    local stripArg = stripNextArg or isOneArgReplace or isTwoArgReplace
+    stripNextArg = isTwoArgReplace
+
+    if not stripArg then
+      table.insert(newArgs, arg)
+    end
+  end
+
+  return newArgs
+end
+
 --- does search
 ---@param params EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 function M.search(params)
-  local version = getRgVersion(params.options)
+  local options = params.options
+  local version = getRgVersion(options)
   if not version then
     params.on_finish(
       'error',
@@ -53,6 +76,11 @@ function M.search(params)
 
   local args = M.getSearchArgs(params.inputs, params.options)
   local isSearchWithReplace = M.isSearchWithReplacement(args)
+
+  local showDiff = isSearchWithReplace and options.engines.ripgrep.showDiffOnReplace
+  if showDiff then
+    args = stripReplaceArgs(args)
+  end
 
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
