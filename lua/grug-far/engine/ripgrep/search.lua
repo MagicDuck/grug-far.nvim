@@ -77,18 +77,49 @@ function M.search(params)
   local args = M.getSearchArgs(params.inputs, params.options)
   local isSearchWithReplace = M.isSearchWithReplacement(args)
 
+  local on_fetch_chunk = function(data)
+    params.on_fetch_chunk(parseResults(data, isSearchWithReplace))
+  end
+
   local showDiff = isSearchWithReplace and options.engines.ripgrep.showDiffOnReplace
   if showDiff then
     args = stripReplaceArgs(args)
+
+    local results_to_process = {}
+    local processNext = function()
+      local results = results_to_process[1]
+      -- TODO (sbadragan): do the thing
+      getReplacementResults(results, function(replacementResults)
+        local mergedResults = results + replacementResults
+        params.on_fetch_chunk(mergedResults)
+        table.remove(results_to_process, 1)
+        if #results_to_process > 0 then
+          processNext()
+        end
+      end)
+    end
+
+    on_fetch_chunk = function(data)
+      local results = parseResults(data, false)
+      table.insert(results_to_process, results)
+
+      if #results_to_process == 1 then
+        procesNext()
+      end
+
+      -- if showDiff then
+      --   params.on_fetch_chunk(results)
+      -- else
+      --   params.on_fetch_chunk(parseResults(data, isSearchWithReplace))
+      -- end
+    end
   end
 
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = args,
     options = params.options,
-    on_fetch_chunk = function(data)
-      params.on_fetch_chunk(parseResults(data, isSearchWithReplace))
-    end,
+    on_fetch_chunk = on_fetch_chunk,
     on_finish = function(status, errorMessage)
       if status == 'error' and errorMessage and #errorMessage == 0 then
         errorMessage = 'no matches'
