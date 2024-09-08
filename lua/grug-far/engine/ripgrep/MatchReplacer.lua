@@ -15,11 +15,14 @@ M.__index = M
 ---@param args string[]
 ---@param on_err fun(err: string)
 function M.new(options, args, on_err)
+  -- TODO (sbadragan): cleanup
+  table.insert(args, '-')
   local self = setmetatable({}, M)
   self._stdin = uv.new_pipe()
   self._replaced_lines = nil
   self._on_done = nil
 
+  P(args)
   fetchCommandOutput({
     cmd_path = options.engines.ripgrep.path,
     args = args,
@@ -30,7 +33,8 @@ function M.new(options, args, on_err)
 
       self._replaced_lines = self._replaced_lines and self._replaced_lines .. data or data
 
-      if vim.endswith(data, '\0') then
+      print('data', data)
+      if vim.endswith(data, 'XXX') then
         self._on_done(self._replaced_lines:sub(1, -2))
         self._on_done = nil
         self._replaced_lines = nil
@@ -41,7 +45,7 @@ function M.new(options, args, on_err)
         on_err(errorMessage)
       end
       -- TODO (sbadragan): remove
-      P('match replacer finished!')
+      print('match replacer finished!', status, errorMessage)
     end,
   })
 
@@ -54,10 +58,13 @@ end
 function M:get_replaced_lines(lines, on_done)
   self._replaced_lines = nil
   self._on_done = on_done
-  uv.write(self._stdin, lines .. '\0')
+  P({ write_lines = lines })
+  uv.write(self._stdin, lines .. 'XXX')
 end
 
 function M:destroy()
+  -- TODO (sbadragan): rmove
+  P('destroy is called')
   uv.shutdown(self._stdin)
 end
 

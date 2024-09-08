@@ -24,6 +24,8 @@ function M:_processNext()
     table.remove(self.queue, 1)
     if #self.queue > 0 then
       self:_processNext()
+    elseif self._on_finish then
+      self._on_finish()
     end
   end)
 end
@@ -41,6 +43,14 @@ end
 --- stops the processing queue at the first available chance
 function M:stop()
   self.is_stopped = true
+end
+
+function M:on_finish(callback)
+  if #self.queue == 0 then
+    callback()
+  else
+    self._on_finish = callback
+  end
 end
 
 return M

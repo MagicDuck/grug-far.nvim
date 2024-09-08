@@ -95,6 +95,13 @@ function M.search(params)
     params.on_fetch_chunk(parseResults(data, isSearchWithReplace))
   end
 
+  local on_finish = function(status, errorMessage)
+    if status == 'error' and errorMessage and #errorMessage == 0 then
+      errorMessage = 'no matches'
+    end
+    params.on_finish(status, errorMessage)
+  end
+
   local cleanup = nil
   local abort = nil
   local effectiveArgs = nil
@@ -134,9 +141,22 @@ function M.search(params)
       processingQueue:push(data)
     end
 
-    cleanup = function()
-      processingQueue:stop()
-      matchReplacer:destroy()
+    on_finish = function(status, errorMessage)
+      if status == 'error' and errorMessage and #errorMessage == 0 then
+        errorMessage = 'no matches'
+      end
+      if status ~= 'success' then
+        processingQueue:stop()
+        -- TODO (sbadragan): turn back?
+        -- matchReplacer:destroy()
+        params.on_finish(status, errorMessage)
+      else
+        processingQueue:on_finish(function()
+          processingQueue:stop()
+          -- matchReplacer:destroy()
+          params.on_finish(status, errorMessage)
+        end)
+      end
     end
   end
 
@@ -144,15 +164,7 @@ function M.search(params)
     cmd_path = params.options.engines.ripgrep.path,
     args = args,
     on_fetch_chunk = on_fetch_chunk,
-    on_finish = function(status, errorMessage)
-      if cleanup then
-        cleanup()
-      end
-      if status == 'error' and errorMessage and #errorMessage == 0 then
-        errorMessage = 'no matches'
-      end
-      params.on_finish(status, errorMessage)
-    end,
+    on_finish = on_finish,
   })
 
   return abort, effectiveArgs
