@@ -1,4 +1,5 @@
 local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
+local ProcessingQueue = require('grug-far/engine/ProcessingQueue')
 local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 local parseResults = require('grug-far/engine/ripgrep/parseResults')
 local getArgs = require('grug-far/engine/ripgrep/getArgs')
@@ -35,6 +36,16 @@ function M.isSearchWithReplacement(args)
   end
 
   return false
+end
+
+--- adds results of doing a replace to results of doing a search
+---@param params { data: string, on_finish: fun(results: ParsedResultsData)}
+local function getResultsWithReplaceDiff(params)
+  local data = params.data
+  -- TODO (sbadragan): need to add diff bar sign
+  local results = parseResults(data, false)
+  -- TODO (sbadragan): call into rg stdin thingy
+  params.on_finish(results)
 end
 
 ---@param args string[]?
@@ -83,35 +94,21 @@ function M.search(params)
 
   local showDiff = isSearchWithReplace and options.engines.ripgrep.showDiffOnReplace
   if showDiff then
-    args = stripReplaceArgs(args)
+    -- TODO (sbadragan): launch rg stdin process. If it fails for some reason, propagate the error
 
-    local results_to_process = {}
-    local processNext = function()
-      local results = results_to_process[1]
-      -- TODO (sbadragan): do the thing
-      getReplacementResults(results, function(replacementResults)
-        local mergedResults = results + replacementResults
-        params.on_fetch_chunk(mergedResults)
-        table.remove(results_to_process, 1)
-        if #results_to_process > 0 then
-          processNext()
-        end
-      end)
-    end
+    args = stripReplaceArgs(args)
+    local processingQueue = ProcessingQueue.new(function(data, on_done)
+      getResultsWithReplaceDiff({
+        data = data,
+        on_finish = function(results)
+          params.on_fetch_chunk(results)
+          on_done()
+        end,
+      })
+    end)
 
     on_fetch_chunk = function(data)
-      local results = parseResults(data, false)
-      table.insert(results_to_process, results)
-
-      if #results_to_process == 1 then
-        procesNext()
-      end
-
-      -- if showDiff then
-      --   params.on_fetch_chunk(results)
-      -- else
-      --   params.on_fetch_chunk(parseResults(data, isSearchWithReplace))
-      -- end
+      processingQueue:push(data)
     end
   end
 
