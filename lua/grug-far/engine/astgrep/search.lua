@@ -106,7 +106,6 @@ local function run_astgrep_search(args, options, on_fetch_chunk, on_finish)
   return fetchCommandOutput({
     cmd_path = options.engines.astgrep.path,
     args = args,
-    options = options,
     on_fetch_chunk = function(data)
       if isTextOutput then
         on_fetch_chunk({

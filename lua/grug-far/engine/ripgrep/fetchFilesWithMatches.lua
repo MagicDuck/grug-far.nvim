@@ -22,7 +22,6 @@ local function fetchFilesWithMatches(params)
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = args,
-    options = params.options,
     on_fetch_chunk = function(data)
       local lines = vim.split(data, '\n')
       local count = 0

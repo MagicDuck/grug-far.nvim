@@ -4,9 +4,9 @@ local uv = vim.uv
 ---@class FetchCommandOutputParams
 ---@field cmd_path string
 ---@field args string[]?
----@field options GrugFarOptions
 ---@field on_fetch_chunk fun(data: string)
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string?)
+---@field stdin? uv_pipe_t
 
 --- fetch with ripgrep
 ---@param params FetchCommandOutputParams
@@ -24,6 +24,7 @@ local function fetchCommandOutput(params)
     return nil, args
   end
 
+  local stdin = params.stdin
   local stdout = uv.new_pipe()
   local stderr = uv.new_pipe()
 
@@ -39,6 +40,7 @@ local function fetchCommandOutput(params)
       return
     end
 
+    utils.closeHandle(stdin)
     utils.closeHandle(stdout)
     utils.closeHandle(stderr)
     utils.closeHandle(handle)
@@ -61,6 +63,7 @@ local function fetchCommandOutput(params)
     end
 
     finished = true
+    utils.closeHandle(stdin)
     utils.closeHandle(stdout)
     utils.closeHandle(stderr)
     utils.closeHandle(handle)

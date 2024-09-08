@@ -4,6 +4,8 @@ local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 local parseResults = require('grug-far/engine/ripgrep/parseResults')
 local getArgs = require('grug-far/engine/ripgrep/getArgs')
 local colors = require('grug-far/engine/ripgrep/colors')
+local MatchReplacer = require('grug-far/engine/ripgrep/MatchReplacer')
+local uv = vim.uv
 
 local M = {}
 
@@ -39,13 +41,14 @@ function M.isSearchWithReplacement(args)
 end
 
 --- adds results of doing a replace to results of doing a search
----@param params { data: string, on_finish: fun(results: ParsedResultsData)}
+---@param params { data: string, matchReplacer: MatchReplacer, on_finish: fun(results: ParsedResultsData)}
 local function getResultsWithReplaceDiff(params)
   local data = params.data
-  -- TODO (sbadragan): need to add diff bar sign
-  local results = parseResults(data, false)
-  -- TODO (sbadragan): call into rg stdin thingy
-  params.on_finish(results)
+  params.matchReplacer:get_replaced_lines(data, function(replaced_lines)
+    -- TODO (sbadragan): need to add diff bar sign
+    local results = parseResults(data .. '\n' .. replaced_lines, false)
+    params.on_finish(results)
+  end)
 end
 
 ---@param args string[]?
@@ -92,14 +95,34 @@ function M.search(params)
     params.on_fetch_chunk(parseResults(data, isSearchWithReplace))
   end
 
+  local cleanup = nil
+  local abort = nil
+  local effectiveArgs = nil
+
   local showDiff = isSearchWithReplace and options.engines.ripgrep.showDiffOnReplace
   if showDiff then
     -- TODO (sbadragan): launch rg stdin process. If it fails for some reason, propagate the error
-
     args = stripReplaceArgs(args)
-    local processingQueue = ProcessingQueue.new(function(data, on_done)
+
+    local replaceInputs = vim.deepcopy(params.inputs)
+    replaceInputs.paths = ''
+    replaceInputs.filesFilter = ''
+    local replaceArgs = M.getSearchArgs(replaceInputs, params.options) --[[ @as string[] ]]
+    local processingQueue = nil
+    local matchReplacer = MatchReplacer.new(params.options, replaceArgs, function(errorMessage)
+      if processingQueue then
+        processingQueue:stop()
+      end
+      if abort then
+        abort()
+      end
+      params.on_finish('error', errorMessage)
+    end)
+
+    processingQueue = ProcessingQueue.new(function(data, on_done)
       getResultsWithReplaceDiff({
         data = data,
+        matchReplacer = matchReplacer,
         on_finish = function(results)
           params.on_fetch_chunk(results)
           on_done()
@@ -110,20 +133,29 @@ function M.search(params)
     on_fetch_chunk = function(data)
       processingQueue:push(data)
     end
+
+    cleanup = function()
+      processingQueue:stop()
+      matchReplacer:destroy()
+    end
   end
 
-  return fetchCommandOutput({
+  abort, effectiveArgs = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = args,
-    options = params.options,
     on_fetch_chunk = on_fetch_chunk,
     on_finish = function(status, errorMessage)
+      if cleanup then
+        cleanup()
+      end
       if status == 'error' and errorMessage and #errorMessage == 0 then
         errorMessage = 'no matches'
       end
       params.on_finish(status, errorMessage)
     end,
   })
+
+  return abort, effectiveArgs
 end
 
 return M
