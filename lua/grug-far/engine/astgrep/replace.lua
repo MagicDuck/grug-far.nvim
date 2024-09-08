@@ -80,7 +80,6 @@ function M.replace(params)
             return fetchCommandOutput({
               cmd_path = params.options.engines.astgrep.path,
               args = chunk_args,
-              options = params.options,
               on_fetch_chunk = function()
                 -- astgrep does not report progess while replacing
               end,
@@ -97,7 +96,6 @@ function M.replace(params)
     on_abort = fetchCommandOutput({
       cmd_path = params.options.engines.astgrep.path,
       args = args,
-      options = params.options,
       on_fetch_chunk = function()
         -- astgrep does not report progess while replacing
       end,

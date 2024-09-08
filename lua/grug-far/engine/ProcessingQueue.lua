@@ -10,10 +10,15 @@ function M.new(processCallback)
   local self = setmetatable({}, M)
   self.queue = {}
   self.processCallback = processCallback
+  self.is_stopped = false
   return self
 end
 
 function M:_processNext()
+  if self.is_stopped then
+    return
+  end
+
   local item = self.queue[1]
   self.processCallback(item, function()
     table.remove(self.queue, 1)
@@ -31,6 +36,11 @@ function M:push(item)
   if #self.queue == 1 then
     self:_processNext()
   end
+end
+
+--- stops the processing queue at the first available chance
+function M:stop()
+  self.is_stopped = true
 end
 
 return M
