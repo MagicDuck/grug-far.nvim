@@ -30,7 +30,7 @@ local function fetchCommandOutput(params)
 
   local handle
   handle = uv.spawn(params.cmd_path, {
-    stdio = { nil, stdout, stderr },
+    stdio = { stdin, stdout, stderr },
     cwd = vim.fn.getcwd(),
     args = args,
   }, function(
