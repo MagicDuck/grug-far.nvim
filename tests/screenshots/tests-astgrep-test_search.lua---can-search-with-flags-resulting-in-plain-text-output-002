@@ -14,9 +14,8 @@
 13|      object: identifier (0,0)-(0,4)
 14|      property: property_identifier (0,5)-(0,7)
 15|
-16|
-17|{"text":"grug.walks","range":{"byteOffset":{"start":33,"end":43},"start":{"line":2,"column":6},"end":{"line":2,"column":16}},"file":"file2.ts","lines":"      grug.walks(talks)","language":"TypeScript","metaVariables":{"single":{"A":{"text":"walks","range":{"byteOffset":{"start":38,"end":43},"start":{"line":2,"column":11},"end":{"line":2,"column":16}}}},"multi":{},"transformed":{}}}
-18|
+16|{"text":"grug.walks","range":{"byteOffset":{"start":33,"end":43},"start":{"line":2,"column":6},"end":{"line":2,"column":16}},"file":"file2.ts","lines":"      grug.walks(talks)","language":"TypeScript","metaVariables":{"single":{"A":{"text":"walks","range":{"byteOffset":{"start":38,"end":43},"start":{"line":2,"column":11},"end":{"line":2,"column":16}}}},"multi":{},"transformed":{}}}
+17|
 
 --|-
 01| 
@@ -36,4 +35,3 @@
 15| 
 16| 
 17| 
-18| 
