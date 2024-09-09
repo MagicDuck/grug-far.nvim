@@ -112,12 +112,7 @@ local function getResultsWithReplaceDiff(params)
 end
 
 -- TODO (sbadragan): get sync to work
--- TODO (sbadragan): bug in history when not on lines
--- [C]: in function 'nvim_buf_get_lines'
--- /opt/repos/grug-far.nvim/lua/grug-far/utils.lua:251: in function 'ensureBufTopEmptyLines'
--- ...repos/grug-far.nvim/lua/grug-far/actions/historyOpen.lua:94: in function 'renderHistoryBuffer'
--- ...repos/grug-far.nvim/lua/grug-far/actions/historyOpen.lua:190: in function <...repos/grug-far.nvim/lua/grug-far/actions/historyOpen.lua:189>
---
+
 ---@param args string[]?
 ---@return string[]? newArgs
 local function stripReplaceArgs(args)

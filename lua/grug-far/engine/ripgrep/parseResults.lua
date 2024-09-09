@@ -66,7 +66,6 @@ local HighlightByType = {
 ---@param highlights ResultHighlight[] highlights table to add to
 ---@param lineNumberSign? ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
--- TODO (sbadragan): we need to handle sub-matches
 local function addResultLines(
   resultLines,
   ranges,
