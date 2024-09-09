@@ -29,13 +29,27 @@ function M:_processNext()
     end
   end)
 end
--- TODO (sbadragan): we can compact all items in the processing queue into one each time
 
 --- adds item to be processed to the queue
 --- automatically processes as necessary
 ---@param item any
 function M:push(item)
   table.insert(self.queue, item)
+  if #self.queue == 1 then
+    self:_processNext()
+  end
+end
+
+--- aggregate to last item in queue
+--- automatically processes as necessary
+---@param aggregate_callback fun(item?: any): any
+function M:aggregate_last(aggregate_callback)
+  if #self.queue > 1 then
+    self.queue[#self.queue] = aggregate_callback(self.queue[#self.queue])
+  else
+    table.insert(self.queue, aggregate_callback(nil))
+  end
+
   if #self.queue == 1 then
     self:_processNext()
   end
