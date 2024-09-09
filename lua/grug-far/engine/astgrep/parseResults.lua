@@ -184,8 +184,6 @@ function M.parseResults(matches)
       local replacedStr = prefix .. match.replacement .. postfix
       local replacedLines = vim.split(replacedStr, '\n')
 
-      -- Note: a bit dirty to modify range data directly, but this is more efficient vs cloning as nothing
-      -- else below this needs it
       local replaceRange = vim.deepcopy(match.range)
       replaceRange['end'].column = #replacedLines[#replacedLines] - #postfix
       addResultLines(

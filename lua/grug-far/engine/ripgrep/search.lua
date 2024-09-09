@@ -2,6 +2,7 @@ local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
 local ProcessingQueue = require('grug-far/engine/ProcessingQueue')
 local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 local parseResults = require('grug-far/engine/ripgrep/parseResults')
+local parseTextResults = require('grug-far/engine/ripgrep/parseTextResults')
 local getArgs = require('grug-far/engine/ripgrep/getArgs')
 local colors = require('grug-far/engine/ripgrep/colors')
 local uv = vim.uv
@@ -41,8 +42,7 @@ function M.isSearchWithReplacement(args)
 end
 
 ---@class ResultsWithReplaceDiffParams
--- TODO (sbadragan): fix this up
----@field json_data any
+---@field json_data RipgrepJson[]
 ---@field options GrugFarOptions
 ---@field inputs GrugFarInputs
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, results: ParsedResultsData?)
@@ -86,7 +86,6 @@ local function getResultsWithReplaceDiff(params)
       replaced_matches_text = replaced_matches_text and replaced_matches_text .. data or data
     end,
     on_finish = function(status, errorMessage)
-      -- TODO (sbadragan): on abort case handle
       if status == 'success' then
         ---@cast replaced_matches_text string
         local replaced_matches = vim.split(replaced_matches_text, match_separator)
@@ -100,12 +99,10 @@ local function getResultsWithReplaceDiff(params)
           end
         end
 
-        -- TODO (sbadragan): need to parse those properly
-        local results = parseResults('hello', false)
+        -- TODO (sbadragan): generalize?
+        local results = parseResults.parseResults(json_data, true, true)
         params.on_finish(status, nil, results)
-        P('gets here 1')
       else
-        P('gets here 2')
         params.on_finish(status, errorMessage)
       end
     end,
@@ -118,11 +115,11 @@ local function getResultsWithReplaceDiff(params)
       uv.shutdown(stdin)
     end
   )
-  print('run with', vim.inspect(matches_for_replacement))
 
   return abort
 end
 
+-- TODO (sbadragan): get sync to work
 -- TODO (sbadragan): bug in history when not on lines
 -- [C]: in function 'nvim_buf_get_lines'
 -- /opt/repos/grug-far.nvim/lua/grug-far/utils.lua:251: in function 'ensureBufTopEmptyLines'
@@ -162,12 +159,13 @@ end
 --- runs search
 ---@param params RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
+-- TODO (sbadragan): switch to JSON?
 local function run_search(params)
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = params.args,
     on_fetch_chunk = function(data)
-      params.on_fetch_chunk(parseResults(data, params.isSearchWithReplace))
+      params.on_fetch_chunk(parseTextResults(data, params.isSearchWithReplace))
     end,
     on_finish = function(status, errorMessage)
       if status == 'error' and errorMessage and #errorMessage == 0 then
@@ -214,7 +212,6 @@ local function run_search_with_replace_diff(params)
           on_done()
         else
           abort()
-          P('finishing here 1')
           params.on_finish(status, errorMessage)
         end
       end,
@@ -243,11 +240,9 @@ local function run_search_with_replace_diff(params)
       if status == 'success' then
         processingQueue:on_finish(function()
           processingQueue:stop()
-          P('finishing here 2')
           params.on_finish(status, errorMessage)
         end)
       else
-        P('finishing here 2')
         processingQueue:stop()
         params.on_finish(status, errorMessage)
       end
