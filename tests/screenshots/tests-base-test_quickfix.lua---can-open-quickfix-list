@@ -10,7 +10,7 @@
 09|                                                                                
 10|                                                                                
 11| STATUS_SUCCESS ⟪ ripgrep ⟫
-12|Grug FAR - 1: grug                                            3,4            27%
+12|Grug FAR - 1: grug                                            3,4            25%
 13| file1.txt|2 col 8-3| grug walks                                                
 14| file1.txt|3 col 13-4| then grug swims                                          
 15| file2.doc|2 col 7-3| grug talks and grug drinks                                

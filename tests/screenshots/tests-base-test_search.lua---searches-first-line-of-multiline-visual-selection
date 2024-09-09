@@ -15,13 +15,13 @@
 14|                                                                                
 15|                                                                                
 16| STATUS_SUCCESS ⟪ ripgrep ⟫
-17| 3 matches in 1 files                                                           
+17| 1 matches in 1 files                                                           
 18|                                                                                
 19| file2                                                                          
 20|-2:18:      grug talks and grug drinks                                       [1]
 21|│3:18:      then grug thinks                                                 [2]
 22|│4:18:      something else                                                   [3]
-23|Grug FAR - 1: and grug drinks^@      then gru...              3,16           All
+23|Grug FAR - 1: and grug drinks^@      then gru...              3,16           Top
 24|-- INSERT --                                                                    
 
 --|---------|---------|---------|---------|---------|---------|---------|---------|
