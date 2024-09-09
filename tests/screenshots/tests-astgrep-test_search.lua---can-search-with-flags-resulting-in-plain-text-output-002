@@ -1,37 +1,269 @@
---|
-01|
-02|
-03|grug.$A
-04|
-05|
-06|--lang=ts --debug-query=ast
-07|
-08|
-09|Debug AST:
-10|program (0,0)-(0,7)
-11|  expression_statement (0,0)-(0,7)
-12|    member_expression (0,0)-(0,7)
-13|      object: identifier (0,0)-(0,4)
-14|      property: property_identifier (0,5)-(0,7)
-15|
-16|{"text":"grug.walks","range":{"byteOffset":{"start":33,"end":43},"start":{"line":2,"column":6},"end":{"line":2,"column":16}},"file":"file2.ts","lines":"      grug.walks(talks)","language":"TypeScript","metaVariables":{"single":{"A":{"text":"walks","range":{"byteOffset":{"start":38,"end":43},"start":{"line":2,"column":11},"end":{"line":2,"column":16}}}},"multi":{},"transformed":{}}}
-17|
+---|
+001|
+002|
+003|grug.$A
+004|
+005|
+006|--help
+007|
+008|
+009|Run one time search or rewrite in command line. (default command)
+010|
+011|Usage: sg run [OPTIONS] --pattern <PATTERN> [PATHS]...
+012|
+013|Arguments:
+014|  [PATHS]...
+015|          The paths to search. You can provide multiple paths separated by spaces
+016|          
+017|          [default: .]
+018|
+019|Options:
+020|  -p, --pattern <PATTERN>
+021|          AST pattern to match
+022|
+023|  -r, --rewrite <FIX>
+024|          String to replace the matched AST node
+025|
+026|  -l, --lang <LANG>
+027|          The language of the pattern. For full language list, visit https://ast-grep.github.io/reference/languages.html
+028|
+029|      --debug-query[=<format>]
+030|          Print query pattern's tree-sitter AST. Requires lang be set explicitly
+031|
+032|          Possible values:
+033|          - pattern: Print the query parsed in Pattern format
+034|          - ast:     Print the query in tree-sitter AST format, only named nodes are shown
+035|          - cst:     Print the query in tree-sitter CST format, both named and unnamed nodes are shown
+036|          - sexp:    Print the query in S-expression format
+037|
+038|      --strictness <STRICTNESS>
+039|          The strictness of the pattern
+040|
+041|          Possible values:
+042|          - cst:       Match exact all node
+043|          - smart:     Match all node except source trivial nodes
+044|          - ast:       Match only ast nodes
+045|          - relaxed:   Match ast node except comments
+046|          - signature: Match ast node except comments, without text
+047|
+048|      --no-ignore <FILE_TYPE>
+049|          Do not respect hidden file system or ignore files (.gitignore, .ignore, etc.).
+050|          
+051|          You can suppress multiple ignore files by passing `no-ignore` multiple times.
+052|
+053|          Possible values:
+054|          - hidden:  Search hidden files and directories. By default, hidden files and directories are skipped
+055|          - dot:     Don't respect .ignore files. This does *not* affect whether ast-grep will ignore files and directories whose names begin with a dot. For that, use --no-ignore hidden
+056|          - exclude: Don't respect ignore files that are manually configured for the repository such as git's '.git/info/exclude'
+057|          - global:  Don't respect ignore files that come from "global" sources such as git's `core.excludesFile` configuration option (which defaults to `$HOME/.config/git/ignore`)
+058|          - parent:  Don't respect ignore files (.gitignore, .ignore, etc.) in parent directories
+059|          - vcs:     Don't respect version control ignore files (.gitignore, etc.). This implies --no-ignore parent for VCS files. Note that .ignore files will continue to be respected
+060|
+061|      --stdin
+062|          Enable search code from StdIn.
+063|          
+064|          Use this if you need to take code stream from standard input.
+065|
+066|  -i, --interactive
+067|          Start interactive edit session.
+068|          
+069|          You can confirm the code change and apply it to files selectively, or you can open text editor to tweak the matched code. Note that code rewrite only happens inside a session.
+070|
+071|
+072|  -U, --update-all
+073|          Apply all rewrite without confirmation if true
+074|
+075|      --json[=<style>]
+076|          Output matches in structured JSON .
+077|          
+078|          If this flag is set, ast-grep will output matches in JSON format. You can pass optional value to this flag by using `--json=<style>` syntax to further control how JSON object is formatted and printed. ast-grep will `pretty`-print JSON if no value is passed. Note, the json flag must use `=` to specify its value. It conflicts with interactive.
+079|
+080|          Possible values:
+081|          - pretty:  Prints the matches as a pretty-printed JSON array, with indentation and line breaks. This is useful for human readability, but not for parsing by other programs. This is the default value for the `--json` option
+082|          - stream:  Prints each match as a separate JSON object, followed by a newline character. This is useful for streaming the output to other programs that can read one object per line
+083|          - compact: Prints the matches as a single-line JSON array, without any whitespace. This is useful for saving space and minimizing the output size
+084|
+085|      --color <WHEN>
+086|          Controls output color.
+087|          
+088|          This flag controls when to use colors. The default setting is 'auto', which means ast-grep will try to guess when to use colors. If ast-grep is printing to a terminal, then it will use colors, but if it is redirected to a file or a pipe, then it will suppress color output. ast-grep will also suppress color output in some other circumstances. For example, no color will be used if the TERM environment variable is not set or set to 'dumb'.
+089|          
+090|          [default: auto]
+091|
+092|          Possible values:
+093|          - auto:   Try to use colors, but don't force the issue. If the output is piped to another program, or the console isn't available on Windows, or if TERM=dumb, or if `NO_COLOR` is defined, for example, then don't use colors
+094|          - always: Try very hard to emit colors. This includes emitting ANSI colors on Windows if the console API is unavailable (not implemented yet)
+095|          - ansi:   Ansi is like Always, except it never tries to use anything other than emitting ANSI color codes
+096|          - never:  Never emit colors
+097|
+098|      --heading <WHEN>
+099|          Controls whether to print the file name as heading.
+100|          
+101|          If heading is used, the file name will be printed as heading before all matches of that file. If heading is not used, ast-grep will print the file path before each match as prefix. The default value `auto` is to use heading when printing to a terminal and to disable heading when piping to another program or redirected to files.
+102|          
+103|          [default: auto]
+104|
+105|          Possible values:
+106|          - auto:   Print heading for terminal tty but not for piped output
+107|          - always: Always print heading regardless of output type
+108|          - never:  Never print heading regardless of output type
+109|
+110|  -A, --after <NUM>
+111|          Show NUM lines after each match.
+112|          
+113|          It conflicts with both the -C/--context flag.
+114|          
+115|          [default: 0]
+116|
+117|  -B, --before <NUM>
+118|          Show NUM lines before each match.
+119|          
+120|          It conflicts with both the -C/--context flag.
+121|          
+122|          [default: 0]
+123|
+124|  -C, --context <NUM>
+125|          Show NUM lines around each match.
+126|          
+127|          This is equivalent to providing both the -B/--before and -A/--after flags with the same value. It conflicts with both the -B/--before and -A/--after flags.
+128|          
+129|          [default: 0]
+130|
+131|  -h, --help
+132|          Print help (see a summary with '-h')
+133|
 
---|-
-01| 
-02| 
-03| 
-04| 
-05| 
-06| 
-07| 
-08| 
-09| 
-10| 
-11| 
-12| 
-13| 
-14| 
-15| 
-16| 
-17| 
+---|-
+001| 
+002| 
+003| 
+004| 
+005| 
+006| 
+007| 
+008| 
+009| 
+010| 
+011| 
+012| 
+013| 
+014| 
+015| 
+016| 
+017| 
+018| 
+019| 
+020| 
+021| 
+022| 
+023| 
+024| 
+025| 
+026| 
+027| 
+028| 
+029| 
+030| 
+031| 
+032| 
+033| 
+034| 
+035| 
+036| 
+037| 
+038| 
+039| 
+040| 
+041| 
+042| 
+043| 
+044| 
+045| 
+046| 
+047| 
+048| 
+049| 
+050| 
+051| 
+052| 
+053| 
+054| 
+055| 
+056| 
+057| 
+058| 
+059| 
+060| 
+061| 
+062| 
+063| 
+064| 
+065| 
+066| 
+067| 
+068| 
+069| 
+070| 
+071| 
+072| 
+073| 
+074| 
+075| 
+076| 
+077| 
+078| 
+079| 
+080| 
+081| 
+082| 
+083| 
+084| 
+085| 
+086| 
+087| 
+088| 
+089| 
+090| 
+091| 
+092| 
+093| 
+094| 
+095| 
+096| 
+097| 
+098| 
+099| 
+100| 
+101| 
+102| 
+103| 
+104| 
+105| 
+106| 
+107| 
+108| 
+109| 
+110| 
+111| 
+112| 
+113| 
+114| 
+115| 
+116| 
+117| 
+118| 
+119| 
+120| 
+121| 
+122| 
+123| 
+124| 
+125| 
+126| 
+127| 
+128| 
+129| 
+130| 
+131| 
+132| 
+133| 
