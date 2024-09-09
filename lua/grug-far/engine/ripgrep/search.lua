@@ -2,9 +2,7 @@ local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
 local ProcessingQueue = require('grug-far/engine/ProcessingQueue')
 local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 local parseResults = require('grug-far/engine/ripgrep/parseResults')
-local parseTextResults = require('grug-far/engine/ripgrep/parseTextResults')
 local getArgs = require('grug-far/engine/ripgrep/getArgs')
-local colors = require('grug-far/engine/ripgrep/colors')
 local uv = vim.uv
 
 local M = {}
@@ -13,14 +11,8 @@ local M = {}
 ---@param inputs GrugFarInputs
 ---@param options GrugFarOptions
 ---@return string[]?
--- TODO (sbadragan): update?
 function M.getSearchArgs(inputs, options)
-  local extraArgs = { '--color=ansi' }
-  for k, v in pairs(colors.rg_colors) do
-    table.insert(extraArgs, '--colors=' .. k .. ':none')
-    table.insert(extraArgs, '--colors=' .. k .. ':fg:' .. v.rgb)
-  end
-
+  local extraArgs = { '--json' }
   return getArgs(inputs, options, extraArgs)
 end
 
@@ -99,8 +91,8 @@ local function getResultsWithReplaceDiff(params)
           end
         end
 
-        -- TODO (sbadragan): generalize?
-        local results = parseResults.parseResults(json_data, true, true)
+        local showDiff = params.options.engines.ripgrep.showDiffOnReplace
+        local results = parseResults.parseResults(json_data, true, showDiff)
         params.on_finish(status, nil, results)
       else
         params.on_finish(status, errorMessage)
@@ -154,18 +146,25 @@ end
 ---@field inputs GrugFarInputs
 ---@field on_fetch_chunk fun(data: ParsedResultsData)
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
----@field isSearchWithReplace boolean
 
 --- runs search
 ---@param params RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
--- TODO (sbadragan): switch to JSON?
 local function run_search(params)
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = params.args,
     on_fetch_chunk = function(data)
-      params.on_fetch_chunk(parseTextResults(data, params.isSearchWithReplace))
+      local json_lines = vim.split(data, '\n')
+      local json_data = {}
+      for _, json_line in ipairs(json_lines) do
+        if #json_line > 0 then
+          local entry = vim.json.decode(json_line)
+          table.insert(json_data, entry)
+        end
+      end
+      local results = parseResults.parseResults(json_data, false, false)
+      params.on_fetch_chunk(results)
     end,
     on_finish = function(status, errorMessage)
       if status == 'error' and errorMessage and #errorMessage == 0 then
@@ -179,7 +178,7 @@ end
 --- runs search with replace diff
 ---@param params RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
-local function run_search_with_replace_diff(params)
+local function run_search_with_replace(params)
   local abortSearch = nil
   local effectiveArgs = nil
   local processingQueue = nil
@@ -194,10 +193,6 @@ local function run_search_with_replace_diff(params)
   end
 
   local searchArgs = stripReplaceArgs(params.args)
-  if searchArgs then
-    -- TODO (sbadragan): put this into getSearchArgs??
-    table.insert(searchArgs, '--json')
-  end
 
   processingQueue = ProcessingQueue.new(function(json_data, on_done)
     getResultsWithReplaceDiff({
@@ -269,16 +264,14 @@ function M.search(params)
 
   local args = M.getSearchArgs(params.inputs, params.options)
   local isSearchWithReplace = M.isSearchWithReplacement(args)
-  local showDiff = isSearchWithReplace and options.engines.ripgrep.showDiffOnReplace
 
-  if showDiff then
-    return run_search_with_replace_diff({
+  if isSearchWithReplace then
+    return run_search_with_replace({
       options = options,
       inputs = params.inputs,
       args = args,
       on_fetch_chunk = params.on_fetch_chunk,
       on_finish = params.on_finish,
-      isSearchWithReplace = isSearchWithReplace,
     })
   else
     return run_search({
@@ -287,7 +280,6 @@ function M.search(params)
       args = args,
       on_fetch_chunk = params.on_fetch_chunk,
       on_finish = params.on_finish,
-      isSearchWithReplace = isSearchWithReplace,
     })
   end
 end
