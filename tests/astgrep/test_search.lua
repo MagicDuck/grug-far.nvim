@@ -125,7 +125,7 @@ T['can search with flags resulting in plain text output'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    prefills = { search = 'grug.$A', flags = '--lang=ts --debug-query=ast' },
+    prefills = { search = 'grug.$A', flags = '--help' },
   })
 
   helpers.childWaitForFinishedStatus(child)
