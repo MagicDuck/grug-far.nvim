@@ -45,9 +45,8 @@ M.defaultOptions = {
       -- like for example if you always want context lines around matches
       extraArgs = '',
 
-      -- whether to show diff of the match being replaced as oppose to just the
-      -- replaced result. Can be a bit slower but taking the hit might be worth
-      -- as it makes it easier to understand the change being made
+      -- whether to show diff of the match being replaced as opposed to just the
+      -- replaced result. It usually makes it easier to understand the change being made
       showDiffOnReplace = true,
 
       -- placeholders to show in input areas when they are empty

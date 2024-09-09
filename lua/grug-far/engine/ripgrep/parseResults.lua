@@ -168,6 +168,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
       last_line_number = nil
       table.insert(lines, '')
     elseif match.type == 'match' then
+      stats.matches = stats.matches + 1
       local first_submatch = data.submatches[1]
       local last_submatch = data.submatches[#data.submatches]
       local match_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
