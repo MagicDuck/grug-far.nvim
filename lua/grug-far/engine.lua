@@ -66,6 +66,7 @@ M.DiffSeparatorChars = ' '
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType
 ---@field isSearchWithReplacement fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean is this a search with replacement
+---@field showsReplaceDiff fun(options: GrugFarOptions): boolean whether we show a diff when replacing
 ---@field search fun(params: EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?) performs search
 ---@field replace fun(params: EngineReplaceParams): (abort: fun()?) performs replace
 ---@field isSyncSupported fun(): boolean whether sync operation is supported

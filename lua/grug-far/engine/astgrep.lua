@@ -11,6 +11,10 @@ local AstgrepEngine = {
     return search.isSearchWithReplacement(args)
   end,
 
+  showsReplaceDiff = function()
+    return true
+  end,
+
   search = search.search,
 
   replace = replace.replace,

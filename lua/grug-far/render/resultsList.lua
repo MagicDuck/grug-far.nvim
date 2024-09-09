@@ -283,6 +283,12 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
   if not context.engine.isSyncSupported() then
     return
   end
+  if
+    context.engine.isSearchWithReplacement(context.state.inputs, context.options)
+    and context.engine.showsReplaceDiff(context.options)
+  then
+    return
+  end
   if not opts.getIcon('resultsChangeIndicator', context) then
     return
   end
