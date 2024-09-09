@@ -61,25 +61,27 @@ local HighlightByType = {
 
 --- adds result lines
 ---@param resultLines string[] lines to add
----@param range { start: { column: integer?, line: integer}, end: {column: integer?, line: integer}}
+---@param ranges { start: { column: integer?, line: integer}, end: {column: integer?, line: integer}}[]
 ---@param lines string[] lines table to add to
 ---@param highlights ResultHighlight[] highlights table to add to
 ---@param lineNumberSign? ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
+-- TODO (sbadragan): we need to handle sub-matches
 local function addResultLines(
   resultLines,
-  range,
+  ranges,
   lines,
   highlights,
   lineNumberSign,
   matchHighlightType
 )
   local numlines = #lines
+  local first_range = ranges[1]
   for j, resultLine in ipairs(resultLines) do
     local current_line = numlines + j - 1
-    local isLastLine = j == #resultLines
-    local line_no = tostring(range.start.line + j)
-    local col_no = range.start.column and tostring(range.start.column + 1) or nil
+    local current_line_number = first_range.start.line + j - 1
+    local line_no = tostring(current_line_number)
+    local col_no = first_range.start.column and tostring(first_range.start.column) or nil
     local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))
 
     table.insert(highlights, {
@@ -104,14 +106,22 @@ local function addResultLines(
 
     resultLine = prefix .. resultLine
     if matchHighlightType then
-      table.insert(highlights, {
-        hl_type = matchHighlightType,
-        hl = HighlightByType[matchHighlightType],
-        start_line = current_line,
-        start_col = j == 1 and #prefix + range.start.column or #prefix,
-        end_line = current_line,
-        end_col = isLastLine and #prefix + range['end'].column or #resultLine,
-      })
+      for _, range in ipairs(ranges) do
+        if range.start.line <= current_line_number and range['end'].line >= current_line_number then
+          table.insert(highlights, {
+            hl_type = matchHighlightType,
+            hl = HighlightByType[matchHighlightType],
+            start_line = current_line,
+            start_col = range.start.line == current_line_number
+                and #prefix + range.start.column - 1
+              or #prefix,
+            end_line = current_line,
+            end_col = range['end'].line == current_line_number
+                and #prefix + range['end'].column - 1
+              or #resultLine,
+          })
+        end
+      end
     end
 
     table.insert(lines, utils.getLineWithoutCarriageReturn(resultLine))
@@ -169,8 +179,6 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
       table.insert(lines, '')
     elseif match.type == 'match' then
       stats.matches = stats.matches + 1
-      local first_submatch = data.submatches[1]
-      local last_submatch = data.submatches[#data.submatches]
       local match_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
       local match_lines = vim.split(match_lines_text, '\n')
       last_line_number = data.line_number + #match_lines - 1
@@ -181,27 +189,57 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
         local matchHighlightType = (isSearchWithReplace and showDiff)
             and ResultHighlightType.MatchRemoved
           or ResultHighlightType.Match
-        addResultLines(match_lines, {
-          start = {
-            line = data.line_number,
-            column = first_submatch and first_submatch.start or nil,
-          },
-          ['end'] = {
-            line = last_line_number,
-            column = last_submatch and last_submatch['end'] or nil,
-          },
-        }, lines, highlights, lineNumberSign, matchHighlightType)
+        local ranges = vim
+          .iter(data.submatches)
+          :map(function(submatch)
+            local text_to_submatch = match_lines_text:sub(1, submatch.start)
+            local start_line = data.line_number + vim.fn.count(text_to_submatch, '\n')
+            return {
+              start = {
+                line = start_line,
+                column = submatch.start - (utils.strFindLast(text_to_submatch, '\n') or 0) + 1,
+              },
+              ['end'] = {
+                line = start_line + vim.fn.count(submatch.match.text, '\n'),
+                column = submatch['end']
+                  - (utils.strFindLast(text_to_submatch .. submatch.match.text, '\n') or 0)
+                  + 1,
+              },
+            }
+          end)
+          :totable()
+
+        addResultLines(match_lines, ranges, lines, highlights, lineNumberSign, matchHighlightType)
       end
 
       -- add replacement lines
       if isSearchWithReplace then
-        -- build lines text with replacements spliced in for matches
+        -- build lines text with replacements spliced in for matches and figure out match ranges
         local last_index = 0
         local replaced_lines_text = ''
+        local ranges = {}
         for _, submatch in ipairs(data.submatches) do
           replaced_lines_text = replaced_lines_text
             .. match_lines_text:sub(last_index + 1, submatch.start)
-            .. submatch.replacement.text
+
+          local start_line = data.line_number + vim.fn.count(replaced_lines_text, '\n')
+          table.insert(ranges, {
+            start = {
+              line = start_line,
+              column = #replaced_lines_text
+                - (utils.strFindLast(replaced_lines_text, '\n') or 0)
+                + 1,
+            },
+            ['end'] = {
+              line = start_line + vim.fn.count(submatch.replacement.text, '\n'),
+              column = #replaced_lines_text + #submatch.replacement.text - (utils.strFindLast(
+                replaced_lines_text .. submatch.replacement.text,
+                '\n'
+              ) or 0) + 1,
+            },
+          })
+
+          replaced_lines_text = replaced_lines_text .. submatch.replacement.text
           last_index = submatch['end']
         end
         if last_index < #match_lines_text then
@@ -210,18 +248,14 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
 
         local replaced_lines = vim.split(replaced_lines_text, '\n')
 
-        addResultLines(replaced_lines, {
-          start = {
-            line = data.line_number,
-            column = first_submatch and first_submatch.start or nil,
-          },
-          ['end'] = {
-            line = data.line_number + #replaced_lines - 1,
-            column = last_submatch
-                and #replaced_lines[#replaced_lines] - (#match_lines_text - last_submatch['end'])
-              or nil,
-          },
-        }, lines, highlights, added_sign, ResultHighlightType.MatchAdded)
+        addResultLines(
+          replaced_lines,
+          ranges,
+          lines,
+          highlights,
+          added_sign,
+          ResultHighlightType.MatchAdded
+        )
       end
     elseif match.type == 'context' then
       local context_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
@@ -229,13 +263,15 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
       last_line_number = data.line_number + #context_lines - 1
 
       addResultLines(context_lines, {
-        start = {
-          line = data.line_number,
-          column = nil,
-        },
-        ['end'] = {
-          line = last_line_number,
-          column = nil,
+        {
+          start = {
+            line = data.line_number,
+            column = nil,
+          },
+          ['end'] = {
+            line = last_line_number,
+            column = nil,
+          },
         },
       }, lines, highlights, change_sign)
     end

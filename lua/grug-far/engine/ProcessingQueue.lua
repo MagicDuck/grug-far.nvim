@@ -29,6 +29,7 @@ function M:_processNext()
     end
   end)
 end
+-- TODO (sbadragan): we can compact all items in the processing queue into one each time
 
 --- adds item to be processed to the queue
 --- automatically processes as necessary
