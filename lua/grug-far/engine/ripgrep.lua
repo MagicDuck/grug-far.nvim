@@ -12,6 +12,10 @@ local RipgrepEngine = {
     return search.isSearchWithReplacement(args)
   end,
 
+  showsReplaceDiff = function(options)
+    return options.engines.ripgrep.showReplaceDiff
+  end,
+
   search = search.search,
 
   replace = replace.replace,

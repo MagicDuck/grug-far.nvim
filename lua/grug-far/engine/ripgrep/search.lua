@@ -91,7 +91,7 @@ local function getResultsWithReplaceDiff(params)
           end
         end
 
-        local showDiff = params.options.engines.ripgrep.showDiffOnReplace
+        local showDiff = params.options.engines.ripgrep.showReplaceDiff
         local results = parseResults.parseResults(json_data, true, showDiff)
         params.on_finish(status, nil, results)
       else
@@ -112,6 +112,7 @@ local function getResultsWithReplaceDiff(params)
 end
 
 -- TODO (sbadragan): get sync to work
+-- TODO (sbadragan): get numbering correct
 
 ---@param args string[]?
 ---@return string[]? newArgs

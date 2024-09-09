@@ -81,7 +81,7 @@ local function addResultLines(
     local current_line_number = first_range.start.line + j - 1
     local line_no = tostring(current_line_number)
     local col_no = first_range.start.column and tostring(first_range.start.column) or nil
-    local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))
+    local prefix = line_no .. (col_no and ':' .. col_no .. ':' or '-')
 
     table.insert(highlights, {
       hl_type = ResultHighlightType.LineNumber,

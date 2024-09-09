@@ -47,7 +47,7 @@ M.defaultOptions = {
 
       -- whether to show diff of the match being replaced as opposed to just the
       -- replaced result. It usually makes it easier to understand the change being made
-      showDiffOnReplace = true,
+      showReplaceDiff = true,
 
       -- placeholders to show in input areas when they are empty
       -- set individual ones to '' to disable, or set enabled = false for complete disable
@@ -439,13 +439,13 @@ M.defaultOptions = {
 ---@class RipgrepEngineTable
 ---@field path string
 ---@field extraArgs string
----@field showDiffOnReplace boolean
+---@field showReplaceDiff boolean
 ---@field placeholders PlaceholdersTable
 
 ---@class RipgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
----@field showDiffOnReplace? boolean
+---@field showReplaceDiff? boolean
 ---@field placeholders? PlaceholdersTableOverride
 
 ---@class AstgrepEngineTable
