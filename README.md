@@ -24,7 +24,7 @@ Grug find! Grug replace! Grug happy!
 <img width="1256" alt="image" src="https://github.com/user-attachments/assets/d0411f2d-d3ae-4114-b76c-f959d8ddda3a">
 
 #### Replacing:
-<img width="1258" alt="image" src="https://github.com/user-attachments/assets/3bacfd16-6bec-4a0d-b284-9fc8cb4ae13b">
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/d8cd866b-351a-4cd3-9885-7427f7455779">
 
 <details>
 <summary>More screenshots:</summary>
