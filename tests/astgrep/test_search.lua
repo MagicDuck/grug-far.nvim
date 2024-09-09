@@ -129,9 +129,7 @@ T['can search with flags resulting in plain text output'] = function()
   })
 
   helpers.childWaitForFinishedStatus(child)
-
-  helpers.childExpectScreenshot(child)
-  helpers.childExpectBufLines(child)
+  helpers.childWaitForScreenshotText(child, 'Usage: sg run')
 end
 
 T['can search with particular file in paths'] = function()

@@ -175,8 +175,8 @@ T['can replace with empty string'] = function()
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
-  child.type_keys('<esc>cc', 'and')
-  helpers.childWaitForScreenshotText(child, 'and  walks')
+  child.type_keys('<esc>cc', 'drinks')
+  helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
