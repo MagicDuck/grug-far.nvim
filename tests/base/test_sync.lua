@@ -64,9 +64,9 @@ T['can sync all with changes ignoring deleted lines'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>10G', 'dd')
+  child.type_keys(10, '<esc>10G', 'dddd', 'j')
   child.type_keys(10, 'A', ' a deep depth indeed!')
-  child.type_keys(10, '<esc>13G', 'dd')
+  child.type_keys(10, '<esc>14G', 'dddd')
   child.type_keys(10, '$bi', 'believes he ')
 
   child.type_keys('<esc>' .. keymaps.syncLocations.n)

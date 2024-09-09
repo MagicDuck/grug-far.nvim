@@ -9,11 +9,14 @@
 08|
 09|file1.txt
 10|3:13:       then curly swims a deep depth indeed!
-11|
-12|file2.doc
-13|3:12:      then curly believes he thinks
-14|4:11:      and curly flies
-15|
+11|3:13:       then curly swims a deep depth indeed!
+12|
+13|file2.doc
+14|3:12:      then curly thinks
+15|3:12:      then curly thinks
+16|4:11:      and curly flies
+17|4:11:      and curly flies
+18|
 
 --|-
 01| 
@@ -31,3 +34,6 @@
 13| 
 14| 
 15| 
+16| 
+17| 
+18| 
