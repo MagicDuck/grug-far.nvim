@@ -47,7 +47,7 @@ M.defaultOptions = {
 
       -- whether to show diff of the match being replaced as opposed to just the
       -- replaced result. It usually makes it easier to understand the change being made
-      showReplaceDiff = true,
+      showReplaceDiff = false,
 
       -- placeholders to show in input areas when they are empty
       -- set individual ones to '' to disable, or set enabled = false for complete disable

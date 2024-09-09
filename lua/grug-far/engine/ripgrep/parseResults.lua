@@ -177,7 +177,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
       last_line_number = nil
       table.insert(lines, '')
     elseif match.type == 'match' then
-      stats.matches = stats.matches + 1
+      stats.matches = stats.matches + #data.submatches
       local match_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
       local match_lines = vim.split(match_lines_text, '\n')
       last_line_number = data.line_number + #match_lines - 1
@@ -246,14 +246,17 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
         end
 
         local replaced_lines = vim.split(replaced_lines_text, '\n')
+        local lineNumberSign = showDiff and added_sign or change_sign
+        local matchHighlightType = showDiff and ResultHighlightType.MatchAdded
+          or ResultHighlightType.Match
 
         addResultLines(
           replaced_lines,
           ranges,
           lines,
           highlights,
-          added_sign,
-          ResultHighlightType.MatchAdded
+          lineNumberSign,
+          matchHighlightType
         )
       end
     elseif match.type == 'context' then
