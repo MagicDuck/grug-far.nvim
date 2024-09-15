@@ -16,14 +16,16 @@ local ns = vim.api.nvim_create_namespace('grug.treesitter')
 local TSHighlighter = vim.treesitter.highlighter
 
 local function wrap(name)
-  return function(_, win, buf, ...)
+  return function(firstArg, win, buf, ...)
     if not M.cache[buf] then
       return false
     end
+
+    local callback = TSHighlighter[name] --[[@as fun()]]
     for _, hl in pairs(M.cache[buf] or {}) do
       if hl.enabled then
         TSHighlighter.active[buf] = hl.highlighter
-        TSHighlighter[name](_, win, buf, ...)
+        pcall(callback, firstArg, win, buf, ...)
       end
     end
     TSHighlighter.active[buf] = nil
