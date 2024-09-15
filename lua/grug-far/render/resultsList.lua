@@ -58,6 +58,8 @@ local function addLocationMark(buf, context, line, end_col, options)
   })
 end
 
+--- adds highlight result. line is relative to context.state.headerRow
+--- in order to support inputs fields with growing number of lines
 ---@param context GrugFarContext
 ---@param line integer
 ---@param loc ResultLocation
@@ -80,9 +82,7 @@ local function addHighlightResult(context, line, loc)
     return
   end
   local res = { row = line, col = #from, end_col = #loc.text, lnum = loc.lnum }
-  if res.col < res.end_col then
-    table.insert(results.lines, res)
-  end
+  table.insert(results.lines, res)
 end
 
 --- append a bunch of result lines to the buffer
@@ -148,7 +148,11 @@ function M.appendResultsChunk(buf, context, data)
       lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.text = line
       if context.options.resultsHighlight and lastLocation.text then
-        addHighlightResult(context, lastline + highlight.start_line, lastLocation)
+        addHighlightResult(
+          context,
+          lastline + highlight.start_line - context.state.headerRow,
+          lastLocation
+        )
       end
     elseif
       hl_type == ResultHighlightType.ColumnNumber
@@ -350,10 +354,6 @@ end
 ---@param buf integer
 ---@param context GrugFarContext
 function M.clear(buf, context)
-  -- remove all lines after heading and add one blank line
-  local headerRow = context.state.headerRow
-  vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
-  setBufLines(buf, headerRow, -1, false, { '' })
   context.state.resultLocationByExtmarkId = {}
   context.state.resultsLastFilename = nil
   context.state.resultMatchLineCount = 0
@@ -362,6 +362,11 @@ function M.clear(buf, context)
   if context.options.resultsHighlight then
     treesitter.clear(buf)
   end
+  vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
+
+  -- remove all lines after heading and add one blank line
+  local headerRow = context.state.headerRow
+  setBufLines(buf, headerRow, -1, false, { '' })
 end
 
 --- appends search command to results list
@@ -427,7 +432,8 @@ function M.highlight(buf, context)
       regions[lang] = regions[lang] or {}
       local last_line ---@type number?
       for _, line in ipairs(results.lines) do
-        local node = { line.row, line.col, line.row, line.end_col }
+        local row = context.state.headerRow + line.row
+        local node = { row, line.col, row, line.end_col }
         -- put consecutive lines in the same region
         if line.lnum - 1 ~= last_line then
           table.insert(regions[lang], {})
