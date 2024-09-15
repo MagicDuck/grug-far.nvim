@@ -25,6 +25,8 @@ local function search(params)
     state.abort.search = nil
   end
 
+  local abortedEarly = false
+
   -- initiate search in UI
   state.status = 'progress'
   state.progressCount = 0
@@ -45,11 +47,45 @@ local function search(params)
     end
   end
 
+  local on_finish = function(status, errorMessage, customActionMessage)
+    if state.bufClosed then
+      return
+    end
+
+    if customActionMessage then
+      state.actionMessage = customActionMessage
+    end
+
+    state.abort.search = nil
+    clearResultsIfNeeded()
+
+    state.status = status
+    if status == 'error' then
+      state.stats = nil
+      resultsList.setError(buf, context, errorMessage)
+      if state.showSearchCommand and effectiveArgs then
+        resultsList.appendSearchCommand(buf, context, effectiveArgs)
+      end
+    else
+      if errorMessage and #errorMessage > 0 then
+        resultsList.appendWarning(buf, context, errorMessage)
+        state.actionMessage = ' warnings, see end of buffer!'
+      end
+      resultsList.highlight(buf, context)
+    end
+
+    renderResultsHeader(buf, context)
+
+    if context.options.folding.enabled then
+      fold.updateFolds(buf)
+    end
+  end
+
   state.abort.search, effectiveArgs = context.engine.search({
     inputs = state.inputs,
     options = context.options,
     on_fetch_chunk = function(data)
-      if state.bufClosed then
+      if state.bufClosed or abortedEarly then
         return
       end
 
@@ -60,10 +96,10 @@ local function search(params)
       state.stats.matches = state.stats.matches + data.stats.matches
       state.stats.files = state.stats.files + data.stats.files
 
-      local shouldAbortEarly = context.options.maxSearchMatches
+      abortedEarly = context.options.maxSearchMatches ~= nil
         and state.stats.matches > context.options.maxSearchMatches
 
-      if shouldAbortEarly then
+      if abortedEarly then
         state.actionMessage = 'exceeded '
           .. context.options.maxSearchMatches
           .. ' matches, aborting early!'
@@ -73,45 +109,16 @@ local function search(params)
       resultsList.appendResultsChunk(buf, context, data)
       resultsList.throttledForceRedrawBuffer(buf, context)
 
-      if shouldAbortEarly then
+      if abortedEarly then
         if state.abort.search then
           state.abort.search()
+          vim.schedule(function()
+            on_finish('success', nil, nil)
+          end)
         end
       end
     end,
-    on_finish = function(status, errorMessage, customActionMessage)
-      if state.bufClosed then
-        return
-      end
-
-      if customActionMessage then
-        state.actionMessage = customActionMessage
-      end
-
-      state.abort.search = nil
-      clearResultsIfNeeded()
-
-      state.status = status
-      if status == 'error' then
-        state.stats = nil
-        resultsList.setError(buf, context, errorMessage)
-        if state.showSearchCommand and effectiveArgs then
-          resultsList.appendSearchCommand(buf, context, effectiveArgs)
-        end
-      else
-        if errorMessage and #errorMessage > 0 then
-          resultsList.appendWarning(buf, context, errorMessage)
-          state.actionMessage = ' warnings, see end of buffer!'
-        end
-        resultsList.highlight(buf, context)
-      end
-
-      renderResultsHeader(buf, context)
-
-      if context.options.folding.enabled then
-        fold.updateFolds(buf)
-      end
-    end,
+    on_finish = on_finish,
   })
 end
 
