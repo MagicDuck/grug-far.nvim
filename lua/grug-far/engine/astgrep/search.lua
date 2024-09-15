@@ -149,6 +149,7 @@ function M.search(params)
         .. params.options.engines.astgrep.path
         .. '\nast-grep needs to be installed, see https://ast-grep.github.io'
     )
+    return
   end
 
   local rg_version = getRgVersion(params.options)
@@ -159,6 +160,7 @@ function M.search(params)
         .. params.options.engines.ripgrep.path
         .. '\nripgrep needs to be installed, see https://github.com/BurntSushi/ripgrep'
     )
+    return
   end
 
   local args, blacklistedArgs = M.getSearchArgs(params.inputs, params.options)

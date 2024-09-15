@@ -256,6 +256,7 @@ function M.search(params)
         .. params.options.engines.ripgrep.path
         .. '\nripgrep needs to be installed, see https://github.com/BurntSushi/ripgrep'
     )
+    return
   end
 
   local args = M.getSearchArgs(params.inputs, params.options)
