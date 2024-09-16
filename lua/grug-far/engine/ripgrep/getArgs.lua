@@ -69,7 +69,12 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   end
 
   if #inputs.filesFilter > 0 then
-    table.insert(args, '--glob=' .. inputs.filesFilter)
+    for _, fileFilter in ipairs(vim.split(inputs.filesFilter, '\n')) do
+      local glob = vim.trim(fileFilter)
+      if #glob > 0 then
+        table.insert(args, '--glob=' .. glob)
+      end
+    end
   end
 
   for i = 1, #extraArgs do
