@@ -195,6 +195,29 @@ T['can search with file filter'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search with multiple file filters'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    { filename = 'file1.md', content = [[ grug jumps ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', filesFilter = '*.txt\n*.md' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search with replace string'] = function()
   helpers.writeTestFiles({
     { filename = 'file1.txt', content = [[ grug walks ]] },
