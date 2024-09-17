@@ -20,6 +20,9 @@ M.defaultOptions = {
 
   -- disable automatic debounced search and trigger search when leaving insert mode or making normal mode changes instead
   -- Note that normal mode changes such as `diw`, `rF`, etc will still trigger a search
+  normalModeSearch = false,
+
+  -- deprecated, was renamed to normalModeSearch
   searchOnInsertLeave = false,
 
   -- max number of parallel replacements tasks
@@ -497,6 +500,7 @@ M.defaultOptions = {
 ---@field minSearchChars integer
 ---@field maxSearchMatches integer?
 ---@field searchOnInsertLeave boolean
+---@field normalModeSearch boolean
 ---@field maxWorkers integer
 ---@field rgPath string
 ---@field extraRgArgs string
@@ -529,6 +533,7 @@ M.defaultOptions = {
 ---@field minSearchChars? integer
 ---@field maxSearchMatches? integer
 ---@field searchOnInsertLeave? boolean
+---@field normalModeSearch? boolean
 ---@field maxWorkers? integer
 ---@field rgPath? string
 ---@field extraRgArgs? string
@@ -576,6 +581,16 @@ function M.with_defaults(options, defaults)
   if options.rgPath then
     vim.deprecate('options.rgPath', 'options.engines.ripgrep.path', 'soon', 'grug-far.nvim')
     newOptions.engines.ripgrep.path = options.rgPath
+  end
+
+  if not options.normalModeSearch and options.searchOnInsertLeave then
+    vim.deprecate(
+      'options.searchOnInsertLeave',
+      'options.normalModeSearch',
+      'soon',
+      'grug-far.nvim'
+    )
+    newOptions.normalModeSearch = options.searchOnInsertLeave
   end
 
   if options['placeholders'] then

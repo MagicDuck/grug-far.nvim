@@ -311,15 +311,15 @@ function M.createBuffer(win, context)
       end
     end,
   })
-  if context.state.normalModeSearch then
-    vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
-      group = context.augroup,
-      buffer = buf,
-      callback = function()
+  vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = function()
+      if context.state.normalModeSearch then
         searchOnChange()
-      end,
-    })
-  end
+      end
+    end,
+  })
   vim.api.nvim_buf_attach(buf, false, {
     on_bytes = vim.schedule_wrap(function(_, _, _, start_row, _, _, _, _, _, new_end_row_offset)
       resultsList.markUnsyncedLines(buf, context, start_row, start_row + new_end_row_offset)

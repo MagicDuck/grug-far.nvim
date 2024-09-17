@@ -181,7 +181,7 @@ local function createContext(options)
       bufClosed = false,
       highlightRegions = {},
       highlightResults = {},
-      normalModeSearch = options.searchOnInsertLeave,
+      normalModeSearch = options.normalModeSearch,
     },
   }
 end
