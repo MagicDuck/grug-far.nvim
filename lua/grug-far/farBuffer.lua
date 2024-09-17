@@ -14,6 +14,7 @@ local historyAdd = require('grug-far/actions/historyAdd')
 local toggleShowCommand = require('grug-far/actions/toggleShowCommand')
 local swapEngine = require('grug-far/actions/swapEngine')
 local previewLocation = require('grug-far/actions/previewLocation')
+local swapReplacementInterpreter = require('grug-far/actions/swapReplacementInterpreter')
 local utils = require('grug-far/utils')
 local resultsList = require('grug-far/render/resultsList')
 local inputs = require('grug-far/inputs')
@@ -160,6 +161,14 @@ local function getActions(buf, context)
       description = 'Preview location in floating window.',
       action = function()
         previewLocation({ buf = buf, context = context })
+      end,
+    },
+    {
+      text = 'Swap Replacement Type',
+      keymap = keymaps.swapReplacementInterpreter,
+      description = 'Swap replacement interpreter with the next one. For example, with the "lua" interpeter, you can use lua to generate your replacement for each match.',
+      action = function()
+        swapReplacementInterpreter({ buf = buf, context = context })
       end,
     },
   }

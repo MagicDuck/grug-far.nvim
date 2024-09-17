@@ -40,7 +40,9 @@ local function render(buf, context)
     extmarkName = InputNames.replacement,
     nextExtmarkName = InputNames.filesFilter,
     icon = 'replaceInput',
-    label = 'Replace:',
+    label = context.replacementInterpreter
+        and 'Replace [' .. context.replacementInterpreter.type .. ']:'
+      or 'Replace:',
     placeholder = placeholders.enabled and placeholders.replacement,
   }, context)
 

@@ -444,26 +444,4 @@ function M.getOpenTargetWin(context, buf)
   return vim.api.nvim_get_current_win()
 end
 
---- evaluates given chunk of lua code. To return a result
---- prefix with "return "
----@param expstr string
----@param args {[string]: any}
----@return any result, string? error
-function M.luaeval(expstr, args)
-  local arg_names = {}
-  local arg_values = {}
-  for arg_name, arg_value in pairs(args) do
-    table.insert(arg_names, arg_name)
-    table.insert(arg_values, arg_value)
-  end
-
-  local chunkheader = 'local ' .. vim.fn.join(arg_names, ', ') .. ' = ...;\n'
-  local _, chunk, error = pcall(loadstring, chunkheader .. expstr, 'luaeval')
-  if chunk then
-    return chunk(unpack(arg_values))
-  else
-    return nil, error or 'could not evaluate lua chunk'
-  end
-end
-
 return M

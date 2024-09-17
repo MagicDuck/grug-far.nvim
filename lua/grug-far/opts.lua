@@ -91,6 +91,14 @@ M.defaultOptions = {
   -- if nil, defaults to 'ripgrep'
   engine = 'ripgrep',
 
+  -- how to interpret the replacement input.
+  -- Must be one of 'lua' | 'default'
+  -- 'lua': for each search match, evaluate the replacement input as the body of a lua function
+  --   where "match" identifies the match parameter passed to that function. The returned value
+  --   is used as the replacement in each case.
+  -- 'default' | anything else : treat replacement as a string to pass to the current engine
+  replacementInterpreter = 'default',
+
   -- specifies the command to run (with `vim.cmd(...)`) in order to create
   -- the window in which the grug-far buffer will appear
   -- ex (horizontal bottom right split): 'botright split'
@@ -153,6 +161,7 @@ M.defaultOptions = {
     toggleShowCommand = { n = '<localleader>p' },
     swapEngine = { n = '<localleader>e' },
     previewLocation = { n = '<localleader>i' },
+    swapReplacementInterpreter = { n = '<localleader>v' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -316,6 +325,7 @@ M.defaultOptions = {
 ---@field help KeymapDef
 ---@field swapEngine KeymapDef
 ---@field previewLocation KeymapDef
+---@field swapReplacementInterpreter KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -337,6 +347,7 @@ M.defaultOptions = {
 ---@field help? KeymapDef
 ---@field swapEngine? KeymapDef
 ---@field previewLocation? KeymapDef
+---@field swapReplacementInterpreter? KeymapDef
 
 ---@class AutoSaveTable
 ---@field enabled boolean
@@ -467,6 +478,7 @@ M.defaultOptions = {
 ---@field astgrep? AstgrepEngineTableOverride
 
 ---@alias GrugFarEngineType "ripgrep" | "astgrep"
+---@alias GrugFarReplacementInterpreterType "lua" | "default"
 
 ---@alias NumberLabelPosition "right_align" | "eol" | "inline"
 
@@ -509,6 +521,7 @@ M.defaultOptions = {
 ---@field folding FoldingTable
 ---@field engines EnginesTable
 ---@field engine GrugFarEngineType
+---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field resultLocation ResultLocationTable
 
 ---@class GrugFarOptionsOverride
@@ -539,6 +552,7 @@ M.defaultOptions = {
 ---@field folding? FoldingTableOverride
 ---@field engines? EnginesTableOverride
 ---@field engine? GrugFarEngineType
+---@field replacementInterpreter? GrugFarReplacementInterpreterType
 ---@field resultLocation? ResultLocationTableOverride
 
 --- generates merged options
