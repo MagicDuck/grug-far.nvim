@@ -33,6 +33,8 @@ local function render(buf, context)
   }, context)
 
   lineNr = lineNr + 1
+  local interpreterType = context.replacementInterpreter and context.replacementInterpreter.type
+    or nil
   state.inputs.replacement = renderInput({
     buf = buf,
     lineNr = lineNr,
@@ -40,10 +42,13 @@ local function render(buf, context)
     extmarkName = InputNames.replacement,
     nextExtmarkName = InputNames.filesFilter,
     icon = 'replaceInput',
-    label = context.replacementInterpreter
-        and 'Replace [' .. context.replacementInterpreter.type .. ']:'
-      or 'Replace:',
-    placeholder = placeholders.enabled and placeholders.replacement,
+    label = interpreterType and 'Replace [' .. interpreterType .. ']:' or 'Replace:',
+    placeholder = placeholders.enabled
+      and (
+        interpreterType
+          and context.options.replacementInterpreters[interpreterType].replacementPlaceholder
+        or placeholders.replacement
+      ),
   }, context)
 
   lineNr = lineNr + 1

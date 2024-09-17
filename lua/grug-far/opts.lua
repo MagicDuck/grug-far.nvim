@@ -94,6 +94,15 @@ M.defaultOptions = {
   -- if nil, defaults to 'ripgrep'
   engine = 'ripgrep',
 
+  -- replacement interpreters configuration
+  replacementInterpreters = {
+    lua = {
+      -- placeholder to show in replacement input area when empty
+      -- set to '' to disable
+      replacementPlaceholder = 'ex: if vim.startsWith(match, "use") \\n then return "employ" .. match \\n else return match end',
+    },
+  },
+
   -- how to interpret the replacement input.
   -- Must be one of 'lua' | 'default'
   -- 'lua': for each search match, evaluate the replacement input as the body of a lua function
@@ -222,6 +231,8 @@ M.defaultOptions = {
     resultsDiffSeparatorIndicator = '┊',
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
+
+    newline = ' ',
   },
 
   -- strings to auto-fill in each input area at start
@@ -392,6 +403,9 @@ M.defaultOptions = {
 ---@field resultsAddedIndicator string
 ---@field resultsRemovedIndicator string
 ---@field resultsDiffSeparatorIndicator string
+---@field historyTitle string
+---@field helpTitle string
+---@field newline string
 
 ---@class IconsTableOverride
 ---@field enabled? boolean
@@ -409,6 +423,9 @@ M.defaultOptions = {
 ---@field resultsAddedIndicator? string
 ---@field resultsRemovedIndicator? string
 ---@field resultsDiffSeparatorIndicator? string
+---@field historyTitle? string
+---@field helpTitle? string
+---@field newline? string
 
 ---@class PlaceholdersTable
 ---@field enabled boolean
@@ -480,6 +497,18 @@ M.defaultOptions = {
 ---@field ripgrep? RipgrepEngineTableOverride
 ---@field astgrep? AstgrepEngineTableOverride
 
+---@class LuaInterpreterTable
+---@field replacementPlaceholder string
+
+---@class LuaInterpreterTableOverride
+---@field replacementPlaceholder? string
+
+---@class ReplacementInterpretersTable
+---@field lua LuaInterpreterTable
+
+---@class ReplacementInterpretersTableOverride
+---@field lua? LuaInterpreterTableOverride
+
 ---@alias GrugFarEngineType "ripgrep" | "astgrep"
 ---@alias GrugFarReplacementInterpreterType "lua" | "default"
 
@@ -525,6 +554,7 @@ M.defaultOptions = {
 ---@field folding FoldingTable
 ---@field engines EnginesTable
 ---@field engine GrugFarEngineType
+---@field replacementInterpreters ReplacementInterpretersTable
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field resultLocation ResultLocationTable
 
@@ -557,6 +587,7 @@ M.defaultOptions = {
 ---@field folding? FoldingTableOverride
 ---@field engines? EnginesTableOverride
 ---@field engine? GrugFarEngineType
+---@field replacementInterpreters? ReplacementInterpretersTable
 ---@field replacementInterpreter? GrugFarReplacementInterpreterType
 ---@field resultLocation? ResultLocationTableOverride
 

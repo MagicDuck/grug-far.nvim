@@ -7,7 +7,8 @@ local function swapReplacementInterpreter(params)
   local context = params.context
   local buf = params.buf
 
-  local interpreters = { 'default', 'lua' }
+  local interpreters = vim.fn.keys(context.options.replacementInterpreters)
+  table.insert(interpreters, 'default')
   local currentIndex = vim.fn.index(
     interpreters,
     context.replacementInterpreter and context.replacementInterpreter.type or 'default'
