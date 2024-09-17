@@ -35,6 +35,7 @@ local function getSeparator(context)
     .. ' '
     .. context.engine.type
     .. ' '
+    .. (context.state.normalModeSearch and '- normal mode search ' or '')
     .. (opts.getIcon('resultsEngineRight', context) or '')
     .. separatorLine
 end

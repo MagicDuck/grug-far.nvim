@@ -276,7 +276,7 @@ function M.createBuffer(win, context)
     -- do a search immediately if either:
     -- 1. manually searching
     -- 2. auto debounce searching and query is empty string, to improve responsiveness
-    if context.options.searchOnInsertLeave or state.inputs.search == '' then
+    if state.normalModeSearch or state.inputs.search == '' then
       search({ buf = buf, context = context })
     else
       debouncedSearch({ buf = buf, context = context })
@@ -288,7 +288,7 @@ function M.createBuffer(win, context)
     updateBufName(buf, context)
 
     local isInsertMode = vim.fn.mode():lower():find('i') ~= nil
-    if not (context.options.searchOnInsertLeave and isInsertMode) then
+    if not (context.state.normalModeSearch and isInsertMode) then
       searchOnChange()
     end
   end
@@ -311,7 +311,7 @@ function M.createBuffer(win, context)
       end
     end,
   })
-  if context.options.searchOnInsertLeave then
+  if context.state.normalModeSearch then
     vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
       group = context.augroup,
       buffer = buf,

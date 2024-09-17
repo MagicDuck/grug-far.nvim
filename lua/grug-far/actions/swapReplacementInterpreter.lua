@@ -14,9 +14,7 @@ local function swapReplacementInterpreter(params)
   )
   local nextIndex = (currentIndex + 1) % #interpreters
   local nextInterpreterType = interpreters[nextIndex + 1]
-  context.replacementInterpreter =
-    replacementInterpreter.getReplacementInterpreter(nextInterpreterType)
-  -- TODO (sbadragan): switch to search in normal mode only
+  replacementInterpreter.setReplacementInterpreter(context, nextInterpreterType)
   vim.notify(
     'grug-far: swapped to replacement interpreter: '
       .. (context.replacementInterpreter and context.replacementInterpreter.type or 'default')

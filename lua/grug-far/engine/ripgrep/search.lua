@@ -111,9 +111,6 @@ local function getResultsWithReplaceDiff(params)
   return abort
 end
 
--- TODO (sbadragan): get sync to work
--- TODO (sbadragan): get numbering correct
-
 ---@param args string[]?
 ---@return string[]? newArgs
 local function stripReplaceArgs(args)
