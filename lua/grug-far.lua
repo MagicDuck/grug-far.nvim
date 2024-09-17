@@ -5,6 +5,7 @@ local history = require('grug-far/history')
 local utils = require('grug-far/utils')
 local close = require('grug-far/actions/close')
 local engine = require('grug-far/engine')
+local replacementInterpreter = require('grug-far/replacementInterpreter')
 local fold = require('grug-far/fold')
 local inputs = require('grug-far/inputs')
 local fileIconsProvider = require('grug-far/fileIconsProvider')
@@ -144,6 +145,7 @@ local contextCount = 0
 ---@field prevWin? integer
 ---@field actions GrugFarAction[]
 ---@field engine GrugFarEngine
+---@field replacementInterpreter GrugFarReplacementInterpreter
 ---@field fileIconsProvider? FileIconsProvider
 
 --- generate instance specific context
@@ -155,6 +157,9 @@ local function createContext(options)
     count = contextCount,
     options = options,
     engine = engine.getEngine(options.engine),
+    replacementInterpreter = replacementInterpreter.getReplacementInterpreter(
+      options.replacementInterpreter
+    ),
     namespace = vim.api.nvim_create_namespace('grug-far-namespace'),
     locationsNamespace = vim.api.nvim_create_namespace(''),
     historyHlNamespace = vim.api.nvim_create_namespace(''),
