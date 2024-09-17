@@ -3,6 +3,7 @@ local history = require('grug-far/history')
 local utils = require('grug-far/utils')
 local opts = require('grug-far/opts')
 local engine = require('grug-far/engine')
+local replacementInterpreter = require('grug-far/replacementInterpreter')
 local inputs = require('grug-far/inputs')
 
 --- gets history entry at given 0-based buffer row
@@ -58,6 +59,9 @@ local function pickHistoryEntry(historyWin, historyBuf, buf, context)
   end
 
   context.engine = engine.getEngine(entry.engine)
+  -- TODO (sbadragan): might need to switch to normal mode search in here, maybe we need a common func to do that
+  context.replacementInterpreter =
+    replacementInterpreter.getReplacementInterpreter(entry.replacementInterpreter)
   inputs.fill(context, buf, {
     search = entry.search,
     replacement = entry.replacement,

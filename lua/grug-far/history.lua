@@ -2,6 +2,7 @@ local utils = require('grug-far/utils')
 local M = {}
 
 local continuation_prefix = '| '
+local engine_field_sep = '|'
 
 ---@param context GrugFarContext
 ---@return string
@@ -55,6 +56,7 @@ function M.addHistoryEntry(context, notify)
     vim.schedule(function()
       local entry = '\n\nEngine: '
         .. context.engine.type
+        .. (context.replacementInterpreter and engine_field_sep .. context.replacementInterpreter.type or '')
         .. '\nSearch: '
         .. formatInputValue(inputs.search)
         .. '\nReplace: '
@@ -121,6 +123,7 @@ end
 
 ---@class HistoryEntry
 ---@field engine string
+---@field replacementInterpreter? string
 ---@field search string
 ---@field replacement string
 ---@field filesFilter string
@@ -131,8 +134,12 @@ end
 ---@param lines string[]
 ---@return HistoryEntry
 function M.getHistoryEntryFromLines(lines)
+  local engine_val = getFirstValueStartingWith(lines, 'Engine:[ ]?')
+  local engine, replacementInterpreter = unpack(vim.split(engine_val, engine_field_sep))
+
   return {
-    engine = getFirstValueStartingWith(lines, 'Engine:[ ]?'),
+    engine = vim.trim(engine),
+    replacementInterpreter = replacementInterpreter and vim.trim(replacementInterpreter) or nil,
     search = getFirstValueStartingWith(lines, 'Search:[ ]?'),
     replacement = getFirstValueStartingWith(lines, 'Replace:[ ]?'),
     filesFilter = getFirstValueStartingWith(lines, 'Files Filter:[ ]?'),
