@@ -179,7 +179,7 @@ Note that you can edit the history buffer and save just like any other buffer if
 The format of a history entry is:
 ```
 <optional comment, ex: My special search>
-Engine: <astgrep|ripgrep>
+Engine: <astgrep|ripgrep>(|lua)?
 Search: <text>
 Replace: <text>
 Files Filter: <text>

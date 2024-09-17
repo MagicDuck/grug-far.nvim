@@ -145,7 +145,7 @@ local contextCount = 0
 ---@field prevWin? integer
 ---@field actions GrugFarAction[]
 ---@field engine GrugFarEngine
----@field replacementInterpreter GrugFarReplacementInterpreter
+---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field fileIconsProvider? FileIconsProvider
 
 --- generate instance specific context
