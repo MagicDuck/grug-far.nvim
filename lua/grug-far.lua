@@ -125,6 +125,7 @@ local contextCount = 0
 ---@field bufClosed boolean
 ---@field highlightResults FileResults
 ---@field highlightRegions LangRegions
+---@field normalModeSearch boolean
 
 ---@class GrugFarAction
 ---@field text string
@@ -180,6 +181,7 @@ local function createContext(options)
       bufClosed = false,
       highlightRegions = {},
       highlightResults = {},
+      normalModeSearch = options.searchOnInsertLeave,
     },
   }
 end

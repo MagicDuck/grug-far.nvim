@@ -59,9 +59,7 @@ local function pickHistoryEntry(historyWin, historyBuf, buf, context)
   end
 
   context.engine = engine.getEngine(entry.engine)
-  -- TODO (sbadragan): might need to switch to normal mode search in here, maybe we need a common func to do that
-  context.replacementInterpreter =
-    replacementInterpreter.getReplacementInterpreter(entry.replacementInterpreter)
+  replacementInterpreter.setReplacementInterpreter(context, entry.replacementInterpreter)
   inputs.fill(context, buf, {
     search = entry.search,
     replacement = entry.replacement,
