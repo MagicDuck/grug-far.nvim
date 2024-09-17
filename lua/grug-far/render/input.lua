@@ -96,6 +96,15 @@ local function renderInput(params, context)
     if #input_lines == 1 and #input_lines[1] == 0 then
       local ellipsis = ' ...'
       local available_win_width = vim.api.nvim_win_get_width(0) - #ellipsis - 2
+      local text = placeholder
+      local newline = opts.getIcon('newline', context)
+      if newline then
+        text = text:gsub('\\n', newline)
+      end
+      if #text > available_win_width then
+        text = text:sub(1, available_win_width) .. ellipsis
+      end
+
       context.extmarkIds[placeholderExtmarkName] =
         vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
           id = context.extmarkIds[placeholderExtmarkName],
@@ -103,8 +112,7 @@ local function renderInput(params, context)
           end_col = 0,
           virt_text = {
             {
-              #placeholder <= available_win_width and placeholder
-                or placeholder:sub(1, available_win_width) .. ellipsis,
+              text,
               'GrugFarInputPlaceholder',
             },
           },
