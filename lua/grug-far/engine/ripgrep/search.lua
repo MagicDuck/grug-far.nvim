@@ -274,7 +274,6 @@ end
 
 -- TODO (sbadragan): add tests for both this and astgrep
 -- TODO (sbadragan): add syntax highlight
--- TODO (sbadragan): open below (o) is broken in results
 --- does search
 ---@param params EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
