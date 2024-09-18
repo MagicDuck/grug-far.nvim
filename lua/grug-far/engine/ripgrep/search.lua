@@ -245,6 +245,11 @@ end
 ---@param params RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search_with_replace_interpreter(replacementInterpreter, params)
+  local eval_fn, interpreterError = replacementInterpreter.get_eval_fn(params.inputs.replacement)
+  if not eval_fn then
+    params.on_finish('error', interpreterError)
+  end
+
   local searchArgs = stripReplaceArgs(params.args)
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
@@ -257,12 +262,8 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
           local entry = vim.json.decode(json_line)
           if entry.type == 'match' then
             for _, submatch in ipairs(entry.data.submatches) do
-              -- TODO (sbadragan): this is somewhat inefficient, we should only need to eval the lua once, then call func on each
-              -- TODO (sbadragan): handle showing replacement error
-              local replacementText = replacementInterpreter.eval(
-                params.inputs.replacement,
-                { match = submatch.match.text }
-              )
+              ---@cast eval_fn fun(...): string
+              local replacementText = eval_fn(submatch.match.text)
               submatch.replacement = { text = replacementText }
             end
           end
