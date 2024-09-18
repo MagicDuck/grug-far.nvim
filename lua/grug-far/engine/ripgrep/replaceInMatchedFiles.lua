@@ -1,9 +1,14 @@
 local fetchReplacedFileContent = require('grug-far/engine/ripgrep/fetchReplacedFileContent')
 local utils = require('grug-far/utils')
+local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
+local argUtils = require('grug-far/engine/ripgrep/argUtils')
+local getArgs = require('grug-far/engine/ripgrep/getArgs')
+local parseResults = require('grug-far/engine/ripgrep/parseResults')
 
 ---@class replaceInFileParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
+---@field replacement_eval_fn fun(...): string
 ---@field file string
 ---@field on_done fun(errorMessage: string?)
 
@@ -13,38 +18,95 @@ local utils = require('grug-far/utils')
 local function replaceInFile(params)
   local file = params.file
   local on_done = params.on_done
+  local replacement_eval_fn = params.replacement_eval_fn
 
-  return fetchReplacedFileContent({
-    inputs = params.inputs,
-    options = params.options,
-    file = file,
-    on_finish = function(status, errorMessage, content)
-      if status == 'error' then
-        return on_done(errorMessage)
-      end
-      if status == nil then
-        -- aborted
-        return on_done(nil)
-      end
+  if replacement_eval_fn then
+    local inputs = vim.deepcopy(params.inputs)
+    inputs.paths = ''
+    local args = getArgs(inputs, params.options, {})
+    args = argUtils.stripReplaceArgs(args)
+    if args then
+      table.insert(args, params.file)
+    end
 
-      if status == 'success' and content then
-        return utils.overwriteFileAsync(file, content, function(err)
-          if err then
-            return on_done('Could not write: ' .. file .. '\n' .. err)
+    local json_data = {}
+    return fetchCommandOutput({
+      cmd_path = params.options.engines.ripgrep.path,
+      args = args,
+      on_fetch_chunk = function(data)
+        local json_lines = vim.split(data, '\n')
+        for _, json_line in ipairs(json_lines) do
+          if #json_line > 0 then
+            local entry = vim.json.decode(json_line)
+            if entry.type == 'match' then
+              for _, submatch in ipairs(entry.data.submatches) do
+                local replacementText = replacement_eval_fn(submatch.match.text)
+                submatch.replacement = { text = replacementText }
+              end
+            end
+            table.insert(json_data, entry)
           end
+        end
+      end,
+      on_finish = function(status, errorMessage)
+        if status == 'error' then
+          return on_done(errorMessage)
+        end
 
-          on_done(nil)
-        end)
-      end
+        if status == 'success' and #json_data > 0 then
+          return utils.readFileAsync(file, function(err, contents)
+            if err then
+              return on_done('Could not read: ' .. file .. '\n' .. err)
+            end
 
-      return on_done(nil)
-    end,
-  })
+            local new_contents = parseResults.getReplacedContents(contents, json_data)
+            return utils.overwriteFileAsync(file, new_contents, function(err2)
+              if err then
+                return on_done('Could not write: ' .. file .. '\n' .. err2)
+              end
+
+              on_done(nil)
+            end)
+          end)
+        end
+
+        return on_done(nil)
+      end,
+    })
+  else
+    return fetchReplacedFileContent({
+      inputs = params.inputs,
+      options = params.options,
+      file = file,
+      on_finish = function(status, errorMessage, content)
+        if status == 'error' then
+          return on_done(errorMessage)
+        end
+        if status == nil then
+          -- aborted
+          return on_done(nil)
+        end
+
+        if status == 'success' and content then
+          return utils.overwriteFileAsync(file, content, function(err)
+            if err then
+              return on_done('Could not write: ' .. file .. '\n' .. err)
+            end
+
+            on_done(nil)
+          end)
+        end
+
+        return on_done(nil)
+      end,
+    })
+  end
 end
 
 ---@class replaceInMatchedFilesParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
+---@field replacement_eval_fn fun(...): string
 ---@field files string[]
 ---@field report_progress fun(count: integer)
 ---@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
@@ -91,6 +153,7 @@ local function replaceInMatchedFiles(params)
       file = file,
       inputs = params.inputs,
       options = params.options,
+      replacement_eval_fn = params.replacement_eval_fn,
       on_done = vim.schedule_wrap(function(err)
         if err then
           -- optimistically try to continue

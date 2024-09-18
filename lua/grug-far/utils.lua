@@ -156,7 +156,7 @@ end
 
 --- async reads given file using libuv
 ---@param path string
----@param callback fun(err: string , data: nil) | fun(err: nil, data: string)
+---@param callback fun(err: string? , data: string?)
 function M.readFileAsync(path, callback)
   uv.fs_open(path, 'r', 0, function(err1, fd)
     if err1 then

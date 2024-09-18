@@ -3,6 +3,7 @@ local ProcessingQueue = require('grug-far/engine/ProcessingQueue')
 local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 local parseResults = require('grug-far/engine/ripgrep/parseResults')
 local getArgs = require('grug-far/engine/ripgrep/getArgs')
+local argUtils = require('grug-far/engine/ripgrep/argUtils')
 local uv = vim.uv
 
 local M = {}
@@ -111,28 +112,6 @@ local function getResultsWithReplaceDiff(params)
   return abort
 end
 
----@param args string[]?
----@return string[]? newArgs
-local function stripReplaceArgs(args)
-  if not args then
-    return nil
-  end
-  local newArgs = {}
-  local stripNextArg = false
-  for _, arg in ipairs(args) do
-    local isOneArgReplace = vim.startswith(arg, '--replace=')
-    local isTwoArgReplace = arg == '--replace' or arg == '-r'
-    local stripArg = stripNextArg or isOneArgReplace or isTwoArgReplace
-    stripNextArg = isTwoArgReplace
-
-    if not stripArg then
-      table.insert(newArgs, arg)
-    end
-  end
-
-  return newArgs
-end
-
 ---@class RipgrepEngineSearchParams
 ---@field args string[]?
 ---@field options GrugFarOptions
@@ -185,7 +164,7 @@ local function run_search_with_replace(params)
     end
   end
 
-  local searchArgs = stripReplaceArgs(params.args)
+  local searchArgs = argUtils.stripReplaceArgs(params.args)
 
   processingQueue = ProcessingQueue.new(function(json_data, on_done)
     getResultsWithReplaceDiff({
@@ -248,9 +227,10 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
   local eval_fn, interpreterError = replacementInterpreter.get_eval_fn(params.inputs.replacement)
   if not eval_fn then
     params.on_finish('error', interpreterError)
+    return
   end
 
-  local searchArgs = stripReplaceArgs(params.args)
+  local searchArgs = argUtils.stripReplaceArgs(params.args)
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = searchArgs,

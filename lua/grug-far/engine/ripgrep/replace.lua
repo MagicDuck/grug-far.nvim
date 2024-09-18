@@ -1,6 +1,7 @@
 local fetchFilesWithMatches = require('grug-far/engine/ripgrep/fetchFilesWithMatches')
 local replaceInMatchedFiles = require('grug-far/engine/ripgrep/replaceInMatchedFiles')
 local getArgs = require('grug-far/engine/ripgrep/getArgs')
+local replacementInterpreter = require('grug-far/replacementInterpreter')
 
 local M = {}
 
@@ -25,7 +26,7 @@ end
 
 --- does replace
 ---@param params EngineReplaceParams
----@return fun()? abort, string[]? effectiveArgs
+---@return fun()? abort
 M.replace = function(params)
   local report_progress = params.report_progress
   local on_finish = params.on_finish
@@ -36,10 +37,21 @@ M.replace = function(params)
     return
   end
 
-  if isEmptyStringReplace(args) then
+  if not params.replacementInterpreter and isEmptyStringReplace(args) then
     local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
     if choice ~= 1 then
       on_finish(nil, nil, 'replace with empty string canceled!')
+      return
+    end
+  end
+
+  local replacement_eval_fn
+  if params.replacementInterpreter then
+    local interpreterError
+    replacement_eval_fn, interpreterError =
+      replacementInterpreter.get_eval_fn(params.inputs.replacement)
+    if not replacement_eval_fn then
+      params.on_finish('error', interpreterError)
       return
     end
   end
@@ -76,6 +88,7 @@ M.replace = function(params)
         files = files,
         inputs = params.inputs,
         options = params.options,
+        replacement_eval_fn = replacement_eval_fn,
         report_progress = function(count)
           report_progress({ type = 'update_count', count = count })
         end,

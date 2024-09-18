@@ -46,6 +46,7 @@ M.DiffSeparatorChars = ' '
 ---@class EngineReplaceParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
+---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer } | {type: "message", message: string})
 ---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 
