@@ -240,6 +240,49 @@ local function run_search_with_replace(params)
   return abort, effectiveArgs
 end
 
+--- runs search with replacement interpreter
+---@param replacementInterpreter GrugFarReplacementInterpreter
+---@param params RipgrepEngineSearchParams
+---@return fun()? abort, string[]? effectiveArgs
+local function run_search_with_replace_interpreter(replacementInterpreter, params)
+  local searchArgs = stripReplaceArgs(params.args)
+  return fetchCommandOutput({
+    cmd_path = params.options.engines.ripgrep.path,
+    args = searchArgs,
+    on_fetch_chunk = function(data)
+      local json_lines = vim.split(data, '\n')
+      local json_data = {}
+      for _, json_line in ipairs(json_lines) do
+        if #json_line > 0 then
+          local entry = vim.json.decode(json_line)
+          if entry.type == 'match' then
+            for _, submatch in ipairs(entry.data.submatches) do
+              -- TODO (sbadragan): this is somewhat inefficient, we should only need to eval the lua once, then call func on each
+              -- TODO (sbadragan): handle showing replacement error
+              local replacementText = replacementInterpreter.eval(
+                params.inputs.replacement,
+                { match = submatch.match.text }
+              )
+              submatch.replacement = { text = replacementText }
+            end
+          end
+          table.insert(json_data, entry)
+        end
+      end
+      local results = parseResults.parseResults(json_data, true, true)
+      params.on_fetch_chunk(results)
+    end,
+    on_finish = function(status, errorMessage)
+      if status == 'error' and errorMessage and #errorMessage == 0 then
+        errorMessage = 'no matches'
+      end
+      params.on_finish(status, errorMessage)
+    end,
+  })
+end
+
+-- TODO (sbadragan): implement same for astgrep
+-- TODO (sbadragan): add tests for both this and astgrep
 --- does search
 ---@param params EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
@@ -259,7 +302,15 @@ function M.search(params)
   local args = M.getSearchArgs(params.inputs, params.options)
   local isSearchWithReplace = M.isSearchWithReplacement(args)
 
-  if isSearchWithReplace then
+  if params.replacementInterpreter then
+    return run_search_with_replace_interpreter(params.replacementInterpreter, {
+      options = options,
+      inputs = params.inputs,
+      args = args,
+      on_fetch_chunk = params.on_fetch_chunk,
+      on_finish = params.on_finish,
+    })
+  elseif isSearchWithReplace then
     return run_search_with_replace({
       options = options,
       inputs = params.inputs,

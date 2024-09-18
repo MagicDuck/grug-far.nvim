@@ -84,6 +84,7 @@ local function search(params)
   state.abort.search, effectiveArgs = context.engine.search({
     inputs = state.inputs,
     options = context.options,
+    replacementInterpreter = context.replacementInterpreter,
     on_fetch_chunk = function(data)
       if state.bufClosed or abortedEarly then
         return
