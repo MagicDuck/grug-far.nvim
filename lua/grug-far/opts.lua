@@ -60,6 +60,7 @@ M.defaultOptions = {
 
         search = 'ex: foo   foo([a-z0-9]*)   fun\\(',
         replacement = 'ex: bar   ${1}_foo   $$MY_ENV_VAR ',
+        replacement_lua = 'ex: if vim.startsWith(match, "use") \\n then return "employ" .. match \\n else return match end',
         filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (specify one per line)',
         flags = 'ex: --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
         paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua',
@@ -82,6 +83,8 @@ M.defaultOptions = {
 
         search = 'ex: $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
         replacement = 'ex: $A?.()   blah($$$ARGS)',
+        replacement_lua = 'ex: if vars.A == "blah" \\n then return "foo(" .. vim.fn.join(vars.ARGS, ',
+        ') .. ")" \\n else return match end',
         filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
         flags = 'ex: --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
         paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua',
