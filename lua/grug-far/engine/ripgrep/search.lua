@@ -263,8 +263,8 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
   })
 end
 
--- TODO (sbadragan): implement same for astgrep
 -- TODO (sbadragan): add tests for both this and astgrep
+-- TODO (sbadragan): add syntax highlight
 --- does search
 ---@param params EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
