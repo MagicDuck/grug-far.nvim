@@ -119,6 +119,7 @@ local function pasteBelow(context, buf, is_visual)
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
   local input = M.getInputAtRow(context, buf, cursor_row - 1)
   if not input then
+    vim.api.nvim_feedkeys('p', 'n', false)
     return
   end
 
@@ -166,8 +167,10 @@ end
 local function pasteAbove(context, buf, is_visual)
   local win = vim.fn.bufwinid(buf)
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
+
   local input = M.getInputAtRow(context, buf, cursor_row - 1)
   if not input then
+    vim.api.nvim_feedkeys('P', 'n', false)
     return
   end
 
@@ -217,6 +220,7 @@ local function openBelow(context, buf)
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
   local input = M.getInputAtRow(context, buf, cursor_row - 1)
   if not input then
+    vim.api.nvim_feedkeys('o', 'n', false)
     return
   end
 
