@@ -8,7 +8,7 @@ local parseResults = require('grug-far/engine/ripgrep/parseResults')
 ---@class replaceInFileParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
----@field replacement_eval_fn fun(...): string
+---@field replacement_eval_fn fun(...): (string?, string?)
 ---@field file string
 ---@field on_done fun(errorMessage: string?)
 
@@ -63,6 +63,7 @@ local function replaceInFileWithEval(params)
   end
 
   local json_data = {}
+  local firstEvalErr = nil
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = args,
@@ -73,7 +74,11 @@ local function replaceInFileWithEval(params)
           local entry = vim.json.decode(json_line)
           if entry.type == 'match' then
             for _, submatch in ipairs(entry.data.submatches) do
-              local replacementText = replacement_eval_fn(submatch.match.text)
+              local replacementText, err = replacement_eval_fn(submatch.match.text)
+              if err then
+                firstEvalErr = firstEvalErr or err
+                replacementText = ''
+              end
               submatch.replacement = { text = replacementText }
             end
             table.insert(json_data, entry)
@@ -84,6 +89,10 @@ local function replaceInFileWithEval(params)
     on_finish = function(status, errorMessage)
       if status == 'error' then
         return on_done(errorMessage)
+      end
+
+      if firstEvalErr then
+        return on_done(firstEvalErr)
       end
 
       if status == 'success' and #json_data > 0 then
@@ -111,7 +120,7 @@ end
 ---@class replaceInMatchedFilesParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
----@field replacement_eval_fn fun(...): string
+---@field replacement_eval_fn fun(...): (string?, string?)
 ---@field files string[]
 ---@field report_progress fun(count: integer)
 ---@field on_finish fun(status: GrugFarStatus, errorMessage: string?)

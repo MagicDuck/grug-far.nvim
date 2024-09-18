@@ -3,12 +3,16 @@ local LuaInterpreter = {
   type = 'lua',
 
   get_eval_fn = function(script, arg_names)
-    local chunkheader = 'local ' .. vim.fn.join(arg_names, ', ') .. ' = ...;\n'
-    local _, chunk, error = pcall(loadstring, chunkheader .. script, 'Replace')
-    if chunk then
+    local chunkheader = 'local ' .. vim.fn.join(arg_names, ', ') .. ' = ...; '
+    local _, replace, error = pcall(loadstring, chunkheader .. script, 'Replace')
+    if replace then
       return function(...)
-        local result = chunk(...)
-        return result and tostring(result) or ''
+        local success, result = pcall(replace, ...)
+        if success then
+          return result and tostring(result) or '', nil
+        else
+          return nil, result
+        end
       end
     else
       return nil, error or 'could not evaluate lua chunk'

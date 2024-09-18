@@ -12,7 +12,7 @@ local M = {}
 
 ---@params params EngineReplaceParams
 ---@params args string[]
----@params eval_fn fun(...): string
+---@params eval_fn fun(...): (string?, string?)
 ---@return fun()? abort
 local function replace_with_eval(params, args, eval_fn)
   local on_finish = vim.schedule_wrap(params.on_finish)
@@ -50,11 +50,16 @@ local function replace_with_eval(params, args, eval_fn)
   end)
 
   local matches = {}
+  local firstEvalErr = nil
   abortSearch = fetchCommandOutput({
     cmd_path = params.options.engines.astgrep.path,
     args = search_args,
     on_fetch_chunk = function(data)
-      parseResults.json_decode_matches(matches, data, eval_fn)
+      local eval_err = parseResults.json_decode_matches(matches, data, eval_fn)
+      if eval_err then
+        firstEvalErr = firstEvalErr or eval_err
+      end
+
       -- note: we split off last file matches to ensure all matches for a file are processed
       -- at once. This helps with applying replacements
       local before, after = parseResults.split_last_file_matches(matches)
@@ -71,6 +76,11 @@ local function replace_with_eval(params, args, eval_fn)
           processingQueue:push(file_matches)
         end
         matches = {}
+      end
+
+      if firstEvalErr then
+        status = 'error'
+        errorMessage = firstEvalErr
       end
 
       if status == 'success' then
