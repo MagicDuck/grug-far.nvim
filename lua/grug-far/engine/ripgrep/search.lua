@@ -232,6 +232,7 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
   end
 
   local searchArgs = argUtils.stripReplaceArgs(params.args)
+  local firstEvalErr = nil
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = searchArgs,
@@ -244,7 +245,11 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
           if entry.type == 'match' then
             for _, submatch in ipairs(entry.data.submatches) do
               ---@cast eval_fn fun(...): string
-              local replacementText = eval_fn(submatch.match.text)
+              local replacementText, err = eval_fn(submatch.match.text)
+              if err then
+                replacementText = ''
+                firstEvalErr = firstEvalErr or err
+              end
               submatch.replacement = { text = replacementText }
             end
           end
@@ -258,6 +263,10 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
       if status == 'error' and errorMessage and #errorMessage == 0 then
         errorMessage = 'no matches'
       end
+      if firstEvalErr then
+        status = 'error'
+        errorMessage = firstEvalErr
+      end
       params.on_finish(status, errorMessage)
     end,
   })
@@ -265,6 +274,7 @@ end
 
 -- TODO (sbadragan): add tests for both this and astgrep
 -- TODO (sbadragan): add syntax highlight
+-- TODO (sbadragan): open below (o) is broken in results
 --- does search
 ---@param params EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs

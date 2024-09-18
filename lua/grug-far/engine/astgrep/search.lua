@@ -68,6 +68,7 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
   local isTextOutput = isSearchWithTextOutput(args)
 
   local matches = {}
+  local firstEvalErr = nil
   return fetchCommandOutput({
     cmd_path = options.engines.astgrep.path,
     args = args,
@@ -81,7 +82,10 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
         return
       end
 
-      parseResults.json_decode_matches(matches, data, eval_fn)
+      local eval_err = parseResults.json_decode_matches(matches, data, eval_fn)
+      if eval_err then
+        firstEvalErr = firstEvalErr or eval_err
+      end
       -- note: we split off last file matches to ensure all matches for a file are processed
       -- at once. This helps with applying replacements
       local before, after = parseResults.split_last_file_matches(matches)
@@ -93,6 +97,10 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
         -- do the last few
         on_fetch_chunk(parseResults.parseResults(matches))
         matches = {}
+      end
+      if firstEvalErr then
+        status = 'error'
+        errorMessage = firstEvalErr
       end
       vim.schedule(function()
         on_finish(status, errorMessage)

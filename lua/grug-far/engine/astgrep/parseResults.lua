@@ -243,8 +243,10 @@ end
 --- decodes streamed json matches, appending to given table
 ---@param matches AstgrepMatch[]
 ---@param data string
----@param eval_fn? fun(...): string
+---@param eval_fn? fun(...): (string?, string?)
+---@return string? err
 function M.json_decode_matches(matches, data, eval_fn)
+  local firstEvalErr = nil
   local json_lines = vim.split(data, '\n')
   for _, json_line in ipairs(json_lines) do
     if #json_line > 0 then
@@ -262,11 +264,18 @@ function M.json_decode_matches(matches, data, eval_fn)
             end)
             :totable()
         end
-        match.replacement = eval_fn(match.text, vars)
+        local replacementText, err = eval_fn(match.text, vars)
+        if err then
+          firstEvalErr = firstEvalErr or err
+          replacementText = ''
+        end
+        match.replacement = replacementText
       end
       table.insert(matches, match)
     end
   end
+
+  return firstEvalErr
 end
 
 --- splits off matches corresponding to the last file
