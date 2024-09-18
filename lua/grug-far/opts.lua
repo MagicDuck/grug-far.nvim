@@ -96,6 +96,7 @@ M.defaultOptions = {
 
   -- replacement interpreters configuration
   replacementInterpreters = {
+    -- TODO (sbadragan): do a vimscript one? Maybe just need to add var match = 'value'
     lua = {
       -- placeholder to show in replacement input area when empty
       -- set to '' to disable

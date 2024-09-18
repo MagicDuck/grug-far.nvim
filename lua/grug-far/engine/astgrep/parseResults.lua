@@ -28,9 +28,14 @@ local HighlightByType = {
 ---@field line integer
 ---@field column integer
 
+---@class AstgrepMatchByteOffset
+---@field start integer
+---@field end integer
+
 ---@class AstgrepMatchRange
 ---@field start AstgrepMatchPos
 ---@field end AstgrepMatchPos
+---@field byteOffset AstgrepMatchByteOffset
 
 ---@class AstgrepMatchCharCount
 ---@field leading integer
@@ -233,6 +238,89 @@ function M.parseResults(matches)
     highlights = highlights,
     stats = stats,
   }
+end
+
+--- decodes streamed json matches, appending to given table
+---@param matches AstgrepMatch[]
+---@param data string
+---@param eval_fn? fun(...): string
+function M.json_decode_matches(matches, data, eval_fn)
+  local json_lines = vim.split(data, '\n')
+  for _, json_line in ipairs(json_lines) do
+    if #json_line > 0 then
+      local match = vim.json.decode(json_line)
+      if eval_fn then
+        -- TODO (sbadragan): pass in meta variables?
+        match.replacement = eval_fn(match.text)
+      end
+      table.insert(matches, match)
+    end
+  end
+end
+
+--- splits off matches corresponding to the last file
+---@param matches AstgrepMatch[]
+---@return AstgrepMatch[] before, AstgrepMatch[] after
+function M.split_last_file_matches(matches)
+  local end_index = 0
+  for i = #matches - 1, 1, -1 do
+    if matches[i].file ~= matches[i + 1].file then
+      end_index = i
+      break
+    end
+  end
+
+  local before = {}
+  for i = 1, end_index do
+    table.insert(before, matches[i])
+  end
+  local after = {}
+  for i = end_index + 1, #matches do
+    table.insert(after, matches[i])
+  end
+
+  return before, after
+end
+
+--- splits off matches corresponding to each file
+---@param matches AstgrepMatch[]
+---@return AstgrepMatch[][] matches_per_file
+function M.split_matches_per_file(matches)
+  if #matches == 0 then
+    return {}
+  end
+
+  local matches_per_file = { { matches[1] } }
+  for i = 2, #matches, 1 do
+    if matches[i].file == matches[i - 1].file then
+      table.insert(matches_per_file[#matches_per_file], matches[i])
+    else
+      table.insert(matches_per_file, { matches[i] })
+    end
+  end
+
+  return matches_per_file
+end
+
+--- constructs new file content, given old file content and matches with replacements
+---@param contents string
+---@param matches AstgrepMatch[]
+---@return string new_contents
+function M.getReplacedContents(contents, matches)
+  local new_contents = ''
+  local last_index = 0
+  for _, match in ipairs(matches) do
+    new_contents = new_contents
+      .. contents:sub(last_index + 1, match.range.byteOffset.start)
+      .. match.replacement
+
+    last_index = match.range.byteOffset['end']
+  end
+  if last_index < #contents then
+    new_contents = new_contents .. contents:sub(last_index + 1)
+  end
+
+  return new_contents
 end
 
 return M
