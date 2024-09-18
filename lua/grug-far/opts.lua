@@ -83,8 +83,7 @@ M.defaultOptions = {
 
         search = 'ex: $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
         replacement = 'ex: $A?.()   blah($$$ARGS)',
-        replacement_lua = 'ex: if vars.A == "blah" \\n then return "foo(" .. vim.fn.join(vars.ARGS, ',
-        ') .. ")" \\n else return match end',
+        replacement_lua = 'ex: return vars.A == "blah" and "foo(" .. vim.fn.join(vars.ARGS, ", ") .. ")" or match',
         filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
         flags = 'ex: --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
         paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua',
@@ -96,16 +95,6 @@ M.defaultOptions = {
   -- Must be one of 'ripgrep' | 'astgrep' | nil
   -- if nil, defaults to 'ripgrep'
   engine = 'ripgrep',
-
-  -- replacement interpreters configuration
-  replacementInterpreters = {
-    -- TODO (sbadragan): do a vimscript one? Maybe just need to add var match = 'value'
-    lua = {
-      -- placeholder to show in replacement input area when empty
-      -- set to '' to disable
-      replacementPlaceholder = 'ex: if vim.startsWith(match, "use") \\n then return "employ" .. match \\n else return match end',
-    },
-  },
 
   -- how to interpret the replacement input.
   -- Must be one of 'lua' | 'default'
@@ -435,6 +424,7 @@ M.defaultOptions = {
 ---@field enabled boolean
 ---@field search string
 ---@field replacement string
+---@field replacement_lua string
 ---@field filesFilter string
 ---@field flags string
 ---@field paths string
@@ -443,6 +433,7 @@ M.defaultOptions = {
 ---@field enabled? boolean
 ---@field search? string
 ---@field replacement? string
+---@field replacement_lua? string
 ---@field filesFilter? string
 ---@field flags? string
 ---@field paths? string
@@ -501,18 +492,6 @@ M.defaultOptions = {
 ---@field ripgrep? RipgrepEngineTableOverride
 ---@field astgrep? AstgrepEngineTableOverride
 
----@class LuaInterpreterTable
----@field replacementPlaceholder string
-
----@class LuaInterpreterTableOverride
----@field replacementPlaceholder? string
-
----@class ReplacementInterpretersTable
----@field lua LuaInterpreterTable
-
----@class ReplacementInterpretersTableOverride
----@field lua? LuaInterpreterTableOverride
-
 ---@alias GrugFarEngineType "ripgrep" | "astgrep"
 ---@alias GrugFarReplacementInterpreterType "lua" | "default"
 
@@ -558,7 +537,6 @@ M.defaultOptions = {
 ---@field folding FoldingTable
 ---@field engines EnginesTable
 ---@field engine GrugFarEngineType
----@field replacementInterpreters ReplacementInterpretersTable
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field resultLocation ResultLocationTable
 
@@ -591,7 +569,6 @@ M.defaultOptions = {
 ---@field folding? FoldingTableOverride
 ---@field engines? EnginesTableOverride
 ---@field engine? GrugFarEngineType
----@field replacementInterpreters? ReplacementInterpretersTable
 ---@field replacementInterpreter? GrugFarReplacementInterpreterType
 ---@field resultLocation? ResultLocationTableOverride
 
