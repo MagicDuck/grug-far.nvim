@@ -7,17 +7,22 @@ local getAstgrepVersion = require('grug-far/engine/astgrep/getAstgrepVersion')
 local fetchFilteredFilesList = require('grug-far/engine/ripgrep/fetchFilteredFilesList')
 local runWithChunkedFiles = require('grug-far/engine/runWithChunkedFiles')
 local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
+local argUtils = require('grug-far/engine/astgrep/argUtils')
 
 local M = {}
 
 --- decodes streamed json matches, appending to given table
 ---@param matches AstgrepMatch[]
 ---@param data string
-local function json_decode_matches(matches, data)
+---@param eval_fn? fun(...): string
+local function json_decode_matches(matches, data, eval_fn)
   local json_lines = vim.split(data, '\n')
   for _, json_line in ipairs(json_lines) do
     if #json_line > 0 then
       local match = vim.json.decode(json_line)
+      if eval_fn then
+        match.replacement = eval_fn(match.text)
+      end
       table.insert(matches, match)
     end
   end
@@ -96,10 +101,11 @@ end
 --- runs search
 ---@param args string[]?
 ---@param options GrugFarOptions
+---@param eval_fn? fun(...): string
 ---@param on_fetch_chunk fun(data: ParsedResultsData)
 ---@param on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 ---@return fun()? abort, string[]? effectiveArgs
-local function run_astgrep_search(args, options, on_fetch_chunk, on_finish)
+local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_finish)
   local isTextOutput = isSearchWithTextOutput(args)
 
   local matches = {}
@@ -116,7 +122,7 @@ local function run_astgrep_search(args, options, on_fetch_chunk, on_finish)
         return
       end
 
-      json_decode_matches(matches, data)
+      json_decode_matches(matches, data, eval_fn)
       -- note: we split off last file matches to ensure all matches for a file are processed
       -- at once. This helps with applying replacements
       local before, after = split_last_file_matches(matches)
@@ -175,6 +181,17 @@ function M.search(params)
     return
   end
 
+  local eval_fn
+  if params.replacementInterpreter then
+    local interpreterError
+    eval_fn, interpreterError = params.replacementInterpreter.get_eval_fn(params.inputs.replacement)
+    if not eval_fn then
+      params.on_finish('error', interpreterError)
+      return
+    end
+    args = argUtils.stripReplaceArgs(args)
+  end
+
   local hadOutput = false
   local filesFilter = params.inputs.filesFilter
   if filesFilter and #filesFilter > 0 then
@@ -212,7 +229,7 @@ function M.search(params)
               table.insert(chunk_args, file)
             end
 
-            return run_astgrep_search(chunk_args, params.options, function(data)
+            return run_astgrep_search(chunk_args, params.options, eval_fn, function(data)
               hadOutput = true
               params.on_fetch_chunk(data)
             end, function(_, _errorMessage)
@@ -238,7 +255,7 @@ function M.search(params)
 
     return abort
   else
-    return run_astgrep_search(args, params.options, function(data)
+    return run_astgrep_search(args, params.options, eval_fn, function(data)
       hadOutput = true
       params.on_fetch_chunk(data)
     end, function(status, errorMessage)
