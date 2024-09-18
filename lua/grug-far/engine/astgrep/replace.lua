@@ -122,7 +122,8 @@ function M.replace(params)
   local eval_fn
   if params.replacementInterpreter then
     local interpreterError
-    eval_fn, interpreterError = params.replacementInterpreter.get_eval_fn(params.inputs.replacement)
+    eval_fn, interpreterError =
+      params.replacementInterpreter.get_eval_fn(params.inputs.replacement, { 'match', 'vars' })
     if not eval_fn then
       params.on_finish('error', interpreterError)
       return

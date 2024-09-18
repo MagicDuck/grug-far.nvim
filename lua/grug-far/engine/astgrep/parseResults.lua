@@ -250,8 +250,19 @@ function M.json_decode_matches(matches, data, eval_fn)
     if #json_line > 0 then
       local match = vim.json.decode(json_line)
       if eval_fn then
-        -- TODO (sbadragan): pass in meta variables?
-        match.replacement = eval_fn(match.text)
+        local vars = {}
+        for name, value in pairs(match.metaVariables.single) do
+          vars[name] = value.text
+        end
+        for name, value in pairs(match.metaVariables.multi) do
+          vars[name] = vim
+            .iter(value)
+            :map(function(v)
+              return v.text
+            end)
+            :totable()
+        end
+        match.replacement = eval_fn(match.text, vars)
       end
       table.insert(matches, match)
     end

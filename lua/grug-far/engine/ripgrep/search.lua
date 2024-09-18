@@ -224,7 +224,8 @@ end
 ---@param params RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search_with_replace_interpreter(replacementInterpreter, params)
-  local eval_fn, interpreterError = replacementInterpreter.get_eval_fn(params.inputs.replacement)
+  local eval_fn, interpreterError =
+    replacementInterpreter.get_eval_fn(params.inputs.replacement, { 'match' })
   if not eval_fn then
     params.on_finish('error', interpreterError)
     return

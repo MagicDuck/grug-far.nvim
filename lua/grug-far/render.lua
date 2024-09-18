@@ -45,8 +45,7 @@ local function render(buf, context)
     label = interpreterType and 'Replace [' .. interpreterType .. ']:' or 'Replace:',
     placeholder = placeholders.enabled
       and (
-        interpreterType
-          and context.options.replacementInterpreters[interpreterType].replacementPlaceholder
+        interpreterType and placeholders['replacement_' .. interpreterType]
         or placeholders.replacement
       ),
   }, context)
