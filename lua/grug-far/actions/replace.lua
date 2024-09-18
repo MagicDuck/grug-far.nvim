@@ -116,6 +116,7 @@ local function replace(params)
   state.abort.replace = context.engine.replace({
     inputs = context.state.inputs,
     options = context.options,
+    replacementInterpreter = context.replacementInterpreter,
 
     report_progress = function(update)
       if state.bufClosed then

@@ -286,4 +286,36 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
   }
 end
 
+--- constructs new file content, given old file content and matches with replacements
+---@param contents string
+---@param matches RipgrepJson[]
+---@return string new_contents
+function M.getReplacedContents(contents, matches)
+  local new_contents = ''
+  local last_index = 0
+  for _, match in ipairs(matches) do
+    if match.type == 'match' then
+      new_contents = new_contents .. contents:sub(last_index + 1, match.data.absolute_offset)
+
+      local last_sub_index = 0
+      local replaced_lines_text = ''
+      local match_lines_text = match.data.lines.text
+      for _, submatch in ipairs(match.data.submatches) do
+        replaced_lines_text = replaced_lines_text
+          .. match_lines_text:sub(last_sub_index + 1, submatch.start)
+          .. submatch.replacement.text
+        last_sub_index = submatch['end']
+      end
+      if last_sub_index < #match_lines_text then
+        replaced_lines_text = replaced_lines_text .. match_lines_text:sub(last_sub_index + 1)
+      end
+
+      last_index = last_index + #match_lines_text
+    end
+  end
+  new_contents = new_contents .. contents:sub(last_index + 1)
+
+  return new_contents
+end
+
 return M

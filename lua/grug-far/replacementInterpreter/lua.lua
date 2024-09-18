@@ -4,7 +4,7 @@ local LuaInterpreter = {
 
   get_eval_fn = function(script)
     local chunkheader = 'local match = ...;\n'
-    local _, chunk, error = pcall(loadstring, chunkheader .. script, 'luaeval')
+    local _, chunk, error = pcall(loadstring, chunkheader .. script, 'Replace')
     if chunk then
       return function(...)
         return tostring(chunk(...))
