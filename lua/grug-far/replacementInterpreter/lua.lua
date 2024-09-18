@@ -13,7 +13,7 @@ local LuaInterpreter = {
     local chunkheader = 'local ' .. vim.fn.join(param_names, ', ') .. ' = ...;\n'
     local _, chunk, error = pcall(loadstring, chunkheader .. script, 'luaeval')
     if chunk then
-      return chunk(unpack(param_values))
+      return tostring(chunk(unpack(param_values)))
     else
       return nil, error or 'could not evaluate lua chunk'
     end

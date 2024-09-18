@@ -39,6 +39,7 @@ M.DiffSeparatorChars = ' '
 ---@class EngineSearchParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
+---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field on_fetch_chunk fun(data: ParsedResultsData)
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
 
