@@ -309,11 +309,14 @@ function M.getReplacedContents(contents, matches)
       if last_sub_index < #match_lines_text then
         replaced_lines_text = replaced_lines_text .. match_lines_text:sub(last_sub_index + 1)
       end
+      new_contents = new_contents .. replaced_lines_text
 
-      last_index = last_index + #match_lines_text
+      last_index = match.data.absolute_offset + #match_lines_text
     end
   end
-  new_contents = new_contents .. contents:sub(last_index + 1)
+  if last_index < #contents then
+    new_contents = new_contents .. contents:sub(last_index + 1)
+  end
 
   return new_contents
 end

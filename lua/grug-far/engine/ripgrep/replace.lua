@@ -49,7 +49,7 @@ M.replace = function(params)
   if params.replacementInterpreter then
     local interpreterError
     replacement_eval_fn, interpreterError =
-      replacementInterpreter.get_eval_fn(params.inputs.replacement)
+      params.replacementInterpreter.get_eval_fn(params.inputs.replacement)
     if not replacement_eval_fn then
       params.on_finish('error', interpreterError)
       return
