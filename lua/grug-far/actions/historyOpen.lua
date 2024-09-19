@@ -188,13 +188,11 @@ local function createHistoryWindow(buf, context)
   })
 
   -- do the initial render
-  vim.schedule(function()
-    renderHistoryBuffer(historyBuf, context)
-    -- place cursor at first entry
-    vim.api.nvim_win_set_cursor(historyWin, { 3, 0 })
+  renderHistoryBuffer(historyBuf, context)
+  -- place cursor at first entry
+  vim.api.nvim_win_set_cursor(historyWin, { 3, 0 })
 
-    highlightHistoryBuffer(historyBuf, context, 0, -1)
-  end)
+  highlightHistoryBuffer(historyBuf, context, 0, -1)
 
   return historyWin
 end
