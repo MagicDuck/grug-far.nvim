@@ -282,7 +282,6 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
   return abort, effectiveArgs
 end
 
--- TODO (sbadragan): add tests for both this and astgrep
 --- does search
 ---@param params EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
