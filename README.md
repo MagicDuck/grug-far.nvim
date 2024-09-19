@@ -22,28 +22,35 @@ Grug find! Grug replace! Grug happy!
 - Replace using lua interpreted replacement for each match
 
 #### Searching:
-<img width="1256" alt="image" src="https://github.com/user-attachments/assets/d0411f2d-d3ae-4114-b76c-f959d8ddda3a">
+<img width="1257" alt="image" src="https://github.com/user-attachments/assets/bb69a9b2-f89d-416c-9333-27d60d870959">
 
 #### Replacing:
-<img width="1258" alt="image" src="https://github.com/user-attachments/assets/d8cd866b-351a-4cd3-9885-7427f7455779">
+<img width="1257" alt="image" src="https://github.com/user-attachments/assets/cfe0aa1a-7906-409a-ae8b-bdcee3c8918a">
 
 <details>
 <summary>More screenshots:</summary>
 
 #### Rg teaching you its ways
-<img width="1258" alt="image" src="https://github.com/user-attachments/assets/ad95f913-1029-47de-b43c-7607bda60878">
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/c59da414-2836-4e1c-93cd-9ac4568c819c">
 
 #### Help:
-<img width="1259" alt="image" src="https://github.com/user-attachments/assets/86231d5e-1f48-487b-97e0-a4059b6c2a47">
+<img width="1252" alt="image" src="https://github.com/user-attachments/assets/5da63e72-f768-46e7-a807-b26c6f44c42c">
 
 #### History:
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
 
 #### Ast-grep multiline search and replace:
-<img width="1257" alt="image" src="https://github.com/user-attachments/assets/d725dac6-0012-426a-9b42-21e615ad7a29">
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/12cbc3f7-eebc-496b-83ca-9497fd1d7127">
 
 #### Ast-grep debug-query
-<img width="1254" alt="image" src="https://github.com/user-attachments/assets/60ab0161-4da8-45ee-9d6e-6e23251a857b">
+<img width="1251" alt="image" src="https://github.com/user-attachments/assets/20fab223-56b6-42ff-825b-0df3c0e8d625">
+
+#### Ripgrep with lua interpreted replacement
+![image](https://github.com/user-attachments/assets/84c16e54-7e17-4c6d-befd-89b2679270bb)
+
+#### Astgrep with vimscript interpreted replacement
+![image](https://github.com/user-attachments/assets/19945216-c365-4a03-b8e6-6742075afad6)
+
 
 </details>
 
