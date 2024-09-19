@@ -38,7 +38,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        neovim_version: ["v0.10.0"]
+        neovim_version: ["v0.10.1"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout sources
