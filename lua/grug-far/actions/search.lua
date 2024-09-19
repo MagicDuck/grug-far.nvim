@@ -55,6 +55,10 @@ local function search(params)
       return
     end
 
+    if abortedEarly and status == nil then
+      status = 'success'
+    end
+
     if customActionMessage then
       state.actionMessage = customActionMessage
     end
@@ -122,10 +126,9 @@ local function search(params)
       if abortedEarly then
         if state.abort.search then
           state.abort.search()
-          -- TODO (sbadragan): change this up, should not call on_finish twice...
-          -- vim.schedule(function()
-          --   on_finish('success', nil, nil)
-          -- end)
+          vim.schedule(function()
+            on_finish('success', nil, nil)
+          end)
         end
       end
     end,
