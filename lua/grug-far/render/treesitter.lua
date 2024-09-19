@@ -46,7 +46,7 @@ function M.setup()
 end
 
 ---@param buf number
----@param skipRegionsWithIds boolean
+---@param skipRegionsWithIds? boolean
 function M.clear(buf, skipRegionsWithIds)
   for cache_key, hl in pairs(M.cache[buf] or {}) do
     if not (skipRegionsWithIds and hl.regionsId) then
