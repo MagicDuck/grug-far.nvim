@@ -238,6 +238,7 @@ T['is prevented from replacing with blacklisted flags'] = function()
   child.type_keys('<esc>' .. keymaps.replace.n)
 
   helpers.childWaitForScreenshotText(child, 'replace cannot work')
+  helpers.childWaitForScreenshotText(child, 'error: the argument')
   helpers.childExpectScreenshot(child)
 end
 
