@@ -10,7 +10,7 @@
 
 local M = {}
 
-M.cache = {} ---@type table<number, table<string,{parser: vim.treesitter.LanguageTree, highlighter:vim.treesitter.highlighter, enabled:boolean}>>
+M.cache = {} ---@type table<number, table<string,{parser: vim.treesitter.LanguageTree, highlighter:vim.treesitter.highlighter, enabled:boolean, regionsId?: string, regions?: Region[]}>>
 local ns = vim.api.nvim_create_namespace('grug.treesitter')
 
 local TSHighlighter = vim.treesitter.highlighter
@@ -46,50 +46,78 @@ function M.setup()
 end
 
 ---@param buf number
-function M.clear(buf)
-  for _, hl in pairs(M.cache[buf] or {}) do
-    hl.highlighter:destroy()
-    hl.parser:destroy()
+---@param skipRegionsWithIds boolean
+function M.clear(buf, skipRegionsWithIds)
+  for cache_key, hl in pairs(M.cache[buf] or {}) do
+    if not (skipRegionsWithIds and hl.regionsId) then
+      hl.highlighter:destroy()
+      hl.parser:destroy()
+      M.cache[buf][cache_key] = nil
+    end
   end
-  M.cache[buf] = nil
+  if M.cache[buf] and vim.tbl_isempty(M.cache[buf]) then
+    M.cache[buf] = nil
+  end
 end
 
 ---@param buf number
 ---@param regions LangRegions
-function M.attach(buf, regions)
+---@param regionsId string?
+function M.attach(buf, regions, regionsId)
   M.setup()
   M.cache[buf] = M.cache[buf] or {}
-  for lang in pairs(M.cache[buf]) do
-    M.cache[buf][lang].enabled = regions[lang] ~= nil
+
+  if not regionsId then
+    -- stop caring about older highlighted regions, for perf sake
+    for cacheKey in pairs(M.cache[buf]) do
+      local entry = M.cache[buf][cacheKey]
+      -- note: entries with a region id are always highlighted
+      if not entry.regionsId then
+        entry.enabled = regions[cacheKey] ~= nil
+      end
+    end
   end
 
   for lang in pairs(regions) do
-    M._attach_lang(buf, lang, regions[lang])
+    M._attach_lang(buf, lang, regions[lang], regionsId)
   end
 end
 
 ---@param buf number
 ---@param lang string
 ---@param regions Region[]
-function M._attach_lang(buf, lang, regions)
+---@param regionsId string?
+function M._attach_lang(buf, lang, regions, regionsId)
   lang = lang == 'markdown' and 'markdown_inline' or lang
 
   M.cache[buf] = M.cache[buf] or {}
 
-  if not M.cache[buf][lang] then
+  local cacheKey = regionsId and lang .. '__' .. regionsId or lang
+  local entry = M.cache[buf][cacheKey]
+
+  if regionsId and entry and entry.regions and vim.deep_equal(regions[lang], entry.regions) then
+    -- trying to highlight same regions, nothing to do
+    return
+  end
+
+  if not entry then
     local ok, parser = pcall(vim.treesitter.get_parser, buf, lang)
     if not ok then
       return
     end
-    M.cache[buf][lang] = {
+    M.cache[buf][cacheKey] = {
       parser = parser,
       highlighter = TSHighlighter.new(parser),
+      regionsId = regionsId,
     }
+    entry = M.cache[buf][cacheKey]
   end
-  M.cache[buf][lang].enabled = true
-  local parser = M.cache[buf][lang].parser
+  entry.enabled = true
   ---@diagnostic disable-next-line: invisible
-  parser:set_included_regions(regions)
+  entry.parser:set_included_regions(regions)
+  if regionsId then
+    entry.regions = regions
+  end
 end
 
 return M

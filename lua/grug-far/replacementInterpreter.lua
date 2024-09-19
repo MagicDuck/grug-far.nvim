@@ -2,6 +2,7 @@ local M = {}
 
 ---@class GrugFarReplacementInterpreter
 ---@field type GrugFarReplacementInterpreterType
+---@field language string
 ---@field get_eval_fn fun(script: string, arg_names: string[]): (fn: (fun(...): (result: string?, err: string?))?, error: string?)
 
 --- returns engine given type
