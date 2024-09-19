@@ -1,6 +1,7 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far/test/helpers')
 local keymaps = helpers.getKeymaps()
+local opts = require('grug-far/opts')
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -83,7 +84,11 @@ T['replacement interpreter swaps when reloading from history'] = function()
   helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
   child.type_keys('<esc>cc', '$A')
-  child.type_keys('<esc>' .. keymaps.swapReplacementInterpreter.n)
+  child.type_keys('<esc>')
+  -- go back to default
+  for _ = 1, #opts.defaultOptions.enabledReplacementInterpreters - 1 do
+    child.type_keys(keymaps.swapReplacementInterpreter.n)
+  end
   helpers.childWaitForScreenshotText(child, '14 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
