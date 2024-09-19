@@ -1,4 +1,5 @@
 local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
+local utils = require('grug-far/utils')
 local ProcessingQueue = require('grug-far/engine/ProcessingQueue')
 local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
 local parseResults = require('grug-far/engine/ripgrep/parseResults')
@@ -166,7 +167,28 @@ local function run_search_with_replace(params)
 
   local searchArgs = argUtils.stripReplaceArgs(params.args)
 
-  processingQueue = ProcessingQueue.new(function(json_data, on_done)
+  processingQueue = ProcessingQueue.new(function(data, on_done)
+    local json_lines = vim.split(data, '\n')
+    local json_data = {}
+    for _, json_line in ipairs(json_lines) do
+      if #json_line > 0 then
+        local success, entry = pcall(vim.json.decode, json_line)
+        if not success then
+          params.on_fetch_chunk({
+            lines = vim
+              .iter(vim.split(data, '\n'))
+              :map(utils.getLineWithoutCarriageReturn)
+              :totable(),
+            highlights = {},
+            stats = { matches = 0, files = 0 },
+          })
+          on_done()
+          return
+        end
+        table.insert(json_data, entry)
+      end
+    end
+
     getResultsWithReplaceDiff({
       json_data = json_data,
       inputs = params.inputs,
@@ -189,16 +211,7 @@ local function run_search_with_replace(params)
     cmd_path = params.options.engines.ripgrep.path,
     args = searchArgs,
     on_fetch_chunk = function(data)
-      local json_lines = vim.split(data, '\n')
-      local json_data = {}
-      for _, json_line in ipairs(json_lines) do
-        if #json_line > 0 then
-          local entry = vim.json.decode(json_line)
-          table.insert(json_data, entry)
-        end
-      end
-
-      processingQueue:push(json_data)
+      processingQueue:push(data)
     end,
     on_finish = function(status, errorMessage)
       if status == 'error' and errorMessage and #errorMessage == 0 then
