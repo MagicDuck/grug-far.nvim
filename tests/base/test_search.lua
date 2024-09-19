@@ -263,6 +263,49 @@ T['can search with replace string with showReplaceDiff off'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search with lua replace interpreter'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'return match .. "_and_curly"' },
+    replacementInterpreter = 'lua',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can report eval error from lua replace interpreter'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'return non_existent_one .. "_and_curly"' },
+    replacementInterpreter = 'lua',
+  })
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 T['can search with no matches'] = function()
   helpers.writeTestFiles({
     { filename = 'file1.txt', content = [[ grug walks ]] },

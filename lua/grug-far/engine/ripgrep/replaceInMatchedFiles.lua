@@ -142,7 +142,7 @@ local function replaceInMatchedFiles(params)
   local report_progress = params.report_progress
   local on_finish = params.on_finish
   local engagedWorkers = 0
-  local errorMessages = ''
+  local errorMessage = nil
   local isAborted = false
   local abortByFile = {}
 
@@ -165,10 +165,12 @@ local function replaceInMatchedFiles(params)
     local file = table.remove(files)
     if file == nil then
       if engagedWorkers == 0 then
-        if isAborted then
+        if errorMessage then
+          on_finish('error', errorMessage)
+        elseif isAborted then
           on_finish(nil, nil)
         else
-          on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
+          on_finish('success', nil)
         end
       end
       return
@@ -181,14 +183,14 @@ local function replaceInMatchedFiles(params)
       options = params.options,
       replacement_eval_fn = params.replacement_eval_fn,
       on_done = vim.schedule_wrap(function(err)
+        abortByFile[file] = nil
         if err then
-          -- optimistically try to continue
-          errorMessages = errorMessages .. '\n' .. err
+          errorMessage = err
+          abortAll()
+        else
+          report_progress(1)
         end
 
-        abortByFile[file] = nil
-
-        report_progress(1)
         engagedWorkers = engagedWorkers - 1
         replaceNextFile()
       end),

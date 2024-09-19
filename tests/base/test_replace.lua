@@ -205,4 +205,56 @@ T['is prevented from replacing with blacklisted flags'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can replace with lua replace interpreter'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'return match .. "_and_curly"' },
+    replacementInterpreter = 'lua',
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'curly')
+  helpers.childWaitForScreenshotText(child, 'grug_and_curly talks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can report eval error from lua replace interpreter'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'return non_existent_one .. "_and_curly"' },
+    replacementInterpreter = 'lua',
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace failed!')
+  helpers.childExpectScreenshot(child)
+end
+
 return T

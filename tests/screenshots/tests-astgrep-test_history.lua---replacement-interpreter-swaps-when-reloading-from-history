@@ -1,0 +1,37 @@
+--|
+01|
+02|
+03|Engine: astgrep
+04|Search: $A
+05|Replace: return vars.A
+06|Files Filter: 
+07|Flags: 
+08|Paths: 
+09|
+10|
+11|Engine: astgrep|lua
+12|Search: grug.$A
+13|Replace: return vars.A
+14|Files Filter: 
+15|Flags: 
+16|Paths: 
+17|
+
+--|-
+01| 
+02| 
+03| 
+04| 
+05| 
+06| 
+07| 
+08| 
+09| 
+10| 
+11| 
+12| 
+13| 
+14| 
+15| 
+16| 
+17| 
