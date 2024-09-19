@@ -73,6 +73,94 @@ T['can replace with file filter'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can replace with lua replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return match .. "_" .. vars.A',
+      filesFilter = '**/*.ts',
+    },
+    replacementInterpreter = 'lua',
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', '$A')
+  helpers.childWaitForScreenshotText(child, 'grug.walks_walks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can replace with lua replace interpreter and file filter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug.$A', replacement = 'return match .. "_" .. vars.A' },
+    replacementInterpreter = 'lua',
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', '$A')
+  helpers.childWaitForScreenshotText(child, 'grug.walks_walks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can report eval error from lua replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug.$A', replacement = 'return non_existent_one .. "_" .. vars.A' },
+    replacementInterpreter = 'lua',
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace failed!')
+  helpers.childExpectScreenshot(child)
+end
+
 T['can replace within one file'] = function()
   helpers.writeTestFiles({
     {

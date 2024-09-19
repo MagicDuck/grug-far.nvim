@@ -201,6 +201,85 @@ T['can search with file filter'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search with lua replace interpreter and file filter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return match .. "_" .. vars.A',
+      filesFilter = '**/*.ts',
+    },
+    replacementInterpreter = 'lua',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can report eval error from lua replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return non_existent_one .. "_" .. vars.A',
+    },
+    replacementInterpreter = 'lua',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can report eval error from lua replace interpreter with files filter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return non_existent_one .. "_" .. vars.A',
+      filesFilter = '**/*.ts',
+    },
+    replacementInterpreter = 'lua',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 T['can search with replace string'] = function()
   helpers.writeTestFiles({
     {
@@ -216,6 +295,30 @@ T['can search with replace string'] = function()
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
     prefills = { search = 'grug', replacement = 'curly' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search with lua replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug.$A', replacement = 'return match .. "_" .. vars.A' },
+    replacementInterpreter = 'lua',
   })
 
   helpers.childWaitForFinishedStatus(child)

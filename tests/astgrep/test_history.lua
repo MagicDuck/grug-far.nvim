@@ -60,4 +60,50 @@ T['engine swaps when reloading from history'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['replacement interpreter swaps when reloading from history'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug.$A', replacement = 'return vars.A' },
+    replacementInterpreter = 'lua',
+  })
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childWaitForScreenshotText(child, '[lua]')
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
+
+  child.type_keys('<esc>cc', '$A')
+  child.type_keys('<esc>' .. keymaps.swapReplacementInterpreter.n)
+  helpers.childWaitForScreenshotText(child, '14 matches in 1 files')
+  helpers.childWaitForFinishedStatus(child)
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
+
+  child.type_keys('<esc>' .. keymaps.historyOpen.n)
+  helpers.childWaitForScreenshotText(child, 'History')
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>11G', '<enter>')
+  helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
+  helpers.childWaitForScreenshotText(child, '[lua]')
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys('<esc>' .. keymaps.historyOpen.n)
+  helpers.childWaitForScreenshotText(child, 'History')
+
+  child.type_keys('<esc>3G', '<enter>')
+  helpers.childWaitForScreenshotText(child, '14 matches in 1 files')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
