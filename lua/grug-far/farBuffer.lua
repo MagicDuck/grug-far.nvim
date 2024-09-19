@@ -164,7 +164,7 @@ local function getActions(buf, context)
       end,
     },
     {
-      text = 'Swap Replacement Type',
+      text = 'Swap Replacement Interpreter',
       keymap = keymaps.swapReplacementInterpreter,
       description = 'Swap replacement interpreter with the next one. For example, with the "lua" interpeter, you can use lua to generate your replacement for each match.',
       action = function()
