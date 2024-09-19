@@ -20,9 +20,12 @@ local function search(params)
     return
   end
 
-  if state.abort.search then
-    state.abort.search()
-    state.abort.search = nil
+  if abort.search then
+    if not state.searchAgain then
+      state.searchAgain = true
+      abort.search()
+    end
+    return
   end
 
   local abortedEarly = false
@@ -56,7 +59,6 @@ local function search(params)
       state.actionMessage = customActionMessage
     end
 
-    state.abort.search = nil
     clearResultsIfNeeded()
 
     state.status = status
@@ -79,9 +81,16 @@ local function search(params)
     if context.options.folding.enabled then
       fold.updateFolds(buf)
     end
+
+    state.abort.search = nil
+    -- launch a new search if one was triggered while we were finishing up  or were aborted
+    if state.searchAgain then
+      state.searchAgain = false
+      search(params)
+    end
   end
 
-  state.abort.search, effectiveArgs = context.engine.search({
+  abort.search, effectiveArgs = context.engine.search({
     inputs = state.inputs,
     options = context.options,
     replacementInterpreter = context.replacementInterpreter,
@@ -113,9 +122,10 @@ local function search(params)
       if abortedEarly then
         if state.abort.search then
           state.abort.search()
-          vim.schedule(function()
-            on_finish('success', nil, nil)
-          end)
+          -- TODO (sbadragan): change this up, should not call on_finish twice...
+          -- vim.schedule(function()
+          --   on_finish('success', nil, nil)
+          -- end)
         end
       end
     end,

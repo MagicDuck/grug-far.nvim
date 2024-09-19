@@ -68,6 +68,7 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
   local isTextOutput = isSearchWithTextOutput(args)
 
   local matches = {}
+  -- TODO (sbadragan): abort immediately?
   local firstEvalErr = nil
   return fetchCommandOutput({
     cmd_path = options.engines.astgrep.path,
@@ -102,7 +103,7 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
         status = 'error'
         errorMessage = firstEvalErr
       end
-      vim.schedule(function()
+      vim.schedule_wrap(function()
         on_finish(status, errorMessage)
       end)
     end,
@@ -154,7 +155,7 @@ function M.search(params)
     eval_fn, interpreterError =
       params.replacementInterpreter.get_eval_fn(params.inputs.replacement, { 'match', 'vars' })
     if not eval_fn then
-      params.on_finish('error', interpreterError)
+      on_finish('error', interpreterError)
       return
     end
     args = argUtils.stripReplaceArgs(args)
@@ -179,6 +180,7 @@ function M.search(params)
       options = params.options,
       report_progress = function() end,
       on_finish = function(status, errorMessage, files)
+        on_abort = nil
         if not status then
           on_finish(nil, nil, nil)
           return
@@ -200,8 +202,13 @@ function M.search(params)
             return run_astgrep_search(chunk_args, params.options, eval_fn, function(data)
               hadOutput = true
               params.on_fetch_chunk(data)
-            end, function(_, _errorMessage)
-              return on_done((_errorMessage and #_errorMessage > 0) and _errorMessage or nil)
+            end, function(_status, _errorMessage)
+              if _status == 'error' then
+                local err = (_errorMessage and #_errorMessage > 0) and _errorMessage
+                  or 'Unexpected Error!'
+                return on_done(err)
+              end
+              return on_done(nil)
             end)
           end,
           on_finish = function(_status, _errorMessage)
