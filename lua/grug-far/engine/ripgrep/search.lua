@@ -232,11 +232,16 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
   end
 
   local searchArgs = argUtils.stripReplaceArgs(params.args)
-  local firstEvalErr = nil
-  return fetchCommandOutput({
+  local chunk_error = nil
+  local abort, effectiveArgs
+  abort, effectiveArgs = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = searchArgs,
     on_fetch_chunk = function(data)
+      if chunk_error then
+        return
+      end
+
       local json_lines = vim.split(data, '\n')
       local json_data = {}
       for _, json_line in ipairs(json_lines) do
@@ -247,8 +252,11 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
               ---@cast eval_fn fun(...): string
               local replacementText, err = eval_fn(submatch.match.text)
               if err then
-                replacementText = ''
-                firstEvalErr = firstEvalErr or err
+                chunk_error = err
+                if abort then
+                  abort()
+                end
+                return
               end
               submatch.replacement = { text = replacementText }
             end
@@ -263,13 +271,15 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
       if status == 'error' and errorMessage and #errorMessage == 0 then
         errorMessage = 'no matches'
       end
-      if firstEvalErr then
+      if chunk_error then
         status = 'error'
-        errorMessage = firstEvalErr
+        errorMessage = chunk_error
       end
       params.on_finish(status, errorMessage)
     end,
   })
+
+  return abort, effectiveArgs
 end
 
 -- TODO (sbadragan): add tests for both this and astgrep

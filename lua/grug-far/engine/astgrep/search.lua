@@ -68,12 +68,16 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
   local isTextOutput = isSearchWithTextOutput(args)
 
   local matches = {}
-  -- TODO (sbadragan): abort immediately?
-  local firstEvalErr = nil
-  return fetchCommandOutput({
+  local chunk_error = nil
+  local abort, effectiveArgs
+  abort, effectiveArgs = fetchCommandOutput({
     cmd_path = options.engines.astgrep.path,
     args = args,
     on_fetch_chunk = function(data)
+      if chunk_error then
+        return
+      end
+
       if isTextOutput then
         on_fetch_chunk({
           lines = vim.iter(vim.split(data, '\n')):map(utils.getLineWithoutCarriageReturn):totable(),
@@ -83,9 +87,13 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
         return
       end
 
-      local eval_err = parseResults.json_decode_matches(matches, data, eval_fn)
-      if eval_err then
-        firstEvalErr = firstEvalErr or eval_err
+      local err = parseResults.json_decode_matches(matches, data, eval_fn)
+      if err then
+        chunk_error = err
+        if abort then
+          abort()
+        end
+        return
       end
       -- note: we split off last file matches to ensure all matches for a file are processed
       -- at once. This helps with applying replacements
@@ -94,20 +102,22 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
       on_fetch_chunk(parseResults.parseResults(before))
     end,
     on_finish = function(status, errorMessage)
-      if #matches > 0 then
+      if chunk_error then
+        status = 'error'
+        errorMessage = chunk_error
+      end
+      if status == 'success' and #matches > 0 then
         -- do the last few
         on_fetch_chunk(parseResults.parseResults(matches))
         matches = {}
       end
-      if firstEvalErr then
-        status = 'error'
-        errorMessage = firstEvalErr
-      end
-      vim.schedule_wrap(function()
+      vim.schedule(function()
         on_finish(status, errorMessage)
       end)
     end,
   })
+
+  return abort, effectiveArgs
 end
 
 --- does search

@@ -50,14 +50,22 @@ local function replace_with_eval(params, args, eval_fn)
   end)
 
   local matches = {}
-  local firstEvalErr = nil
+  local chunk_error = nil
   abortSearch = fetchCommandOutput({
     cmd_path = params.options.engines.astgrep.path,
     args = search_args,
     on_fetch_chunk = function(data)
-      local eval_err = parseResults.json_decode_matches(matches, data, eval_fn)
-      if eval_err then
-        firstEvalErr = firstEvalErr or eval_err
+      if chunk_error then
+        return
+      end
+
+      local err = parseResults.json_decode_matches(matches, data, eval_fn)
+      if err then
+        chunk_error = err
+        if abort then
+          abort()
+        end
+        return
       end
 
       -- note: we split off last file matches to ensure all matches for a file are processed
@@ -70,17 +78,17 @@ local function replace_with_eval(params, args, eval_fn)
       end
     end,
     on_finish = function(status, errorMessage)
-      if #matches > 0 then
+      if chunk_error then
+        status = 'error'
+        errorMessage = chunk_error
+      end
+
+      if status == 'success' and #matches > 0 then
         -- do the last few
         for _, file_matches in ipairs(parseResults.split_matches_per_file(matches)) do
           processingQueue:push(file_matches)
         end
         matches = {}
-      end
-
-      if firstEvalErr then
-        status = 'error'
-        errorMessage = firstEvalErr
       end
 
       if status == 'success' then
