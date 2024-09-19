@@ -66,7 +66,7 @@ local function render(buf, context)
     icon = 'filesFilterInput',
     label = 'Files Filter:',
     placeholder = placeholders.enabled and placeholders.filesFilter,
-    highlightLang = inputsHighlight and 'bash' or nil,
+    highlightLang = inputsHighlight and 'gitignore' or nil,
   }, context))
 
   lineNr = lineNr + 1
