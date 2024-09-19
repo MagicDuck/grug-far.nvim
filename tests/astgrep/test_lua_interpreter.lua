@@ -15,7 +15,7 @@ local T = MiniTest.new_set({
   },
 })
 
-T['can replace with replace string'] = function()
+T['can search with replace interpreter'] = function()
   helpers.writeTestFiles({
     {
       filename = 'file2.ts',
@@ -29,7 +29,114 @@ T['can replace with replace string'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly' },
+    prefills = { search = 'grug.$A', replacement = 'return match .. "_" .. vars.A' },
+    replacementInterpreter = 'lua',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search with replace interpreter and file filter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return match .. "_" .. vars.A',
+      filesFilter = '**/*.ts',
+    },
+    replacementInterpreter = 'lua',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['search can report eval error from replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return non_existent_one .. "_" .. vars.A',
+    },
+    replacementInterpreter = 'lua',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['search can report eval error from replace interpreter with files filter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return non_existent_one .. "_" .. vars.A',
+      filesFilter = '**/*.ts',
+    },
+    replacementInterpreter = 'lua',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can replace with replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return match .. "_" .. vars.A',
+    },
+    replacementInterpreter = 'lua',
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -38,13 +145,13 @@ T['can replace with replace string'] = function()
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
-  child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, 'curly.walks')
+  child.type_keys('<esc>cc', '$A')
+  helpers.childWaitForScreenshotText(child, 'grug.walks_walks')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 
-T['can replace with file filter'] = function()
+T['can replace with replace interpreter and file filter'] = function()
   helpers.writeTestFiles({
     {
       filename = 'file2.ts',
@@ -58,7 +165,12 @@ T['can replace with file filter'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', filesFilter = '**/*.ts' },
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return match .. "_" .. vars.A',
+      filesFilter = '**/*.ts',
+    },
+    replacementInterpreter = 'lua',
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -67,13 +179,13 @@ T['can replace with file filter'] = function()
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
-  child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, 'curly.walks')
+  child.type_keys('<esc>cc', '$A')
+  helpers.childWaitForScreenshotText(child, 'grug.walks_walks')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 
-T['can replace within one file'] = function()
+T['replace can report eval error from replace interpreter'] = function()
   helpers.writeTestFiles({
     {
       filename = 'file2.ts',
@@ -87,21 +199,17 @@ T['can replace within one file'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', paths = './file2.ts' },
+    prefills = { search = 'grug.$A', replacement = 'return non_existent_one .. "_" .. vars.A' },
+    replacementInterpreter = 'lua',
   })
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>' .. keymaps.replace.n)
-  helpers.childWaitForUIVirtualText(child, 'replace completed!')
-  helpers.childExpectScreenshot(child)
-
-  child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, 'curly.walks')
-  helpers.childWaitForFinishedStatus(child)
+  helpers.childWaitForUIVirtualText(child, 'replace failed!')
   helpers.childExpectScreenshot(child)
 end
 
-T['can replace within one dir'] = function()
+T['replace can report eval error from replace interpreter with files filter'] = function()
   helpers.writeTestFiles({
     {
       filename = 'file2.ts',
@@ -115,130 +223,17 @@ T['can replace within one dir'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', paths = './' },
-  })
-  helpers.childWaitForFinishedStatus(child)
-
-  child.type_keys('<esc>' .. keymaps.replace.n)
-  helpers.childWaitForUIVirtualText(child, 'replace completed!')
-  helpers.childExpectScreenshot(child)
-
-  child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, 'curly.walks')
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
-end
-
-T['can replace within one dir with spaces'] = function()
-  helpers.writeTestFiles({
-    {
-      filename = 'foo bar/file2.ts',
-      content = [[ 
-    if (grug || talks) {
-      grug.walks(talks)
-    }
-    ]],
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return non_existent_one .. "_" .. vars.A',
+      filesFilter = '**/*.ts',
     },
-  }, { 'foo bar' })
-
-  helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', paths = './foo\\ bar' },
-  })
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
-
-  child.type_keys('<esc>' .. keymaps.replace.n)
-  helpers.childWaitForUIVirtualText(child, 'replace completed!')
-  helpers.childExpectScreenshot(child)
-
-  child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, '(curly || talks)')
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
-end
-
-T['can replace within multiple dirs with spaces'] = function()
-  helpers.writeTestFiles({
-    {
-      filename = 'hello world/file2.ts',
-      content = [[ 
-      if (grug || talks) {
-        grug.walks(talks)
-      }
-    ]],
-    },
-  }, { 'foo bar', 'hello world' })
-
-  helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', paths = './foo\\ bar ./hello\\ world' },
-  })
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
-
-  child.type_keys('<esc>' .. keymaps.replace.n)
-  helpers.childWaitForUIVirtualText(child, 'replace completed!')
-  helpers.childExpectScreenshot(child)
-
-  child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, '(curly || talks)')
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
-end
-
-T['can replace with empty string'] = function()
-  helpers.writeTestFiles({
-    {
-      filename = 'file2.ts',
-      content = [[ 
-    if (grug || talks) {
-      grug.walks(talks)
-    }
-    ]],
-    },
-  })
-
-  helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', flags = '--rewrite=' },
+    replacementInterpreter = 'lua',
   })
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>' .. keymaps.replace.n)
-  helpers.childWaitForUIVirtualText(child, 'replace completed!')
-  helpers.childExpectScreenshot(child)
-  helpers.childExpectBufLines(child)
-
-  child.type_keys('<esc>cc', 'talks')
-  helpers.childWaitForScreenshotText(child, '( || talks)')
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
-end
-
-T['is prevented from replacing with blacklisted flags'] = function()
-  helpers.writeTestFiles({
-    {
-      filename = 'file2.ts',
-      content = [[ 
-    if (grug || talks) {
-      grug.walks(talks)
-    }
-    ]],
-    },
-  })
-
-  helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replace = 'curly', flags = '--json' },
-  })
-
-  helpers.childWaitForFinishedStatus(child)
-
-  child.type_keys('<esc>' .. keymaps.replace.n)
-
-  helpers.childWaitForScreenshotText(child, 'replace cannot work')
-  helpers.childWaitForScreenshotText(child, 'error: the argument')
+  helpers.childWaitForUIVirtualText(child, 'replace failed!')
   helpers.childExpectScreenshot(child)
 end
 
