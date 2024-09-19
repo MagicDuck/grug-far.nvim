@@ -54,7 +54,7 @@ jobs:
           repository: neovim/neovim
           path: deps/neovim
       - name: Type Check Code Base
-        uses: mrcjkb/lua-typecheck-action@v0.1.2
+        uses: mrcjkb/lua-typecheck-action@v1
         with:
           configpath: .github/workflows/.luarc.json
           directories: |
