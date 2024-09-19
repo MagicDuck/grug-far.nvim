@@ -21,7 +21,7 @@ local function runWithChunkedFiles(params)
 
   local on_finish = params.on_finish
   local engagedWorkers = 0
-  local errorMessages = ''
+  local errorMessage = nil
   local isAborted = false
   local abortByChunk = {}
 
@@ -42,10 +42,12 @@ local function runWithChunkedFiles(params)
     local chunk = table.remove(chunks)
     if chunk == nil then
       if engagedWorkers == 0 then
-        if isAborted then
+        if errorMessage then
+          on_finish('error', errorMessage)
+        elseif isAborted then
           on_finish(nil, nil)
         else
-          on_finish(#errorMessages > 0 and 'error' or 'success', errorMessages)
+          on_finish('success', nil)
         end
       end
       return
@@ -55,12 +57,11 @@ local function runWithChunkedFiles(params)
     abortByChunk[chunk] = params.run_chunk(
       chunk,
       vim.schedule_wrap(function(err)
-        if err then
-          -- optimistically try to continue
-          errorMessages = errorMessages .. '\n' .. err
-        end
-
         abortByChunk[chunk] = nil
+        if err then
+          errorMessage = err
+          abortAll()
+        end
 
         engagedWorkers = engagedWorkers - 1
         handleNextChunk()

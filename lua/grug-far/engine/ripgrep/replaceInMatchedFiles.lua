@@ -63,11 +63,16 @@ local function replaceInFileWithEval(params)
   end
 
   local json_data = {}
-  local firstEvalErr = nil
-  return fetchCommandOutput({
+  local chunk_error = nil
+  local abort
+  abort = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = args,
     on_fetch_chunk = function(data)
+      if chunk_error then
+        return
+      end
+
       local json_lines = vim.split(data, '\n')
       for _, json_line in ipairs(json_lines) do
         if #json_line > 0 then
@@ -76,8 +81,11 @@ local function replaceInFileWithEval(params)
             for _, submatch in ipairs(entry.data.submatches) do
               local replacementText, err = replacement_eval_fn(submatch.match.text)
               if err then
-                firstEvalErr = firstEvalErr or err
-                replacementText = ''
+                chunk_error = err
+                if abort then
+                  abort()
+                end
+                return
               end
               submatch.replacement = { text = replacementText }
             end
@@ -91,8 +99,8 @@ local function replaceInFileWithEval(params)
         return on_done(errorMessage)
       end
 
-      if firstEvalErr then
-        return on_done(firstEvalErr)
+      if chunk_error then
+        return on_done(chunk_error)
       end
 
       if status == 'success' and #json_data > 0 then
@@ -115,6 +123,8 @@ local function replaceInFileWithEval(params)
       return on_done(nil)
     end,
   })
+
+  return abort
 end
 
 ---@class replaceInMatchedFilesParams

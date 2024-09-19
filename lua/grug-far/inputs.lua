@@ -51,7 +51,7 @@ function M.fill(context, buf, values, clearOld)
   fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
   fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
   fillInput(context, buf, M.InputNames.search, values.search, clearOld)
-  vim.schedule_wrap(function()
+  vim.schedule(function()
     search({ buf = buf, context = context })
   end)
 end
