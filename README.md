@@ -120,14 +120,19 @@ _Note:_ When replacing matches with the empty string, you will be prompted to co
 visible in the results area due to UI considering it just a search. If you
 would like to see the actual replacement in the results area, add `--replace=` to the flags.
 
-### Replacing with lua interpreted result for each match
+### Replacing each match with the result of an interpreted script
 
 Some situations require the power of arbitrary code executed for each search to determine the proper replacements.
-In those cases, you can use the `Swap Replacement Interpreter` action to switch to the `lua` replacement interpreter.
-This will allow you to write multi-line lua code, essentially the body of a lua function, in the `Replace:` input.
+In those cases, you can use the `Swap Replacement Interpreter` action to switch to a desired replacement interpreter,
+such as `lua` or `vimscript`.
+For example with the `lua` interpreter, this will allow you to write multi-line lua code, essentially the body of a lua function,
+in the `Replace:` input.
+
 You can use `match` to refer to each match and need to `return` the value you want to be the replacement.
 In the case of the `astgrep` engine, you will also have access to the meta variables by accessing them through the
 `vars` table. ex: `$A` is referred to by `vars.A`, `$$$ARGS` is referred to by `vars.ARGS`.
+
+It is a similar situation for the `vimscript` interpreter. 
 
 ### Syncing results lines back to originating files
 
