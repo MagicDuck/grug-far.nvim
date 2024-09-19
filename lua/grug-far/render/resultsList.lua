@@ -360,7 +360,7 @@ function M.clear(buf, context)
   context.state.highlightResults = {}
   context.state.highlightRegions = {}
   if context.options.resultsHighlight then
-    treesitter.clear(buf)
+    treesitter.clear(buf, true)
   end
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
 

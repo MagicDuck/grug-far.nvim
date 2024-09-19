@@ -48,6 +48,7 @@ local function render(buf, context)
         interpreterType and placeholders['replacement_' .. interpreterType]
         or placeholders.replacement
       ),
+    hilightLang = context.replacementInterpreter and context.replacementInterpreter.language or nil,
   }, context)
 
   lineNr = lineNr + 1

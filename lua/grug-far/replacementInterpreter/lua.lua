@@ -2,6 +2,8 @@
 local LuaInterpreter = {
   type = 'lua',
 
+  language = 'lua',
+
   get_eval_fn = function(script, arg_names)
     local chunkheader = 'local ' .. vim.fn.join(arg_names, ', ') .. ' = ...; '
     local _, replace, error = pcall(loadstring, chunkheader .. script, 'Replace')

@@ -1,4 +1,5 @@
 local opts = require('grug-far/opts')
+local treesitter = require('grug-far/render/treesitter')
 
 ---@class InputRenderParams
 ---@field buf integer
@@ -9,6 +10,7 @@ local opts = require('grug-far/opts')
 ---@field label string
 ---@field placeholder? string | false
 ---@field icon? string
+---@field hilightLang? string
 
 ---@param params InputRenderParams
 ---@param context GrugFarContext
@@ -90,6 +92,19 @@ local function renderInput(params, context)
       virt_lines_above = true,
       right_gravity = false,
     })
+
+  if params.hilightLang then
+    local prev_line =
+      unpack(vim.api.nvim_buf_get_lines(buf, currentStartRow - 1, currentStartRow, false))
+    local start_col = prev_line and #prev_line or 0
+    local last_line = input_lines[#input_lines]
+    local end_col = last_line and #last_line - 1 or 0
+    treesitter.attach(buf, {
+      [params.hilightLang] = {
+        { { currentStartRow - 1, start_col, currentEndRow, end_col } },
+      },
+    }, extmarkName)
+  end
 
   if placeholder then
     local placeholderExtmarkName = extmarkName .. '_placeholder'
