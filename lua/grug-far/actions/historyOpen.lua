@@ -59,7 +59,7 @@ local function pickHistoryEntry(historyWin, historyBuf, buf, context)
   end
 
   context.engine = engine.getEngine(entry.engine)
-  replacementInterpreter.setReplacementInterpreter(context, entry.replacementInterpreter)
+  replacementInterpreter.setReplacementInterpreter(buf, context, entry.replacementInterpreter)
   inputs.fill(context, buf, {
     search = entry.search,
     replacement = entry.replacement,

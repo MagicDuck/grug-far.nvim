@@ -1,3 +1,4 @@
+local treesitter = require('grug-far/render/treesitter')
 local M = {}
 
 ---@class GrugFarReplacementInterpreter
@@ -20,13 +21,17 @@ end
 
 --- sets replacement interpreter
 ---@param context GrugFarContext
+---@param buf integer
 ---@param type GrugFarReplacementInterpreterType
-function M.setReplacementInterpreter(context, type)
+function M.setReplacementInterpreter(buf, context, type)
   local currentType = context.replacementInterpreter and context.replacementInterpreter.type
     or 'default'
   if currentType == type then
     return
   end
+
+  -- clear old syntax highlighting
+  treesitter.clear(buf)
 
   local interpreter = M.getReplacementInterpreter(type)
   context.replacementInterpreter = interpreter
