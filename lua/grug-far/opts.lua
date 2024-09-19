@@ -96,12 +96,17 @@ M.defaultOptions = {
   -- if nil, defaults to 'ripgrep'
   engine = 'ripgrep',
 
-  -- how to interpret the replacement input.
-  -- Must be one of 'lua' | 'default'
-  -- 'lua': for each search match, evaluate the replacement input as the body of a lua function
-  --   where "match" identifies the match parameter passed to that function. The returned value
-  --   is used as the replacement in each case.
-  -- 'default' | anything else : treat replacement as a string to pass to the current engine
+  -- replacement interpreters that are enabled for usage (in addition to the default).
+  -- Those allow you to evaluate the replacement input as a an interpreted string for each search match.
+  -- The result of that evaluation is used as the replacement in each case.
+  -- Supported:
+  -- * 'default': treat replacement as a string to pass to the current engine
+  -- * 'lua': treat replacement as lua function body where search match is identified by `match` and
+  --          meta variables (with astgrep for example) are avaible in `vars` table (ex: `vars.A` captures `$A`)
+  enabledReplacementInterpreters = { 'default', 'lua' },
+
+  -- which replacement interprer to use
+  -- Must be one of enabledReplacementInterpreters defined above.
   replacementInterpreter = 'default',
 
   -- specifies the command to run (with `vim.cmd(...)`) in order to create
@@ -166,7 +171,7 @@ M.defaultOptions = {
     toggleShowCommand = { n = '<localleader>p' },
     swapEngine = { n = '<localleader>e' },
     previewLocation = { n = '<localleader>i' },
-    swapReplacementInterpreter = { n = '<localleader>v' },
+    swapReplacementInterpreter = { n = '<localleader>x' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -542,6 +547,7 @@ M.defaultOptions = {
 ---@field engines EnginesTable
 ---@field engine GrugFarEngineType
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
+---@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]
 ---@field resultLocation ResultLocationTable
 
 ---@class GrugFarOptionsOverride
@@ -576,6 +582,7 @@ M.defaultOptions = {
 ---@field engines? EnginesTableOverride
 ---@field engine? GrugFarEngineType
 ---@field replacementInterpreter? GrugFarReplacementInterpreterType
+---@field enabledReplacementInterpreters? GrugFarReplacementInterpreterType[]
 ---@field resultLocation? ResultLocationTableOverride
 
 --- generates merged options
@@ -615,6 +622,15 @@ function M.with_defaults(options, defaults)
     error(
       'options.placeholders has been removed in favor of options.engines[engine].placeholders! Please use that one instead!'
     )
+  end
+
+  if
+    not vim.tbl_contains(
+      newOptions.enabledReplacementInterpreters,
+      newOptions.replacementInterpreter
+    )
+  then
+    error('options.enabledReplacementInterpreters must contain options.replacementInterpreter')
   end
 
   if options.extraRgArgs then
