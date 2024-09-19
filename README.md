@@ -19,6 +19,7 @@ Grug find! Grug replace! Grug happy!
 - Search results folding
 - Multiline search & replace
 - "Preview" result source while "scrolling" through results 
+- Replace using lua interpreted replacement for each match
 
 #### Searching:
 <img width="1256" alt="image" src="https://github.com/user-attachments/assets/d0411f2d-d3ae-4114-b76c-f959d8ddda3a">
@@ -118,6 +119,15 @@ Error messages from ripgrep when entering invalid flags and so on are displayed 
 _Note:_ When replacing matches with the empty string, you will be prompted to confirm, as the change is not
 visible in the results area due to UI considering it just a search. If you
 would like to see the actual replacement in the results area, add `--replace=` to the flags.
+
+### Replacing with lua interpreted result for each match
+
+Some situations require the power of arbitrary code executed for each search to determine the proper replacements.
+In those cases, you can use the `Swap Replacement Interpreter` action to switch to the `lua` replacement interpreter.
+This will allow you to write multi-line lua code, essentially the body of a lua function, in the `Replace:` input.
+You can use `match` to refer to each match and need to `return` the value you want to be the replacement.
+In the case of the `astgrep` engine, you will also have access to the meta variables by accessing them through the
+`vars` table. ex: `$A` is referred to by `vars.A`, `$$$ARGS` is referred to by `vars.ARGS`.
 
 ### Syncing results lines back to originating files
 

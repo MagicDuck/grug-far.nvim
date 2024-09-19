@@ -22,7 +22,6 @@ local function render(buf, context)
     actions = context.actions,
   }, context)
 
-  -- TODO (sbadragan): update readme
   lineNr = lineNr + TOP_EMPTY_LINES
   state.inputs.search = renderInput({
     buf = buf,
