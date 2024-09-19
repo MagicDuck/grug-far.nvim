@@ -62,7 +62,6 @@ T['can search manually on insert leave or normal mode change'] = function()
     },
   })
 
-  -- TODO (sbadragan): add test for normalModeSearch
   helpers.childRunGrugFar(child, {
     searchOnInsertLeave = true,
   })

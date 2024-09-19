@@ -103,10 +103,11 @@ M.defaultOptions = {
   -- * 'default': treat replacement as a string to pass to the current engine
   -- * 'lua': treat replacement as lua function body where search match is identified by `match` and
   --          meta variables (with astgrep for example) are avaible in `vars` table (ex: `vars.A` captures `$A`)
-  enabledReplacementInterpreters = { 'default', 'lua' },
+  enabledReplacementInterpreters = { 'default', 'lua', 'vimscript' },
 
   -- which replacement interprer to use
   -- Must be one of enabledReplacementInterpreters defined above.
+  -- TODO (sbadragan): add vimscript
   replacementInterpreter = 'default',
 
   -- specifies the command to run (with `vim.cmd(...)`) in order to create
@@ -501,7 +502,7 @@ M.defaultOptions = {
 ---@field astgrep? AstgrepEngineTableOverride
 
 ---@alias GrugFarEngineType "ripgrep" | "astgrep"
----@alias GrugFarReplacementInterpreterType "lua" | "default"
+---@alias GrugFarReplacementInterpreterType "lua" | "vimscript" | "default"
 
 ---@alias NumberLabelPosition "right_align" | "eol" | "inline"
 

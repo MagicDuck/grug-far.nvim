@@ -10,7 +10,9 @@ local M = {}
 ---@return GrugFarReplacementInterpreter?
 function M.getReplacementInterpreter(type)
   if type == 'lua' then
-    return require('grug-far/replacementInterpreter/lua')
+    return require('grug-far/replacementInterpreter/luascript')
+  elseif type == 'vimscript' then
+    return require('grug-far/replacementInterpreter/vimscript')
   end
 
   return nil

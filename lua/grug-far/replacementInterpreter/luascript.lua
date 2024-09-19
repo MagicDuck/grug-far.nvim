@@ -13,11 +13,11 @@ local LuaInterpreter = {
         if success then
           return result and tostring(result) or '', nil
         else
-          return nil, result
+          return nil, 'Replace [lua]:\n' .. result
         end
       end
     else
-      return nil, error or 'could not evaluate lua chunk'
+      return nil, 'Replace [lua]\n' .. (error or 'could not evaluate lua chunk')
     end
   end,
 }
