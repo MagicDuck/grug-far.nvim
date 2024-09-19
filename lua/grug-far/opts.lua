@@ -175,6 +175,9 @@ M.defaultOptions = {
   -- highlight the results with TreeSitter, if available
   resultsHighlight = true,
 
+  -- highlight the inputs with TreeSitter, if available
+  inputsHighlight = true,
+
   -- spinner states, default depends on nerdfont, set to false to disable
   spinnerStates = {
     '󱑋 ',
@@ -528,6 +531,7 @@ M.defaultOptions = {
 ---@field keymaps Keymaps
 ---@field resultsSeparatorLineChar string
 ---@field resultsHighlight boolean
+---@field inputsHighlight boolean
 ---@field spinnerStates string[] | false
 ---@field reportDuration boolean
 ---@field icons IconsTable
@@ -560,6 +564,8 @@ M.defaultOptions = {
 ---@field ignoreVisualSelection? boolean
 ---@field keymaps? KeymapsOverride
 ---@field resultsSeparatorLineChar? string
+---@field resultsHighlight? boolean
+---@field inputsHighlight? boolean
 ---@field spinnerStates? string[] | false
 ---@field reportDuration? boolean
 ---@field icons? IconsTableOverride

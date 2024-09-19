@@ -12,6 +12,7 @@ local TOP_EMPTY_LINES = 2
 local function render(buf, context)
   local state = context.state
   local placeholders = context.options.engines[context.engine.type].placeholders
+  local inputsHighlight = context.options.inputsHighlight
 
   local lineNr = 0
   utils.ensureBufTopEmptyLines(buf, TOP_EMPTY_LINES)
@@ -21,6 +22,7 @@ local function render(buf, context)
     actions = context.actions,
   }, context)
 
+  -- TODO (sbadragan): update readme
   lineNr = lineNr + TOP_EMPTY_LINES
   state.inputs.search = renderInput({
     buf = buf,
@@ -30,6 +32,7 @@ local function render(buf, context)
     icon = 'searchInput',
     label = 'Search:',
     placeholder = placeholders.enabled and placeholders.search,
+    highlightLang = inputsHighlight and 'regex' or nil,
   }, context)
 
   lineNr = lineNr + 1
@@ -48,7 +51,9 @@ local function render(buf, context)
         interpreterType and placeholders['replacement_' .. interpreterType]
         or placeholders.replacement
       ),
-    hilightLang = context.replacementInterpreter and context.replacementInterpreter.language or nil,
+    highlightLang = inputsHighlight
+        and (context.replacementInterpreter and context.replacementInterpreter.language or 'regex')
+      or nil,
   }, context)
 
   lineNr = lineNr + 1
@@ -61,6 +66,7 @@ local function render(buf, context)
     icon = 'filesFilterInput',
     label = 'Files Filter:',
     placeholder = placeholders.enabled and placeholders.filesFilter,
+    highlightLang = inputsHighlight and 'bash' or nil,
   }, context))
 
   lineNr = lineNr + 1
@@ -73,6 +79,7 @@ local function render(buf, context)
     icon = 'flagsInput',
     label = 'Flags:',
     placeholder = placeholders.enabled and placeholders.flags,
+    highlightLang = inputsHighlight and 'bash' or nil,
   }, context))
 
   lineNr = lineNr + 1
@@ -85,6 +92,7 @@ local function render(buf, context)
     icon = 'pathsInput',
     label = 'Paths:',
     placeholder = placeholders.enabled and placeholders.paths,
+    highlightLang = inputsHighlight and 'bash' or nil,
   }, context))
 
   lineNr = lineNr + 1
