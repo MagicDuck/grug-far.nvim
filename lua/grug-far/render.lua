@@ -51,7 +51,7 @@ local function render(buf, context)
         or placeholders.replacement
       ),
     highlightLang = inputsHighlight
-        and (context.replacementInterpreter and context.replacementInterpreter.language or 'regex')
+        and (context.replacementInterpreter and context.replacementInterpreter.language or nil)
       or nil,
   }, context)
 

@@ -15,7 +15,7 @@ local function swapReplacementInterpreter(params)
   )
   local nextIndex = (currentIndex + 1) % #interpreters
   local nextInterpreterType = interpreters[nextIndex + 1]
-  replacementInterpreter.setReplacementInterpreter(context, nextInterpreterType)
+  replacementInterpreter.setReplacementInterpreter(buf, context, nextInterpreterType)
   vim.notify(
     'grug-far: swapped to replacement interpreter: '
       .. (context.replacementInterpreter and context.replacementInterpreter.type or 'default')
