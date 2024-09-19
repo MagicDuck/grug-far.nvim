@@ -13,7 +13,7 @@ local LuaInterpreter = {
         if success then
           return result and tostring(result) or '', nil
         else
-          return nil, 'Replace [lua]:\n' .. result
+          return nil, result
         end
       end
     else
