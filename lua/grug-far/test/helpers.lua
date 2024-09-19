@@ -139,6 +139,7 @@ function M.getSetupOptions()
       pickHistoryEntry = { n = '<enter>' },
       toggleShowCommand = { n = ',p' },
       swapEngine = { n = ',e' },
+      swapReplacementInterpreter = { n = ',x' },
       previewLocation = { n = ',i' },
     },
     history = {
