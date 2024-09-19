@@ -1,4 +1,3 @@
-local search = require('grug-far/actions/search')
 local M = {}
 
 ---@enum InputNames
@@ -52,7 +51,8 @@ function M.fill(context, buf, values, clearOld)
   fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
   fillInput(context, buf, M.InputNames.search, values.search, clearOld)
   vim.schedule(function()
-    search({ buf = buf, context = context })
+    -- hack to get syntax highlighting to render correctly
+    vim.api.nvim_buf_set_lines(buf, 0, 0, false, {})
   end)
 end
 
