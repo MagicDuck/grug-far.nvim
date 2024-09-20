@@ -150,7 +150,7 @@ require('grug-far').get_current_visual_selection()  *grug-far.get_current_visual
 	Return: ~
 	    {visual_selection}(string) 
 
-require('grug-far').get_current_visual_selection_split()  *grug-far.get_current_visual_selection_split()*
+require('grug-far').get_current_visual_selection_lines()  *grug-far.get_current_visual_selection_lines()*
 	Gets the current visual selection as a string array for each line.
 	This is provided as a utility for users so they don't have to rewrite.
 	
