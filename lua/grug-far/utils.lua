@@ -268,13 +268,24 @@ function M.ensureBufTopEmptyLines(buf, count)
   end
 end
 
+--- leave visual mode if in visual mode
+---@return boolean if left visual mode
+function M.leaveVisualMode()
+  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
+  if isVisualMode then
+    -- needed to make visual selection work
+    vim.fn.feedkeys(':', 'nx')
+  end
+  return isVisualMode
+end
+
 --- get text lines in visual selection
 ---@return string[]
 function M.getVisualSelectionLines()
   local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, '<'))
   local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(0, '>'))
   local lines = vim.fn.getline(start_row, end_row) --[[ @as string[] ]]
-  if #lines > 0 and start_col and end_col then
+  if #lines > 0 and start_col and end_col and end_col < string.len(lines[#lines]) then
     if start_row == end_row then
       lines[1] = lines[1]:sub(start_col + 1, end_col + 1)
     else
