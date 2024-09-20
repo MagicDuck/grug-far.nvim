@@ -143,6 +143,13 @@ require('grug-far').update_instance_prefills({instanceName}, {prefills}, {clearO
 	       {search=, replacement=, filesFilter=, flags=, paths=}
             {clearOld}(boolean) if given, old input values are ignored
 
+require('grug-far').get_current_visual_selection()  *grug-far.get_current_visual_selection()*
+	Gets the current visual selection as a string.
+	This is provided as a utility for users so they don't have to rewrite.
+	
+	Return: ~
+	    {visual_selection}(string) 
+
 ==============================================================================
 4. Highlights                                          *grug-far-highlights*
 
