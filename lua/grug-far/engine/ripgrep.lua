@@ -1,7 +1,6 @@
 local search = require('grug-far/engine/ripgrep/search')
 local replace = require('grug-far/engine/ripgrep/replace')
 local sync = require('grug-far/engine/ripgrep/sync')
-local utils = require('grug-far/utils')
 
 ---@type GrugFarEngine
 local RipgrepEngine = {
