@@ -321,7 +321,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 #### Add nvim-tree integration to open search limited to focused directory or file
 
-Create nvim-tree hotkey `z` that will create/open named instance `tree` of grug-far with the current directory of the file or directory in focus. On the second trigger, path of the `tree` grug-far instance will be updates, leaving other fields intact
+Create a hotkey `z` in `nvim-tree` that will create/open a named instance of grug-far with the current directory of the file or directory in focus. On the second trigger, path of the grug-far instance will be updated, leaving other fields intact.
 
 <details>
 <summary>Nvim tree lazy plugin setup</summary>
@@ -372,6 +372,10 @@ return {
 ```
 </details>
 
+#### Add oil.nvim integration to open search limited to focused directory
+
+Create a hotkey `gs` in `oil.nvim` that will create/open a named instance of grug-far with the current directory in focus. On the second trigger, path of the grug-far instance will be updated, leaving other fields intact.
+
 <details>
 <summary>Oil explorer lazy plugin setup</summary>
 
@@ -411,6 +415,10 @@ return {
 }
 ```
 </details>
+
+#### Add mini.files integration to open search limited to focused directory
+
+Create a hotkey `gs` in `mini.files` that will create/open a named instance of grug-far with the current directory in focus. On the second trigger, the path of the grug-far instance will be updated, leaving other fields intact.
 
 <details>
 <summary>MiniFiles explorer lazy plugin setup</summary>
