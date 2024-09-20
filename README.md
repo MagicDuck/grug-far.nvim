@@ -426,7 +426,7 @@ return {
     })
 
     
-    local files_grug_far_cwd = function(path)
+    local files_grug_far_replace = function(path)
       -- works only if cursor is on the valid file system entry
       local cur_entry_path = MiniFiles.get_fs_entry().path
       local prefills = { paths = vim.fs.dirname(cur_entry_path) }
@@ -450,7 +450,7 @@ return {
     vim.api.nvim_create_autocmd("User", {
       pattern = "MiniFilesBufferCreate",
       callback = function(args)
-        vim.keymap.set("n", "gs", files_grug_far_cwd, { buffer = args.data.buf_id, desc = "Search in directory" })
+        vim.keymap.set("n", "gs", files_grug_far_replace, { buffer = args.data.buf_id, desc = "Search in directory" })
       end,
     })
   end,
