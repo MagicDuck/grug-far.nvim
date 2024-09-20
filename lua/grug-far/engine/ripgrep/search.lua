@@ -132,7 +132,18 @@ local function run_search(params)
       local json_data = {}
       for _, json_line in ipairs(json_lines) do
         if #json_line > 0 then
-          local entry = vim.json.decode(json_line)
+          local success, entry = pcall(vim.json.decode, json_line)
+          if not success then
+            params.on_fetch_chunk({
+              lines = vim
+                .iter(vim.split(data, '\n'))
+                :map(utils.getLineWithoutCarriageReturn)
+                :totable(),
+              highlights = {},
+              stats = { matches = 0, files = 0 },
+            })
+            return
+          end
           table.insert(json_data, entry)
         end
       end
