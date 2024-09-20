@@ -268,6 +268,17 @@ function M.ensureBufTopEmptyLines(buf, count)
   end
 end
 
+--- leave visual mode if in visual mode
+---@return boolean if left visual mode
+function M.leaveVisualMode()
+  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
+  if isVisualMode then
+    -- needed to make visual selection work
+    vim.fn.feedkeys(':', 'nx')
+  end
+  return isVisualMode
+end
+
 --- get text lines in visual selection
 ---@return string[]
 function M.getVisualSelectionLines()
