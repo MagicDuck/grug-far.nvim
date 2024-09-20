@@ -432,6 +432,20 @@ function M.with_visual_selection(options)
   return M._open_internal(resolvedOpts, { is_visual = true })
 end
 
+--- gets the current visual selection as a string
+--- This is provided as a utility for users so they don't have to rewrite
+---@return string
+function M.get_current_visual_selection()
+  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
+  if isVisualMode then
+    -- needed to make visual selection work
+    vim.cmd([[normal! vv]])
+  end
+
+  local selection_lines = utils.getVisualSelectionLines()
+  return vim.fn.join(selection_lines, '\n')
+end
+
 ---@deprecated use open(same options) instead
 --- launch grug-far with the given overrides
 ---@param options? GrugFarOptionsOverride
