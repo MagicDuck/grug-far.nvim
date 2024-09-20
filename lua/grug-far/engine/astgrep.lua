@@ -1,4 +1,3 @@
-local utils = require('grug-far/utils')
 local search = require('grug-far/engine/astgrep/search')
 local replace = require('grug-far/engine/astgrep/replace')
 
