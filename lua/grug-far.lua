@@ -252,12 +252,8 @@ function M.open(options)
   ensure_configured()
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
   local is_visual = false
-  if not resolvedOpts.ignoreVisualSelection and vim.fn.mode():lower():find('v') ~= nil then
-    is_visual = true
-  end
-  if is_visual then
-    -- needed to make visual selection work
-    vim.cmd([[normal! vv]])
+  if not resolvedOpts.ignoreVisualSelection then
+    is_visual = utils.leaveVisualMode()
   end
 
   return M._open_internal(resolvedOpts, { is_visual = is_visual })
@@ -422,11 +418,7 @@ end
 function M.with_visual_selection(options)
   ensure_configured()
 
-  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
-  if isVisualMode then
-    -- needed to make visual selection work
-    vim.cmd([[normal! vv]])
-  end
+  utils.leaveVisualMode()
 
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
   return M._open_internal(resolvedOpts, { is_visual = true })
@@ -436,12 +428,7 @@ end
 --- This is provided as a utility for users so they don't have to rewrite
 ---@return string
 function M.get_current_visual_selection()
-  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
-  if isVisualMode then
-    -- needed to make visual selection work
-    vim.cmd([[normal! vv]])
-  end
-
+  utils.leaveVisualMode()
   local selection_lines = utils.getVisualSelectionLines()
   return vim.fn.join(selection_lines, '\n')
 end
