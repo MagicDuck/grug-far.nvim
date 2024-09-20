@@ -71,12 +71,15 @@ function M.setup(options)
   highlights.setup()
   vim.api.nvim_create_user_command('GrugFar', function(params)
     local engineParam = params.fargs[1]
-    local is_visual = params.range > 0
+    local has_visual
+    if params.range > 0 then
+      has_visual = M.get_current_visual_selection_split()
+    end
     local resolvedOpts = opts.with_defaults({ engine = engineParam }, globalOptions)
     if params.mods and #params.mods > 0 then
       resolvedOpts.windowCreationCommand = params.mods .. ' split'
     end
-    M._open_internal(resolvedOpts, { is_visual = is_visual })
+    M._open_internal(resolvedOpts, { has_visual = has_visual })
   end, {
     nargs = '?',
     range = true,
@@ -251,17 +254,17 @@ end
 function M.open(options)
   ensure_configured()
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
-  local is_visual = false
+  local has_visual
   if not resolvedOpts.ignoreVisualSelection then
-    is_visual = utils.leaveVisualMode()
+    has_visual = M.get_current_visual_selection_split({ if_visual = true })
   end
 
-  return M._open_internal(resolvedOpts, { is_visual = is_visual })
+  return M._open_internal(resolvedOpts, { has_visual = has_visual })
 end
 
 --- launch grug-far with the given options and params
 ---@param options GrugFarOptions
----@param params { is_visual: boolean }
+---@param params { has_visual: string[]? }
 ---@return string instanceName
 function M._open_internal(options, params)
   if options.instanceName and namedInstances[options.instanceName] then
@@ -272,8 +275,9 @@ function M._open_internal(options, params)
   if not options.instanceName then
     options.instanceName = '__grug_far_instance__' .. context.count
   end
-  if params.is_visual then
-    options.prefills = context.engine.getInputPrefillsForVisualSelection(options.prefills)
+  if params.has_visual then
+    options.prefills =
+      context.engine.getInputPrefillsForVisualSelection(params.has_visual, options.prefills)
   end
 
   local win = createWindow(context)
@@ -418,19 +422,30 @@ end
 function M.with_visual_selection(options)
   ensure_configured()
 
-  utils.leaveVisualMode()
-
   local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
-  return M._open_internal(resolvedOpts, { is_visual = true })
+  local has_visual = M.get_current_visual_selection_split()
+  return M._open_internal(resolvedOpts, { has_visual = has_visual })
 end
 
---- gets the current visual selection as a string
+--- gets the current visual selection as a string array of lines
 --- This is provided as a utility for users so they don't have to rewrite
----@return string
-function M.get_current_visual_selection()
-  utils.leaveVisualMode()
-  local selection_lines = utils.getVisualSelectionLines()
-  return vim.fn.join(selection_lines, '\n')
+---@param params? { if_visual: boolean? }
+---@return string[]?
+function M.get_current_visual_selection_split(params)
+  local was_visual = utils.leaveVisualMode()
+  if (params and params.if_visual) and not was_visual then
+    return
+  end
+  return utils.getVisualSelectionLines()
+end
+
+--- gets the current visual selection as a single string
+--- This is provided as a utility for users so they don't have to rewrite
+---@param params? { if_visual: boolean? }
+---@return string?
+function M.get_current_visual_selection(params)
+  local selection_lines = M.get_current_visual_selection_split(params)
+  return selection_lines and vim.fn.join(selection_lines, '\n')
 end
 
 ---@deprecated use open(same options) instead

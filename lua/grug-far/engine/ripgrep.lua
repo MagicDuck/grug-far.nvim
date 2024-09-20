@@ -26,16 +26,15 @@ local RipgrepEngine = {
 
   sync = sync.sync,
 
-  getInputPrefillsForVisualSelection = function(initialPrefills)
+  getInputPrefillsForVisualSelection = function(visual_selection, initialPrefills)
     local prefills = vim.deepcopy(initialPrefills)
 
-    local selection_lines = utils.getVisualSelectionLines()
-    prefills.search = vim.fn.join(selection_lines, '\n')
+    prefills.search = vim.fn.join(visual_selection, '\n')
     local flags = prefills.flags or ''
     if not flags:find('%-%-fixed%-strings') then
       flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
     end
-    if #selection_lines > 1 and not flags:find('%-%-multiline') then
+    if #visual_selection > 1 and not flags:find('%-%-multiline') then
       flags = (#flags > 0 and flags .. ' ' or flags) .. '--multiline'
     end
     prefills.flags = flags
