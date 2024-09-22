@@ -17,7 +17,7 @@ M.updateFolds = function(buf)
     -- Note: the following does not work when which-key is enabled for grug-far file type
     -- see https://github.com/folke/which-key.nvim/issues/830
     local cursor = vim.api.nvim_win_get_cursor(win)
-    vim.fn.win_execute(win, 'normal zx')
+    vim.fn.win_execute(win, 'normal! zx')
     vim.api.nvim_win_set_cursor(win, cursor)
   end
 end
