@@ -88,7 +88,7 @@ local function getResultsWithReplaceDiff(params)
           if json_result.type == 'match' then
             for _, submatch in ipairs(json_result.data.submatches) do
               i = i + 1
-              submatch.replacement = { text = replaced_matches[i] }
+              submatch.replacement = { text = replaced_matches[i] or '' }
             end
           end
         end
