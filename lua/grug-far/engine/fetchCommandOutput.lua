@@ -27,6 +27,7 @@ local function fetchCommandOutput(params)
   local stdin = params.stdin
   local stdout = uv.new_pipe()
   local stderr = uv.new_pipe()
+  local lastLine = ''
 
   local handle
   handle = uv.spawn(params.cmd_path, {
@@ -76,7 +77,6 @@ local function fetchCommandOutput(params)
     end)
   end
 
-  local lastLine = ''
   uv.read_start(
     stdout,
     vim.schedule_wrap(function(err, data)
@@ -98,9 +98,7 @@ local function fetchCommandOutput(params)
           on_fetch_chunk(chunkData)
         end
       else
-        if #lastLine > 0 then
-          on_fetch_chunk(lastLine)
-        end
+        on_fetch_chunk(lastLine)
       end
     end)
   )
