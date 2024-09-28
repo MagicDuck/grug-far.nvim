@@ -1,0 +1,39 @@
+--|
+01|
+02|
+03|grug
+04|
+05|
+06|--replace=
+07|
+08|
+09|file1.txt
+10|1:2: grug walks 
+11|1:2:  walks 
+12|
+13|file2.doc
+14|2:7:      grug talks and grug drinks
+15|2:7:       talks and  drinks
+16|3:12:      then grug thinks
+17|3:12:      then  thinks
+18|
+
+--|-
+01| 
+02| 
+03| 
+04| 
+05| 
+06| 
+07| 
+08| 
+09| 
+10| 
+11| 
+12| 
+13| 
+14| 
+15| 
+16| 
+17| 
+18| 

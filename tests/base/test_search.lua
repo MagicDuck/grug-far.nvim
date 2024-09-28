@@ -240,6 +240,28 @@ T['can search with replace string'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search with empty replace string'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', flags = '--replace=' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search with replace string with showReplaceDiff off'] = function()
   helpers.writeTestFiles({
     { filename = 'file1.txt', content = [[ grug walks ]] },

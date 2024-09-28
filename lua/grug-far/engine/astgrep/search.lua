@@ -210,7 +210,9 @@ function M.search(params)
             end
 
             return run_astgrep_search(chunk_args, params.options, eval_fn, function(data)
-              hadOutput = true
+              if not hadOutput and #data.lines > 0 then
+                hadOutput = true
+              end
               params.on_fetch_chunk(data)
             end, function(_status, _errorMessage)
               if _status == 'error' then
@@ -241,7 +243,9 @@ function M.search(params)
     return abort
   else
     return run_astgrep_search(args, params.options, eval_fn, function(data)
-      hadOutput = true
+      if not hadOutput and #data.lines > 0 then
+        hadOutput = true
+      end
       params.on_fetch_chunk(data)
     end, function(status, errorMessage)
       -- give the user more feedback when there are no matches
