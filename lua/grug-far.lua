@@ -130,6 +130,7 @@ local contextCount = 0
 ---@field highlightRegions LangRegions
 ---@field normalModeSearch boolean
 ---@field searchAgain boolean
+---@field searchDisabled boolean
 
 ---@class GrugFarAction
 ---@field text string
@@ -187,6 +188,7 @@ local function createContext(options)
       highlightResults = {},
       normalModeSearch = options.normalModeSearch,
       searchAgain = false,
+      searchDisabled = false,
     },
   }
 end
