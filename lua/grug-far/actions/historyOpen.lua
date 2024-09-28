@@ -58,8 +58,10 @@ local function pickHistoryEntry(historyWin, historyBuf, buf, context)
     return
   end
 
+  closeHistoryWindow(historyWin)
+
+  context.state.searchDisabled = true
   context.engine = engine.getEngine(entry.engine)
-  replacementInterpreter.setReplacementInterpreter(buf, context, entry.replacementInterpreter)
   inputs.fill(context, buf, {
     search = entry.search,
     replacement = entry.replacement,
@@ -67,8 +69,8 @@ local function pickHistoryEntry(historyWin, historyBuf, buf, context)
     flags = entry.flags,
     paths = entry.paths,
   }, true)
-
-  closeHistoryWindow(historyWin)
+  context.state.searchDisabled = false
+  replacementInterpreter.setReplacementInterpreter(buf, context, entry.replacementInterpreter)
 end
 
 --- set up key maps for history buffer

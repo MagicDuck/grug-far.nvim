@@ -265,8 +265,13 @@ function M.createBuffer(win, context)
 
   local debouncedSearch = utils.debounce(vim.schedule_wrap(search), context.options.debounceMs)
   local function searchOnChange()
-    -- only re-issue search when inputs have changed
     local state = context.state
+
+    if state.searchDisabled then
+      return
+    end
+
+    -- only re-issue search when inputs have changed
     if vim.deep_equal(state.inputs, state.lastInputs) then
       return
     end
