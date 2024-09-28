@@ -104,6 +104,18 @@ require('grug-far').has_instance({instanceName})               *grug-far.has_ins
 	Return: ~
 	    {exists}(boolean) 
 
+require('grug-far').get_instance_name_by_buf({buf})   *grug-far.get_instance_name_by_buf()*
+        Returns instance name associated with given buf number.
+        if given buf number is 0, returns instance for current buffer.
+	Note that even grug far instances that are not specifically given an
+	instanceName, will have an automatically generated one.
+
+        Parameters: ~
+            {buf}(integer) buf number
+
+	Return: ~
+	    {instanceName}(string) name of the instance
+
 require('grug-far').is_instance_open({instanceName})           *grug-far.is_instance_open()*
         Checks if grug-far instance with given name is open.
 

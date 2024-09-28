@@ -290,6 +290,20 @@ function M._open_internal(options, params)
   return options.instanceName
 end
 
+--- returns instance name associated with given buf number
+--- if given buf number is 0, returns instance for current buffer
+---@param buf integer (same argument as for bufnr())
+---@return string?
+function M.get_instance_name_by_buf(buf)
+  local bufnr = vim.fn.bufnr(buf)
+  for instanceName, instance in pairs(namedInstances) do
+    if instance.buf == bufnr then
+      return instanceName
+    end
+  end
+  return nil
+end
+
 --- toggles given list of flags in the current grug-far buffer
 ---@param flags string[]
 function M.toggle_flags(flags)
@@ -297,24 +311,31 @@ function M.toggle_flags(flags)
     return {}
   end
 
-  local FLAGS_LINE_NO = 6
-  local flags_line = vim.fn.getline(FLAGS_LINE_NO)
+  local instanceName = M.get_instance_name_by_buf(0)
+  if not instanceName then
+    return
+  end
+
+  local instance = namedInstances[instanceName]
+
+  local flags_value = instance.context.state.inputs.flags
   local states = {}
   for _, flag in ipairs(flags) do
-    local i, j = flags_line:find(' ' .. flag, 1, true)
+    local i, j = flags_value:find(' ' .. flag, 1, true)
     if not i then
-      i, j = flags_line:find(flag, 1, true)
+      i, j = flags_value:find(flag, 1, true)
     end
 
     if i then
-      flags_line = flags_line:sub(1, i - 1) .. flags_line:sub(j + 1, -1)
+      flags_value = flags_value:sub(1, i - 1) .. flags_value:sub(j + 1, -1)
       table.insert(states, false)
     else
-      flags_line = flags_line .. ' ' .. flag
+      flags_value = flags_value .. ' ' .. flag
       table.insert(states, true)
     end
   end
-  vim.fn.setline(FLAGS_LINE_NO, flags_line)
+
+  inputs.fill(instance.context, instance.buf, { flags = flags_value }, false)
 
   return states
 end
