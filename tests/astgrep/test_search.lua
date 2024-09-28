@@ -247,6 +247,29 @@ T['can search with no matches'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search with files filter and no matches'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'george', filesFilter = '*.ts' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search for some string with many matches'] = function()
   local files = {}
   for i = 1, 100 do
