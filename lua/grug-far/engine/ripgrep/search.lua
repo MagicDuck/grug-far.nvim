@@ -166,6 +166,18 @@ local function run_search_with_replace(params)
   local abortSearch = nil
   local effectiveArgs = nil
   local processingQueue = nil
+  local has_finished = false
+  local on_finish = function(...)
+    if not has_finished then
+      has_finished = true
+      params.on_finish(...)
+    end
+  end
+  local on_fetch_chunk = function(...)
+    if not has_finished then
+      params.on_fetch_chunk(...)
+    end
+  end
 
   local abort = function()
     if processingQueue then
@@ -174,6 +186,7 @@ local function run_search_with_replace(params)
     if abortSearch then
       abortSearch()
     end
+    on_finish(nil, nil)
   end
 
   local searchArgs = argUtils.stripReplaceArgs(params.args)
@@ -185,7 +198,7 @@ local function run_search_with_replace(params)
       if #json_line > 0 then
         local success, entry = pcall(vim.json.decode, json_line)
         if not success then
-          params.on_fetch_chunk({
+          on_fetch_chunk({
             lines = vim
               .iter(vim.split(data, '\n'))
               :map(utils.getLineWithoutCarriageReturn)
@@ -207,12 +220,13 @@ local function run_search_with_replace(params)
       on_finish = function(status, errorMessage, results)
         if status == 'success' then
           if results then
-            params.on_fetch_chunk(results)
+            on_fetch_chunk(results)
           end
           on_done()
+          return
         else
           abort()
-          params.on_finish(status, errorMessage)
+          on_finish(status, errorMessage)
         end
       end,
     })
@@ -231,11 +245,11 @@ local function run_search_with_replace(params)
       if status == 'success' then
         processingQueue:on_finish(function()
           processingQueue:stop()
-          params.on_finish(status, errorMessage)
+          on_finish(status, errorMessage)
         end)
       else
         processingQueue:stop()
-        params.on_finish(status, errorMessage)
+        on_finish(status, errorMessage)
       end
     end,
   })
