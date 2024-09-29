@@ -478,15 +478,6 @@ filetypes = {
 }
 ```
 
-#### 2. Why do folds not appear when using which-key plugin?
-This is a known issue in which-key v3. See https://github.com/folke/which-key.nvim/issues/830
-The workaround is to exclude main `grug-far` filetype in which-key plugin config:
-```lua
-disable = {
-  ft = { 'grug-far' },
-},
-```
-
 ## 📦 Similar Plugins / Inspiration
 
 - [nvim-spectre][spectre]: the OG find and replace in a buffer plugin, great inspiration!
