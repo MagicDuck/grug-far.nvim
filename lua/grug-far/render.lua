@@ -1,8 +1,8 @@
-local renderHelp = require('grug-far/render/help')
-local renderInput = require('grug-far/render/input')
-local renderResults = require('grug-far/render/results')
-local utils = require('grug-far/utils')
-local inputs = require('grug-far/inputs')
+local renderHelp = require('grug-far.render.help')
+local renderInput = require('grug-far.render.input')
+local renderResults = require('grug-far.render.results')
+local utils = require('grug-far.utils')
+local inputs = require('grug-far.inputs')
 local InputNames = inputs.InputNames
 
 local TOP_EMPTY_LINES = 2

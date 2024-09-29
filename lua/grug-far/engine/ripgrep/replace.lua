@@ -1,6 +1,6 @@
-local fetchFilesWithMatches = require('grug-far/engine/ripgrep/fetchFilesWithMatches')
-local replaceInMatchedFiles = require('grug-far/engine/ripgrep/replaceInMatchedFiles')
-local getArgs = require('grug-far/engine/ripgrep/getArgs')
+local fetchFilesWithMatches = require('grug-far.engine.ripgrep.fetchFilesWithMatches')
+local replaceInMatchedFiles = require('grug-far.engine.ripgrep.replaceInMatchedFiles')
+local getArgs = require('grug-far.engine.ripgrep.getArgs')
 
 local M = {}
 

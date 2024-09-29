@@ -1,5 +1,5 @@
 local MiniTest = require('mini.test')
-local helpers = require('grug-far/test/helpers')
+local helpers = require('grug-far.test.helpers')
 local keymaps = helpers.getKeymaps()
 
 ---@type NeovimChild

@@ -1,5 +1,5 @@
-local utils = require('grug-far/utils')
-local opts = require('grug-far/opts')
+local utils = require('grug-far.utils')
+local opts = require('grug-far.opts')
 
 ---@alias HlText string[]
 

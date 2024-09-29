@@ -1,5 +1,5 @@
-local getArgs = require('grug-far/engine/ripgrep/getArgs')
-local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
+local getArgs = require('grug-far.engine.ripgrep.getArgs')
+local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 
 ---@class FetchFilteredFilesListParams
 ---@field inputs GrugFarInputs

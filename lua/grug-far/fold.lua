@@ -1,4 +1,4 @@
-local engine = require('grug-far/engine')
+local engine = require('grug-far.engine')
 local M = {}
 
 ---@param line string

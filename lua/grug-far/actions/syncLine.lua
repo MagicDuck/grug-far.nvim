@@ -1,4 +1,4 @@
-local sync = require('grug-far/actions/sync')
+local sync = require('grug-far.actions.sync')
 
 --- syncs current result line with original file location
 ---@param params { buf: integer, context: GrugFarContext }

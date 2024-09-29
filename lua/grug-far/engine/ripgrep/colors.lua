@@ -1,4 +1,4 @@
-local ResultHighlightType = require('grug-far/engine').ResultHighlightType
+local ResultHighlightType = require('grug-far.engine').ResultHighlightType
 
 local M = {}
 M.ansi_color_ending = '[0m'

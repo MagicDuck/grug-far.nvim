@@ -1,4 +1,4 @@
-local renderResultsHeader = require('grug-far/render/resultsHeader')
+local renderResultsHeader = require('grug-far.render.resultsHeader')
 
 --- ensure a minimum line number so that we don't overlap inputs
 ---@param buf integer

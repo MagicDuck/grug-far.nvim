@@ -1,4 +1,4 @@
-local utils = require('grug-far/utils')
+local utils = require('grug-far.utils')
 
 --- aborts all currently running tasks
 ---@param params { buf: integer, context: GrugFarContext }

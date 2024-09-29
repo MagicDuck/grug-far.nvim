@@ -1,6 +1,6 @@
 local MiniTest = require('mini.test')
 local expect = MiniTest.expect
-local helpers = require('grug-far/test/helpers')
+local helpers = require('grug-far.test.helpers')
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()

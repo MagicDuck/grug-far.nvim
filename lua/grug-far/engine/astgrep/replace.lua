@@ -1,12 +1,12 @@
-local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
-local utils = require('grug-far/utils')
-local getArgs = require('grug-far/engine/astgrep/getArgs')
-local blacklistedReplaceFlags = require('grug-far/engine/astgrep/blacklistedReplaceFlags')
-local fetchFilteredFilesList = require('grug-far/engine/ripgrep/fetchFilteredFilesList')
-local runWithChunkedFiles = require('grug-far/engine/runWithChunkedFiles')
-local argUtils = require('grug-far/engine/astgrep/argUtils')
-local parseResults = require('grug-far/engine/astgrep/parseResults')
-local ProcessingQueue = require('grug-far/engine/ProcessingQueue')
+local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
+local utils = require('grug-far.utils')
+local getArgs = require('grug-far.engine.astgrep.getArgs')
+local blacklistedReplaceFlags = require('grug-far.engine.astgrep.blacklistedReplaceFlags')
+local fetchFilteredFilesList = require('grug-far.engine.ripgrep.fetchFilteredFilesList')
+local runWithChunkedFiles = require('grug-far.engine.runWithChunkedFiles')
+local argUtils = require('grug-far.engine.astgrep.argUtils')
+local parseResults = require('grug-far.engine.astgrep.parseResults')
+local ProcessingQueue = require('grug-far.engine.ProcessingQueue')
 
 local M = {}
 

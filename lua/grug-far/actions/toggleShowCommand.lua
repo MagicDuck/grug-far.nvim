@@ -1,4 +1,4 @@
-local search = require('grug-far/actions/search')
+local search = require('grug-far.actions.search')
 
 --- toggles displaying search command
 ---@param params { buf: integer, context: GrugFarContext }

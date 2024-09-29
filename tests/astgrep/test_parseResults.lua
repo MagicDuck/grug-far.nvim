@@ -1,4 +1,4 @@
-local parseResults = require('grug-far/engine/astgrep/parseResults')
+local parseResults = require('grug-far.engine.astgrep.parseResults')
 local MiniTest = require('mini.test')
 local expect = MiniTest.expect
 

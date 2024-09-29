@@ -1,4 +1,4 @@
-local history = require('grug-far/history')
+local history = require('grug-far.history')
 
 --- adds current UI values as history entry
 ---@param params { context: GrugFarContext }

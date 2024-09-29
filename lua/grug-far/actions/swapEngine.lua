@@ -1,5 +1,5 @@
-local search = require('grug-far/actions/search')
-local engine = require('grug-far/engine')
+local search = require('grug-far.actions.search')
+local engine = require('grug-far.engine')
 
 --- swaps engine with the next one
 ---@param params { buf: integer, context: GrugFarContext }

@@ -1,6 +1,6 @@
-local syncChangedFiles = require('grug-far/engine/syncChangedFiles')
-local getArgs = require('grug-far/engine/ripgrep/getArgs')
-local utils = require('grug-far/utils')
+local syncChangedFiles = require('grug-far.engine.syncChangedFiles')
+local getArgs = require('grug-far.engine.ripgrep.getArgs')
+local utils = require('grug-far.utils')
 
 local M = {}
 

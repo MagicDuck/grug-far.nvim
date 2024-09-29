@@ -1,4 +1,4 @@
-local resultsList = require('grug-far/render/resultsList')
+local resultsList = require('grug-far.render.resultsList')
 
 local function previewLocation(params)
   local buf = params.buf

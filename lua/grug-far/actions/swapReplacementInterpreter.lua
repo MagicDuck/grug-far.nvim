@@ -1,5 +1,5 @@
-local search = require('grug-far/actions/search')
-local replacementInterpreter = require('grug-far/replacementInterpreter')
+local search = require('grug-far.actions.search')
+local replacementInterpreter = require('grug-far.replacementInterpreter')
 
 --- swaps replacement interpreter with the next one
 ---@param params { buf: integer, context: GrugFarContext }

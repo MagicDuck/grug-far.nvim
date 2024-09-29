@@ -1,4 +1,4 @@
-local utils = require('grug-far/utils')
+local utils = require('grug-far.utils')
 
 --- opens quickfix list
 ---@param context GrugFarContext

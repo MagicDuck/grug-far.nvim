@@ -1,5 +1,5 @@
-local treesitter = require('grug-far/render/treesitter')
-local resultsList = require('grug-far/render/resultsList')
+local treesitter = require('grug-far.render.treesitter')
+local resultsList = require('grug-far.render.resultsList')
 local M = {}
 
 ---@class GrugFarReplacementInterpreter
@@ -12,9 +12,9 @@ local M = {}
 ---@return GrugFarReplacementInterpreter?
 function M.getReplacementInterpreter(type)
   if type == 'lua' then
-    return require('grug-far/replacementInterpreter/luascript')
+    return require('grug-far.replacementInterpreter.luascript')
   elseif type == 'vimscript' then
-    return require('grug-far/replacementInterpreter/vimscript')
+    return require('grug-far.replacementInterpreter.vimscript')
   end
 
   return nil

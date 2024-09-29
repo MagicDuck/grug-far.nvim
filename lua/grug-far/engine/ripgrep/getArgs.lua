@@ -1,5 +1,5 @@
-local utils = require('grug-far/utils')
-local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
+local utils = require('grug-far.utils')
+local getRgVersion = require('grug-far.engine.ripgrep.getRgVersion')
 
 --- get args for ripgrep or nil if params invalid / insufficient
 ---@param inputs GrugFarInputs
