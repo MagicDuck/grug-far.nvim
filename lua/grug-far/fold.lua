@@ -54,12 +54,12 @@ function M.setup(context, win)
 
     vim.api.nvim_set_option_value(
       'foldexpr',
-      'v:lua.require("grug-far/fold")._getFoldLevelFns["' .. context.options.instanceName .. '"]()',
+      'v:lua.require("grug-far.fold")._getFoldLevelFns["' .. context.options.instanceName .. '"]()',
       { win = win }
     )
     vim.api.nvim_set_option_value(
       'foldtext',
-      'v:lua.require("grug-far/fold").getFoldText()',
+      'v:lua.require("grug-far.fold").getFoldText()',
       { win = win }
     )
   end

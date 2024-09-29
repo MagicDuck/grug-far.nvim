@@ -154,7 +154,7 @@ local function pasteBelow(context, buf, is_visual)
     end
   end
   local keys = vim.api.nvim_replace_termcodes(
-    pasteCmd .. '<esc><cmd>lua require("grug-far/inputs")._pasteBelowCallback()<cr>',
+    pasteCmd .. '<esc><cmd>lua require("grug-far.inputs")._pasteBelowCallback()<cr>',
     true,
     false,
     true
@@ -207,7 +207,7 @@ local function pasteAbove(context, buf, is_visual)
     end
   end
   local keys = vim.api.nvim_replace_termcodes(
-    'P<esc><cmd>lua require("grug-far/inputs")._pasteAboveCallback()<cr>',
+    'P<esc><cmd>lua require("grug-far.inputs")._pasteAboveCallback()<cr>',
     true,
     false,
     true
