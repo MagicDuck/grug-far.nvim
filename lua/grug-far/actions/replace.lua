@@ -1,6 +1,6 @@
-local renderResultsHeader = require('grug-far/render/resultsHeader')
-local resultsList = require('grug-far/render/resultsList')
-local history = require('grug-far/history')
+local renderResultsHeader = require('grug-far.render.resultsHeader')
+local resultsList = require('grug-far.render.resultsList')
+local history = require('grug-far.history')
 local uv = vim.uv
 
 --- gets action message to display

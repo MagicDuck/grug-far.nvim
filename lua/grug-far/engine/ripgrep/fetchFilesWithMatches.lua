@@ -1,6 +1,6 @@
-local getArgs = require('grug-far/engine/ripgrep/getArgs')
-local blacklistedReplaceFlags = require('grug-far/engine/ripgrep/blacklistedReplaceFlags')
-local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
+local getArgs = require('grug-far.engine.ripgrep.getArgs')
+local blacklistedReplaceFlags = require('grug-far.engine.ripgrep.blacklistedReplaceFlags')
+local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 
 ---@class FetchWithMatchesParams
 ---@field inputs GrugFarInputs

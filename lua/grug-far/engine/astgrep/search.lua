@@ -1,13 +1,13 @@
-local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
-local getArgs = require('grug-far/engine/astgrep/getArgs')
-local parseResults = require('grug-far/engine/astgrep/parseResults')
-local utils = require('grug-far/utils')
-local blacklistedSearchFlags = require('grug-far/engine/astgrep/blacklistedSearchFlags')
-local getAstgrepVersion = require('grug-far/engine/astgrep/getAstgrepVersion')
-local fetchFilteredFilesList = require('grug-far/engine/ripgrep/fetchFilteredFilesList')
-local runWithChunkedFiles = require('grug-far/engine/runWithChunkedFiles')
-local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
-local argUtils = require('grug-far/engine/astgrep/argUtils')
+local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
+local getArgs = require('grug-far.engine.astgrep.getArgs')
+local parseResults = require('grug-far.engine.astgrep.parseResults')
+local utils = require('grug-far.utils')
+local blacklistedSearchFlags = require('grug-far.engine.astgrep.blacklistedSearchFlags')
+local getAstgrepVersion = require('grug-far.engine.astgrep.getAstgrepVersion')
+local fetchFilteredFilesList = require('grug-far.engine.ripgrep.fetchFilteredFilesList')
+local runWithChunkedFiles = require('grug-far.engine.runWithChunkedFiles')
+local getRgVersion = require('grug-far.engine.ripgrep.getRgVersion')
+local argUtils = require('grug-far.engine.astgrep.argUtils')
 
 local M = {}
 

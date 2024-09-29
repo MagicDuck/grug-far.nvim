@@ -1,4 +1,4 @@
-local blacklistedSearchFlags = require('grug-far/engine/astgrep/blacklistedSearchFlags')
+local blacklistedSearchFlags = require('grug-far.engine.astgrep.blacklistedSearchFlags')
 
 -- those are flags that would result in undesirable situations when replacing
 -- (in addition to the blacklisted search flags)

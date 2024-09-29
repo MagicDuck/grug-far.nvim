@@ -1,6 +1,6 @@
-local renderResultsHeader = require('grug-far/render/resultsHeader')
-local resultsList = require('grug-far/render/resultsList')
-local fold = require('grug-far/fold')
+local renderResultsHeader = require('grug-far.render.resultsHeader')
+local resultsList = require('grug-far.render.resultsList')
+local fold = require('grug-far.fold')
 
 --- performs search
 ---@param params { buf: integer, context: GrugFarContext }

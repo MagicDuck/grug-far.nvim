@@ -1,4 +1,4 @@
-local opts = require('grug-far/opts')
+local opts = require('grug-far.opts')
 local MiniTest = require('mini.test')
 local expect = MiniTest.expect
 

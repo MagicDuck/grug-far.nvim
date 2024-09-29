@@ -1,5 +1,5 @@
-local opts = require('grug-far/opts')
-local treesitter = require('grug-far/render/treesitter')
+local opts = require('grug-far.opts')
+local treesitter = require('grug-far.render.treesitter')
 
 ---@class InputRenderParams
 ---@field buf integer

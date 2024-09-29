@@ -1,5 +1,5 @@
-local utils = require('grug-far/utils')
-local engine = require('grug-far/engine')
+local utils = require('grug-far.utils')
+local engine = require('grug-far.engine')
 local ResultHighlightType = engine.ResultHighlightType
 
 local M = {}

@@ -1,5 +1,5 @@
-local search = require('grug-far/engine/astgrep/search')
-local replace = require('grug-far/engine/astgrep/replace')
+local search = require('grug-far.engine.astgrep.search')
+local replace = require('grug-far.engine.astgrep.replace')
 
 ---@type GrugFarEngine
 local AstgrepEngine = {

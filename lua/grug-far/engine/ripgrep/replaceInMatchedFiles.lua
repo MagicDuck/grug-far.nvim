@@ -1,9 +1,9 @@
-local fetchReplacedFileContent = require('grug-far/engine/ripgrep/fetchReplacedFileContent')
-local utils = require('grug-far/utils')
-local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
-local argUtils = require('grug-far/engine/ripgrep/argUtils')
-local getArgs = require('grug-far/engine/ripgrep/getArgs')
-local parseResults = require('grug-far/engine/ripgrep/parseResults')
+local fetchReplacedFileContent = require('grug-far.engine.ripgrep.fetchReplacedFileContent')
+local utils = require('grug-far.utils')
+local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
+local argUtils = require('grug-far.engine.ripgrep.argUtils')
+local getArgs = require('grug-far.engine.ripgrep.getArgs')
+local parseResults = require('grug-far.engine.ripgrep.parseResults')
 
 ---@class replaceInFileParams
 ---@field inputs GrugFarInputs

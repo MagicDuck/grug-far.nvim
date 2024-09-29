@@ -1,4 +1,4 @@
-local opts = require('grug-far/opts')
+local opts = require('grug-far.opts')
 
 --- gets status text
 ---@param context GrugFarContext

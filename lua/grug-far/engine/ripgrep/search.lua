@@ -1,10 +1,10 @@
-local fetchCommandOutput = require('grug-far/engine/fetchCommandOutput')
-local utils = require('grug-far/utils')
-local ProcessingQueue = require('grug-far/engine/ProcessingQueue')
-local getRgVersion = require('grug-far/engine/ripgrep/getRgVersion')
-local parseResults = require('grug-far/engine/ripgrep/parseResults')
-local getArgs = require('grug-far/engine/ripgrep/getArgs')
-local argUtils = require('grug-far/engine/ripgrep/argUtils')
+local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
+local utils = require('grug-far.utils')
+local ProcessingQueue = require('grug-far.engine.ProcessingQueue')
+local getRgVersion = require('grug-far.engine.ripgrep.getRgVersion')
+local parseResults = require('grug-far.engine.ripgrep.parseResults')
+local getArgs = require('grug-far.engine.ripgrep.getArgs')
+local argUtils = require('grug-far.engine.ripgrep.argUtils')
 local uv = vim.uv
 
 local M = {}

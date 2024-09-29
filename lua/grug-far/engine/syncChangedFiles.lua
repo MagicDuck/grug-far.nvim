@@ -1,4 +1,4 @@
-local utils = require('grug-far/utils')
+local utils = require('grug-far.utils')
 
 --- performs sync for given changed file
 ---@param params { changedFile: ChangedFile, on_done: fun(errorMessage: string?) }
