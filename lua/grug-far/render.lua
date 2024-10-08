@@ -5,7 +5,7 @@ local utils = require('grug-far.utils')
 local inputs = require('grug-far.inputs')
 local InputNames = inputs.InputNames
 
-local TOP_EMPTY_LINES = 2
+local TOP_EMPTY_LINES = 1
 
 ---@param buf integer
 ---@param context GrugFarContext
@@ -16,11 +16,13 @@ local function render(buf, context)
 
   local lineNr = 0
   utils.ensureBufTopEmptyLines(buf, TOP_EMPTY_LINES)
-  renderHelp({
-    buf = buf,
-    extmarkName = 'farHelp',
-    actions = context.actions,
-  }, context)
+  if context.options.helpLine.enabled then
+    renderHelp({
+      buf = buf,
+      extmarkName = 'farHelp',
+      actions = context.actions,
+    }, context)
+  end
 
   lineNr = lineNr + TOP_EMPTY_LINES
   state.inputs.search = renderInput({
