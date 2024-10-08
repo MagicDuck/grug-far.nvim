@@ -1,22 +1,21 @@
 --|
 01|
-02|
-03|grug
+02|grug
+03|
 04|
-05|
-06|--replace=
+05|--replace=
+06|
 07|
-08|
-09|file1.txt
-10|1:6: and grug walks 
-11|1:6: and  walks 
-12|
-13|file2.doc
-14|2:7:      grug talks and grug drinks
-15|2:7:       talks and  drinks
-16|3:16:      and then grug thinks
-17|3:16:      and then  thinks
-18|
+08|file1.txt
+09|1:6: and grug walks 
+10|1:6: and  walks 
+11|
+12|file2.doc
+13|2:7:      grug talks and grug drinks
+14|2:7:       talks and  drinks
+15|3:16:      and then grug thinks
+16|3:16:      and then  thinks
+17|
 
 --|-
 01| 
@@ -36,4 +35,3 @@
 15| 
 16| 
 17| 
-18| 

@@ -10,7 +10,7 @@
 09|file2.doc                                                                       
 10|3:12:      then grug thinks                                                  [4]
 11|4:11:      and grug flies                                                    [5]
-12|Grug FAR - 1: grug                                            13,4           87%
+12|Grug FAR - 1: grug                                            12,4           85%
 13|file1.txt|3 col 13-4| then grug swims                                           
 14|file2.doc|3 col 12-4| then grug thinks                                          
 15|file2.doc|4 col 11-4| and grug flies                                            
