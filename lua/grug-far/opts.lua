@@ -103,22 +103,29 @@ M.defaultOptions = {
   -- * 'default': treat replacement as a string to pass to the current engine
   -- * 'lua': treat replacement as lua function body where search match is identified by `match` and
   --          meta variables (with astgrep for example) are avaible in `vars` table (ex: `vars.A` captures `$A`)
+  -- * 'vimscript': treat replacement as vimscript function body where search match is identified by `match` and
+  --          meta variables (with astgrep for example) are avaible in `vars` table (ex: `vars.A` captures `$A`)
   enabledReplacementInterpreters = { 'default', 'lua', 'vimscript' },
 
   -- which replacement interprer to use
   -- Must be one of enabledReplacementInterpreters defined above.
-  -- TODO (sbadragan): add vimscript
   replacementInterpreter = 'default',
 
   -- specifies the command to run (with `vim.cmd(...)`) in order to create
   -- the window in which the grug-far buffer will appear
   -- ex (horizontal bottom right split): 'botright split'
-  -- ex (open new tab): 'tabnew %'
+  -- ex (open new tab): 'tab split'
   windowCreationCommand = 'vsplit',
 
   -- buffer line numbers + match line numbers can get a bit visually overwhelming
   -- turn this off if you still like to see the line numbers
   disableBufferLineNumbers = true,
+
+  -- help line config
+  helpLine = {
+    -- whether to show the help line at the top of the buffer
+    enabled = true,
+  },
 
   -- maximum number of search chars to show in buffer and quickfix list titles
   -- zero disables showing it
@@ -135,7 +142,7 @@ M.defaultOptions = {
   startInInsertMode = true,
 
   -- row in the window to position the cursor at at start
-  startCursorRow = 3,
+  startCursorRow = 2,
 
   -- whether to wrap text in the grug-far buffer
   wrap = true,
@@ -516,6 +523,12 @@ M.defaultOptions = {
 ---@field numberLabelPosition? NumberLabelPosition
 ---@field numberLabelFormat? string
 
+---@class HelpLineTable
+---@field enabled boolean
+
+---@class HelpLineTableOverride
+---@field enabled? boolean
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -550,6 +563,7 @@ M.defaultOptions = {
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]
 ---@field resultLocation ResultLocationTable
+---@field helpLine HelpLineTable
 
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
@@ -585,6 +599,7 @@ M.defaultOptions = {
 ---@field replacementInterpreter? GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters? GrugFarReplacementInterpreterType[]
 ---@field resultLocation? ResultLocationTableOverride
+---@field helpLine? HelpLineTableOverride
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride | GrugFarOptions
