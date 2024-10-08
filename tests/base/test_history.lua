@@ -52,7 +52,7 @@ T['can manually save and reload from history'] = function()
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
 
-  child.type_keys('<esc>23G', '<enter>')
+  child.type_keys('<esc>24G', '<enter>')
   helpers.childWaitForScreenshotText(child, '4 matches in 2 files')
   helpers.childExpectScreenshot(child)
 end
@@ -175,7 +175,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
   helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectBufLines(child)
 
-  child.type_keys('<esc>10G', '<enter>')
+  child.type_keys('<esc>12G', '<enter>')
   helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
   helpers.childWaitForScreenshotText(child, '[lua]')
   helpers.childExpectScreenshot(child)
@@ -183,7 +183,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childWaitForScreenshotText(child, 'History')
 
-  child.type_keys('<esc>2G', '<enter>')
+  child.type_keys('<esc>3G', '<enter>')
   helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
   helpers.childExpectScreenshot(child)
 end
