@@ -101,10 +101,11 @@ function M._attach_lang(buf, lang, regions, regionsId)
   end
 
   if not entry then
-    local ok, parser = pcall(vim.treesitter.get_parser, buf, lang)
+    local ok, parser = pcall(vim.treesitter.languagetree.new, buf, lang)
     if not ok then
       return
     end
+    parser:set_included_regions(regions)
     M.cache[buf][cacheKey] = {
       parser = parser,
       highlighter = TSHighlighter.new(parser),
