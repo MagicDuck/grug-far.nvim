@@ -31,6 +31,13 @@ T['can open with icons disabled'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can open with help line disabled'] = function()
+  helpers.childRunGrugFar(child, {
+    helpLine = { enabled = false },
+  })
+  helpers.childExpectScreenshot(child)
+end
+
 T['can launch with :GrugFar'] = function()
   child.type_keys('<esc>:GrugFar<cr>')
   helpers.childWaitForScreenshotText(child, 'Search:')
