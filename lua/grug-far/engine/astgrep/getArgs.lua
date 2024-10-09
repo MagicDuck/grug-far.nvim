@@ -1,4 +1,5 @@
 local utils = require('grug-far.utils')
+local getAstgrepVersion = require('grug-far.engine.astgrep.getAstgrepVersion')
 
 local rewriteFlags = {
   '--rewrite',
@@ -67,6 +68,17 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
 
   for i = 1, #extraArgs do
     table.insert(args, extraArgs[i])
+  end
+
+  local version = getAstgrepVersion(options)
+  -- note: astgrep added --glob suport in v0.28.0
+  if #inputs.filesFilter > 0 and version and vim.version.gt(version, '0.27.999') then
+    for _, fileFilter in ipairs(vim.split(inputs.filesFilter, '\n')) do
+      local glob = vim.trim(fileFilter)
+      if #glob > 0 then
+        table.insert(args, '--globs=' .. glob)
+      end
+    end
   end
 
   table.insert(args, '--pattern=' .. inputs.search)
