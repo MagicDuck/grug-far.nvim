@@ -173,10 +173,10 @@ function M.search(params)
 
   local hadOutput = false
   local filesFilter = params.inputs.filesFilter
-  if filesFilter and #filesFilter > 0 then
-    -- ast-grep currently does not support --glob type functionality
-    -- see see https://github.com/ast-grep/ast-grep/issues/1062
-    -- this if-branch uses rg to get the files and can be removed if that is implemented
+  local version = getAstgrepVersion(params.options)
+  if filesFilter and #filesFilter > 0 and version and vim.version.gt(version, '0.28.0') then
+    -- note: astgrep added --glob suport in v0.28.0
+    -- this if-branch uses rg to get the files and can be removed in the future once everybody uses new astgrep
 
     local on_abort = nil
     local function abort()
@@ -240,7 +240,7 @@ function M.search(params)
       end,
     })
 
-    return abort
+    return abort, args
   else
     return run_astgrep_search(args, params.options, eval_fn, function(data)
       if not hadOutput and #data.lines > 0 then

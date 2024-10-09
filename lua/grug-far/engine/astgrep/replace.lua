@@ -7,6 +7,7 @@ local runWithChunkedFiles = require('grug-far.engine.runWithChunkedFiles')
 local argUtils = require('grug-far.engine.astgrep.argUtils')
 local parseResults = require('grug-far.engine.astgrep.parseResults')
 local ProcessingQueue = require('grug-far.engine.ProcessingQueue')
+local getAstgrepVersion = require('grug-far.engine.astgrep.getAstgrepVersion')
 
 local M = {}
 
@@ -162,10 +163,10 @@ function M.replace(params)
   end
 
   local filesFilter = params.inputs.filesFilter
-  if filesFilter and #filesFilter > 0 then
-    -- ast-grep currently does not support --glob type functionality
-    -- see see https://github.com/ast-grep/ast-grep/issues/1062
-    -- this if-branch uses rg to get the files and can be removed if that is implemented
+  local version = getAstgrepVersion(params.options)
+  if filesFilter and #filesFilter > 0 and version and vim.version.lt(version, '0.28.0') then
+    -- note: astgrep added --glob suport in v0.28.0
+    -- this if-branch uses rg to get the files and can be removed in the future once everybody uses new astgrep
     on_abort = fetchFilteredFilesList({
       inputs = params.inputs,
       options = params.options,
