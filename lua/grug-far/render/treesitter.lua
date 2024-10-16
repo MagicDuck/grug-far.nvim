@@ -101,7 +101,7 @@ function M._attach_lang(buf, lang, regions, regionsId)
   end
 
   if not entry then
-    local ok, parser = pcall(vim.treesitter.languagetree.new, buf, lang)
+    local ok, parser = pcall(vim.treesitter.get_parser, buf, lang)
     if not ok then
       return
     end
