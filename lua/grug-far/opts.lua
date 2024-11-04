@@ -321,6 +321,14 @@ M.defaultOptions = {
     -- format for the number label, by default it displays as for example:  [42]
     numberLabelFormat = ' [%d]',
   },
+
+  -- options for help window, history window and preview windows
+  -- these are the same options as the ones that get passed to
+  -- `vim.api.nvim_open_win()`: border, style, etc.
+  -- see :h nvim_open_win for more info
+  helpWindow = {},
+  historyWindow = {},
+  previewWindow = {},
 }
 
 ---@class KeymapTable
@@ -564,6 +572,9 @@ M.defaultOptions = {
 ---@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]
 ---@field resultLocation ResultLocationTable
 ---@field helpLine HelpLineTable
+---@field helpWindow vim.api.keyset.win_config
+---@field historyWindow vim.api.keyset.win_config
+---@field previewWindow vim.api.keyset.win_config
 
 ---@class GrugFarOptionsOverride
 ---@field debounceMs? integer
@@ -600,6 +611,9 @@ M.defaultOptions = {
 ---@field enabledReplacementInterpreters? GrugFarReplacementInterpreterType[]
 ---@field resultLocation? ResultLocationTableOverride
 ---@field helpLine? HelpLineTableOverride
+---@field helpWindow? vim.api.keyset.win_config
+---@field historyWindow? vim.api.keyset.win_config
+---@field previewWindow? vim.api.keyset.win_config
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride | GrugFarOptions

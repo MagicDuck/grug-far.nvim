@@ -73,17 +73,18 @@ local function createHelpWindow(context)
   local helpBuf = vim.api.nvim_create_buf(false, true)
   local width = vim.api.nvim_win_get_width(0) - 2
   local height = math.floor(vim.api.nvim_win_get_height(0) / 2)
-  local helpWin = vim.api.nvim_open_win(helpBuf, true, {
+  local helpWinConfig = vim.tbl_extend('force', {
     relative = 'win',
     row = 0,
     col = 2,
     width = width,
     height = height,
-    border = 'rounded',
     footer = (opts.getIcon('helpTitle', context) or ' ') .. 'Help (press <q> or <esc> to close)',
     footer_pos = 'center',
+    border = 'rounded',
     style = 'minimal',
-  })
+  }, context.options.helpWindow)
+  local helpWin = vim.api.nvim_open_win(helpBuf, true, helpWinConfig)
   vim.api.nvim_set_option_value('wrap', true, { win = helpWin })
 
   -- delete buffer on window close

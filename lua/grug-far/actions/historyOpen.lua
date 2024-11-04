@@ -145,18 +145,19 @@ local function createHistoryWindow(buf, context)
   local historyBuf = vim.api.nvim_create_buf(false, true)
   local width = vim.api.nvim_win_get_width(0) - 2
   local height = math.floor(vim.api.nvim_win_get_height(0) * 0.66)
-  local historyWin = vim.api.nvim_open_win(historyBuf, true, {
+  local historyWinConfig = vim.tbl_extend('force', {
     relative = 'win',
     row = 0,
     col = 2,
     width = width,
     height = height,
-    border = 'rounded',
     footer = (opts.getIcon('historyTitle', context) or ' ')
       .. 'History (press <:q> or <:bd> to close)',
     footer_pos = 'center',
+    border = 'rounded',
     style = 'minimal',
-  })
+  }, context.options.historyWindow)
+  local historyWin = vim.api.nvim_open_win(historyBuf, true, historyWinConfig)
 
   local historyFilename = history.getHistoryFilename(context)
   vim.cmd('e ' .. vim.fn.fnameescape(historyFilename))
