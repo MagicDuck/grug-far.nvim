@@ -12,18 +12,18 @@ local function previewLocation(params)
 
   local width = vim.api.nvim_win_get_width(0)
   local height = vim.api.nvim_win_get_height(0)
-  local opts = {
+  local previewWinConfig = vim.tbl_extend('force', {
     relative = 'win',
-    border = 'rounded',
     width = width,
     height = math.floor(height / 3),
     bufpos = { vim.fn.line('.') - 1, vim.fn.col('.') },
     focusable = true,
     win = grugfar_win,
+    border = 'rounded',
     style = 'minimal',
-  }
+  }, context.options.previewWindow)
 
-  local w = vim.api.nvim_open_win(0, true, opts)
+  local w = vim.api.nvim_open_win(0, true, previewWinConfig)
   local bufnr = vim.fn.bufnr(location.filename)
   if bufnr == -1 then
     vim.fn.win_execute(w, 'e ' .. vim.fn.fnameescape(location.filename), true)
