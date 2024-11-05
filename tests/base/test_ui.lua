@@ -1,5 +1,6 @@
 local MiniTest = require('mini.test')
 local helpers = require('grug-far.test.helpers')
+local keymaps = helpers.getKeymaps()
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -231,6 +232,71 @@ T['o on last line of input does not break into next input'] = function()
   })
   helpers.childWaitForScreenshotText(child, 'Search:')
   child.type_keys('<esc>jo')
+  helpers.childExpectScreenshot(child)
+end
+
+T['can change border style for help window'] = function()
+  helpers.childRunGrugFar(child, {
+    helpWindow = {
+      border = 'none',
+    },
+  })
+  child.type_keys('<esc>g?')
+  helpers.childExpectScreenshot(child)
+end
+
+T['can change border style for history window'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[
+      grug talks and grug drinks
+      then grug thinks and talks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', flags = '-i' },
+    historyWindow = {
+      border = 'solid',
+    },
+  })
+  helpers.childWaitForFinishedStatus(child)
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
+
+  child.type_keys('<esc>' .. keymaps.historyOpen.n)
+  helpers.childWaitForScreenshotText(child, 'History')
+  helpers.childExpectScreenshot(child)
+end
+
+T['can change border style for preview window'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+    previewWindow = {
+      border = 'double',
+    },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>9G')
+  child.type_keys('<esc>' .. keymaps.previewLocation.n)
   helpers.childExpectScreenshot(child)
 end
 
