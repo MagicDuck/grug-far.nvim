@@ -1,4 +1,5 @@
 local resultsList = require('grug-far.render.resultsList')
+local utils = require('grug-far.utils')
 
 local function previewLocation(params)
   local buf = params.buf
@@ -26,7 +27,7 @@ local function previewLocation(params)
   local w = vim.api.nvim_open_win(0, true, previewWinConfig)
   local bufnr = vim.fn.bufnr(location.filename)
   if bufnr == -1 then
-    vim.fn.win_execute(w, 'e ' .. vim.fn.fnameescape(location.filename), true)
+    vim.fn.win_execute(w, 'e ' .. utils.escape_path_for_cmd(location.filename), true)
   else
     vim.api.nvim_win_set_buf(w, bufnr)
   end

@@ -455,4 +455,39 @@ function M.getOpenTargetWin(context, buf)
   return vim.api.nvim_get_current_win()
 end
 
+--- NOTE: this function lifted directly from neo-tree.nvim where it was produced
+--- through a process of much sweat, blood and tears :)
+--- https://github.com/nvim-neo-tree/neo-tree.nvim/blob/a77af2e764c5ed4038d27d1c463fa49cd4794e07/lua/neo-tree/utils/init.lua#L1057
+---
+--- Escapes a path primarily relying on `vim.fn.fnameescape`. This function should
+--- only be used when preparing a path to be used in a vim command, such as `:e`.
+---
+--- For Windows systems, this function handles punctuation characters that will
+--- be escaped, but may appear at the beginning of a path segment. For example,
+--- the path `C:\foo\(bar)\baz.txt` (where foo, (bar), and baz.txt are segments)
+--- will remain unchanged when escaped by `fnaemescape` on a Windows system.
+--- However, if that string is used to edit a file with `:e`, `:b`, etc., the open
+--- parenthesis will be treated as an escaped character and the path separator will
+--- be lost.
+---
+--- For more details, see issue #889 when this function was introduced, and further
+--- discussions in #1264, #1352, and #1448.
+--- @param path string
+--- @return string
+M.escape_path_for_cmd = function(path)
+  local escaped_path = vim.fn.fnameescape(path)
+  if is_win then
+    -- there is too much history to this logic to capture in a reasonable comment.
+    -- essentially, the following logic adds a number of `\` depending on the leading
+    -- character in a path segment. see #1264, #1352, and #1448 in neo-tree.nvim repo for more info.
+    local need_extra_esc = path:find('[%[%]`%$~]')
+    local esc = need_extra_esc and '\\\\' or '\\'
+    escaped_path = escaped_path:gsub('\\[%(%)%^&;]', esc .. '%1')
+    if need_extra_esc then
+      escaped_path = escaped_path:gsub("\\\\['` ]", '\\%1')
+    end
+  end
+  return escaped_path
+end
+
 return M

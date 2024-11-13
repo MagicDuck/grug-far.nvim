@@ -160,7 +160,7 @@ local function createHistoryWindow(buf, context)
   local historyWin = vim.api.nvim_open_win(historyBuf, true, historyWinConfig)
 
   local historyFilename = history.getHistoryFilename(context)
-  vim.cmd('e ' .. vim.fn.fnameescape(historyFilename))
+  vim.cmd('e ' .. utils.escape_path_for_cmd(historyFilename))
 
   -- delete buffer on window close
   vim.api.nvim_create_autocmd({ 'WinClosed' }, {
