@@ -57,7 +57,7 @@ local function gotoLocation(params)
   local targetWin = utils.getOpenTargetWin(context, buf)
 
   if bufnr == -1 then
-    vim.fn.win_execute(targetWin, 'e ' .. vim.fn.fnameescape(location.filename), true)
+    vim.fn.win_execute(targetWin, 'e ' .. utils.escape_path_for_cmd(location.filename), true)
   else
     vim.api.nvim_win_set_buf(targetWin, bufnr)
   end
