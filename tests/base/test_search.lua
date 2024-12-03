@@ -240,6 +240,29 @@ T['can search with replace string'] = function()
   helpers.childExpectBufLines(child)
 end
 
+-- NOTE: this checks that the match_separator in getResultsWithReplaceDiff() replacement logic works correctly
+T['can search with replace string, with dotall'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug(.*)', replacement = 'curly$1' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search with empty replace string'] = function()
   helpers.writeTestFiles({
     { filename = 'file1.txt', content = [[ grug walks ]] },
