@@ -90,16 +90,17 @@ local function fetchCommandOutput(params)
 
       if data then
         hadStdout = true
+        on_fetch_chunk(data)
 
-        -- large outputs can cause the last line to be truncated
-        -- save it and prepend to next chunk
-        local chunkData = lastLine .. data
-        chunkData, lastLine = utils.splitLastLine(chunkData)
-        if #chunkData > 0 then
-          on_fetch_chunk(chunkData)
-        end
-      else
-        on_fetch_chunk(lastLine)
+        --   -- large outputs can cause the last line to be truncated
+        --   -- save it and prepend to next chunk
+        --   local chunkData = lastLine .. data
+        --   chunkData, lastLine = utils.splitLastLine(chunkData)
+        --   if #chunkData > 0 then
+        --     on_fetch_chunk(chunkData)
+        --   end
+        -- else
+        --   on_fetch_chunk(lastLine)
       end
     end)
   )
