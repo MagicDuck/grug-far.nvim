@@ -7,6 +7,7 @@ local uv = vim.uv
 ---@field on_fetch_chunk fun(data: string)
 ---@field on_finish fun(status: GrugFarStatus, errorMesage: string?)
 ---@field stdin? uv_pipe_t
+---@field fixChunkLineTruncation? boolean
 
 --- fetch with ripgrep
 ---@param params FetchCommandOutputParams
@@ -16,8 +17,16 @@ local function fetchCommandOutput(params)
   local finished = false
   local errorMessage = ''
 
+  local lastLine = ''
   local on_fetch_chunk = params.on_fetch_chunk
-  local on_finish = params.on_finish
+  local on_finish = function(...)
+    if #lastLine > 0 then
+      on_fetch_chunk(lastLine)
+      lastLine = ''
+    end
+    params.on_finish(...)
+  end
+  local fixChunkLineTruncation = not (params.fixChunkLineTruncation == false)
 
   if not args then
     on_finish(nil, nil)
@@ -27,7 +36,6 @@ local function fetchCommandOutput(params)
   local stdin = params.stdin
   local stdout = uv.new_pipe()
   local stderr = uv.new_pipe()
-  local lastLine = ''
   local hadStdout = false
 
   local handle
@@ -87,20 +95,25 @@ local function fetchCommandOutput(params)
         errorMessage = errorMessage .. '\nerror reading from command stdout!'
         return
       end
+      if fixChunkLineTruncation then
+        if data then
+          hadStdout = true
 
-      if data then
-        hadStdout = true
-        on_fetch_chunk(data)
-
-        --   -- large outputs can cause the last line to be truncated
-        --   -- save it and prepend to next chunk
-        --   local chunkData = lastLine .. data
-        --   chunkData, lastLine = utils.splitLastLine(chunkData)
-        --   if #chunkData > 0 then
-        --     on_fetch_chunk(chunkData)
-        --   end
-        -- else
-        --   on_fetch_chunk(lastLine)
+          -- large outputs can cause the last line to be truncated
+          -- save it and prepend to next chunk
+          local chunkData = lastLine .. data
+          chunkData, lastLine = utils.splitLastLine(chunkData)
+          if #chunkData > 0 then
+            on_fetch_chunk(chunkData)
+          end
+        else
+          on_fetch_chunk(lastLine)
+        end
+      else
+        if data then
+          hadStdout = true
+          on_fetch_chunk(data)
+        end
       end
     end)
   )

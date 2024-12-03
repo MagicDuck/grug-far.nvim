@@ -84,6 +84,7 @@ local function getResultsWithReplaceDiff(params)
     cmd_path = params.options.engines.ripgrep.path,
     args = replaceArgs,
     stdin = stdin,
+    fixChunkLineTruncation = false, -- NOTE: perf improvement
     on_fetch_chunk = function(data)
       replaced_matches_text = replaced_matches_text and replaced_matches_text .. data or data
     end,
