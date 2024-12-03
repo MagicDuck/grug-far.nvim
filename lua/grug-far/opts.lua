@@ -63,7 +63,7 @@ M.defaultOptions = {
         replacement_lua = 'ex: if vim.startsWith(match, "use") \\n then return "employ" .. match \\n else return match end',
         filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (specify one per line)',
         flags = 'ex: --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
-        paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua',
+        paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
       },
     },
     -- see https://ast-grep.github.io
@@ -86,7 +86,7 @@ M.defaultOptions = {
         replacement_lua = 'ex: return vars.A == "blah" and "foo(" .. vim.fn.join(vars.ARGS, ", ") .. ")" or match',
         filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
         flags = 'ex: --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
-        paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua',
+        paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
       },
     },
   },
