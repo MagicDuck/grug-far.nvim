@@ -85,18 +85,10 @@ local function getResultsWithReplaceDiff(params)
     args = replaceArgs,
     stdin = stdin,
     on_fetch_chunk = function(data)
-      -- if matches_for_replacement[1] == 'Color' then
-      --   print('data is', data, replaced_matches_text)
-      -- end
       replaced_matches_text = replaced_matches_text and replaced_matches_text .. data or data
     end,
     on_finish = function(status, errorMessage)
       if status == 'success' then
-        if not replaced_matches_text then
-          print('replaced_matches_text is nil', replaced_matches_text, inputString)
-          print(status, errorMessage)
-          replaced_matches_text = 'Stephan' .. match_separator
-        end
         ---@cast replaced_matches_text string
         local replaced_matches = vim.split(replaced_matches_text, match_separator)
         local i = 0
