@@ -490,4 +490,14 @@ M.escape_path_for_cmd = function(path)
   return escaped_path
 end
 
+--- Normalizes a path. Expands a tilde at the beginning, environment variables.
+---@param path string
+---@return string
+M.normalizePath = function(path)
+  if vim.startswith(path, '.') then
+    return path
+  end
+  return vim.fs.normalize(path)
+end
+
 return M
