@@ -61,21 +61,30 @@ local function getResultsWithReplaceDiff(params)
 
   local stdin = uv.new_pipe()
   local replaced_matches_text = nil
-  local match_separator = '\029'
+  local match_separator = '\0'
 
   local replaceInputs = vim.deepcopy(params.inputs)
   replaceInputs.paths = ''
   replaceInputs.filesFilter = ''
-  local replaceArgs = getArgs(
-    replaceInputs,
-    params.options,
-    { '--color=never', '--no-heading', '--no-line-number', '--no-column', '--no-filename' }
-  ) --[[ @as string[] ]]
+  local replaceArgs = getArgs(replaceInputs, params.options, {
+    '--color=never',
+    '--no-heading',
+    '--no-line-number',
+    '--no-column',
+    '--no-filename',
+    '--null-data',
+  }) --[[ @as string[] ]]
+
+  local inputString = ''
+  for _, piece in ipairs(matches_for_replacement) do
+    inputString = inputString .. piece .. match_separator
+  end
 
   local abort = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = replaceArgs,
     stdin = stdin,
+    fixChunkLineTruncation = false, -- NOTE: perf improvement
     on_fetch_chunk = function(data)
       replaced_matches_text = replaced_matches_text and replaced_matches_text .. data or data
     end,
@@ -102,13 +111,9 @@ local function getResultsWithReplaceDiff(params)
     end,
   })
 
-  uv.write(
-    stdin,
-    vim.fn.join(matches_for_replacement, match_separator) .. match_separator,
-    function()
-      uv.shutdown(stdin)
-    end
-  )
+  uv.write(stdin, inputString, function()
+    uv.shutdown(stdin)
+  end)
 
   return abort
 end
