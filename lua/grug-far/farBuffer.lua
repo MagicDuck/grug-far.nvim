@@ -119,7 +119,7 @@ local function getActions(buf, context)
     {
       text = 'Apply Next',
       keymap = keymaps.applyNext,
-      description = 'Apply change at current line, remove it from buffer and move cursor to next change',
+      description = 'Apply change at current line, remove it from buffer and move cursor to / open next change',
       action = function()
         applyChange({ buf = buf, context = context, increment = 1 })
       end,
@@ -127,7 +127,7 @@ local function getActions(buf, context)
     {
       text = 'Apply Prev',
       keymap = keymaps.applyPrev,
-      description = 'Apply change at current line, remove it from buffer and move cursor to prev change',
+      description = 'Apply change at current line, remove it from buffer and move cursor to / open prev change',
       action = function()
         applyChange({ buf = buf, context = context, increment = -1 })
       end,
