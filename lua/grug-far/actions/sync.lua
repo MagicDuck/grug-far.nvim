@@ -66,6 +66,7 @@ end
 ---@field startRow integer
 ---@field endRow integer
 ---@field on_success? fun()
+---@field shouldNotifyOnComplete? boolean defaults to true
 
 --- performs sync of lines in results area with corresponding original file locations
 ---@param params SyncParams
@@ -75,6 +76,7 @@ local function sync(params)
   local startRow = params.startRow
   local endRow = params.endRow
   local on_success = params.on_success
+  local shouldNotifyOnComplete = params.shouldNotifyOnComplete ~= false
   local state = context.state
   local abort = state.abort
 
@@ -196,7 +198,9 @@ local function sync(params)
         return
       end
 
-      vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
+      if shouldNotifyOnComplete then
+        vim.notify('grug-far: synced changes!', vim.log.levels.INFO)
+      end
       if on_success then
         on_success()
       end
