@@ -449,10 +449,12 @@ function M.getOpenTargetWin(context, buf)
     end
   end
 
-  -- no other window apart from grug-far one, create one
-  vim.cmd('leftabove vertical split')
+  -- no other window apart from grug-far one, create one, keeping focus in grug-far win
+  vim.cmd('rightbelow vertical split')
+  local new_win = vim.api.nvim_get_current_win()
+  vim.cmd('wincmd w')
 
-  return vim.api.nvim_get_current_win()
+  return new_win
 end
 
 --- NOTE: this function lifted directly from neo-tree.nvim where it was produced
