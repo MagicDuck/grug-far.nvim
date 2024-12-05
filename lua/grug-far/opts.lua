@@ -180,6 +180,8 @@ M.defaultOptions = {
     swapEngine = { n = '<localleader>e' },
     previewLocation = { n = '<localleader>i' },
     swapReplacementInterpreter = { n = '<localleader>x' },
+    applyNext = { n = '<localleader>j' },
+    applyPrev = { n = '<localleader>k' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -357,6 +359,8 @@ M.defaultOptions = {
 ---@field swapEngine KeymapDef
 ---@field previewLocation KeymapDef
 ---@field swapReplacementInterpreter KeymapDef
+---@field applyNext KeymapDef
+---@field applyPrev KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -379,6 +383,8 @@ M.defaultOptions = {
 ---@field swapEngine? KeymapDef
 ---@field previewLocation? KeymapDef
 ---@field swapReplacementInterpreter? KeymapDef
+---@field applyNext? KeymapDef
+---@field applyPrev? KeymapDef
 
 ---@class AutoSaveTable
 ---@field enabled boolean

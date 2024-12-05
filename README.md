@@ -144,7 +144,10 @@ It is a similar situation for the `vimscript` interpreter.
 ### Syncing results lines back to originating files
 
 It is possible to sync the text of the lines in the results area back to their originating files.
-This operation is either done on the current cursor line (`Sync Line`), or on all lines (`Sync All`). 
+There are 3 types of actions that can accomplish this operation:
+1. `Sync Line` - syncs current line
+2. `Sync All` - syncs all lines
+3. `Apply Next`/`Apply Prev` - syncs current line/diff and smartly deletes it from the result buffer
 
 A sync will happen only if a line has changed in some way compared to the source file, so if there's 
 either a replacement taking place or you have manually edited it.

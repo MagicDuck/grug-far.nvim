@@ -14,6 +14,7 @@ local historyAdd = require('grug-far.actions.historyAdd')
 local toggleShowCommand = require('grug-far.actions.toggleShowCommand')
 local swapEngine = require('grug-far.actions.swapEngine')
 local previewLocation = require('grug-far.actions.previewLocation')
+local applyChange = require('grug-far.actions.applyChange')
 local swapReplacementInterpreter = require('grug-far.actions.swapReplacementInterpreter')
 local utils = require('grug-far.utils')
 local resultsList = require('grug-far.render.resultsList')
@@ -113,6 +114,22 @@ local function getActions(buf, context)
       description = "Move cursor to previous result line relative to current line and trigger 'Open' action",
       action = function()
         openLocation({ buf = buf, context = context, increment = -1 })
+      end,
+    },
+    {
+      text = 'Apply Next',
+      keymap = keymaps.applyNext,
+      description = 'Apply change at current line, remove it from buffer and move cursor to next change',
+      action = function()
+        applyChange({ buf = buf, context = context, increment = 1 })
+      end,
+    },
+    {
+      text = 'Apply Prev',
+      keymap = keymaps.applyPrev,
+      description = 'Apply change at current line, remove it from buffer and move cursor to prev change',
+      action = function()
+        applyChange({ buf = buf, context = context, increment = -1 })
       end,
     },
     {

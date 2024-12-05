@@ -141,6 +141,8 @@ function M.getSetupOptions()
       swapEngine = { n = ',e' },
       swapReplacementInterpreter = { n = ',x' },
       previewLocation = { n = ',i' },
+      applyNext = { n = ',j' },
+      applyPrev = { n = ',k' },
     },
     history = {
       historyDir = vim.uv.cwd() .. '/temp_history_dir',

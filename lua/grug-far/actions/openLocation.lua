@@ -55,7 +55,7 @@ end
 --- if count > 0 given, it will use the result location with that number instead
 --- if increment is given, it will use the first location that is at least <increment> away from the current line
 ---@param params { buf: integer, context: GrugFarContext, increment: -1 | 1 | nil, count: number? }
-local function open(params)
+local function openLocation(params)
   local buf = params.buf
   local context = params.context
   local increment = params.increment
@@ -119,4 +119,4 @@ local function open(params)
   )
 end
 
-return open
+return openLocation
