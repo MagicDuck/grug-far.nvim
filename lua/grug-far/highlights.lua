@@ -6,7 +6,7 @@ local highlights = {
   GrugFarHelpWinHeader = { default = true, link = 'Title' },
   GrugFarHelpWinActionPrefix = { default = true, link = 'Title' },
   GrugFarHelpWinActionText = { default = true, link = 'ModeMsg' },
-  GrugFarHelpWinActionKey = { default = true, link = 'Conceal' },
+  GrugFarHelpWinActionKey = { default = true, link = 'Identifier' },
   GrugFarHelpWinActionDescription = { default = true, link = 'NormalFloat' },
 
   GrugFarInputLabel = { default = true, link = 'Identifier' },
