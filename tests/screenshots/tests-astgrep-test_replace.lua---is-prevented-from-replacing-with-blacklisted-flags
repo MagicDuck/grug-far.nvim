@@ -15,7 +15,7 @@
 14| STATUS_READY ⟪ astgrep ⟫
 15|  replace cannot work with flags: --json                                       
 16|                                                                                
-17|error: the argument '--json[=<style>]' cannot be used multiple times            
+17|error: the argument '--json[=<STYLE>]' cannot be used multiple times            
 18|                                                                                
 19|Usage: sg run [OPTIONS] --pattern <PATTERN> [PATHS]...                          
 20|                                                                                
