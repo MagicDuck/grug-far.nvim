@@ -82,7 +82,7 @@ local function setupKeymap(historyWin, historyBuf, buf, context)
   local keymaps = context.options.keymaps
   utils.setBufKeymap(
     historyBuf,
-    'Grug Far: pick history entry',
+    'Pick history entry',
     keymaps.pickHistoryEntry,
     function()
       pickHistoryEntry(historyWin, historyBuf, buf, context)

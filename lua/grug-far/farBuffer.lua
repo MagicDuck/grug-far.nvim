@@ -276,7 +276,7 @@ function M.createBuffer(win, context)
   setupGlobalOptOverrides(buf, context)
   context.actions = getActions(buf, context)
   for _, action in ipairs(context.actions) do
-    utils.setBufKeymap(buf, 'Grug Far: ' .. action.text, action.keymap, action.action)
+    utils.setBufKeymap(buf, action.text, action.keymap, action.action)
   end
   inputs.bindInputSaavyKeys(context, buf)
 
