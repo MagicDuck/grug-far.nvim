@@ -56,7 +56,7 @@ end
 -- note: unfortunatly has to be global so it can be passed to command complete= opt
 -- selene: allow(unused_variable)
 function GrugFarCompleteEngine()
-  return vim.fn.join(vim.fn.keys(opts.defaultOptions.engines), '\n')
+  return table.concat(vim.fn.keys(opts.defaultOptions.engines), '\n')
 end
 
 --- set up grug-far
@@ -470,7 +470,7 @@ end
 ---@return string?
 function M.get_current_visual_selection(strict)
   local selection_lines = M.get_current_visual_selection_lines(strict)
-  return selection_lines and vim.fn.join(selection_lines, '\n')
+  return selection_lines and table.concat(selection_lines, '\n')
 end
 
 ---@deprecated use open(same options) instead

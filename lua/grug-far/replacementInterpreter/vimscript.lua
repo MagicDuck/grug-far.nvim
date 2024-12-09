@@ -8,9 +8,9 @@ local VimscriptInterpreter = {
     local exec_success, exec_error = pcall(
       vim.api.nvim_exec2,
       'function! __grug_far_vimscript_eval('
-        .. vim.fn.join(arg_names, ', ')
+        .. table.concat(arg_names, ', ')
         .. ')\n'
-        .. vim.fn.join(
+        .. table.concat(
           vim
             .iter(arg_names)
             :map(function(arg_name)

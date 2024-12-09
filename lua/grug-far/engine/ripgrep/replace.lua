@@ -74,7 +74,7 @@ M.replace = function(params)
           nil,
           nil,
           blacklistedArgs
-              and 'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', ')
+              and 'replace cannot work with flags: ' .. table.concat(blacklistedArgs, ', ')
             or nil
         )
         return

@@ -121,7 +121,7 @@ function M.replace(params)
     getArgs(params.inputs, params.options, extraArgs, blacklistedReplaceFlags, true)
 
   if blacklistedArgs and #blacklistedArgs > 0 then
-    on_finish(nil, nil, 'replace cannot work with flags: ' .. vim.fn.join(blacklistedArgs, ', '))
+    on_finish(nil, nil, 'replace cannot work with flags: ' .. table.concat(blacklistedArgs, ', '))
     return
   end
 

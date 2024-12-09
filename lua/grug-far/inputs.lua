@@ -97,7 +97,7 @@ function M.getInputAtRow(context, buf, row)
         ---@cast end_boundary_row integer
         local end_row = end_boundary_row - 1
         local value_lines = vim.api.nvim_buf_get_lines(buf, start_row, end_row + 1, false)
-        local value = vim.fn.join(value_lines, '\n')
+        local value = table.concat(value_lines, '\n')
         if row >= start_row and row <= end_row then
           return {
             name = input_name,
