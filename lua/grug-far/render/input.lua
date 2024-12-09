@@ -143,7 +143,7 @@ local function renderInput(params, context)
     end
   end
 
-  return vim.fn.join(input_lines, '\n')
+  return table.concat(input_lines, '\n')
 end
 
 return renderInput

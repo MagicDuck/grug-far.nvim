@@ -29,7 +29,7 @@ local function formatInputValue(value)
   for i, line in ipairs(lines) do
     table.insert(result, i == 1 and line or continuation_prefix .. line)
   end
-  return vim.fn.join(result, '\n')
+  return table.concat(result, '\n')
 end
 
 --- adds entry to history
