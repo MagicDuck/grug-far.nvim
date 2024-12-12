@@ -5,7 +5,7 @@ local utils = require('grug-far.utils')
 ---@param resultsLocations ResultLocation[]
 local function openQuickfixList(context, resultsLocations)
   local search = context.state.inputs.search
-  vim.fn.setqflist(resultsLocations, 'r')
+  vim.fn.setqflist(resultsLocations, ' ')
   vim.fn.setqflist({}, 'a', {
     title = 'Grug FAR results'
       .. utils.strEllideAfter(search, context.options.maxSearchCharsInTitles, ' for: '),
