@@ -80,14 +80,9 @@ end
 ---@param context GrugFarContext
 local function setupKeymap(historyWin, historyBuf, buf, context)
   local keymaps = context.options.keymaps
-  utils.setBufKeymap(
-    historyBuf,
-    'Pick history entry',
-    keymaps.pickHistoryEntry,
-    function()
-      pickHistoryEntry(historyWin, historyBuf, buf, context)
-    end
-  )
+  utils.setBufKeymap(historyBuf, 'Pick history entry', keymaps.pickHistoryEntry, function()
+    pickHistoryEntry(historyWin, historyBuf, buf, context)
+  end)
 end
 
 ---@param historyBuf integer
