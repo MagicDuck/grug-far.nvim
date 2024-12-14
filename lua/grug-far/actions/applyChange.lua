@@ -1,7 +1,6 @@
 local sync = require('grug-far.actions.sync')
 local openLocation = require('grug-far.actions.openLocation')
 local resultsList = require('grug-far.render.resultsList')
--- TODO (sbadragan): update README.md
 
 --- gets adjacent location
 ---@param buf integer

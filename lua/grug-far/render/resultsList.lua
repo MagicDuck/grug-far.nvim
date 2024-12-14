@@ -2,6 +2,7 @@ local opts = require('grug-far.opts')
 local utils = require('grug-far.utils')
 local treesitter = require('grug-far.render.treesitter')
 local ResultHighlightType = require('grug-far.engine').ResultHighlightType
+local ResultLineGroup = require('grug-far.engine').ResultLineGroup
 
 local M = {}
 
@@ -114,8 +115,6 @@ function M.appendResultsChunk(buf, context, data)
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
   ---@type ResultLocation?
   local lastLocation = nil
-  ---@type ResultLocation?
-  local prevLastLocation = nil
 
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
@@ -134,17 +133,16 @@ function M.appendResultsChunk(buf, context, data)
       local markId = addLocationMark(buf, context, lastline + highlight.start_line, #line, options)
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl_type == ResultHighlightType.LineNumber then
-      prevLastLocation = lastLocation
       lastLocation = { filename = state.resultsLastFilename }
       lastLocation.sign = highlight.sign
       lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.text = line
 
       if
-        not (
-          prevLastLocation
-          and lastLocation.filename == prevLastLocation.filename
-          and lastLocation.lnum == prevLastLocation.lnum
+        highlight.line_group == ResultLineGroup.MatchLines
+        and not (
+          data.highlights[i - 1]
+          and data.highlights[i - 1].line_group_id == highlight.line_group_id
         )
       then
         state.resultMatchLineCount = state.resultMatchLineCount + 1

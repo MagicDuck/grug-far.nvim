@@ -20,6 +20,15 @@ M.ResultHighlightType = {
   DiffSeparator = 7,
 }
 
+---@enum ResultLineGroup
+M.ResultLineGroup = {
+  MatchLines = 1,
+  ReplacementLines = 2,
+  ContextLines = 3,
+  DiffSeparator = 4,
+  FilePath = 5,
+}
+
 M.DiffSeparatorChars = ' '
 
 ---@class ResultHighlight
@@ -30,6 +39,8 @@ M.DiffSeparatorChars = ' '
 ---@field end_line integer
 ---@field end_col integer
 ---@field sign? ResultHighlightSign
+---@field line_group ResultLineGroup
+---@field line_group_id integer
 
 ---@class ParsedResultsData
 ---@field lines string[]
