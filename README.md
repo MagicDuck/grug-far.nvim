@@ -22,10 +22,10 @@ Grug find! Grug replace! Grug happy!
 - Replace using lua interpreted replacement for each match
 
 #### Searching:
-<img width="1257" alt="image" src="https://github.com/user-attachments/assets/bb69a9b2-f89d-416c-9333-27d60d870959">
+<img width="1263" alt="image" src="https://github.com/user-attachments/assets/7851bc37-bd88-473d-a09a-1510088e074c" />
 
 #### Replacing:
-<img width="1257" alt="image" src="https://github.com/user-attachments/assets/cfe0aa1a-7906-409a-ae8b-bdcee3c8918a">
+<img width="1260" alt="image" src="https://github.com/user-attachments/assets/c8edd521-9321-4e83-a4ce-e3d98ac1b346" />
 
 <details>
 <summary>More screenshots:</summary>
@@ -40,16 +40,17 @@ Grug find! Grug replace! Grug happy!
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
 
 #### Ast-grep multiline search and replace:
-<img width="1258" alt="image" src="https://github.com/user-attachments/assets/12cbc3f7-eebc-496b-83ca-9497fd1d7127">
+<img width="1254" alt="image" src="https://github.com/user-attachments/assets/1f07c536-ef41-476f-9a15-7f0715c0579c" />
 
 #### Ast-grep debug-query
 <img width="1251" alt="image" src="https://github.com/user-attachments/assets/20fab223-56b6-42ff-825b-0df3c0e8d625">
 
 #### Ripgrep with lua interpreted replacement
-![image](https://github.com/user-attachments/assets/84c16e54-7e17-4c6d-befd-89b2679270bb)
+<img width="1259" alt="image" src="https://github.com/user-attachments/assets/e2b9ca48-e0cc-49d1-b048-5042f40b774b" />
 
 #### Astgrep with vimscript interpreted replacement
-![image](https://github.com/user-attachments/assets/19945216-c365-4a03-b8e6-6742075afad6)
+<img width="1257" alt="image" src="https://github.com/user-attachments/assets/34eebeda-4e29-4fed-a751-eac3f879425c" />
+
 
 
 </details>
