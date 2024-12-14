@@ -114,6 +114,8 @@ function M.appendResultsChunk(buf, context, data)
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
   ---@type ResultLocation?
   local lastLocation = nil
+  ---@type ResultLocation?
+  local prevLastLocation = nil
 
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
@@ -132,21 +134,32 @@ function M.appendResultsChunk(buf, context, data)
       local markId = addLocationMark(buf, context, lastline + highlight.start_line, #line, options)
       resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
     elseif hl_type == ResultHighlightType.LineNumber then
-      -- omit ending ':'
-      state.resultMatchLineCount = state.resultMatchLineCount + 1
-      lastLocation = { filename = state.resultsLastFilename, count = state.resultMatchLineCount }
+      prevLastLocation = lastLocation
+      lastLocation = { filename = state.resultsLastFilename }
+      lastLocation.sign = highlight.sign
+      lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
+      lastLocation.text = line
+
+      if
+        not (
+          prevLastLocation
+          and lastLocation.filename == prevLastLocation.filename
+          and lastLocation.lnum == prevLastLocation.lnum
+        )
+      then
+        state.resultMatchLineCount = state.resultMatchLineCount + 1
+        lastLocation.count = state.resultMatchLineCount
+      end
+
       local markId = addLocationMark(
         buf,
         context,
         lastline + highlight.start_line,
         #line,
-        { sign = highlight.sign, matchLineCount = state.resultMatchLineCount }
+        { sign = highlight.sign, matchLineCount = lastLocation.count }
       )
       resultLocationByExtmarkId[markId] = lastLocation
 
-      lastLocation.sign = highlight.sign
-      lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
-      lastLocation.text = line
       if context.options.resultsHighlight and lastLocation.text then
         addHighlightResult(
           context,
