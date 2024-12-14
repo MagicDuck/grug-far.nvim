@@ -37,6 +37,11 @@ end
 ---@param notify? boolean
 function M.addHistoryEntry(context, notify)
   local inputs = context.state.inputs
+  if
+    #inputs.search + #inputs.replacement + #inputs.flags + #inputs.filesFilter + #inputs.paths == 0
+  then
+    return -- nothing to save
+  end
   local historyFilename = M.getHistoryFilename(context)
   local callback = vim.schedule_wrap(function(err)
     if notify then
