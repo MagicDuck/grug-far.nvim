@@ -1,6 +1,7 @@
 local utils = require('grug-far.utils')
 local engine = require('grug-far.engine')
 local ResultHighlightType = engine.ResultHighlightType
+local ResultLineGroup = engine.ResultLineGroup
 
 local M = {}
 
@@ -23,6 +24,12 @@ local HighlightByType = {
   [ResultHighlightType.MatchRemoved] = 'GrugFarResultsMatchRemoved',
   [ResultHighlightType.DiffSeparator] = 'Normal',
 }
+
+local last_line_group_id = 0
+local function get_next_line_group_id()
+  last_line_group_id = last_line_group_id + 1
+  return last_line_group_id
+end
 
 ---@class AstgrepMatchPos
 ---@field line integer
@@ -54,6 +61,7 @@ local HighlightByType = {
 ---@param range AstgrepMatchRange
 ---@param lines string[] lines table to add to
 ---@param highlights ResultHighlight[] highlights table to add to
+---@param line_group ResultLineGroup
 ---@param lineNumberSign? ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
 local function addResultLines(
@@ -61,9 +69,11 @@ local function addResultLines(
   range,
   lines,
   highlights,
+  line_group,
   lineNumberSign,
   matchHighlightType
 )
+  local line_group_id = get_next_line_group_id()
   local numlines = #lines
   for j, resultLine in ipairs(resultLines) do
     local current_line = numlines + j - 1
@@ -73,6 +83,8 @@ local function addResultLines(
     local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))
 
     table.insert(highlights, {
+      line_group = line_group,
+      line_group_id = line_group_id,
       hl_type = ResultHighlightType.LineNumber,
       hl = HighlightByType[ResultHighlightType.LineNumber],
       start_line = current_line,
@@ -83,6 +95,8 @@ local function addResultLines(
     })
     if col_no then
       table.insert(highlights, {
+        line_group = line_group,
+        line_group_id = line_group_id,
         hl_type = ResultHighlightType.ColumnNumber,
         hl = HighlightByType[ResultHighlightType.ColumnNumber],
         start_line = current_line,
@@ -95,6 +109,8 @@ local function addResultLines(
     resultLine = prefix .. resultLine
     if matchHighlightType then
       table.insert(highlights, {
+        line_group = line_group,
+        line_group_id = line_group_id,
         hl_type = matchHighlightType,
         hl = HighlightByType[matchHighlightType],
         start_line = current_line,
@@ -147,6 +163,8 @@ function M.parseResults(matches)
     if isFileBoundary then
       stats.files = stats.files + 1
       table.insert(highlights, {
+        line_group = ResultLineGroup.FilePath,
+        line_group_id = get_next_line_group_id(),
         hl_type = ResultHighlightType.FilePath,
         hl = HighlightByType[ResultHighlightType.FilePath],
         start_line = #lines,
@@ -170,7 +188,14 @@ function M.parseResults(matches)
       local leadingRange = vim.deepcopy(match.range)
       leadingRange.start.column = nil
       leadingRange.start.line = match.range.start.line - #leadingLines
-      addResultLines(leadingLines, leadingRange, lines, highlights, change_sign)
+      addResultLines(
+        leadingLines,
+        leadingRange,
+        lines,
+        highlights,
+        ResultLineGroup.ContextLines,
+        change_sign
+      )
     end
 
     -- add match lines
@@ -178,7 +203,15 @@ function M.parseResults(matches)
     local matchHighlightType = match.replacement and ResultHighlightType.MatchRemoved
       or ResultHighlightType.Match
     local matchLines = vim.split(matchLinesStr, '\n')
-    addResultLines(matchLines, match.range, lines, highlights, lineNumberSign, matchHighlightType)
+    addResultLines(
+      matchLines,
+      match.range,
+      lines,
+      highlights,
+      ResultLineGroup.MatchLines,
+      lineNumberSign,
+      matchHighlightType
+    )
 
     -- add replacements lines
     if match.replacement then
@@ -196,6 +229,7 @@ function M.parseResults(matches)
         replaceRange,
         lines,
         highlights,
+        ResultLineGroup.ReplacementLines,
         added_sign,
         ResultHighlightType.MatchAdded
       )
@@ -207,7 +241,14 @@ function M.parseResults(matches)
       local trailingRange = vim.deepcopy(match.range)
       trailingRange.start.column = nil
       trailingRange.start.line = match.range['end'].line + 1
-      addResultLines(trailingLines, trailingRange, lines, highlights, change_sign)
+      addResultLines(
+        trailingLines,
+        trailingRange,
+        lines,
+        highlights,
+        ResultLineGroup.ContextLines,
+        change_sign
+      )
     end
 
     -- add separator
@@ -217,6 +258,8 @@ function M.parseResults(matches)
       and match.file == matches[i + 1].file
     then
       table.insert(highlights, {
+        line_group = ResultLineGroup.DiffSeparator,
+        line_group_id = get_next_line_group_id(),
         hl_type = ResultHighlightType.DiffSeparator,
         hl = HighlightByType[ResultHighlightType.DiffSeparator],
         start_line = #lines,

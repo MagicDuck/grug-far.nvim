@@ -1,6 +1,7 @@
 local utils = require('grug-far.utils')
 local engine = require('grug-far.engine')
 local ResultHighlightType = engine.ResultHighlightType
+local ResultLineGroup = engine.ResultLineGroup
 
 local M = {}
 
@@ -23,6 +24,12 @@ local HighlightByType = {
   [ResultHighlightType.MatchRemoved] = 'GrugFarResultsMatchRemoved',
   [ResultHighlightType.DiffSeparator] = 'Normal',
 }
+
+local last_line_group_id = 0
+local function get_next_line_group_id()
+  last_line_group_id = last_line_group_id + 1
+  return last_line_group_id
+end
 
 ---@class RipgrepJsonSubmatch
 ---@field match {text: string}
@@ -64,6 +71,7 @@ local HighlightByType = {
 ---@param ranges { start: { column: integer?, line: integer}, end: {column: integer?, line: integer}}[]
 ---@param lines string[] lines table to add to
 ---@param highlights ResultHighlight[] highlights table to add to
+---@param line_group ResultLineGroup
 ---@param lineNumberSign? ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
 local function addResultLines(
@@ -71,9 +79,11 @@ local function addResultLines(
   ranges,
   lines,
   highlights,
+  line_group,
   lineNumberSign,
   matchHighlightType
 )
+  local line_group_id = get_next_line_group_id()
   local numlines = #lines
   local first_range = ranges[1]
   for j, resultLine in ipairs(resultLines) do
@@ -84,6 +94,8 @@ local function addResultLines(
     local prefix = line_no .. (col_no and ':' .. col_no .. ':' or '-')
 
     table.insert(highlights, {
+      line_group = line_group,
+      line_group_id = line_group_id,
       hl_type = ResultHighlightType.LineNumber,
       hl = HighlightByType[ResultHighlightType.LineNumber],
       start_line = current_line,
@@ -94,6 +106,8 @@ local function addResultLines(
     })
     if col_no then
       table.insert(highlights, {
+        line_group = line_group,
+        line_group_id = line_group_id,
         hl_type = ResultHighlightType.ColumnNumber,
         hl = HighlightByType[ResultHighlightType.ColumnNumber],
         start_line = current_line,
@@ -108,6 +122,8 @@ local function addResultLines(
       for _, range in ipairs(ranges) do
         if range.start.line <= current_line_number and range['end'].line >= current_line_number then
           table.insert(highlights, {
+            line_group = line_group,
+            line_group_id = line_group_id,
             hl_type = matchHighlightType,
             hl = HighlightByType[matchHighlightType],
             start_line = current_line,
@@ -150,6 +166,8 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
       and last_line_number < data.line_number - 1
     then
       table.insert(highlights, {
+        line_group = ResultLineGroup.DiffSeparator,
+        line_group_id = get_next_line_group_id(),
         hl_type = ResultHighlightType.DiffSeparator,
         hl = HighlightByType[ResultHighlightType.DiffSeparator],
         start_line = #lines,
@@ -165,6 +183,8 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
     if match.type == 'begin' then
       stats.files = stats.files + 1
       table.insert(highlights, {
+        line_group = ResultLineGroup.FilePath,
+        line_group_id = get_next_line_group_id(),
         hl_type = ResultHighlightType.FilePath,
         hl = HighlightByType[ResultHighlightType.FilePath],
         start_line = #lines,
@@ -208,7 +228,15 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
           end)
           :totable()
 
-        addResultLines(match_lines, ranges, lines, highlights, lineNumberSign, matchHighlightType)
+        addResultLines(
+          match_lines,
+          ranges,
+          lines,
+          highlights,
+          ResultLineGroup.MatchLines,
+          lineNumberSign,
+          matchHighlightType
+        )
       end
 
       -- add replacement lines
@@ -255,6 +283,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
           ranges,
           lines,
           highlights,
+          ResultLineGroup.ReplacementLines,
           lineNumberSign,
           matchHighlightType
         )
@@ -275,7 +304,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
             column = nil,
           },
         },
-      }, lines, highlights, change_sign)
+      }, lines, highlights, ResultLineGroup.ContextLines, change_sign)
     end
   end
 
