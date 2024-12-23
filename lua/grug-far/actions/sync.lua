@@ -96,7 +96,7 @@ local function sync(params)
   end
 
   if not context.engine.isSyncSupported() then
-    state.actionMessage = 'sync operation not suppored by current engine!'
+    state.actionMessage = 'sync operation not supported by current engine!'
     renderResultsHeader(buf, context)
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
     return

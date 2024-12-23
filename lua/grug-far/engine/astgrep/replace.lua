@@ -165,7 +165,7 @@ function M.replace(params)
   local filesFilter = params.inputs.filesFilter
   local version = getAstgrepVersion(params.options)
   if filesFilter and #filesFilter > 0 and version and vim.version.lt(version, '0.28.0') then
-    -- note: astgrep added --glob suport in v0.28.0
+    -- note: astgrep added --glob support in v0.28.0
     -- this if-branch uses rg to get the files and can be removed in the future once everybody uses new astgrep
     on_abort = fetchFilteredFilesList({
       inputs = params.inputs,
@@ -206,7 +206,7 @@ function M.replace(params)
                 cmd_path = params.options.engines.astgrep.path,
                 args = chunk_args,
                 on_fetch_chunk = function()
-                  -- astgrep does not report progess while replacing
+                  -- astgrep does not report progress while replacing
                 end,
                 on_finish = on_finish_chunk,
               })
@@ -224,7 +224,7 @@ function M.replace(params)
         cmd_path = params.options.engines.astgrep.path,
         args = args,
         on_fetch_chunk = function()
-          -- astgrep does not report progess while replacing
+          -- astgrep does not report progress while replacing
         end,
         on_finish = on_finish,
       })

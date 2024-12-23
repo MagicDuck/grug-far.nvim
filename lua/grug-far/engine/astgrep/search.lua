@@ -175,7 +175,7 @@ function M.search(params)
   local filesFilter = params.inputs.filesFilter
   local version = getAstgrepVersion(params.options)
   if filesFilter and #filesFilter > 0 and version and vim.version.gt(version, '0.28.0') then
-    -- note: astgrep added --glob suport in v0.28.0
+    -- note: astgrep added --glob support in v0.28.0
     -- this if-branch uses rg to get the files and can be removed in the future once everybody uses new astgrep
 
     local on_abort = nil

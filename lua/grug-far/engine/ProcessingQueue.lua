@@ -4,7 +4,7 @@ M.__index = M
 
 --- a processing queue processes each item pushed to it in sequence
 --- until there are none. If more items are pushed it automatically starts
---- procesing again
+--- processing again
 ---@param processCallback fun(item: any, on_done: fun())
 function M.new(processCallback)
   local self = setmetatable({}, M)
