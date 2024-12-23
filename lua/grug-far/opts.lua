@@ -102,9 +102,9 @@ M.defaultOptions = {
   -- Supported:
   -- * 'default': treat replacement as a string to pass to the current engine
   -- * 'lua': treat replacement as lua function body where search match is identified by `match` and
-  --          meta variables (with astgrep for example) are avaible in `vars` table (ex: `vars.A` captures `$A`)
+  --          meta variables (with astgrep for example) are available in `vars` table (ex: `vars.A` captures `$A`)
   -- * 'vimscript': treat replacement as vimscript function body where search match is identified by `match` and
-  --          meta variables (with astgrep for example) are avaible in `vars` table (ex: `vars.A` captures `$A`)
+  --          meta variables (with astgrep for example) are available in `vars` table (ex: `vars.A` captures `$A`)
   enabledReplacementInterpreters = { 'default', 'lua', 'vimscript' },
 
   -- which replacement interprer to use
@@ -133,7 +133,7 @@ M.defaultOptions = {
 
   -- static title to use for grug-far buffer, as opposed to the dynamically generated title.
   -- Note that nvim does not allow multiple buffers with the same name, so this option is meant more
-  -- as something to be speficied for a particular instance as opposed to something set in the setup function
+  -- as something to be specified for a particular instance as opposed to something set in the setup function
   -- nil or '' disables it
   staticTitle = nil,
 
@@ -288,7 +288,7 @@ M.defaultOptions = {
 
   -- unique instance name. This is used as a handle to refer to a particular instance of grug-far when
   -- toggling visibility, etc.
-  -- As this needs to be unique per instance, this option is meant to be speficied for a particular instance
+  -- As this needs to be unique per instance, this option is meant to be specified for a particular instance
   -- as opposed to something set in the setup function
   instanceName = nil,
 

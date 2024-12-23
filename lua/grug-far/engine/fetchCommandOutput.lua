@@ -5,7 +5,7 @@ local uv = vim.uv
 ---@field cmd_path string
 ---@field args string[]?
 ---@field on_fetch_chunk fun(data: string)
----@field on_finish fun(status: GrugFarStatus, errorMesage: string?)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
 ---@field stdin? uv_pipe_t
 ---@field fixChunkLineTruncation? boolean
 

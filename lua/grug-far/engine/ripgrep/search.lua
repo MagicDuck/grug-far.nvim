@@ -39,7 +39,7 @@ end
 ---@field json_data RipgrepJson[]
 ---@field options GrugFarOptions
 ---@field inputs GrugFarInputs
----@field on_finish fun(status: GrugFarStatus, errorMesage: string?, results: ParsedResultsData?)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, results: ParsedResultsData?)
 
 --- adds results of doing a replace to results of doing a search
 ---@param params ResultsWithReplaceDiffParams
@@ -123,7 +123,7 @@ end
 ---@field options GrugFarOptions
 ---@field inputs GrugFarInputs
 ---@field on_fetch_chunk fun(data: ParsedResultsData)
----@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 
 --- runs search
 ---@param params RipgrepEngineSearchParams

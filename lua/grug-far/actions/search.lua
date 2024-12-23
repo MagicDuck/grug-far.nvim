@@ -36,7 +36,7 @@ local function search(params)
   state.stats = { matches = 0, files = 0 }
   state.actionMessage = nil
 
-  -- note: we clear first time we fetch more info instead of intially
+  -- note: we clear first time we fetch more info instead of initially
   -- in order to reduce flicker
   local isCleared = false
   local effectiveArgs

@@ -31,7 +31,7 @@ M.sync = function(params)
   end
 
   if isMultilineSearchReplace(args) then
-    on_finish(nil, nil, 'sync disabled for multline search/replace!')
+    on_finish(nil, nil, 'sync disabled for multiline search/replace!')
     return
   end
 

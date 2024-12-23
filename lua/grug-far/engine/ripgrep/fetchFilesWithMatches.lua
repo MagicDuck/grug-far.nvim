@@ -6,7 +6,7 @@ local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field report_progress fun(count: integer)
----@field on_finish fun(status: GrugFarStatus, errorMesage: string?, filesWithMatches: string[], blacklistedArgs: string[]?)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, filesWithMatches: string[], blacklistedArgs: string[]?)
 
 --- fetch list of files that match search
 ---@param params FetchWithMatchesParams

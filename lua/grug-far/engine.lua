@@ -52,7 +52,7 @@ M.DiffSeparatorChars = ' '
 ---@field options GrugFarOptions
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field on_fetch_chunk fun(data: ParsedResultsData)
----@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 
 ---@class EngineReplaceParams
 ---@field inputs GrugFarInputs
@@ -74,7 +74,7 @@ M.DiffSeparatorChars = ' '
 ---@field options GrugFarOptions
 ---@field changedFiles ChangedFile[]
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
----@field on_finish fun(status: GrugFarStatus, errorMesage: string?, customActionMessage: string?)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType

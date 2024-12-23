@@ -413,7 +413,7 @@ function M.appendSearchCommand(buf, context, rgArgs)
   )
 end
 
---- force redraws buffer. This is order to apear more responsive to the user
+--- force redraws buffer. This is order to appear more responsive to the user
 --- and quickly give user feedback as results come in / data is updated
 --- note that only the "top" range of lines is redrawn, including a bunch of lines
 --- after headerRow so that we immediately get error messages to show up

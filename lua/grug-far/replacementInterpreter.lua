@@ -31,7 +31,7 @@ function M.setReplacementInterpreter(buf, context, type)
     return
   end
 
-  -- clear results as it can be slow to clear sytnax highlight otherwise
+  -- clear results as it can be slow to clear syntax highlight otherwise
   resultsList.clear(buf, context)
 
   -- clear old syntax highlighting
