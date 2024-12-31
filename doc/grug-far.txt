@@ -87,7 +87,7 @@ require('grug-far').toggle_instance({config})       *grug-far.toggle_instance()*
 require('grug-far').toggle_flags({flags})                *grug-far.toggle_flags()*
         Toggles given list of flags in the current grug-far buffer. The 
 	flags get added to/removed from the Flags input line.
-	ex: require('grug-far).toggle_flags({'--fixed-strings'}). 
+	e.g. require('grug-far).toggle_flags({'--fixed-strings'}). 
 
         Parameters: ~
             {flags}(table) List of flag strings to toggle.
