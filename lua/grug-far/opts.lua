@@ -58,12 +58,12 @@ M.defaultOptions = {
         -- whether to show placeholders
         enabled = true,
 
-        search = 'ex: foo   foo([a-z0-9]*)   fun\\(',
-        replacement = 'ex: bar   ${1}_foo   $$MY_ENV_VAR ',
-        replacement_lua = 'ex: if vim.startsWith(match, "use") \\n then return "employ" .. match \\n else return match end',
-        filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (specify one per line)',
-        flags = 'ex: --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
-        paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
+        search = 'e.g. foo   foo([a-z0-9]*)   fun\\(',
+        replacement = 'e.g. bar   ${1}_foo   $$MY_ENV_VAR ',
+        replacement_lua = 'e.g. if vim.startsWith(match, "use") \\n then return "employ" .. match \\n else return match end',
+        filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line)',
+        flags = 'e.g. --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
+        paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
       },
     },
     -- see https://ast-grep.github.io
@@ -81,12 +81,12 @@ M.defaultOptions = {
         -- whether to show placeholders
         enabled = true,
 
-        search = 'ex: $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
-        replacement = 'ex: $A?.()   blah($$$ARGS)',
-        replacement_lua = 'ex: return vars.A == "blah" and "foo(" .. table.concat(vars.ARGS, ", ") .. ")" or match',
-        filesFilter = 'ex: *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
-        flags = 'ex: --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
-        paths = 'ex: /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
+        search = 'e.g. $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
+        replacement = 'e.g. $A?.()   blah($$$ARGS)',
+        replacement_lua = 'e.g. return vars.A == "blah" and "foo(" .. table.concat(vars.ARGS, ", ") .. ")" or match',
+        filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
+        flags = 'e.g. --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
+        paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
       },
     },
   },
@@ -102,9 +102,9 @@ M.defaultOptions = {
   -- Supported:
   -- * 'default': treat replacement as a string to pass to the current engine
   -- * 'lua': treat replacement as lua function body where search match is identified by `match` and
-  --          meta variables (with astgrep for example) are available in `vars` table (ex: `vars.A` captures `$A`)
+  --          meta variables (with astgrep for example) are available in `vars` table (e.g. `vars.A` captures `$A`)
   -- * 'vimscript': treat replacement as vimscript function body where search match is identified by `match` and
-  --          meta variables (with astgrep for example) are available in `vars` table (ex: `vars.A` captures `$A`)
+  --          meta variables (with astgrep for example) are available in `vars` table (e.g. `vars.A` captures `$A`)
   enabledReplacementInterpreters = { 'default', 'lua', 'vimscript' },
 
   -- which replacement interprer to use
@@ -157,7 +157,7 @@ M.defaultOptions = {
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' or false to unset. Mappings with no normal mode value will be removed from the help header
   -- you can specify either a string which is then used as the mapping for both normal and insert mode
-  -- or you can specify a table of the form { [mode] = <lhs> } (ex: { i = '<C-enter>', n = '<localleader>gr'})
+  -- or you can specify a table of the form { [mode] = <lhs> } (e.g. { i = '<C-enter>', n = '<localleader>gr'})
   -- it is recommended to use <localleader> though as that is more vim-ish
   -- see https://learnvimscriptthehardway.stevelosh.com/chapters/11.html#local-leader
   keymaps = {

@@ -138,7 +138,7 @@ in the `Replace:` input.
 
 You can use `match` to refer to each match and need to `return` the value you want to be the replacement.
 In the case of the `astgrep` engine, you will also have access to the meta variables by accessing them through the
-`vars` table. ex: `$A` is referred to by `vars.A`, `$$$ARGS` is referred to by `vars.ARGS`.
+`vars` table. e.g. `$A` is referred to by `vars.A`, `$$$ARGS` is referred to by `vars.ARGS`.
 
 It is a similar situation for the `vimscript` interpreter. 
 
@@ -204,14 +204,14 @@ open the search history as a buffer. From there you can pick an entry that will 
 Note that you can edit the history buffer and save just like any other buffer if you need to do some cleanup.
 The format of a history entry is:
 ```
-<optional comment, ex: My special search>
+<optional comment, e.g. My special search>
 Engine: <astgrep|ripgrep>(|lua)?
 Search: <text>
 Replace: <text>
 Files Filter: <text>
 Flags: <text>
 ```
-where `<text>` can span multiple line with the aid of a "continuation prefix" (`| `). ex:
+where `<text>` can span multiple line with the aid of a "continuation prefix" (`| `). e.g.
 ```
 Replace: something
 | additional replace text
