@@ -415,7 +415,7 @@ end
 --- gets companion window in which open files
 ---@param context GrugFarContext
 ---@param buf integer
----@return integer window
+---@return integer window, boolean isNew
 function M.getOpenTargetWin(context, buf)
   local grugfar_win = vim.fn.bufwinid(buf)
   local tabpage = vim.api.nvim_win_get_tabpage(grugfar_win)
@@ -437,14 +437,14 @@ function M.getOpenTargetWin(context, buf)
     -- use prevWin if it's in current tab page
     for _, win in ipairs(target_windows) do
       if win == context.prevWin then
-        return context.prevWin
+        return context.prevWin, false
       end
     end
 
     -- use another window in the tab page
     for _, win in ipairs(target_windows) do
       if win ~= grugfar_win then
-        return win
+        return win, false
       end
     end
   end
@@ -457,7 +457,7 @@ function M.getOpenTargetWin(context, buf)
   end
   vim.cmd('wincmd w')
 
-  return new_win
+  return new_win, true
 end
 
 --- NOTE: this function lifted directly from neo-tree.nvim where it was produced
