@@ -1,17 +1,24 @@
 local utils = require('grug-far.utils')
 
 --- opens quickfix list
+---@param buf integer
 ---@param context GrugFarContext
 ---@param resultsLocations ResultLocation[]
-local function openQuickfixList(context, resultsLocations)
+local function openQuickfixList(buf, context, resultsLocations)
   local search = context.state.inputs.search
   vim.fn.setqflist(resultsLocations, ' ')
   vim.fn.setqflist({}, 'a', {
     title = 'Grug FAR results'
       .. utils.strEllideAfter(search, context.options.maxSearchCharsInTitles, ' for: '),
   })
+
+  -- open/goto target win so that quickfix list will open items into the terget win
+  local targetWin = utils.getOpenTargetWin(context, buf)
+
   -- open list below taking whole horizontal space
   vim.cmd('botright copen | stopinsert')
+  vim.api.nvim_set_current_win(targetWin)
+  vim.cmd('cfirst')
 end
 
 --- gets the result locations for the quickfix list, ignoring ones for deleted
@@ -62,7 +69,7 @@ local function qflist(params)
     return
   end
 
-  openQuickfixList(context, resultsLocations)
+  openQuickfixList(buf, context, resultsLocations)
 end
 
 return qflist

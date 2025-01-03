@@ -153,6 +153,7 @@ local contextCount = 0
 ---@field engine GrugFarEngine
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field fileIconsProvider? FileIconsProvider
+---@field winDefaultOpts table<string, any>
 
 --- generate instance specific context
 ---@param options GrugFarOptions
@@ -190,7 +191,19 @@ local function createContext(options)
       searchAgain = false,
       searchDisabled = false,
     },
+    winDefaultOpts = {},
   }
+end
+
+--- sets window option, storing previous "default" value in winDefaultOpts
+--- those are used when we split off new windows and don't want to inherit those opts
+---@param context GrugFarContext
+---@param win integer
+---@param name string
+---@param value any
+local function setWinOption(context, win, name, value)
+  context.winDefaultOpts[name] = vim.api.nvim_get_option_value(name, { win = win })
+  vim.api.nvim_set_option_value(name, value, { win = win })
 end
 
 ---@param context GrugFarContext
@@ -201,11 +214,11 @@ local function createWindow(context)
   local win = vim.api.nvim_get_current_win()
 
   if context.options.disableBufferLineNumbers then
-    vim.api.nvim_set_option_value('number', false, { win = win })
-    vim.api.nvim_set_option_value('relativenumber', false, { win = win })
+    setWinOption(context, win, 'number', false)
+    setWinOption(context, win, 'relativenumber', false)
   end
 
-  vim.api.nvim_set_option_value('wrap', context.options.wrap, { win = win })
+  setWinOption(context, win, 'wrap', context.options.wrap)
 
   fold.setup(context, win)
 

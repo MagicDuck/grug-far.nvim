@@ -450,8 +450,11 @@ function M.getOpenTargetWin(context, buf)
   end
 
   -- no other window apart from grug-far one, create one, keeping focus in grug-far win
-  vim.cmd('rightbelow vertical split')
+  vim.cmd('topleft vertical split')
   local new_win = vim.api.nvim_get_current_win()
+  for opt_name, opt_value in pairs(context.winDefaultOpts) do
+    vim.api.nvim_set_option_value(opt_name, opt_value, { win = new_win })
+  end
   vim.cmd('wincmd w')
 
   return new_win
