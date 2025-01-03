@@ -13,11 +13,15 @@ local function openQuickfixList(buf, context, resultsLocations)
   })
 
   -- open/goto target win so that quickfix list will open items into the terget win
-  local targetWin = utils.getOpenTargetWin(context, buf)
+  local targetWin, isNewWin = utils.getOpenTargetWin(context, buf)
   vim.api.nvim_set_current_win(targetWin)
 
   -- open list below taking whole horizontal space
   vim.cmd('botright copen | stopinsert')
+  if isNewWin then
+    vim.api.nvim_set_current_win(targetWin)
+    vim.cmd('cfirst')
+  end
 end
 
 --- gets the result locations for the quickfix list, ignoring ones for deleted
