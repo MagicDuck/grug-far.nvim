@@ -321,16 +321,12 @@ function M.getActionMapping(keymap)
   ---@diagnostic disable-next-line: undefined-field
   if vim.g.maplocalleader then
     ---@diagnostic disable-next-line: undefined-field
-    lhs = lhs:gsub('<localleader>', vim.g.maplocalleader)
+    lhs = lhs:gsub('<localleader>', vim.g.maplocalleader == ' ' and '<SPC>' or vim.g.maplocalleader)
   end
   ---@diagnostic disable-next-line: undefined-field
   if vim.g.mapleader then
     ---@diagnostic disable-next-line: undefined-field
     lhs = lhs:gsub('<leader>', vim.g.mapleader == ' ' and '<SPC>' or vim.g.mapleader)
-  end
-
-  if lhs:sub(1, 1) ~= '<' then
-    lhs = '<' .. lhs .. '>'
   end
 
   return lhs
