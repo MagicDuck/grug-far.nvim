@@ -1,15 +1,15 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|   Actions:                                                                    
-02|     - Actions / Help <g?>                 Open up help window.                 
-03|    - Replace <,r>                        Perform replace. Note that compared t
-04|  o 'Sync All', replace can also handle multiline replacements.                 
-05|    - Sync All <,s>                       Sync all result lines text (potential
-06|  ly manually modified) back to their originating files. You can refine the effe
-07| ct by manually deleting lines to exclude them.                                
-08|     - Sync Line <,l>                      Sync current result line text (potent
-09| 󰮚ially manually modified) back to its originating file.                        
-10|     - History Open <,t>                   Open history window. The history wind
-11| ow allows you to select and edit historical searches/replacements.            
+02|     - Actions / Help g?                 Open up help window.                   
+03|    - Replace ,r                        Perform replace. Note that compared to 
+04|  'Sync All', replace can also handle multiline replacements.                   
+05|    - Sync All ,s                       Sync all result lines text (potentially
+06|   manually modified) back to their originating files. You can refine the effect
+07|  by manually deleting lines to exclude them.                                  
+08|     - Sync Line ,l                      Sync current result line text (potentia
+09| 󰮚lly manually modified) back to its originating file.                          
+10|     - History Open ,t                   Open history window. The history window
+11|  allows you to select and edit historical searches/replacements.              
 12|                                                                                
 13|                                                                                
 14| STATUS_READY ⟪ ripgrep ⟫
@@ -26,15 +26,15 @@
 
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|00112222222211111111111111111111111111111111111111111111111111111111111111111111
-02|33112224444444444444415555111111111111111111111111111111111111111111111111111111
-03|66112224444444155551111111111111111111111111111111111111111111111111111111111111
+02|33112224444444444444415511111111111111111111111111111111111111111111111111111111
+03|66112224444444155111111111111111111111111111111111111111111111111111111111111111
 04|33111111111111111111111111111111111111111111111111111111111111111111111111111111
-05|66112224444444415555111111111111111111111111111111111111111111111111111111111111
+05|66112224444444415511111111111111111111111111111111111111111111111111111111111111
 06|33111111111111111111111111111111111111111111111111111111111111111111111111111111
 07|66111111111111111111111111111111111111111111111111111111111111111111111111111111
-08|33112224444444441555511111111111111111111111111111111111111111111111111111111111
+08|33112224444444441551111111111111111111111111111111111111111111111111111111111111
 09|66111111111111111111111111111111111111111111111111111111111111111111111111111111
-10|33112224444444444441555511111111111111111111111111111111111111111111111111111111
+10|33112224444444444441551111111111111111111111111111111111111111111111111111111111
 11|66111111111111111111111111111111111111111111111111111111111111111111111111111111
 12|33333333333333333333333333333333333333333333333333333333333333333333333333333333
 13|33333333333333333333333333333333333333333333333333333333333333333333333333333333
