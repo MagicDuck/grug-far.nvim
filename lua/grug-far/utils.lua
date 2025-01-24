@@ -419,15 +419,42 @@ function M.getOpenTargetWin(context, buf)
   local target_windows = vim
     .iter(tabpage_windows)
     :filter(function(w)
+      if w == grugfar_win then
+        return false
+      end
+
       local b = vim.api.nvim_win_get_buf(w)
       if not b then
         return false
       end
 
-      local buftype = vim.api.nvim_get_option_value('buftype', { buf = buf })
-      return buftype and buftype ~= ''
+      local buftype = vim.api.nvim_get_option_value('buftype', { buf = b })
+      if not buftype or buftype == '' then
+        return false
+      end
+
+      local exclude = context.options.openTargetWindow.exclude
+      if exclude then
+        local filetype = vim.api.nvim_get_option_value('filetype', { buf = b })
+        for _, filter in ipairs(exclude) do
+          if type(filter) == 'string' then
+            if filetype == filter then
+              return false
+            end
+          elseif type(filter) == 'function' then
+            if filter(w) then
+              return false
+            end
+          end
+        end
+      end
+
+      return true
     end)
     :totable()
+
+  -- TODO (sbadragan): need to figure out how to "prefer" opening new window
+  -- nvim_win_get_position({window}) -> (row, col)
 
   if #target_windows > 1 then
     -- use prevWin if it's in current tab page
@@ -438,11 +465,7 @@ function M.getOpenTargetWin(context, buf)
     end
 
     -- use another window in the tab page
-    for _, win in ipairs(target_windows) do
-      if win ~= grugfar_win then
-        return win, false
-      end
-    end
+    return target_windows[1], false
   end
 
   -- no other window apart from grug-far one, create one, keeping focus in grug-far win

@@ -324,6 +324,10 @@ M.defaultOptions = {
     numberLabelFormat = ' [%d]',
   },
 
+  openTargetWindow = {
+    exclude = {},
+  },
+
   -- options for help window, history window and preview windows
   -- these are the same options as the ones that get passed to
   -- `vim.api.nvim_open_win()`: border, style, etc.
@@ -543,6 +547,14 @@ M.defaultOptions = {
 ---@class HelpLineTableOverride
 ---@field enabled? boolean
 
+---@alias FilterWindowFn fun(winid: number): boolean
+
+---@class OpenTargetWindowTable
+---@field exclude (string | FilterWindowFn)[]
+
+---@class OpenTargetWindowTableOverride
+---@field exclude? (string | FilterWindowFn)[]
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -577,6 +589,7 @@ M.defaultOptions = {
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]
 ---@field resultLocation ResultLocationTable
+---@field openTargetWindow OpenTargetWindowTable
 ---@field helpLine HelpLineTable
 ---@field helpWindow vim.api.keyset.win_config
 ---@field historyWindow vim.api.keyset.win_config
@@ -616,6 +629,7 @@ M.defaultOptions = {
 ---@field replacementInterpreter? GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters? GrugFarReplacementInterpreterType[]
 ---@field resultLocation? ResultLocationTableOverride
+---@field openTargetWindow? OpenTargetWindowTableOverride
 ---@field helpLine? HelpLineTableOverride
 ---@field helpWindow? vim.api.keyset.win_config
 ---@field historyWindow? vim.api.keyset.win_config
