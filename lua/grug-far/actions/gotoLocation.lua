@@ -63,12 +63,12 @@ local function gotoLocation(params)
     vim.api.nvim_win_set_buf(targetWin, bufnr)
   end
 
+  vim.api.nvim_set_current_win(targetWin)
+
   vim.api.nvim_win_set_cursor(
     targetWin,
     { location.lnum or 1, location.col and location.col - 1 or 0 }
   )
-
-  vim.api.nvim_set_current_win(targetWin)
 end
 
 return gotoLocation

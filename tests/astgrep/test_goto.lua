@@ -29,14 +29,13 @@ T['can open a given location'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    windowCreationCommand = 'vsplit',
     prefills = { search = 'grug.$A' },
   })
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.gotoLocation.n)
-  helpers.childWaitForScreenshotText(child, 'All file2.ts')
+  helpers.childWaitForScreenshotText(child, '3,7')
   helpers.childExpectScreenshot(child)
 end
 
