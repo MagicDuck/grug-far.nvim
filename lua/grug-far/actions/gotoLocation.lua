@@ -46,15 +46,16 @@ local function gotoLocation(params)
   if not location then
     return
   end
-  if row and row ~= cursor_row then
-    vim.api.nvim_win_set_cursor(grugfar_win, { row, 0 })
-  end
-
-  vim.api.nvim_command([[execute "normal! m` "]])
 
   ---@diagnostic disable-next-line
   local bufnr = vim.fn.bufnr(location.filename)
   local targetWin = utils.getOpenTargetWin(context, buf)
+
+  if row then
+    vim.api.nvim_win_set_cursor(grugfar_win, { row, 0 })
+  end
+
+  vim.api.nvim_command([[execute "normal! m` "]])
 
   if bufnr == -1 then
     vim.fn.win_execute(targetWin, 'e ' .. utils.escape_path_for_cmd(location.filename), true)

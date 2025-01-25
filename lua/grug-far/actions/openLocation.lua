@@ -68,13 +68,14 @@ local function openLocation(params)
   if not location then
     return
   end
-  if row and row ~= cursor_row then
+
+  local targetWin = utils.getOpenTargetWin(context, buf)
+  if row then
     vim.api.nvim_win_set_cursor(grugfar_win, { row, 0 })
   end
 
   vim.api.nvim_command([[execute "normal! m` "]])
 
-  local targetWin = utils.getOpenTargetWin(context, buf)
   local targetBuf = vim.fn.bufnr(location.filename)
   if targetBuf == -1 then
     vim.fn.win_execute(
