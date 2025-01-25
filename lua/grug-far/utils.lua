@@ -413,7 +413,9 @@ end
 ---@param buf integer
 ---@return integer window, boolean isNew
 function M.getOpenTargetWin(context, buf)
+  local preferredLocation = context.options.openTargetWindow.preferredLocation
   local grugfar_win = vim.fn.bufwinid(buf)
+  -- get candidate windows in the current tab
   local tabpage = vim.api.nvim_win_get_tabpage(grugfar_win)
   local tabpage_windows = vim.api.nvim_tabpage_list_wins(tabpage)
   local target_windows = vim
@@ -429,7 +431,7 @@ function M.getOpenTargetWin(context, buf)
       end
 
       local buftype = vim.api.nvim_get_option_value('buftype', { buf = b })
-      if not buftype or buftype == '' then
+      if not buftype or buftype ~= '' then
         return false
       end
 
@@ -453,28 +455,91 @@ function M.getOpenTargetWin(context, buf)
     end)
     :totable()
 
-  -- TODO (sbadragan): need to figure out how to "prefer" opening new window
-  -- nvim_win_get_position({window}) -> (row, col)
+  -- TODO (sbadragan): remove
+  print('target_windows', vim.inspect(target_windows))
 
-  if #target_windows > 1 then
-    -- use prevWin if it's in current tab page
-    for _, win in ipairs(target_windows) do
-      if win == context.prevWin then
-        return context.prevWin, false
+  -- try to reuse a window that is already at preferredLocation
+  if #target_windows > 0 then
+    if preferredLocation == 'prev' then
+      for _, win in ipairs(target_windows) do
+        if win == context.prevWin then
+          return context.prevWin, false
+        end
+      end
+    else
+      local ref_row, ref_col = unpack(vim.api.nvim_win_get_position(grugfar_win))
+      local candidate_win
+      local dist = 100000000000 -- some suitable large starting number
+      for _, win in ipairs(target_windows) do
+        local row, col = unpack(vim.api.nvim_win_get_position(win))
+        P({
+          row = row,
+          col = col,
+          ref_row = ref_row,
+          ref_col = ref_col,
+          dist = dist,
+          preferredLocation,
+        })
+        if
+          preferredLocation == 'left'
+          and row == ref_row
+          and col < ref_col
+          and (ref_col - col) < dist
+        then
+          dist = ref_col - col
+          candidate_win = win
+        elseif
+          preferredLocation == 'right'
+          and row == ref_row
+          and col > ref_col
+          and (col - ref_col) < dist
+        then
+          dist = col - ref_col
+          candidate_win = win
+        elseif
+          preferredLocation == 'above'
+          and col == ref_col
+          and row < ref_row
+          and (ref_row - row) < dist
+        then
+          dist = ref_row - row
+          candidate_win = win
+        elseif
+          preferredLocation == 'below'
+          and col == ref_col
+          and row > ref_row
+          and (row - ref_row) < dist
+        then
+          dist = row - ref_row
+          candidate_win = win
+        end
+      end
+
+      if candidate_win then
+        return candidate_win, false
       end
     end
-
-    -- use another window in the tab page
-    return target_windows[1], false
   end
 
-  -- no other window apart from grug-far one, create one, keeping focus in grug-far win
-  vim.cmd('topleft vertical split')
-  local new_win = vim.api.nvim_get_current_win()
+  -- create window at preferred location, keeping focus in grug-far win
+  if
+    not (
+      preferredLocation == 'left'
+      or preferredLocation == 'right'
+      or preferredLocation == 'above'
+      or preferredLocation == 'below'
+    )
+  then
+    preferredLocation = 'left'
+  end
+
+  local new_win = vim.api.nvim_open_win(buf, false, {
+    win = grugfar_win,
+    split = preferredLocation,
+  })
   for opt_name, opt_value in pairs(context.winDefaultOpts) do
     vim.api.nvim_set_option_value(opt_name, opt_value, { win = new_win })
   end
-  vim.cmd('wincmd w')
 
   return new_win, true
 end

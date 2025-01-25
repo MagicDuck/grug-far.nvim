@@ -326,6 +326,7 @@ M.defaultOptions = {
 
   openTargetWindow = {
     exclude = {},
+    preferredLocation = 'left',
   },
 
   -- options for help window, history window and preview windows
@@ -548,12 +549,15 @@ M.defaultOptions = {
 ---@field enabled? boolean
 
 ---@alias FilterWindowFn fun(winid: number): boolean
+---@alias WinPreferredLocation "prev" | "left" | "right" | "above" | "below"
 
 ---@class OpenTargetWindowTable
 ---@field exclude (string | FilterWindowFn)[]
+---@field preferredLocation WinPreferredLocation
 
 ---@class OpenTargetWindowTableOverride
 ---@field exclude? (string | FilterWindowFn)[]
+---@field preferredLocation? WinPreferredLocation
 
 ---@class GrugFarOptions
 ---@field debounceMs integer
