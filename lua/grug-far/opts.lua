@@ -324,8 +324,17 @@ M.defaultOptions = {
     numberLabelFormat = ' [%d]',
   },
 
+  -- options related to the target window for goto or open actions
   openTargetWindow = {
+    -- filter for windows to exclude when considering candidate targets. It's a list of either:
+    -- * filetype to exclude
+    -- * filter function of the form: function(winid: number): boolean (return true to exclude)
     exclude = {},
+
+    -- preferred location for target window relative to the grug-far window. If an existing candidate
+    -- window that is not excluded by the exclude filter exists in that direction, it will be reused,
+    -- otherwise a new window will be created in that direction.
+    -- available options: "prev" | "left" | "right" | "above" | "below"
     preferredLocation = 'left',
   },
 
