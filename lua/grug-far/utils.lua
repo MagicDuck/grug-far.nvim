@@ -455,9 +455,6 @@ function M.getOpenTargetWin(context, buf)
     end)
     :totable()
 
-  -- TODO (sbadragan): remove
-  print('target_windows', vim.inspect(target_windows))
-
   -- try to reuse a window that is already at preferredLocation
   if #target_windows > 0 then
     if preferredLocation == 'prev' then
@@ -472,14 +469,6 @@ function M.getOpenTargetWin(context, buf)
       local dist = 100000000000 -- some suitable large starting number
       for _, win in ipairs(target_windows) do
         local row, col = unpack(vim.api.nvim_win_get_position(win))
-        P({
-          row = row,
-          col = col,
-          ref_row = ref_row,
-          ref_col = ref_col,
-          dist = dist,
-          preferredLocation,
-        })
         if
           preferredLocation == 'left'
           and row == ref_row
