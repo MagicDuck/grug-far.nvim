@@ -337,44 +337,57 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 ```
 
-#### Add nvim-tree integration to open search limited to focused directory or file
+#### Add neo-tree integration to open search limited to focused directory or file
 
-Create a hotkey `z` in `nvim-tree` that will create/open a named instance of grug-far with the current directory of the file or directory in focus. On the second trigger, path of the grug-far instance will be updated, leaving other fields intact.
+Create a hotkey `z` in `neo-tree` that will create/open a named instance of grug-far with the current directory of the file or directory in focus. On the second trigger, path of the grug-far instance will be updated, leaving other fields intact.
 
 <details>
-<summary>Nvim tree lazy plugin setup</summary>
+<summary>Neo tree lazy plugin setup</summary>
 
 Small video of it in action: https://github.com/MagicDuck/grug-far.nvim/issues/165#issuecomment-2257439367
 
 ```lua
 return {
-  "nvim-tree/nvim-tree.lua",
+  "nvim-neo-tree/neo-tree.nvim",
   dependencies = "nvim-tree/nvim-web-devicons",
   config = function()
-    -- https://github.com/nvim-tree/nvim-tree.lua/blob/master/lua/nvim-tree.lua#L342
-    require("nvim-tree").setup {
+    local function open_grug_far(prefills)
+      local grug_far = require("grug-far")
+
+      if not grug_far.has_instance("explorer") then
+        grug_far.open({ instanceName = "explorer" })
+      else
+        grug_far.open_instance("explorer")
+      end
+      -- doing it seperately because multiple paths doesn't open work when passed with open
+      -- updating the prefills without clearing the search and other fields
+      grug_far.update_instance_prefills("explorer", prefills, false)
+    end
+    require("neo-tree").setup {
       commands = {
         -- create a new neo-tree command
         grug_far_replace = function(state)
           local node = state.tree:get_node()
           local prefills = {
-            -- get the current path and get the parent directory if a file is selected
-            paths = node.type == "directory" and node:get_id() or vim.fn.fnamemodify(node:get_id(), ":h"),
+            -- also escape the paths if space is there
+            -- if you want files to be selected, use ':p' only, see filename-modifiers
+            paths = node.type == "directory" and vim.fn.fnameescape(vim.fn.fnamemodify(node:get_id(), ":p"))
+        or vim.fn.fnameescape(vim.fn.fnamemodify(node:get_id(), ":h")),
           }
-
-          local grug_far = require "grug-far"
-          -- instance check
-          if not grug_far.has_instance "explorer" then
-            grug_far.open {
-              instanceName = "explorer",
-              prefills = prefills,
-              staticTitle = "Find and Replace from Explorer",
-            }
-          else
-            grug_far.open_instance "explorer"
-            -- updating the prefills without clearing the search and other fields
-            grug_far.update_instance_prefills("explorer", prefills, false)
+          open_grug_far(prefills)
+        end,
+        -- https://github.com/nvim-neo-tree/neo-tree.nvim/blob/fbb631e818f48591d0c3a590817003d36d0de691/doc/neo-tree.txt#L535
+        grug_far_replace_visual = function(state, selected_nodes, callback)
+          local paths = {}
+          for _, node in pairs(selected_nodes) do
+            -- also escape the paths if space is there
+            -- if you want files to be selected, use ':p' only, see filename-modifiers
+            local path = node.type == "directory" and vim.fn.fnameescape(vim.fn.fnamemodify(node:get_id(), ":p"))
+        or vim.fn.fnameescape(vim.fn.fnamemodify(node:get_id(), ":h"))
+            table.insert(paths, path)
           end
+          local prefills = { paths = table.concat(paths, "\n") }
+          open_grug_far(prefills)
         end,
       },
       window = {
