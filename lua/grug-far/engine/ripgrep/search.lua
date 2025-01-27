@@ -133,26 +133,18 @@ local function run_search(params)
     cmd_path = params.options.engines.ripgrep.path,
     args = params.args,
     on_fetch_chunk = function(data)
-      local json_lines = vim.split(data, '\n')
-      local json_data = {}
-      for _, json_line in ipairs(json_lines) do
-        if #json_line > 0 then
-          local success, entry = pcall(vim.json.decode, json_line)
-          if not success then
-            params.on_fetch_chunk({
-              lines = vim
-                .iter(vim.split(data, '\n'))
-                :map(utils.getLineWithoutCarriageReturn)
-                :totable(),
-              highlights = {},
-              stats = { matches = 0, files = 0 },
-            })
-            return
-          end
-          table.insert(json_data, entry)
-        end
+      -- handle non-json data (like when running rg with --help flag)
+      if not vim.startswith(data, '{') then
+        params.on_fetch_chunk({
+          lines = vim.iter(vim.split(data, '\n')):map(utils.getLineWithoutCarriageReturn):totable(),
+          highlights = {},
+          stats = { matches = 0, files = 0 },
+        })
+        return
       end
-      local results = parseResults.parseResults(json_data, false, false)
+
+      local json_list = utils.str_to_json_list(data)
+      local results = parseResults.parseResults(json_list, false, false)
       params.on_fetch_chunk(results)
     end,
     on_finish = function(status, errorMessage)
@@ -197,27 +189,18 @@ local function run_search_with_replace(params)
   local searchArgs = argUtils.stripReplaceArgs(params.args)
 
   processingQueue = ProcessingQueue.new(function(data, on_done)
-    local json_lines = vim.split(data, '\n')
-    local json_data = {}
-    for _, json_line in ipairs(json_lines) do
-      if #json_line > 0 then
-        local success, entry = pcall(vim.json.decode, json_line)
-        if not success then
-          on_fetch_chunk({
-            lines = vim
-              .iter(vim.split(data, '\n'))
-              :map(utils.getLineWithoutCarriageReturn)
-              :totable(),
-            highlights = {},
-            stats = { matches = 0, files = 0 },
-          })
-          on_done()
-          return
-        end
-        table.insert(json_data, entry)
-      end
+    -- handle non-json data (like when running rg with --help flag)
+    if not vim.startswith(data, '{') then
+      on_fetch_chunk({
+        lines = vim.iter(vim.split(data, '\n')):map(utils.getLineWithoutCarriageReturn):totable(),
+        highlights = {},
+        stats = { matches = 0, files = 0 },
+      })
+      on_done()
+      return
     end
 
+    local json_data = utils.str_to_json_list(data)
     getResultsWithReplaceDiff({
       json_data = json_data,
       inputs = params.inputs,
@@ -285,29 +268,34 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
         return
       end
 
-      local json_lines = vim.split(data, '\n')
-      local json_data = {}
-      for _, json_line in ipairs(json_lines) do
-        if #json_line > 0 then
-          local entry = vim.json.decode(json_line)
-          if entry.type == 'match' then
-            for _, submatch in ipairs(entry.data.submatches) do
-              ---@cast eval_fn fun(...): string
-              local replacementText, err = eval_fn(submatch.match.text)
-              if err then
-                chunk_error = err
-                if abort then
-                  abort()
-                end
-                return
+      -- handle non-json data (like when running rg with --help flag)
+      if not vim.startswith(data, '{') then
+        params.on_fetch_chunk({
+          lines = vim.iter(vim.split(data, '\n')):map(utils.getLineWithoutCarriageReturn):totable(),
+          highlights = {},
+          stats = { matches = 0, files = 0 },
+        })
+        return
+      end
+
+      local json_list = utils.str_to_json_list(data)
+      for _, entry in ipairs(json_list) do
+        if entry.type == 'match' then
+          for _, submatch in ipairs(entry.data.submatches) do
+            ---@cast eval_fn fun(...): string
+            local replacementText, err = eval_fn(submatch.match.text)
+            if err then
+              chunk_error = err
+              if abort then
+                abort()
               end
-              submatch.replacement = { text = replacementText }
+              return
             end
+            submatch.replacement = { text = replacementText }
           end
-          table.insert(json_data, entry)
         end
       end
-      local results = parseResults.parseResults(json_data, true, true)
+      local results = parseResults.parseResults(json_list, true, true)
       params.on_fetch_chunk(results)
     end,
     on_finish = function(status, errorMessage)
