@@ -73,24 +73,21 @@ local function replaceInFileWithEval(params)
         return
       end
 
-      local json_lines = vim.split(data, '\n')
-      for _, json_line in ipairs(json_lines) do
-        if #json_line > 0 then
-          local entry = vim.json.decode(json_line)
-          if entry.type == 'match' then
-            for _, submatch in ipairs(entry.data.submatches) do
-              local replacementText, err = replacement_eval_fn(submatch.match.text)
-              if err then
-                chunk_error = err
-                if abort then
-                  abort()
-                end
-                return
+      local json_list = utils.str_to_json_list(data)
+      for _, entry in ipairs(json_list) do
+        if entry.type == 'match' then
+          for _, submatch in ipairs(entry.data.submatches) do
+            local replacementText, err = replacement_eval_fn(submatch.match.text)
+            if err then
+              chunk_error = err
+              if abort then
+                abort()
               end
-              submatch.replacement = { text = replacementText }
+              return
             end
-            table.insert(json_data, entry)
+            submatch.replacement = { text = replacementText }
           end
+          table.insert(json_data, entry)
         end
       end
     end,

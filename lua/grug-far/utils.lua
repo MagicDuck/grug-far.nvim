@@ -578,4 +578,27 @@ M.normalizePath = function(path)
   return vim.fs.normalize(path)
 end
 
+--- parse a string containing json separated by newline into a list of tables
+---@param str string
+---@return table[]
+M.str_to_json_list = function(str)
+  local json_lines = vim.split(str, '\n')
+  local json_data = {}
+  local i = 1
+  for j = 1, #json_lines, 1 do
+    local json_str = json_lines[i]
+    for k = i + 1, j, 1 do
+      json_str = json_str .. '\n' .. json_lines[k]
+    end
+
+    local success, json_entry = pcall(vim.json.decode, json_str)
+    if success then
+      table.insert(json_data, json_entry)
+      i = j + 1
+    end
+  end
+
+  return json_data
+end
+
 return M
