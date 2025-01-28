@@ -3,6 +3,7 @@ local highlights = require('grug-far.highlights')
 local farBuffer = require('grug-far.farBuffer')
 local history = require('grug-far.history')
 local utils = require('grug-far.utils')
+local tasks = require('grug-far.tasks')
 local close = require('grug-far.actions.close')
 local engine = require('grug-far.engine')
 local replacementInterpreter = require('grug-far.replacementInterpreter')
@@ -107,11 +108,6 @@ local contextCount = 0
 ---@field flags string
 ---@field paths string
 
----@class GrugFarStateAbort
----@field search? fun()
----@field replace? fun()
----@field sync? fun()
-
 ---@class GrugFarState
 ---@field inputs GrugFarInputs
 ---@field lastInputs? GrugFarInputs
@@ -123,7 +119,7 @@ local contextCount = 0
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultMatchLineCount integer
 ---@field resultsLastFilename? string
----@field abort GrugFarStateAbort
+---@field tasks GrugFarTask[]
 ---@field showSearchCommand boolean
 ---@field bufClosed boolean
 ---@field highlightResults FileResults
@@ -182,12 +178,13 @@ local function createContext(options)
       headerRow = 0,
       resultLocationByExtmarkId = {},
       resultMatchLineCount = 0,
-      abort = {},
+      tasks = {},
       showSearchCommand = false,
       bufClosed = false,
       highlightRegions = {},
       highlightResults = {},
       normalModeSearch = options.normalModeSearch,
+      -- TODO (sbadragan): remove this?
       searchAgain = false,
       searchDisabled = false,
     },
@@ -234,7 +231,7 @@ local function setupCleanup(buf, context)
       history.addHistoryEntry(context)
     end
 
-    utils.abortTasks(context)
+    tasks.abortAllTasks(context)
     context.state.bufClosed = true
     if context.options.instanceName then
       namedInstances[context.options.instanceName] = nil

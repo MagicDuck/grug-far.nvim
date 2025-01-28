@@ -1,6 +1,8 @@
 local renderResultsHeader = require('grug-far.render.resultsHeader')
 local resultsList = require('grug-far.render.resultsList')
 local fold = require('grug-far.fold')
+local tasks = require('grug-far.tasks')
+local utils = require('grug-far.utils')
 
 --- performs search
 ---@param params { buf: integer, context: GrugFarContext }
@@ -8,27 +10,27 @@ local function search(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
-  local abort = state.abort
 
-  if abort.sync then
+  if tasks.hasActiveTasksWithType(context, 'sync') then
     vim.notify('grug-far: sync in progress', vim.log.levels.INFO)
     return
   end
 
-  if abort.replace then
+  if tasks.hasActiveTasksWithType(context, 'replace') then
     vim.notify('grug-far: replace in progress', vim.log.levels.INFO)
     return
   end
 
-  if abort.search then
-    if not state.searchAgain then
-      state.searchAgain = true
-      abort.search()
-    end
-    return
+  if tasks.hasActiveTasksWithType(context, 'search') then
+    -- abort all previous searches
+    vim.iter(tasks.getActiveTasksByType(context, 'search')):each(function(t)
+      tasks.abortTask(context, t)
+    end)
   end
 
-  local abortedEarly = false
+  local task = tasks.createTask(context, 'search')
+  local abort
+  local effectiveArgs
 
   -- initiate search in UI
   state.status = 'progress'
@@ -36,10 +38,7 @@ local function search(params)
   state.stats = { matches = 0, files = 0 }
   state.actionMessage = nil
 
-  -- note: we clear first time we fetch more info instead of initially
-  -- in order to reduce flicker
   local isCleared = false
-  local effectiveArgs
   local function clearResultsIfNeeded()
     if not isCleared then
       isCleared = true
@@ -50,13 +49,16 @@ local function search(params)
     end
   end
 
-  local on_finish = function(status, errorMessage, customActionMessage)
-    if state.bufClosed then
-      return
-    end
+  -- note: we clear first time we fetch more info or after 100ms instead of initially
+  -- in order to reduce flicker
+  utils.setTimeout(
+    tasks.task_callback_wrap(context, task, vim.schedule_wrap(clearResultsIfNeeded)),
+    100
+  )
 
-    if abortedEarly and status == nil then
-      status = 'success'
+  local on_finish = function(status, errorMessage, customActionMessage)
+    if context.state.bufClosed then
+      return
     end
 
     if customActionMessage then
@@ -90,23 +92,14 @@ local function search(params)
       fold.updateFolds(buf)
     end
 
-    state.abort.search = nil
-    -- launch a new search if one was triggered while we were finishing up  or were aborted
-    if state.searchAgain then
-      state.searchAgain = false
-      search(params)
-    end
+    tasks.finishTask(context, task)
   end
 
-  abort.search, effectiveArgs = context.engine.search({
+  abort, effectiveArgs = context.engine.search({
     inputs = state.inputs,
     options = context.options,
     replacementInterpreter = context.replacementInterpreter,
-    on_fetch_chunk = function(data)
-      if state.bufClosed or abortedEarly or not state.stats then
-        return
-      end
-
+    on_fetch_chunk = tasks.task_callback_wrap(context, task, function(data)
       clearResultsIfNeeded()
 
       state.status = 'progress'
@@ -114,10 +107,10 @@ local function search(params)
       state.stats.matches = state.stats.matches + data.stats.matches
       state.stats.files = state.stats.files + data.stats.files
 
-      abortedEarly = context.options.maxSearchMatches ~= nil
+      local abortEarly = context.options.maxSearchMatches ~= nil
         and state.stats.matches > context.options.maxSearchMatches
 
-      if abortedEarly then
+      if abortEarly then
         state.actionMessage = 'exceeded '
           .. context.options.maxSearchMatches
           .. ' matches, aborting early!'
@@ -127,17 +120,15 @@ local function search(params)
       resultsList.appendResultsChunk(buf, context, data)
       resultsList.throttledForceRedrawBuffer(buf, context)
 
-      if abortedEarly then
-        if state.abort.search then
-          state.abort.search()
-          vim.schedule(function()
-            on_finish('success', nil, nil)
-          end)
-        end
+      if abortEarly then
+        tasks.abortTask(context, task)
+        on_finish('success', nil, nil)
       end
-    end,
-    on_finish = on_finish,
+    end),
+    on_finish = tasks.task_callback_wrap(context, task, on_finish),
   })
+
+  task.abort = abort
 end
 
 return search
