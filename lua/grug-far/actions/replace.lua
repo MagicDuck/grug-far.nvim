@@ -1,6 +1,7 @@
 local renderResultsHeader = require('grug-far.render.resultsHeader')
 local resultsList = require('grug-far.render.resultsList')
 local history = require('grug-far.history')
+local tasks = require('grug-far.tasks')
 local uv = vim.uv
 
 --- gets action message to display
@@ -33,20 +34,21 @@ local function replace(params)
   local buf = params.buf
   local context = params.context
   local state = context.state
-  local abort = state.abort
   local filesCount = 0
   local filesTotal = 0
   local startTime
 
-  if abort.replace then
+  if tasks.hasActiveTasksWithType(context, 'replace') then
     vim.notify('grug-far: replace already in progress', vim.log.levels.INFO)
     return
   end
 
-  if abort.sync then
+  if tasks.hasActiveTasksWithType(context, 'sync') then
     vim.notify('grug-far: sync in progress', vim.log.levels.INFO)
     return
   end
+
+  local task = tasks.createTask(context, 'replace')
 
   -- initiate replace in UI
   vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
@@ -66,63 +68,61 @@ local function replace(params)
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
   end
 
-  local on_finish_all = function(status, errorMessage, customActionMessage)
-    if state.bufClosed then
-      return
+  local on_finish_all = tasks.task_callback_wrap(
+    context,
+    task,
+    function(status, errorMessage, customActionMessage)
+      vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
+
+      if status == 'error' then
+        reportError(errorMessage)
+        tasks.finishTask(context, task)
+        return
+      end
+
+      if errorMessage and #errorMessage > 0 then
+        resultsList.appendWarning(buf, context, errorMessage)
+      end
+
+      state.status = status
+      vim.cmd.checktime()
+
+      local wasAborted = status == nil and customActionMessage == nil
+
+      if wasAborted then
+        state.actionMessage = 'replace aborted at ' .. filesCount .. ' / ' .. filesTotal
+      elseif status == nil and customActionMessage then
+        state.actionMessage = customActionMessage
+      else
+        local time = uv.now() - startTime
+        -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
+        state.actionMessage =
+          getActionMessage(nil, filesCount, filesCount, time, context.options.reportDuration)
+      end
+
+      renderResultsHeader(buf, context)
+      if wasAborted then
+        tasks.finishTask(context, task)
+        return
+      end
+
+      vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
+
+      local autoSave = context.options.history.autoSave
+      if autoSave.enabled and autoSave.onReplace then
+        history.addHistoryEntry(context)
+      end
+      tasks.finishTask(context, task)
     end
-
-    vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
-    state.abort.replace = nil
-
-    if status == 'error' then
-      reportError(errorMessage)
-      return
-    end
-
-    if errorMessage and #errorMessage > 0 then
-      resultsList.appendWarning(buf, context, errorMessage)
-    end
-
-    state.status = status
-    vim.cmd.checktime()
-
-    local wasAborted = status == nil and customActionMessage == nil
-
-    if wasAborted then
-      state.actionMessage = 'replace aborted at ' .. filesCount .. ' / ' .. filesTotal
-    elseif status == nil and customActionMessage then
-      state.actionMessage = customActionMessage
-    else
-      local time = uv.now() - startTime
-      -- not passing in total as 3rd arg cause of paranoia if counts don't end up matching
-      state.actionMessage =
-        getActionMessage(nil, filesCount, filesCount, time, context.options.reportDuration)
-    end
-
-    renderResultsHeader(buf, context)
-    if wasAborted then
-      return
-    end
-
-    vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
-
-    local autoSave = context.options.history.autoSave
-    if autoSave.enabled and autoSave.onReplace then
-      history.addHistoryEntry(context)
-    end
-  end
+  )
 
   startTime = uv.now()
-  state.abort.replace = context.engine.replace({
+  task.abort = context.engine.replace({
     inputs = context.state.inputs,
     options = context.options,
     replacementInterpreter = context.replacementInterpreter,
 
-    report_progress = function(update)
-      if state.bufClosed then
-        return
-      end
-
+    report_progress = tasks.task_callback_wrap(context, task, function(update)
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
       if update.type == 'update_total' then
@@ -136,7 +136,7 @@ local function replace(params)
       end
       renderResultsHeader(buf, context)
       resultsList.throttledForceRedrawBuffer(buf, context)
-    end,
+    end),
     on_finish = on_finish_all,
   })
 end

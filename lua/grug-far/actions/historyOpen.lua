@@ -1,6 +1,7 @@
 local renderHelp = require('grug-far.render.help')
 local history = require('grug-far.history')
 local utils = require('grug-far.utils')
+local tasks = require('grug-far.tasks')
 local opts = require('grug-far.opts')
 local engine = require('grug-far.engine')
 local replacementInterpreter = require('grug-far.replacementInterpreter')
@@ -200,14 +201,13 @@ end
 local function historyOpen(params)
   local buf = params.buf
   local context = params.context
-  local abort = context.state.abort
 
-  if abort.sync then
+  if tasks.hasActiveTasksWithType(context, 'sync') then
     vim.notify('grug-far: sync in progress', vim.log.levels.INFO)
     return
   end
 
-  if abort.replace then
+  if tasks.hasActiveTasksWithType(context, 'replace') then
     vim.notify('grug-far: replace in progress', vim.log.levels.INFO)
     return
   end

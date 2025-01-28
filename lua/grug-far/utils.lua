@@ -296,21 +296,6 @@ function M.getVisualSelectionLines()
   return lines
 end
 
---- aborts all tasks
----@param context GrugFarContext
----@return boolean if any aborted
-function M.abortTasks(context)
-  local abortedAny = false
-  for _, abort_fn in pairs(context.state.abort) do
-    if abort_fn then
-      abort_fn()
-      abort_fn = nil
-      abortedAny = true
-    end
-  end
-  return abortedAny
-end
-
 ---@param keymap KeymapDef
 ---@return string | nil
 function M.getActionMapping(keymap)
