@@ -103,7 +103,7 @@ local function search(params)
     options = context.options,
     replacementInterpreter = context.replacementInterpreter,
     on_fetch_chunk = function(data)
-      if state.bufClosed or abortedEarly then
+      if state.bufClosed or abortedEarly or not state.stats then
         return
       end
 
