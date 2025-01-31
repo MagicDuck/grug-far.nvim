@@ -125,7 +125,6 @@ local contextCount = 0
 ---@field highlightResults FileResults
 ---@field highlightRegions LangRegions
 ---@field normalModeSearch boolean
----@field searchAgain boolean
 ---@field searchDisabled boolean
 
 ---@class GrugFarAction
@@ -184,8 +183,6 @@ local function createContext(options)
       highlightRegions = {},
       highlightResults = {},
       normalModeSearch = options.normalModeSearch,
-      -- TODO (sbadragan): remove this?
-      searchAgain = false,
       searchDisabled = false,
     },
     winDefaultOpts = {},
