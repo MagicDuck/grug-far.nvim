@@ -183,7 +183,6 @@ function M.appendResultsChunk(buf, context, data)
       )
     end
   end
-  M.throttledHighlight(buf, context)
 end
 
 --- gets result location at given row if available
@@ -463,7 +462,7 @@ function M.highlight(buf, context)
   end
 end
 
-M.throttledHighlight = utils.throttle(M.highlight, 40)
+M.throttledHighlight = utils.throttle(M.highlight, 500)
 M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)
 
 return M

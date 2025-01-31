@@ -4,6 +4,12 @@ local fold = require('grug-far.fold')
 local tasks = require('grug-far.tasks')
 local utils = require('grug-far.utils')
 
+---@enum SearchUpdateType
+local SearchUpdateType = {
+  FetchChunk = 1,
+  Finish = 2,
+}
+
 --- performs search
 ---@param params { buf: integer, context: GrugFarContext }
 local function search(params)
@@ -21,16 +27,18 @@ local function search(params)
     return
   end
 
-  if tasks.hasActiveTasksWithType(context, 'search') then
-    -- abort all previous searches
-    vim.iter(tasks.getActiveTasksByType(context, 'search')):each(function(t)
-      tasks.abortTask(context, t)
-    end)
-  end
+  -- abort all previous searches
+  vim.iter(tasks.getTasksByType(context, 'search')):each(function(t)
+    tasks.abortTask(context, t)
+  end)
 
   local task = tasks.createTask(context, 'search')
   local abort
   local effectiveArgs
+
+  -- TODO (sbadragan): remove
+  local count = 0
+  local startTime = vim.uv.now()
 
   -- initiate search in UI
   state.status = 'progress'
@@ -65,8 +73,6 @@ local function search(params)
       state.actionMessage = customActionMessage
     end
 
-    clearResultsIfNeeded()
-
     state.status = status
     if status == 'error' then
       state.stats = nil
@@ -86,8 +92,6 @@ local function search(params)
       resultsList.highlight(buf, context)
     end
 
-    renderResultsHeader(buf, context)
-
     if context.options.folding.enabled then
       fold.updateFolds(buf)
     end
@@ -95,37 +99,90 @@ local function search(params)
     tasks.finishTask(context, task)
   end
 
-  abort, effectiveArgs = context.engine.search({
-    inputs = state.inputs,
-    options = context.options,
-    replacementInterpreter = context.replacementInterpreter,
-    on_fetch_chunk = tasks.task_callback_wrap(context, task, function(data)
-      clearResultsIfNeeded()
+  -- set up update queue
+  local update_queue = {}
+  local MAX_PROCESSING_BLOCK_SIZE = 1
+  local perform_update = function(data)
+    clearResultsIfNeeded()
+
+    if data.type == SearchUpdateType.Finish then
+      local time = vim.uv.now() - startTime
+      print('did', count, 'in', time, 'rate duration is', time / count)
+
+      on_finish(vim.F.unpack_len(data.params))
+    else -- FetchChunk
+      count = count + 1
 
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
       state.stats.matches = state.stats.matches + data.stats.matches
       state.stats.files = state.stats.files + data.stats.files
 
-      local abortEarly = context.options.maxSearchMatches ~= nil
-        and state.stats.matches > context.options.maxSearchMatches
+      -- resultsList.appendResultsChunk(buf, context, data)
+    end
+  end
 
-      if abortEarly then
-        state.actionMessage = 'exceeded '
-          .. context.options.maxSearchMatches
-          .. ' matches, aborting early!'
+  local update_timer = vim.uv.new_timer()
+  local UPDATE_INTERVAL = 40
+  update_timer:start(
+    0,
+    UPDATE_INTERVAL,
+    vim.schedule_wrap(function()
+      local isDone = state.bufClosed or (task.isFinished and task.abortReason ~= 'abortedEarly')
+      if isDone then
+        if not update_timer:is_closing() then
+          update_timer:stop()
+          update_timer:close()
+        end
+        return
+      end
+
+      if #update_queue == 0 then
+        return
+      end
+
+      for _ = 1, math.min(MAX_PROCESSING_BLOCK_SIZE, #update_queue), 1 do
+        local chunk = table.remove(update_queue, 1)
+        perform_update(chunk)
       end
       renderResultsHeader(buf, context)
+      resultsList.forceRedrawBuffer(buf, context)
+      resultsList.throttledHighlight(buf, context)
+    end)
+  )
 
-      resultsList.appendResultsChunk(buf, context, data)
-      resultsList.throttledForceRedrawBuffer(buf, context)
+  local fetched_matches = 0
+  abort, effectiveArgs = context.engine.search({
+    inputs = state.inputs,
+    options = context.options,
+    replacementInterpreter = context.replacementInterpreter,
+    on_fetch_chunk = tasks.task_callback_wrap(context, task, function(data)
+      fetched_matches = fetched_matches + data.stats.matches
+      local abortEarly = context.options.maxSearchMatches ~= nil
+        and fetched_matches > context.options.maxSearchMatches
+
+      data.type = SearchUpdateType.FetchChunk
+      table.insert(update_queue, data)
 
       if abortEarly then
-        tasks.abortTask(context, task)
-        on_finish('success', nil, nil)
+        tasks.abortTask(context, task, 'abortedEarly')
+        table.insert(update_queue, {
+          params = {
+            'success',
+            nil,
+            'exceeded ' .. context.options.maxSearchMatches .. ' matches, aborting early!',
+          },
+          type = SearchUpdateType.Finish,
+        })
       end
     end),
-    on_finish = tasks.task_callback_wrap(context, task, on_finish),
+    on_finish = tasks.task_callback_wrap(context, task, function(...)
+      local paramz = vim.F.pack_len(...)
+      table.insert(update_queue, {
+        params = paramz,
+        type = SearchUpdateType.Finish,
+      })
+    end),
   })
 
   task.abort = abort

@@ -1,11 +1,11 @@
-local utils = require('grug-far.utils')
+local tasks = require('grug-far.tasks')
 
 --- aborts all currently running tasks
 ---@param params { buf: integer, context: GrugFarContext }
 local function abort(params)
   local context = params.context
 
-  local abortedAny = utils.abortTasks(context)
+  local abortedAny = tasks.abortAllTasks(context)
 
   -- clear stuff
   if abortedAny then
