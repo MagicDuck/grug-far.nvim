@@ -39,6 +39,7 @@ T['can toggle one flag'] = function()
     { '--fixed-strings' },
   })
   helpers.childWaitForScreenshotText(child, 'no matches')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 
   -- toggle flag off
@@ -46,6 +47,7 @@ T['can toggle one flag'] = function()
     { '--fixed-strings' },
   })
   helpers.childWaitForScreenshotText(child, '5 matches')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 
