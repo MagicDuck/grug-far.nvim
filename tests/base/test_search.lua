@@ -446,4 +446,54 @@ T['searches first line of multiline visual selection'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can trim long lines during search'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[grug walks a distance that is exactly 56 characters long]],
+    },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+    maxLineLength = 30,
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['respects disabled maxLineLength'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[grug walks a distance that is exactly 56 characters long]],
+    },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+    maxLineLength = -1,
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 return T
