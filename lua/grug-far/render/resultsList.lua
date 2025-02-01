@@ -87,6 +87,10 @@ local function addHighlightResult(context, line, loc)
   table.insert(results.lines, res)
 end
 
+function getTrimmedLineMessage(maxLineLength)
+  return ' ... (very long line, trimmed to ' .. maxLineLength .. ' chars)'
+end
+
 --- append a bunch of result lines to the buffer
 ---@param buf integer
 ---@param context GrugFarContext
@@ -98,10 +102,7 @@ function M.appendResultsChunk(buf, context, data)
     for i = 1, #data.lines do
       local line = data.lines[i]
       if #line > maxLineLength then
-        data.lines[i] = line:sub(1, maxLineLength)
-          .. ' ... (very long line, trimmed to '
-          .. maxLineLength
-          .. ' chars)'
+        data.lines[i] = line:sub(1, maxLineLength) .. getTrimmedLineMessage(maxLineLength)
       end
     end
   end
@@ -121,18 +122,51 @@ function M.appendResultsChunk(buf, context, data)
       then
         break
       end
+
+      local lineNr = lastline + j
+      local start_col = j == highlight.start_line and highlight.start_col or 0
+
+      local end_col = -1
+      if j == highlight.end_line then
+        end_col = highlight.end_col
+        if maxLineLength > -1 then
+          end_col = math.min(end_col, maxLineLength)
+        end
+      else
+        if #data.lines[j] > maxLineLength then
+          end_col = maxLineLength
+        end
+      end
+
       vim.api.nvim_buf_add_highlight(
         buf,
         context.namespace,
         highlight.hl,
-        lastline + j,
-        j == highlight.start_line and highlight.start_col or 0,
-        j == highlight.end_line
-            and (maxLineLength > -1 and math.min(highlight.end_col, maxLineLength) or highlight.end_col)
-          or -1
+        lineNr,
+        start_col,
+        end_col
       )
-      -- TODO (sbadragan): to be fancy, highlight the longline message
       -- TODO (sbadragan): prevent sync when we have longline messages
+    end
+  end
+
+  -- TODO (sbadragan): add a test for long line search
+  if maxLineLength > -1 then
+    local trimmedLineMsgLen = #getTrimmedLineMessage(maxLineLength)
+    for i = 1, #data.lines do
+      local line = data.lines[i]
+      if #line > maxLineLength then
+        local lineNr = lastline + i - 1
+        local start_col = #line - trimmedLineMsgLen
+        vim.api.nvim_buf_add_highlight(
+          buf,
+          context.namespace,
+          'GrugFarResultsLongLineStr',
+          lineNr,
+          start_col,
+          -1
+        )
+      end
     end
   end
 

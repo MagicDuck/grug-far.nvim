@@ -88,6 +88,9 @@ local function search(params)
       end
     end
 
+    renderResultsHeader(buf, context)
+    resultsList.forceRedrawBuffer(buf, context)
+
     if context.options.folding.enabled then
       fold.updateFolds(buf)
     end
@@ -102,14 +105,15 @@ local function search(params)
 
     if data.type == SearchUpdateType.Finish then
       on_finish(vim.F.unpack_len(data.params))
-      -- TODO (sbadragan): likely we need to force a rerender here to make tests happy, or inside on_finish
     else -- FetchChunk
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
       state.stats.matches = state.stats.matches + data.stats.matches
       state.stats.files = state.stats.files + data.stats.files
+      renderResultsHeader(buf, context)
 
       resultsList.appendResultsChunk(buf, context, data)
+      resultsList.highlight(buf, context)
     end
   end
 
@@ -139,8 +143,6 @@ local function search(params)
         local chunk = table.remove(update_queue, 1)
         perform_update(chunk)
       end
-      renderResultsHeader(buf, context)
-      resultsList.highlight(buf, context)
     end)
   )
 
