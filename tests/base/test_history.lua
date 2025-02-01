@@ -177,9 +177,9 @@ T['replacement interpreter swaps when reloading from history'] = function()
   helpers.childExpectBufLines(child)
 
   child.type_keys('<esc>12G', '<enter>')
-  -- TODO (sbadragan): we need to fix this for everything as it randomly does it
   helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
   helpers.childWaitForScreenshotText(child, '[lua]')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
