@@ -439,12 +439,9 @@ T['searches first line of multiline visual selection'] = function()
 
   helpers.cdTempTestDir(child)
   child.cmd(':e file2')
-  -- TODO (sbadragan): what is going on here?
-  child.type_keys(10, 'j', 'wwwv', 'j', 'j')
-  child.type_keys(100, '<esc>:lua GrugFar.with_visual_selection()<CR>')
+  child.type_keys(10, 'j', 'wwwvjj', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
 
   helpers.childWaitForFinishedStatus(child)
-  helpers.childWaitForScreenshotText(child, '--fixed-strings --multiline')
 
   helpers.childExpectScreenshot(child)
 end
