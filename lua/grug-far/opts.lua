@@ -18,6 +18,11 @@ M.defaultOptions = {
   -- set to nil to disable
   maxSearchMatches = 2000,
 
+  -- trim lines that are longer than this value in order to prevent neovim performance issues
+  -- with long lines and annoying navigation
+  -- set to -1 to disable
+  maxLineLength = 1000,
+
   -- disable automatic debounced search and trigger search when leaving insert mode or making normal mode changes instead
   -- Note that normal mode changes such as `diw`, `rF`, etc will still trigger a search
   normalModeSearch = false,
@@ -572,6 +577,7 @@ M.defaultOptions = {
 ---@field debounceMs integer
 ---@field minSearchChars integer
 ---@field maxSearchMatches integer?
+---@field maxLineLength integer
 ---@field searchOnInsertLeave boolean
 ---@field normalModeSearch boolean
 ---@field maxWorkers integer
@@ -612,6 +618,7 @@ M.defaultOptions = {
 ---@field debounceMs? integer
 ---@field minSearchChars? integer
 ---@field maxSearchMatches? integer
+---@field maxLineLength? integer
 ---@field searchOnInsertLeave? boolean
 ---@field normalModeSearch? boolean
 ---@field maxWorkers? integer
