@@ -28,6 +28,7 @@ local highlights = {
   GrugFarResultsDiffSeparatorIndicator = { default = true, link = 'Normal' },
   GrugFarResultsCmdHeader = { default = true, link = '@text.uri' },
   GrugFarResultsNumberLabel = { default = true, link = 'Identifier' },
+  GrugFarResultsLongLineStr = { default = true, link = 'Comment' },
 }
 
 function M.setup()
