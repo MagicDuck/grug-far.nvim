@@ -100,7 +100,6 @@ local function search(params)
 
   -- set up update queue
   local update_queue = {}
-  local MAX_PROCESSING_BLOCK_SIZE = 1
   local perform_update = function(data)
     clearResultsIfNeeded()
 
@@ -109,9 +108,6 @@ local function search(params)
       print('did', count, 'in', time, 'rate duration is', time / count)
 
       on_finish(vim.F.unpack_len(data.params))
-      -- TODO (sbadragan): here?
-      -- print('highlighting')
-      resultsList.highlight(buf, context)
     else -- FetchChunk
       count = count + 1
 
@@ -120,15 +116,13 @@ local function search(params)
       state.stats.matches = state.stats.matches + data.stats.matches
       state.stats.files = state.stats.files + data.stats.files
 
-      -- TODO (sbadragan): this is causing the infinite loop
       resultsList.appendResultsChunk(buf, context, data)
-      -- TODO (sbadragan): highlight is slow
-      -- resultsList.highlight(buf, context)
     end
   end
 
   local update_timer = vim.uv.new_timer()
-  local UPDATE_INTERVAL = 40
+  local UPDATE_INTERVAL = 10
+  local MAX_PROCESSING_BLOCK_SIZE = 2
   update_timer:start(
     0,
     UPDATE_INTERVAL,
