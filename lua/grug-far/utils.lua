@@ -2,9 +2,6 @@ local uv = vim.uv
 local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 local M = {}
 
----@type number?
-M.scratch_buf = nil
-
 --- sets a given buffer's name without creating alternative buffers
 ---@param bufnr number the buffer to change the name of
 ---@param name string the new buffer name
@@ -37,10 +34,7 @@ end
 
 ---@param filename string
 function M.getFileType(filename)
-  if not (M.scratch_buf and vim.api.nvim_buf_is_valid(M.scratch_buf)) then
-    M.scratch_buf = vim.api.nvim_create_buf(false, true)
-  end
-  return vim.filetype.match({ filename = filename, buf = M.scratch_buf })
+  return vim.filetype.match({ filename = filename })
 end
 
 --- clear the timeout

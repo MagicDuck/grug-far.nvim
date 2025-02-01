@@ -89,7 +89,6 @@ local function search(params)
         state.actionMessage = lastline < winheight and ' warnings!'
           or ' warnings, see end of buffer!'
       end
-      resultsList.highlight(buf, context)
     end
 
     if context.options.folding.enabled then
@@ -110,6 +109,9 @@ local function search(params)
       print('did', count, 'in', time, 'rate duration is', time / count)
 
       on_finish(vim.F.unpack_len(data.params))
+      -- TODO (sbadragan): here?
+      -- print('highlighting')
+      resultsList.highlight(buf, context)
     else -- FetchChunk
       count = count + 1
 
@@ -118,7 +120,10 @@ local function search(params)
       state.stats.matches = state.stats.matches + data.stats.matches
       state.stats.files = state.stats.files + data.stats.files
 
-      -- resultsList.appendResultsChunk(buf, context, data)
+      -- TODO (sbadragan): this is causing the infinite loop
+      resultsList.appendResultsChunk(buf, context, data)
+      -- TODO (sbadragan): highlight is slow
+      -- resultsList.highlight(buf, context)
     end
   end
 
@@ -145,9 +150,17 @@ local function search(params)
         local chunk = table.remove(update_queue, 1)
         perform_update(chunk)
       end
+      -- TODO (sbadragan): undo this one
       renderResultsHeader(buf, context)
-      resultsList.forceRedrawBuffer(buf, context)
-      resultsList.throttledHighlight(buf, context)
+      resultsList.highlight(buf, context)
+      --
+      -- TODO (sbadragan): this does not seem to do it...
+      -- vim.api.nvim__redraw({ buf = buf, flush = true, cursor = true })
+
+      -- resultsList.forceRedrawBuffer(buf, context)
+      -- TODO (sbadragan): this causes slowdown
+      -- resultsList.throttledHighlight(buf, context)
+      -- resultsList.highlight(buf, context)
     end)
   )
 
