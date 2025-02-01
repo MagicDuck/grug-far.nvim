@@ -80,7 +80,7 @@ local function openLocation(params)
   if targetBuf == -1 then
     vim.fn.win_execute(
       targetWin,
-      'keepjumps e! ' .. utils.escape_path_for_cmd(location.filename),
+      'keepjumps silent! e! ' .. utils.escape_path_for_cmd(location.filename),
       true
     )
     targetBuf = vim.api.nvim_win_get_buf(targetWin)
