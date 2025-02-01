@@ -50,6 +50,7 @@ T['engine swaps when reloading from history'] = function()
   child.type_keys('<esc>11G', '<enter>')
   helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
   helpers.childWaitForScreenshotText(child, 'astgrep')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
@@ -58,6 +59,7 @@ T['engine swaps when reloading from history'] = function()
   child.type_keys('<esc>3G', '<enter>')
   helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
   helpers.childWaitForScreenshotText(child, 'ripgrep')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 
@@ -101,6 +103,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
   child.type_keys('<esc>11G', '<enter>')
   helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
   helpers.childWaitForScreenshotText(child, '[lua]')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
@@ -108,6 +111,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
 
   child.type_keys('<esc>3G', '<enter>')
   helpers.childWaitForScreenshotText(child, '14 matches in 1 files')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 
