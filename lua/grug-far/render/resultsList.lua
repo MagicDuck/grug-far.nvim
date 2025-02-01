@@ -46,17 +46,16 @@ local function addLocationMark(buf, context, line, end_col, options)
     right_gravity = true,
     sign_text = sign_text,
     sign_hl_group = options.sign and options.sign.hl or nil,
-    -- TODO (sbadragan): perf problem with this one
-    -- virt_text = resultLocationOpts.showNumberLabel and options.matchLineCount and {
-    --   {
-    --     resultLocationOpts.numberLabelFormat:format(options.matchLineCount),
-    --     'GrugFarResultsNumberLabel',
-    --   },
-    -- } or options.virt_text,
-    -- virt_text_pos = resultLocationOpts.showNumberLabel
-    --     and options.matchLineCount
-    --     and resultLocationOpts.numberLabelPosition
-    --   or options.virt_text_pos,
+    virt_text = resultLocationOpts.showNumberLabel and options.matchLineCount and {
+      {
+        resultLocationOpts.numberLabelFormat:format(options.matchLineCount),
+        'GrugFarResultsNumberLabel',
+      },
+    } or options.virt_text,
+    virt_text_pos = resultLocationOpts.showNumberLabel
+        and options.matchLineCount
+        and resultLocationOpts.numberLabelPosition
+      or options.virt_text_pos,
   })
 end
 

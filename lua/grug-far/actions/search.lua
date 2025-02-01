@@ -36,10 +36,6 @@ local function search(params)
   local abort
   local effectiveArgs
 
-  -- TODO (sbadragan): remove
-  local count = 0
-  local startTime = vim.uv.now()
-
   -- initiate search in UI
   state.status = 'progress'
   state.progressCount = 0
@@ -104,13 +100,8 @@ local function search(params)
     clearResultsIfNeeded()
 
     if data.type == SearchUpdateType.Finish then
-      local time = vim.uv.now() - startTime
-      print('did', count, 'in', time, 'rate duration is', time / count)
-
       on_finish(vim.F.unpack_len(data.params))
     else -- FetchChunk
-      count = count + 1
-
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
       state.stats.matches = state.stats.matches + data.stats.matches
@@ -144,17 +135,8 @@ local function search(params)
         local chunk = table.remove(update_queue, 1)
         perform_update(chunk)
       end
-      -- TODO (sbadragan): undo this one
       renderResultsHeader(buf, context)
       resultsList.highlight(buf, context)
-      --
-      -- TODO (sbadragan): this does not seem to do it...
-      -- vim.api.nvim__redraw({ buf = buf, flush = true, cursor = true })
-
-      -- resultsList.forceRedrawBuffer(buf, context)
-      -- TODO (sbadragan): this causes slowdown
-      -- resultsList.throttledHighlight(buf, context)
-      -- resultsList.highlight(buf, context)
     end)
   )
 
