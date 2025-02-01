@@ -146,7 +146,6 @@ function M.appendResultsChunk(buf, context, data)
         start_col,
         end_col
       )
-      -- TODO (sbadragan): prevent sync when we have longline messages
     end
   end
 

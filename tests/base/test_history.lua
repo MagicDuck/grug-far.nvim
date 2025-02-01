@@ -54,6 +54,7 @@ T['can manually save and reload from history'] = function()
 
   child.type_keys('<esc>24G', '<enter>')
   helpers.childWaitForScreenshotText(child, '4 matches in 2 files')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 
@@ -176,6 +177,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
   helpers.childExpectBufLines(child)
 
   child.type_keys('<esc>12G', '<enter>')
+  -- TODO (sbadragan): we need to fix this for everything as it randomly does it
   helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
   helpers.childWaitForScreenshotText(child, '[lua]')
   helpers.childExpectScreenshot(child)
@@ -185,6 +187,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
 
   child.type_keys('<esc>3G', '<enter>')
   helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 

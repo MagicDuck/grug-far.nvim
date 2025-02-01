@@ -87,11 +87,13 @@ T['can update instance prefills'] = function()
   -- prefill while keeping existing
   child.lua('GrugFar.update_instance_prefills(...)', { instanceName, { paths = 'file1.txt' } })
   helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 
   -- prefill while clearing old
   child.lua('GrugFar.update_instance_prefills(...)', { instanceName, { search = 'walks' }, true })
   helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 

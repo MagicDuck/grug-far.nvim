@@ -110,6 +110,7 @@ local function sync(params)
     state.actionMessage = 'no changes to sync!'
     renderResultsHeader(buf, context)
     vim.notify('grug-far: ' .. state.actionMessage, vim.log.levels.INFO)
+    tasks.finishTask(context, task)
     return
   end
 
