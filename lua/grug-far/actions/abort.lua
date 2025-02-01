@@ -5,7 +5,7 @@ local tasks = require('grug-far.tasks')
 local function abort(params)
   local context = params.context
 
-  local abortedAny = tasks.abortAllTasks(context)
+  local abortedAny = tasks.abortAndFinishAllTasks(context)
 
   -- clear stuff
   if abortedAny then

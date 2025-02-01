@@ -27,9 +27,10 @@ local function search(params)
     return
   end
 
-  -- abort all previous searches
+  -- abort and finish all previous searches
   vim.iter(tasks.getTasksByType(context, 'search')):each(function(t)
-    tasks.abortTask(context, t)
+    tasks.abortTask(t)
+    tasks.finishTask(context, t)
   end)
 
   local task = tasks.createTask(context, 'search')
@@ -101,6 +102,7 @@ local function search(params)
 
     if data.type == SearchUpdateType.Finish then
       on_finish(vim.F.unpack_len(data.params))
+      -- TODO (sbadragan): likely we need to force a rerender here to make tests happy, or inside on_finish
     else -- FetchChunk
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
@@ -118,7 +120,9 @@ local function search(params)
     0,
     UPDATE_INTERVAL,
     vim.schedule_wrap(function()
-      local isDone = state.bufClosed or (task.isFinished and task.abortReason ~= 'abortedEarly')
+      -- note a task that was aborted early (isAborted == true)
+      -- will still continue processing the remaining chunks in the queue
+      local isDone = state.bufClosed or task.isFinished
       if isDone then
         if not update_timer:is_closing() then
           update_timer:stop()
@@ -154,7 +158,7 @@ local function search(params)
       table.insert(update_queue, data)
 
       if abortEarly then
-        tasks.abortTask(context, task, 'abortedEarly')
+        tasks.abortTask(task)
         table.insert(update_queue, {
           params = {
             'success',

@@ -5,13 +5,16 @@ local function close(params)
   local buf = params.buf
   local state = context.state
 
-  local runningTasks = vim.iter(state.tasks):filter(function(task)
-    return task.type ~= 'search' and not task.isFinished
-  end)
+  local runningNonSearchTasks = vim
+    .iter(state.tasks)
+    :filter(function(task)
+      return task.type ~= 'search' and not task.isFinished
+    end)
+    :totable()
 
-  if #runningTasks > 0 then
+  if #runningNonSearchTasks > 0 then
     local choice = vim.fn.confirm(
-      runningTasks[1].type
+      runningNonSearchTasks[1].type
         .. ' task will be aborted. Are you sure you want to close grug-far buffer?',
       '&yes\n&cancel'
     )

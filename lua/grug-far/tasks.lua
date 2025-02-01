@@ -6,7 +6,7 @@ local M = {}
 ---@field id number
 ---@field type GrugFarTaskType
 ---@field abort? fun()
----@field abortReason? string
+---@field isAborted boolean
 ---@field isFinished boolean
 
 local last_task_id = 0
@@ -24,6 +24,7 @@ function M.createTask(context, type, abort)
   local task = {
     id = get_next_task_id(),
     isFinished = false,
+    isAborted = false,
     abort = abort,
     type = type,
   }
@@ -53,7 +54,7 @@ function M.getActiveTasksByType(context, type)
   return vim
     .iter(context.state.tasks)
     :filter(function(task)
-      return not task.isFinished and task.type == type
+      return not task.isFinished and not task.isAborted and task.type == type
     end)
     :totable()
 end
@@ -66,14 +67,28 @@ function M.hasActiveTasksWithType(context, type)
   return #M.getActiveTasksByType(context, type) > 0
 end
 
-local function _abortTask(task, reason)
-  task.abortReason = reason
+--- aborts and finishes all tasks
+---@param context GrugFarContext
+---@return boolean abortedAny
+function M.abortAndFinishAllTasks(context)
+  local abortedAny = false
+  for _, task in ipairs(context.state.tasks) do
+    local wasAborted = M.abortTask(task)
+    M.finishTask(context, task)
+    abortedAny = abortedAny or wasAborted
+  end
 
-  if task.isFinished then
+  return abortedAny
+end
+
+--- aborts given tasks
+---@param task GrugFarTask
+function M.abortTask(task)
+  if task.isAborted then
     return false
   end
 
-  task.isFinished = true
+  task.isAborted = true
   if task.abort then
     task.abort()
   end
@@ -81,40 +96,12 @@ local function _abortTask(task, reason)
   return true
 end
 
---- aborts all tasks
----@param context GrugFarContext
----@return boolean abortedAny
-function M.abortAllTasks(context)
-  local abortedAny = false
-  for _, task in ipairs(context.state.tasks) do
-    local wasAborted = _abortTask(task)
-    abortedAny = abortedAny or wasAborted
-  end
-  context.state.tasks = {}
-
-  return abortedAny
-end
-
---- aborts given tasks
----@param context GrugFarContext
----@param task GrugFarTask
----@param reason? string
-function M.abortTask(context, task, reason)
-  _abortTask(task, reason)
-  context.state.tasks = vim
-    .iter(context.state.tasks)
-    :filter(function(t)
-      return t == task
-    end)
-    :totable()
-end
-
---- finishes given task
+--- finishes given task and removes it from the task list
 ---@param context GrugFarContext
 ---@param task GrugFarTask
 function M.finishTask(context, task)
   task.isFinished = true
-  task.abortReason = nil
+  task.isAborted = false
   context.state.tasks = vim
     .iter(context.state.tasks)
     :filter(function(t)
@@ -128,7 +115,7 @@ function M.task_callback_wrap(context, task, cb)
     if context.state.bufClosed then
       return
     end
-    if task.isFinished then
+    if task.isFinished or task.isAborted then
       return
     end
 

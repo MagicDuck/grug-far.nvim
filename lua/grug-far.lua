@@ -228,7 +228,7 @@ local function setupCleanup(buf, context)
       history.addHistoryEntry(context)
     end
 
-    tasks.abortAllTasks(context)
+    tasks.abortAndFinishAllTasks(context)
     context.state.bufClosed = true
     if context.options.instanceName then
       namedInstances[context.options.instanceName] = nil
