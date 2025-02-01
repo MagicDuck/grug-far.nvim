@@ -480,15 +480,10 @@ function M.highlight(buf, context)
 
   -- Attach the regions to the buffer
   if not vim.tbl_isempty(regions) then
-    -- local startTime = vim.uv.now()
     treesitter.attach(buf, regions)
-    -- TODO (sbadragan): remove
-    -- local time = vim.uv.now() - startTime
-    -- print('treesitter attach took', time)
   end
 end
 
-M.throttledHighlight = utils.throttle(M.highlight, 100)
 M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)
 
 return M
