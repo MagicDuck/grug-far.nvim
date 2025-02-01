@@ -65,7 +65,6 @@ end
 ---@param line integer
 ---@param loc ResultLocation
 local function addHighlightResult(context, line, loc)
-  local end_col = #loc.text
   local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
   if not from then
     return
@@ -83,6 +82,7 @@ local function addHighlightResult(context, line, loc)
     -- try to detect the filetype again
     return
   end
+  local end_col = #loc.text
   local res = { row = line, col = #from, end_col = end_col, lnum = loc.lnum }
   table.insert(results.lines, res)
 end
@@ -93,17 +93,16 @@ end
 ---@param data ParsedResultsData
 function M.appendResultsChunk(buf, context, data)
   -- trim long lines
-  -- TODO (sbadragan): we should trim the lines
-  -- if we have long lines in the buffer, it should prevent sync
-  -- TODO (sbadragan): use some reasonable config opt here, if set to false, it can be turned off
-  local max_line_len = 1000
-  for i = 1, #data.lines do
-    local line = data.lines[i]
-    if #line > max_line_len then
-      data.lines[i] = line:sub(1, max_line_len)
-        .. ' ... (very long line, trimmed to '
-        .. max_line_len
-        .. ' chars)'
+  local maxLineLength = context.options.maxLineLength
+  if maxLineLength > -1 then
+    for i = 1, #data.lines do
+      local line = data.lines[i]
+      if #line > maxLineLength then
+        data.lines[i] = line:sub(1, maxLineLength)
+          .. ' ... (very long line, trimmed to '
+          .. maxLineLength
+          .. ' chars)'
+      end
     end
   end
 
@@ -115,7 +114,11 @@ function M.appendResultsChunk(buf, context, data)
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
     for j = highlight.start_line, highlight.end_line do
-      if j == highlight.start_line and highlight.start_col > max_line_len then
+      if
+        maxLineLength > -1
+        and j == highlight.start_line
+        and highlight.start_col > maxLineLength
+      then
         break
       end
       vim.api.nvim_buf_add_highlight(
@@ -124,9 +127,12 @@ function M.appendResultsChunk(buf, context, data)
         highlight.hl,
         lastline + j,
         j == highlight.start_line and highlight.start_col or 0,
-        j == highlight.end_line and math.min(highlight.end_col, max_line_len) or -1
+        j == highlight.end_line
+            and (maxLineLength > -1 and math.min(highlight.end_col, maxLineLength) or highlight.end_col)
+          or -1
       )
       -- TODO (sbadragan): to be fancy, highlight the longline message
+      -- TODO (sbadragan): prevent sync when we have longline messages
     end
   end
 
