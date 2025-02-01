@@ -46,16 +46,17 @@ local function addLocationMark(buf, context, line, end_col, options)
     right_gravity = true,
     sign_text = sign_text,
     sign_hl_group = options.sign and options.sign.hl or nil,
-    virt_text = resultLocationOpts.showNumberLabel and options.matchLineCount and {
-      {
-        resultLocationOpts.numberLabelFormat:format(options.matchLineCount),
-        'GrugFarResultsNumberLabel',
-      },
-    } or options.virt_text,
-    virt_text_pos = resultLocationOpts.showNumberLabel
-        and options.matchLineCount
-        and resultLocationOpts.numberLabelPosition
-      or options.virt_text_pos,
+    -- TODO (sbadragan): perf problem with this one
+    -- virt_text = resultLocationOpts.showNumberLabel and options.matchLineCount and {
+    --   {
+    --     resultLocationOpts.numberLabelFormat:format(options.matchLineCount),
+    --     'GrugFarResultsNumberLabel',
+    --   },
+    -- } or options.virt_text,
+    -- virt_text_pos = resultLocationOpts.showNumberLabel
+    --     and options.matchLineCount
+    --     and resultLocationOpts.numberLabelPosition
+    --   or options.virt_text_pos,
   })
 end
 
@@ -65,6 +66,7 @@ end
 ---@param line integer
 ---@param loc ResultLocation
 local function addHighlightResult(context, line, loc)
+  local end_col = #loc.text
   local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
   if not from then
     return
@@ -82,7 +84,7 @@ local function addHighlightResult(context, line, loc)
     -- try to detect the filetype again
     return
   end
-  local res = { row = line, col = #from, end_col = #loc.text, lnum = loc.lnum }
+  local res = { row = line, col = #from, end_col = end_col, lnum = loc.lnum }
   table.insert(results.lines, res)
 end
 
@@ -91,21 +93,41 @@ end
 ---@param context GrugFarContext
 ---@param data ParsedResultsData
 function M.appendResultsChunk(buf, context, data)
+  -- trim long lines
+  -- TODO (sbadragan): we should trim the lines
+  -- if we have long lines in the buffer, it should prevent sync
+  -- TODO (sbadragan): use some reasonable config opt here, if set to false, it can be turned off
+  local max_line_len = 1000
+  for i = 1, #data.lines do
+    local line = data.lines[i]
+    if #line > max_line_len then
+      data.lines[i] = line:sub(1, max_line_len)
+        .. ' ... (very long line, trimmed to '
+        .. max_line_len
+        .. ' chars)'
+    end
+  end
+
   -- add text
   local lastline = vim.api.nvim_buf_line_count(buf)
   setBufLines(buf, lastline, lastline, false, data.lines)
+
   -- add highlights
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
     for j = highlight.start_line, highlight.end_line do
+      if j == highlight.start_line and highlight.start_col > max_line_len then
+        break
+      end
       vim.api.nvim_buf_add_highlight(
         buf,
         context.namespace,
         highlight.hl,
         lastline + j,
         j == highlight.start_line and highlight.start_col or 0,
-        j == highlight.end_line and highlight.end_col or -1
+        j == highlight.end_line and math.min(highlight.end_col, max_line_len) or -1
       )
+      -- TODO (sbadragan): to be fancy, highlight the longline message
     end
   end
 
@@ -458,11 +480,15 @@ function M.highlight(buf, context)
 
   -- Attach the regions to the buffer
   if not vim.tbl_isempty(regions) then
+    -- local startTime = vim.uv.now()
     treesitter.attach(buf, regions)
+    -- TODO (sbadragan): remove
+    -- local time = vim.uv.now() - startTime
+    -- print('treesitter attach took', time)
   end
 end
 
-M.throttledHighlight = utils.throttle(M.highlight, 500)
+M.throttledHighlight = utils.throttle(M.highlight, 100)
 M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)
 
 return M
