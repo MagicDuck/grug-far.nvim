@@ -32,8 +32,10 @@ local function fillInput(context, buf, name, value, clearOld)
     local newLines = vim.split(value or '', '\n')
     -- note: we need to adopt this tricky way of inserting the value in order to move
     -- the next inputs extmark position down appropriately
-    vim.api.nvim_buf_set_lines(buf, inputRow, inputRow + oldNumInputLines - 1, true, newLines)
-    vim.api.nvim_buf_set_lines(buf, inputRow + #newLines, inputRow + #newLines + 1, true, {})
+    vim.api.nvim_buf_set_text(buf, inputRow, 0, inputRow, 0, newLines)
+    print('fill input', name, vim.inspect(newLines))
+    -- vim.api.nvim_buf_set_lines(buf, inputRow, inputRow + oldNumInputLines - 1, true, newLines)
+    -- vim.api.nvim_buf_set_lines(buf, inputRow + #newLines, inputRow + #newLines + 1, true, {})
   end
 end
 
@@ -44,12 +46,20 @@ end
 ---@param values GrugFarPrefills | GrugFarPrefillsOverride
 ---@param clearOld boolean
 function M.fill(context, buf, values, clearOld)
+  P(values)
   -- filling in reverse order as it's more reliable with the left gravity extmarks
-  fillInput(context, buf, M.InputNames.paths, values.paths, clearOld)
-  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
-  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
-  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
+  -- fillInput(context, buf, M.InputNames.paths, values.paths, clearOld)
+  -- fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
+  -- fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
+  -- fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
+  -- fillInput(context, buf, M.InputNames.search, values.search, clearOld)
+
   fillInput(context, buf, M.InputNames.search, values.search, clearOld)
+  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
+  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
+  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
+  fillInput(context, buf, M.InputNames.paths, values.paths, clearOld)
+  -- vim.api.nvim__redraw({ buf = buf, flush = true })
   vim.schedule(function()
     -- hack to get syntax highlighting to render correctly
     vim.api.nvim_buf_set_lines(buf, 0, 0, false, {})

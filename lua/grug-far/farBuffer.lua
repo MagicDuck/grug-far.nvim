@@ -356,16 +356,18 @@ function M.createBuffer(win, context)
   vim.schedule(function()
     render(buf, context)
 
-    inputs.fill(context, buf, context.options.prefills, true)
-    updateBufName(buf, context)
+    vim.schedule(function()
+      inputs.fill(context, buf, context.options.prefills, true)
+      updateBufName(buf, context)
 
-    pcall(vim.api.nvim_win_set_cursor, win, { context.options.startCursorRow, 0 })
-    if context.options.startInInsertMode then
-      vim.cmd('startinsert!')
-    end
+      pcall(vim.api.nvim_win_set_cursor, win, { context.options.startCursorRow, 0 })
+      if context.options.startInInsertMode then
+        vim.cmd('startinsert!')
+      end
 
-    -- launch a search in case there are prefills
-    searchOnChange()
+      -- launch a search in case there are prefills
+      searchOnChange()
+    end)
   end)
 
   return buf
