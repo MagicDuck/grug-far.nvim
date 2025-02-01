@@ -58,7 +58,11 @@ local function gotoLocation(params)
   vim.api.nvim_command([[execute "normal! m` "]])
 
   if bufnr == -1 then
-    vim.fn.win_execute(targetWin, 'e ' .. utils.escape_path_for_cmd(location.filename), true)
+    vim.fn.win_execute(
+      targetWin,
+      'silent! edit ' .. utils.escape_path_for_cmd(location.filename),
+      true
+    )
   else
     vim.api.nvim_win_set_buf(targetWin, bufnr)
   end
