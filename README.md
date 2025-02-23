@@ -51,9 +51,13 @@ Grug find! Grug replace! Grug happy!
 #### Astgrep with vimscript interpreted replacement
 <img width="1257" alt="image" src="https://github.com/user-attachments/assets/34eebeda-4e29-4fed-a751-eac3f879425c" />
 
-
-
 </details>
+
+### Video
+
+*linkarzu* has kindly made a video which shows off some of the features in action (don't forget to thank him for his hard work by liking if you found it helpful):
+
+[![linkarzu youtube video](https://img.youtube.com/vi/AK1TSwJrB3k/0.jpg)](https://www.youtube.com/watch?v=AK1TSwJrB3k)
 
 ## 🤔 Philosophy
 
