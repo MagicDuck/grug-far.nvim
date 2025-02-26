@@ -146,6 +146,22 @@ local function search(params)
     end)
   )
 
+  local numSearchChars = #state.inputs.search
+  if numSearchChars > 0 and numSearchChars < (context.options.minSearchChars or 1) then
+    table.insert(update_queue, {
+      params = {
+        'success',
+        nil,
+        'Please enter at least '
+          .. context.options.minSearchChars
+          .. ' search chars to trigger search!',
+      },
+      type = SearchUpdateType.Finish,
+    })
+
+    return
+  end
+
   local fetched_matches = 0
   abort, effectiveArgs = context.engine.search({
     inputs = state.inputs,
