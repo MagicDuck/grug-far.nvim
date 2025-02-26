@@ -52,6 +52,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: neovim/neovim
+          ref: 'v0.10.1'
           path: deps/neovim
       - name: Type Check Code Base
         uses: mrcjkb/lua-typecheck-action@v1
