@@ -43,20 +43,10 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
-      - name: Checkout luvit types
-        uses: actions/checkout@v4
-        with:
-          repository: Bilal2453/luvit-meta
-          path: deps/luvit-meta
-      - name: Checkout Neovim Types
-        uses: actions/checkout@v4
-        with:
-          repository: neovim/neovim
-          ref: 'v0.10.1'
-          path: deps/neovim
       - name: Type Check Code Base
-        uses: mrcjkb/lua-typecheck-action@v1
+        uses: stevearc/nvim-typecheck-action@v2
         with:
           configpath: .github/workflows/.luarc.json
-          directories: |
-            lua
+          path: lua
+          level: Warning
+          nvim-version: v0.10.1

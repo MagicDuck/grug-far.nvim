@@ -105,9 +105,11 @@ function M._attach_lang(buf, lang, regions, regionsId)
     if not ok then
       return
     end
+    ---@diagnostic disable-next-line: invisible
     parser:set_included_regions(regions)
     M.cache[buf][cacheKey] = {
       parser = parser,
+      ---@diagnostic disable-next-line: invisible
       highlighter = TSHighlighter.new(parser),
       regionsId = regionsId,
     }
