@@ -95,10 +95,33 @@ M.defaultOptions = {
         paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
       },
     },
+
+    astgreprule = {
+      -- ast-grep executable to use, can be a different path if you need to configure
+      path = 'sg',
+
+      -- extra args that you always want to pass
+      -- like for example if you always want context lines around matches
+      extraArgs = '',
+
+      -- placeholders to show in input areas when they are empty
+      -- set individual ones to '' to disable, or set enabled = false for complete disable
+      placeholders = {
+        -- whether to show placeholders
+        enabled = true,
+
+        search = 'e.g. $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
+        replacement = 'e.g. $A?.()   blah($$$ARGS)',
+        replacement_lua = 'e.g. return vars.A == "blah" and "foo(" .. table.concat(vars.ARGS, ", ") .. ")" or match',
+        filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
+        flags = 'e.g. --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
+        paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
+      },
+    },
   },
 
   -- search and replace engine to use.
-  -- Must be one of 'ripgrep' | 'astgrep' | nil
+  -- Must be one of 'ripgrep' | 'astgrep' | 'astgreprule' | nil
   -- if nil, defaults to 'ripgrep'
   engine = 'ripgrep',
 
@@ -530,12 +553,13 @@ M.defaultOptions = {
 ---@class EnginesTable
 ---@field ripgrep RipgrepEngineTable
 ---@field astgrep AstgrepEngineTable
+---@field astgreprule AstgrepEngineTable
 
 ---@class EnginesTableOverride
 ---@field ripgrep? RipgrepEngineTableOverride
 ---@field astgrep? AstgrepEngineTableOverride
 
----@alias GrugFarEngineType "ripgrep" | "astgrep"
+---@alias GrugFarEngineType "ripgrep" | "astgrep" | "astgreprule"
 ---@alias GrugFarReplacementInterpreterType "lua" | "vimscript" | "default"
 
 ---@alias NumberLabelPosition "right_align" | "eol" | "inline"

@@ -110,7 +110,7 @@ end
 --- does replace
 ---@param params EngineReplaceParams
 ---@return fun()? abort
-function M.replace(params)
+function M.replace(params, isRuleMode)
   local report_progress = params.report_progress
   local on_finish = params.on_finish
 
@@ -118,7 +118,7 @@ function M.replace(params)
     '--update-all',
   }
   local args, blacklistedArgs =
-    getArgs(params.inputs, params.options, extraArgs, blacklistedReplaceFlags, true)
+    getArgs(params.inputs, params.options, extraArgs, blacklistedReplaceFlags, true, isRuleMode)
 
   if blacklistedArgs and #blacklistedArgs > 0 then
     on_finish(nil, nil, 'replace cannot work with flags: ' .. table.concat(blacklistedArgs, ', '))
@@ -130,7 +130,7 @@ function M.replace(params)
     return
   end
 
-  if #params.inputs.replacement == 0 then
+  if not isRuleMode and #params.inputs.replacement == 0 then
     local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
     if choice ~= 1 then
       on_finish(nil, nil, 'replace with empty string canceled!')
