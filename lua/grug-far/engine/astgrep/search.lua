@@ -15,11 +15,11 @@ local M = {}
 ---@param inputs GrugFarInputs
 ---@param options GrugFarOptions
 ---@return string[]?
-function M.getSearchArgs(inputs, options)
+function M.getSearchArgs(inputs, options, isRuleMode)
   local extraArgs = {
     '--json=stream',
   }
-  return getArgs(inputs, options, extraArgs, blacklistedSearchFlags)
+  return getArgs(inputs, options, extraArgs, blacklistedSearchFlags, false, isRuleMode)
 end
 
 --- is doing a search with replacement?
@@ -123,7 +123,7 @@ end
 --- does search
 ---@param params EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
-function M.search(params)
+function M.search(params, isRuleMode)
   local on_finish = params.on_finish
   local sg_version = getAstgrepVersion(params.options)
   if not sg_version then
@@ -158,7 +158,7 @@ function M.search(params)
     return
   end
 
-  local args, blacklistedArgs = M.getSearchArgs(params.inputs, params.options)
+  local args, blacklistedArgs = M.getSearchArgs(params.inputs, params.options, isRuleMode)
 
   if blacklistedArgs and #blacklistedArgs > 0 then
     on_finish(nil, nil, 'search cannot work with flags: ' .. table.concat(blacklistedArgs, ', '))

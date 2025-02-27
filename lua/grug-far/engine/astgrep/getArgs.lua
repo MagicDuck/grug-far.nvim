@@ -12,15 +12,16 @@ local rewriteFlags = {
 ---@param extraArgs string[]
 ---@param blacklistedFlags? string[]
 ---@param forceReplace? boolean
+---@param isRuleMode? boolean
 ---@return string[]? args, string[]? blacklisted
-local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplace)
+local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplace, isRuleMode)
   if #inputs.search < (options.minSearchChars or 1) then
     return nil
   end
 
-  local args = { 'run' }
+  local args = isRuleMode and { 'scan' } or { 'run' }
 
-  if forceReplace or #inputs.replacement > 0 then
+  if not isRuleMode and (forceReplace or #inputs.replacement > 0) then
     table.insert(args, '--rewrite=' .. inputs.replacement)
   end
 
@@ -64,8 +65,10 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   end
 
   -- required args
-  table.insert(args, '--heading=always')
   table.insert(args, '--color=never')
+  if not isRuleMode then
+    table.insert(args, '--heading=always')
+  end
 
   for i = 1, #extraArgs do
     table.insert(args, extraArgs[i])
@@ -82,7 +85,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
     end
   end
 
-  table.insert(args, '--pattern=' .. inputs.search)
+  table.insert(args, (isRuleMode and '--inline-rules=' or '--pattern=') .. inputs.search)
 
   return args, nil
 end
