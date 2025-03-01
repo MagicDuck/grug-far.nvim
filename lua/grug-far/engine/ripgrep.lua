@@ -6,15 +6,10 @@ local sync = require('grug-far.engine.ripgrep.sync')
 local RipgrepEngine = {
   type = 'ripgrep',
 
-  -- TODO (sbadragan): update history
-  --   we can omit rendering the Replace input for astgrep-rules
-  -- we could define labels for each input in opts, similar to how we now do placeholders. So we could rename Search to Rules for astgrep-rules engine specifically.
-  -- we can have prefills respect those inputs
-  -- we can have history respect those input labels
-  -- TODO (sbadragan): update prefills
   -- TODO (sbadragan): what do do on engine change default behaviour
-  -- TODO (sbadragan): Ideally we would make higlightLang configurable per input per engine
   -- TODO (sbadragan): test with a rules one
+  --   we can omit rendering the Replace input for astgrep-rules
+  --  we could define labels for each input in opts, similar to how we now do placeholders. So we could rename Search to Rules for astgrep-rules engine specifically.
   inputs = {
     {
       name = 'search',

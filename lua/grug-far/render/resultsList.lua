@@ -149,7 +149,6 @@ function M.appendResultsChunk(buf, context, data)
     end
   end
 
-  -- TODO (sbadragan): add a test for long line search
   if maxLineLength > -1 then
     local trimmedLineMsgLen = #getTrimmedLineMessage(maxLineLength)
     for i = 1, #data.lines do
