@@ -1,19 +1,9 @@
 local M = {}
 
--- TODO (sbadragan): remove this?
----@enum InputNames
-M.InputNames = {
-  search = 'search',
-  replacement = 'replacement',
-  filesFilter = 'filesFilter',
-  flags = 'flags',
-  paths = 'paths',
-}
-
 --- fills in given input
 ---@param context GrugFarContext
 ---@param buf integer
----@param name InputNames
+---@param name string
 ---@param value string?
 ---@param clearOld boolean?
 local function fillInput(context, buf, name, value, clearOld)
@@ -46,11 +36,10 @@ end
 ---@param clearOld boolean
 function M.fill(context, buf, values, clearOld)
   -- filling in reverse order as it's more reliable with the left gravity extmarks
-  fillInput(context, buf, M.InputNames.paths, values.paths, clearOld)
-  fillInput(context, buf, M.InputNames.flags, values.flags, clearOld)
-  fillInput(context, buf, M.InputNames.filesFilter, values.filesFilter, clearOld)
-  fillInput(context, buf, M.InputNames.replacement, values.replacement, clearOld)
-  fillInput(context, buf, M.InputNames.search, values.search, clearOld)
+  for i = #context.engine.inputs, 1, -1 do
+    local input = context.engine.inputs[i]
+    fillInput(context, buf, input.name, values[input.name], clearOld)
+  end
   vim.schedule(function()
     -- hack to get syntax highlighting to render correctly
     vim.api.nvim_buf_set_lines(buf, 0, 0, false, {})
@@ -70,13 +59,12 @@ end
 ---@param row integer
 ---@return InputDetails?
 function M.getInputAtRow(context, buf, row)
-  local names = {
-    M.InputNames.search,
-    M.InputNames.replacement,
-    M.InputNames.filesFilter,
-    M.InputNames.flags,
-    M.InputNames.paths,
-  }
+  local names = vim
+    .iter(context.engine.inputs)
+    :map(function(input)
+      return input.name
+    end)
+    :totable()
   for i, input_name in ipairs(names) do
     local extmarkId = context.extmarkIds[input_name]
     local nextExtmarkId = context.extmarkIds[i < #names and names[i + 1] or 'results_header']
