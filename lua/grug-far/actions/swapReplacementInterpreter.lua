@@ -7,6 +7,13 @@ local function swapReplacementInterpreter(params)
   local context = params.context
   local buf = params.buf
 
+  local isReplacementInterpreterUsed = vim.iter(context.engine.inputs):find(function(input)
+    return input.replacementInterpreterEnabled
+  end)
+  if not isReplacementInterpreterUsed then
+    return
+  end
+
   local interpreters = vim.deepcopy(context.options.enabledReplacementInterpreters)
   table.insert(interpreters, 'default')
   local currentIndex = vim.fn.index(
