@@ -5,6 +5,46 @@ local replace = require('grug-far.engine.astgrep.replace')
 local AstgrepEngine = {
   type = 'astgrep',
 
+  inputs = {
+    {
+      -- TODO (sbadragan): test with a rules one
+      -- TODO (sbadragan): set back
+      name = 'rules',
+      label = 'Rules',
+      iconName = 'searchInput',
+      highlightLang = 'regex',
+      trim = false,
+    },
+    {
+      name = 'replacement',
+      label = 'Replace',
+      iconName = 'replaceInput',
+      highlightLang = nil,
+      trim = false,
+    },
+    {
+      name = 'filesFilter',
+      label = 'Files Filter',
+      iconName = 'filesFilterInput',
+      highlightLang = 'gitignore',
+      trim = true,
+    },
+    {
+      name = 'flags',
+      label = 'Flags',
+      iconName = 'flagsInput',
+      highlightLang = 'bash',
+      trim = true,
+    },
+    {
+      name = 'paths',
+      label = 'Paths',
+      iconName = 'pathsInput',
+      highlightLang = 'bash',
+      trim = true,
+    },
+  },
+
   isSearchWithReplacement = function(inputs, options)
     local args = search.getSearchArgs(inputs, options)
     return search.isSearchWithReplacement(args)
@@ -30,6 +70,14 @@ local AstgrepEngine = {
     local prefills = vim.deepcopy(initialPrefills)
     prefills.search = table.concat(visual_selection, '\n')
     return prefills
+  end,
+
+  getSearchDescription = function(inputs)
+    return inputs.search
+  end,
+
+  isEmptySearch = function(inputs)
+    return #inputs.search == 0
   end,
 }
 

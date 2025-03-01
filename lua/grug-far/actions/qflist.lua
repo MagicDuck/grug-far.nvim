@@ -5,11 +5,13 @@ local utils = require('grug-far.utils')
 ---@param context GrugFarContext
 ---@param resultsLocations ResultLocation[]
 local function openQuickfixList(buf, context, resultsLocations)
-  local search = context.state.inputs.search
   vim.fn.setqflist(resultsLocations, ' ')
   vim.fn.setqflist({}, 'a', {
-    title = 'Grug FAR results'
-      .. utils.strEllideAfter(search, context.options.maxSearchCharsInTitles, ' for: '),
+    title = 'Grug FAR results' .. utils.strEllideAfter(
+      context.engine.getSearchDescription(context.state.inputs),
+      context.options.maxSearchCharsInTitles,
+      ' for: '
+    ),
   })
 
   -- open/goto target win so that quickfix list will open items into the terget win

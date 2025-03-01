@@ -76,8 +76,16 @@ M.DiffSeparatorChars = ' '
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
 ---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 
+---@class GrugFarEngineInput
+---@field name string
+---@field label string
+---@field iconName string
+---@field highlightLang? string
+---@field trim boolean
+
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType
+---@field inputs GrugFarEngineInput[]
 ---@field isSearchWithReplacement fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean is this a search with replacement
 ---@field showsReplaceDiff fun(options: GrugFarOptions): boolean whether we show a diff when replacing
 ---@field search fun(params: EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?) performs search
@@ -85,6 +93,8 @@ M.DiffSeparatorChars = ' '
 ---@field isSyncSupported fun(): boolean whether sync operation is supported
 ---@field sync fun(params: EngineSyncParams): (abort: fun()?) syncs given changes to their originating files
 ---@field getInputPrefillsForVisualSelection fun(visual_selection: string[], initialPrefills: GrugFarPrefills): GrugFarPrefills gets prefills updated with visual selection searchand any additional flags that are necessary (for example --fixed-strings for rg)
+---@field getSearchDescription fun(inputs: GrugFarInputs): string a string describing the current search to be used as buffer title for example
+---@field isEmptySearch fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean whether search query is empty
 
 --- returns engine given type
 ---@param type GrugFarEngineType

@@ -6,6 +6,44 @@ local sync = require('grug-far.engine.ripgrep.sync')
 local RipgrepEngine = {
   type = 'ripgrep',
 
+  inputs = {
+    {
+      name = 'search',
+      label = 'Search',
+      iconName = 'searchInput',
+      highlightLang = 'regex',
+      trim = false,
+    },
+    {
+      name = 'replacement',
+      label = 'Replace',
+      iconName = 'replaceInput',
+      highlightLang = nil,
+      trim = false,
+    },
+    {
+      name = 'filesFilter',
+      label = 'Files Filter',
+      iconName = 'filesFilterInput',
+      highlightLang = 'gitignore',
+      trim = true,
+    },
+    {
+      name = 'flags',
+      label = 'Flags',
+      iconName = 'flagsInput',
+      highlightLang = 'bash',
+      trim = true,
+    },
+    {
+      name = 'paths',
+      label = 'Paths',
+      iconName = 'pathsInput',
+      highlightLang = 'bash',
+      trim = true,
+    },
+  },
+
   isSearchWithReplacement = function(inputs, options)
     local args = search.getSearchArgs(inputs, options)
     return search.isSearchWithReplacement(args)
@@ -39,6 +77,14 @@ local RipgrepEngine = {
     prefills.flags = flags
 
     return prefills
+  end,
+
+  getSearchDescription = function(inputs)
+    return inputs.search
+  end,
+
+  isEmptySearch = function(inputs)
+    return #inputs.search == 0
   end,
 }
 

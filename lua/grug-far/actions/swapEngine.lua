@@ -14,6 +14,10 @@ local function swapEngine(params)
   context.engine = engine.getEngine(nextEngineType)
   vim.notify('grug-far: swapped to engine: ' .. context.engine.type .. '!', vim.log.levels.INFO)
   search({ buf = buf, context = context })
+
+  -- TODO (sbadragan): need to somehow clear the extmark that was rendered for Search: input...
+  -- and the associated value
+  -- then fillInput with default for the ones that have a default.
 end
 
 return swapEngine

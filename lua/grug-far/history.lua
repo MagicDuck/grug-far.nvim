@@ -36,10 +36,13 @@ end
 ---@param context GrugFarContext
 ---@param notify? boolean
 function M.addHistoryEntry(context, notify)
-  local inputs = context.state.inputs
-  if
-    #inputs.search + #inputs.replacement + #inputs.flags + #inputs.filesFilter + #inputs.paths == 0
-  then
+  local inputsLen = 0
+  for _, input in ipairs(context.engine.inputs) do
+    local value = context.state.inputs[input.name]
+    inputsLen = inputsLen + #value
+  end
+
+  if inputsLen == 0 then
     return -- nothing to save
   end
   local historyFilename = M.getHistoryFilename(context)
@@ -61,18 +64,19 @@ function M.addHistoryEntry(context, notify)
     vim.schedule(function()
       local entry = '\n\nEngine: '
         .. context.engine.type
-        .. (context.replacementInterpreter and engine_field_sep .. context.replacementInterpreter.type or '')
-        .. '\nSearch: '
-        .. formatInputValue(inputs.search)
-        .. '\nReplace: '
-        .. formatInputValue(inputs.replacement)
-        .. '\nFiles Filter: '
-        .. formatInputValue(inputs.filesFilter)
-        .. '\nFlags: '
-        .. formatInputValue(inputs.flags)
-        .. '\nPaths: '
-        .. formatInputValue(inputs.paths)
-        .. '\n'
+        .. (
+          context.replacementInterpreter
+            and engine_field_sep .. context.replacementInterpreter.type
+          or ''
+        )
+      for _, input in ipairs(context.engine.inputs) do
+        entry = entry
+          .. '\n'
+          .. input.label
+          .. ': '
+          .. formatInputValue(context.state.inputs[input.name])
+      end
+      entry = entry .. '\n'
 
       -- dedupe last entry
       local newContents = contents or ''
@@ -136,21 +140,23 @@ end
 ---@field paths string
 
 --- gets history entry from list of lines
+---@param context GrugFarContext
 ---@param lines string[]
 ---@return HistoryEntry
-function M.getHistoryEntryFromLines(lines)
+function M.getHistoryEntryFromLines(context, lines)
   local engine_val = getFirstValueStartingWith(lines, 'Engine:[ ]?')
   local engine, replacementInterpreter = unpack(vim.split(engine_val, engine_field_sep))
 
-  return {
+  local entry = {
     engine = vim.trim(engine),
     replacementInterpreter = replacementInterpreter and vim.trim(replacementInterpreter) or nil,
-    search = getFirstValueStartingWith(lines, 'Search:[ ]?'),
-    replacement = getFirstValueStartingWith(lines, 'Replace:[ ]?'),
-    filesFilter = getFirstValueStartingWith(lines, 'Files Filter:[ ]?'),
-    flags = getFirstValueStartingWith(lines, 'Flags:[ ]?'),
-    paths = getFirstValueStartingWith(lines, 'Paths:[ ]?'),
   }
+
+  for _, input in ipairs(context.engine.inputs) do
+    entry[input.name] = getFirstValueStartingWith(lines, input.label .. ':[ ]?')
+  end
+
+  return entry
 end
 
 return M
