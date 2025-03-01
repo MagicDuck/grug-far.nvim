@@ -22,10 +22,10 @@ local function render(buf, context)
     }, context)
   end
 
-  lineNr = lineNr + TOP_EMPTY_LINES - 1
+  lineNr = lineNr + TOP_EMPTY_LINES
 
   for i, input in ipairs(context.engine.inputs) do
-    lineNr = lineNr + 1
+    local prevInput = context.engine.inputs[i - 1]
     local nextInput = context.engine.inputs[i + 1]
 
     local label = input.label
@@ -47,6 +47,7 @@ local function render(buf, context)
       buf = buf,
       lineNr = lineNr,
       extmarkName = input.name,
+      prevExtmarkName = prevInput and prevInput.name or nil,
       nextExtmarkName = nextInput and nextInput.name or 'results_header',
       icon = input.iconName,
       label = label .. ':',
@@ -55,9 +56,10 @@ local function render(buf, context)
     }, context)
 
     state.inputs[input.name] = input.trim and vim.trim(value) or value
+
+    lineNr = lineNr + 1
   end
 
-  lineNr = lineNr + 1
   renderResults({
     buf = buf,
     minLineNr = lineNr,
