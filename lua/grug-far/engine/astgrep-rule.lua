@@ -3,7 +3,7 @@ local replace = require('grug-far.engine.astgrep.replace')
 
 ---@type GrugFarEngine
 local AstgrepEngine = {
-  type = 'astgreprule',
+  type = 'astgrep-rule',
 
   isSearchWithReplacement = function(inputs, options)
     local args = search.getSearchArgs(inputs, options, true)

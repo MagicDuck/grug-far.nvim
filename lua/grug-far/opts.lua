@@ -96,7 +96,7 @@ M.defaultOptions = {
       },
     },
 
-    astgreprule = {
+    ['astgrep-rule'] = {
       -- ast-grep executable to use, can be a different path if you need to configure
       path = 'sg',
 
@@ -121,7 +121,7 @@ M.defaultOptions = {
   },
 
   -- search and replace engine to use.
-  -- Must be one of 'ripgrep' | 'astgrep' | 'astgreprule' | nil
+  -- Must be one of 'ripgrep' | 'astgrep' | 'astgrep-rule' | nil
   -- if nil, defaults to 'ripgrep'
   engine = 'ripgrep',
 
@@ -553,13 +553,13 @@ M.defaultOptions = {
 ---@class EnginesTable
 ---@field ripgrep RipgrepEngineTable
 ---@field astgrep AstgrepEngineTable
----@field astgreprule AstgrepEngineTable
+---@field astgrep-rule AstgrepEngineTable
 
 ---@class EnginesTableOverride
 ---@field ripgrep? RipgrepEngineTableOverride
 ---@field astgrep? AstgrepEngineTableOverride
 
----@alias GrugFarEngineType "ripgrep" | "astgrep" | "astgreprule"
+---@alias GrugFarEngineType "ripgrep" | "astgrep" | "astgrep-rule"
 ---@alias GrugFarReplacementInterpreterType "lua" | "vimscript" | "default"
 
 ---@alias NumberLabelPosition "right_align" | "eol" | "inline"
