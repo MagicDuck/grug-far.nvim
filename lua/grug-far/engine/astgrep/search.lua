@@ -135,6 +135,17 @@ function M.search(params)
     )
     return
   end
+  local numSearchChars = #params.inputs.search
+  if numSearchChars > 0 and numSearchChars < (params.options.minSearchChars or 1) then
+    params.on_finish(
+      'success',
+      nil,
+      'Please enter at least '
+        .. params.options.minSearchChars
+        .. ' search chars to trigger search!'
+    )
+    return
+  end
 
   local rg_version = getRgVersion(params.options)
   if not rg_version then
