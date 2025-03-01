@@ -82,6 +82,10 @@ local RipgrepEngine = {
 
     return prefills
   end,
+
+  getSearchDescription = function(inputs)
+    return inputs.search
+  end,
 }
 
 return RipgrepEngine
