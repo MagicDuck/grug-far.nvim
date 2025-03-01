@@ -298,8 +298,8 @@ function M.createBuffer(win, context)
 
     -- do a search immediately if either:
     -- 1. manually searching
-    -- 2. auto debounce searching and query is empty string, to improve responsiveness
-    if state.normalModeSearch or state.inputs.search == '' then
+    -- 2. auto debounce searching and query is empty, to improve responsiveness
+    if state.normalModeSearch or context.engine.isEmptySearch(state.inputs, context.options) then
       search({ buf = buf, context = context })
     else
       debouncedSearch({ buf = buf, context = context })

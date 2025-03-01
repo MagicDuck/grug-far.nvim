@@ -6,10 +6,6 @@ local sync = require('grug-far.engine.ripgrep.sync')
 local RipgrepEngine = {
   type = 'ripgrep',
 
-  -- TODO (sbadragan): what do do on engine change default behaviour
-  -- TODO (sbadragan): test with a rules one
-  --   we can omit rendering the Replace input for astgrep-rules
-  --  we could define labels for each input in opts, similar to how we now do placeholders. So we could rename Search to Rules for astgrep-rules engine specifically.
   inputs = {
     {
       name = 'search',
@@ -85,6 +81,10 @@ local RipgrepEngine = {
 
   getSearchDescription = function(inputs)
     return inputs.search
+  end,
+
+  isEmptySearch = function(inputs)
+    return #inputs.search == 0
   end,
 }
 

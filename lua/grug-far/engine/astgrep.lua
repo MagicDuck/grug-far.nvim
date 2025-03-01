@@ -7,8 +7,10 @@ local AstgrepEngine = {
 
   inputs = {
     {
-      name = 'search',
-      label = 'Search',
+      -- TODO (sbadragan): test with a rules one
+      -- TODO (sbadragan): set back
+      name = 'rules',
+      label = 'Rules',
       iconName = 'searchInput',
       highlightLang = 'regex',
       trim = false,
@@ -72,6 +74,10 @@ local AstgrepEngine = {
 
   getSearchDescription = function(inputs)
     return inputs.search
+  end,
+
+  isEmptySearch = function(inputs)
+    return #inputs.search == 0
   end,
 }
 
