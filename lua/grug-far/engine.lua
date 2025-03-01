@@ -83,6 +83,7 @@ M.DiffSeparatorChars = ' '
 ---@field highlightLang? string
 ---@field trim boolean
 ---@field replacementInterpreterEnabled? boolean
+---@field getDefaultValue? fun(context: GrugFarContext): string
 
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType
