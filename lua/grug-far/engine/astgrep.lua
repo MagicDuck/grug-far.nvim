@@ -14,6 +14,12 @@ local AstgrepEngine = {
       iconName = 'searchInput',
       highlightLang = 'regex',
       trim = false,
+      getDefaultValue = function(context)
+        return [[
+hello world
+of many rules]]
+      end,
+      -- TODO (sbadragan): clear the flags with default value??
     },
     {
       name = 'replacement',
