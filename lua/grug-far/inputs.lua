@@ -1,5 +1,6 @@
 local M = {}
 
+-- TODO (sbadragan): remove this?
 ---@enum InputNames
 M.InputNames = {
   search = 'search',
