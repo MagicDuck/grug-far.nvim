@@ -32,8 +32,7 @@ local function render(buf, context)
     local placeholder = placeholders[input.name]
     local highlightLang = input.highlightLang
 
-    -- special treatment for replacement interpreter
-    if input.name == 'replacement' then
+    if input.replacementInterpreterEnabled then
       local interpreterType = context.replacementInterpreter and context.replacementInterpreter.type
         or nil
       if interpreterType then

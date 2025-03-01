@@ -82,6 +82,7 @@ M.DiffSeparatorChars = ' '
 ---@field iconName string
 ---@field highlightLang? string
 ---@field trim boolean
+---@field replacementInterpreterEnabled? boolean
 
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType

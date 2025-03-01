@@ -20,6 +20,7 @@ local RipgrepEngine = {
       iconName = 'replaceInput',
       highlightLang = nil,
       trim = false,
+      replacementInterpreterEnabled = true,
     },
     {
       name = 'filesFilter',
