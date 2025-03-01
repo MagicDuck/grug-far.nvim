@@ -1,12 +1,25 @@
 local search = require('grug-far.engine.astgrep.search')
 local replace = require('grug-far.engine.astgrep.replace')
 
+local shallow_copy_table = function(tbl)
+  local copy = {}
+  for k, v in pairs(tbl) do
+    copy[k] = v
+  end
+  return copy
+end
+
 ---@type GrugFarEngine
 local AstgrepEngine = {
   type = 'astgrep-rule',
 
-  isSearchWithReplacement = function(inputs, options)
-    local args = search.getSearchArgs(inputs, options, true)
+  isSearchWithReplacement = function(raw, options)
+    -- todo: stop patching `s/search/rules/`, once per-engine inputs land
+    local inputs = shallow_copy_table(raw)
+    inputs.rules = inputs.search
+    inputs.search = nil
+
+    local args = search.getSearchArgs(inputs, options)
     return search.isSearchWithReplacement(args)
   end,
 
@@ -14,12 +27,22 @@ local AstgrepEngine = {
     return true
   end,
 
-  search = function(params)
-    return search.search(params, true)
+  search = function(raw)
+    local params = shallow_copy_table(raw)
+    params.inputs = shallow_copy_table(params.inputs)
+    params.inputs.rules = params.inputs.search
+    params.inputs.search = nil
+
+    return search.search(params)
   end,
 
-  replace = function(params)
-    return replace.replace(params, true)
+  replace = function(raw)
+    local params = shallow_copy_table(raw)
+    params.inputs = shallow_copy_table(params.inputs)
+    params.inputs.rules = params.inputs.search
+    params.inputs.search = nil
+
+    return replace.replace(params)
   end,
 
   isSyncSupported = function()
