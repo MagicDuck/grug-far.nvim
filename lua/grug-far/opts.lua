@@ -66,6 +66,7 @@ M.defaultOptions = {
         search = 'e.g. foo   foo([a-z0-9]*)   fun\\(',
         replacement = 'e.g. bar   ${1}_foo   $$MY_ENV_VAR ',
         replacement_lua = 'e.g. if vim.startsWith(match, "use") \\n then return "employ" .. match \\n else return match end',
+        replacement_vimscript = 'e.g. return "bob_" .. match',
         filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line)',
         flags = 'e.g. --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
         paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
