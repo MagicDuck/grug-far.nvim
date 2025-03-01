@@ -223,7 +223,7 @@ local function updateBufName(buf, context)
   else
     title = getNextUniqueBufName(buf, 'Grug FAR', true)
       .. utils.strEllideAfter(
-        context.state.inputs.search,
+        context.engine.getSearchDescription(context.state.inputs),
         context.options.maxSearchCharsInTitles,
         ': '
       )

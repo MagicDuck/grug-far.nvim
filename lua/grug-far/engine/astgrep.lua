@@ -69,6 +69,10 @@ local AstgrepEngine = {
     prefills.search = table.concat(visual_selection, '\n')
     return prefills
   end,
+
+  getSearchDescription = function(inputs)
+    return inputs.search
+  end,
 }
 
 return AstgrepEngine
