@@ -76,8 +76,16 @@ M.DiffSeparatorChars = ' '
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
 ---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 
+---@class GrugFarEngineInput
+---@field name string
+---@field label string
+---@field iconName string
+---@field highlightLang? string
+---@field trim boolean
+
 ---@class GrugFarEngine
 ---@field type GrugFarEngineType
+---@field inputs GrugFarEngineInput[]
 ---@field isSearchWithReplacement fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean is this a search with replacement
 ---@field showsReplaceDiff fun(options: GrugFarOptions): boolean whether we show a diff when replacing
 ---@field search fun(params: EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?) performs search

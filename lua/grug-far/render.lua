@@ -2,8 +2,6 @@ local renderHelp = require('grug-far.render.help')
 local renderInput = require('grug-far.render.input')
 local renderResults = require('grug-far.render.results')
 local utils = require('grug-far.utils')
-local inputs = require('grug-far.inputs')
-local InputNames = inputs.InputNames
 
 local TOP_EMPTY_LINES = 1
 
@@ -24,77 +22,40 @@ local function render(buf, context)
     }, context)
   end
 
-  lineNr = lineNr + TOP_EMPTY_LINES
-  state.inputs.search = renderInput({
-    buf = buf,
-    lineNr = lineNr,
-    extmarkName = InputNames.search,
-    nextExtmarkName = InputNames.replacement,
-    icon = 'searchInput',
-    label = 'Search:',
-    placeholder = placeholders.enabled and placeholders.search,
-    highlightLang = inputsHighlight and 'regex' or nil,
-  }, context)
+  lineNr = lineNr + TOP_EMPTY_LINES - 1
 
-  lineNr = lineNr + 1
-  local interpreterType = context.replacementInterpreter and context.replacementInterpreter.type
-    or nil
-  state.inputs.replacement = renderInput({
-    buf = buf,
-    lineNr = lineNr,
-    prevExtmarkName = InputNames.search,
-    extmarkName = InputNames.replacement,
-    nextExtmarkName = InputNames.filesFilter,
-    icon = 'replaceInput',
-    label = interpreterType and 'Replace [' .. interpreterType .. ']:' or 'Replace:',
-    placeholder = placeholders.enabled
-      and (
-        interpreterType and placeholders['replacement_' .. interpreterType]
-        or placeholders.replacement
-      ),
-    highlightLang = inputsHighlight
-        and (context.replacementInterpreter and context.replacementInterpreter.language or nil)
-      or nil,
-  }, context)
+  for i, input in ipairs(context.engine.inputs) do
+    lineNr = lineNr + 1
+    local nextInput = context.engine.inputs[i + 1]
 
-  lineNr = lineNr + 1
-  state.inputs.filesFilter = vim.trim(renderInput({
-    buf = buf,
-    lineNr = lineNr,
-    prevExtmarkName = InputNames.replacement,
-    extmarkName = InputNames.filesFilter,
-    nextExtmarkName = InputNames.flags,
-    icon = 'filesFilterInput',
-    label = 'Files Filter:',
-    placeholder = placeholders.enabled and placeholders.filesFilter,
-    highlightLang = inputsHighlight and 'gitignore' or nil,
-  }, context))
+    local label = input.label
+    local placeholder = placeholders[input.name]
+    local highlightLang = input.highlightLang
 
-  lineNr = lineNr + 1
-  state.inputs.flags = vim.trim(renderInput({
-    buf = buf,
-    lineNr = lineNr,
-    prevExtmarkName = InputNames.filesFilter,
-    extmarkName = InputNames.flags,
-    nextExtmarkName = InputNames.paths,
-    icon = 'flagsInput',
-    label = 'Flags:',
-    placeholder = placeholders.enabled and placeholders.flags,
-    highlightLang = inputsHighlight and 'bash' or nil,
-  }, context))
+    -- special treatment for replacement interpreter
+    if input.name == 'replacement' then
+      local interpreterType = context.replacementInterpreter and context.replacementInterpreter.type
+        or nil
+      if interpreterType then
+        label = label .. ' [' .. interpreterType .. ']'
+        placeholder = placeholders[input.name .. '_' .. interpreterType]
+        highlightLang = context.replacementInterpreter.language
+      end
+    end
 
-  lineNr = lineNr + 1
-  state.inputs.paths = vim.trim(renderInput({
-    buf = buf,
-    lineNr = lineNr,
-    prevExtmarkName = InputNames.flags,
-    extmarkName = InputNames.paths,
-    nextExtmarkName = 'results_header',
-    icon = 'pathsInput',
-    label = 'Paths:',
-    placeholder = placeholders.enabled and placeholders.paths,
-    highlightLang = inputsHighlight and 'bash' or nil,
-  }, context))
+    local value = renderInput({
+      buf = buf,
+      lineNr = lineNr,
+      extmarkName = input.name,
+      nextExtmarkName = nextInput and nextInput.name or 'results_header',
+      icon = input.iconName,
+      label = label .. ':',
+      placeholder = placeholders.enabled and placeholder,
+      highlightLang = inputsHighlight and highlightLang or nil,
+    }, context)
+
+    state.inputs[input.name] = input.trim and vim.trim(value) or value
+  end
 
   lineNr = lineNr + 1
   renderResults({
