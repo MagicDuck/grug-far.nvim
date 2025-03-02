@@ -54,11 +54,18 @@ local AstgrepRulesEngine = {
 
         local existingPattern = context.state.previousInputValues.search or ''
 
-        return [[
+        local defaultValue = [[
 id: my-rule-1
 language: ]] .. lang .. '\n' .. [[
 rule:
-  pattern: ]] .. existingPattern
+  pattern: ]] .. existingPattern .. '\n'
+
+        local existingReplacement = context.state.previousInputValues.replacement
+        if #existingReplacement > 0 then
+          defaultValue = (defaultValue .. '\nfix: ' .. existingReplacement .. '\n')
+        end
+
+        return defaultValue
       end,
     },
     {
