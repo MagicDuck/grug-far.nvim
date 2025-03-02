@@ -519,6 +519,8 @@ M.defaultOptions = {
 ---@field flags? string
 ---@field paths? string
 
+---@alias LanguageGlobsTable table<string, string[]>
+
 ---@class GrugFarPrefills
 ---@field search? string
 ---@field rules? string
@@ -554,19 +556,32 @@ M.defaultOptions = {
 ---@field extraArgs string
 ---@field placeholders PlaceholdersTable
 
+---@class AstgrepRulesEngineTable
+---@field path string
+---@field extraArgs string
+---@field placeholders PlaceholdersTable
+---@field languageGlobs LanguageGlobsTable
+
 ---@class AstgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
 ---@field placeholders? PlaceholdersTableOverride
 
+---@class AstgrepRulesEngineTableOverride
+---@field path? string
+---@field extraArgs? string
+---@field placeholders? PlaceholdersTableOverride
+---@field languageGlobs? LanguageGlobsTable
+
 ---@class EnginesTable
 ---@field ripgrep RipgrepEngineTable
 ---@field astgrep AstgrepEngineTable
----@field astgrep-rules AstgrepEngineTable
+---@field astgrep-rules AstgrepRulesEngineTable
 
 ---@class EnginesTableOverride
 ---@field ripgrep? RipgrepEngineTableOverride
 ---@field astgrep? AstgrepEngineTableOverride
+---@field astgrep-rules? AstgrepRulesEngineTableOverride
 
 ---@alias GrugFarEngineType "ripgrep" | "astgrep" | "astgrep-rules"
 ---@alias GrugFarReplacementInterpreterType "lua" | "vimscript" | "default"

@@ -108,6 +108,7 @@ local contextCount = 0
 ---@field filesFilter string
 ---@field flags string
 ---@field paths string
+---@field isRuleMode? boolean
 
 ---@class GrugFarState
 ---@field inputs GrugFarInputs
