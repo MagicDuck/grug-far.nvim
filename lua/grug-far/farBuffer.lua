@@ -357,7 +357,15 @@ function M.createBuffer(win, context)
     render(buf, context)
 
     vim.schedule(function()
-      inputs.fill(context, buf, context.options.prefills, true)
+      local values = {}
+      for _, input in ipairs(context.engine.inputs) do
+        local value = context.options.prefills[input.name]
+        if value == nil and input.getDefaultValue then
+          value = input.getDefaultValue(context)
+        end
+        values[input.name] = value
+      end
+      inputs.fill(context, buf, values, true)
       updateBufName(buf, context)
 
       pcall(vim.api.nvim_win_set_cursor, win, { context.options.startCursorRow, 0 })

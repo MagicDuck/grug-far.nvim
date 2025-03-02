@@ -439,7 +439,7 @@ end
 --- updates grug-far instance with given input prefills
 --- if clearOld=true is given, the old input values are ignored
 ---@param instanceName string
----@param prefills GrugFarPrefillsOverride
+---@param prefills GrugFarPrefills
 ---@param clearOld boolean
 function M.update_instance_prefills(instanceName, prefills, clearOld)
   ensure_configured()

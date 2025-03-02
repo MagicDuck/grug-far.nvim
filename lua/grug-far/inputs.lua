@@ -32,7 +32,7 @@ end
 --- if clearOld is true, clear old values even if new value not given
 ---@param context GrugFarContext
 ---@param buf integer
----@param values GrugFarPrefills | GrugFarPrefillsOverride
+---@param values GrugFarPrefills
 ---@param clearOld boolean
 function M.fill(context, buf, values, clearOld)
   -- filling in reverse order as it's more reliable with the left gravity extmarks
