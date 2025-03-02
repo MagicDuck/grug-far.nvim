@@ -42,6 +42,9 @@ M.defaultOptions = {
   -- deprecated, please use engines.ripgrep.extraArgs
   extraRgArgs = '',
 
+  -- Order to rotate through engines when swapping engines
+  enginesOrder = { 'ripgrep', 'astgrep', 'astgrep-rules' },
+
   -- search and replace engines configuration
   engines = {
     -- see https://github.com/BurntSushi/ripgrep
