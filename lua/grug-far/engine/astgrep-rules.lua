@@ -11,7 +11,7 @@ end
 
 ---@type GrugFarEngine
 local AstgrepEngine = {
-  type = 'astgrep-rule',
+  type = 'astgrep-rules',
 
   isSearchWithReplacement = function(raw, options)
     -- todo: stop patching `s/search/rules/`, once per-engine inputs land
