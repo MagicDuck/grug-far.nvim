@@ -105,8 +105,8 @@ function M.getEngine(type)
   if type == 'astgrep' then
     return require('grug-far.engine.astgrep')
   end
-  if type == 'astgrep-rule' then
-    return require('grug-far.engine.astgrep-rule')
+  if type == 'astgrep-rules' then
+    return require('grug-far.engine.astgrep-rules')
   end
   return require('grug-far.engine.ripgrep')
 end
