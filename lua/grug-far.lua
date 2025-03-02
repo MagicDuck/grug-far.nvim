@@ -102,7 +102,8 @@ local contextCount = 0
 ---@field count? integer
 
 ---@class GrugFarInputs
----@field search string
+---@field search? string
+---@field rules? string
 ---@field replacement string
 ---@field filesFilter string
 ---@field flags string

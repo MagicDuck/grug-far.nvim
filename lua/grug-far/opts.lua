@@ -496,9 +496,10 @@ M.defaultOptions = {
 
 ---@class PlaceholdersTable
 ---@field enabled boolean
----@field search string
----@field replacement string
----@field replacement_lua string
+---@field search? string
+---@field rules? string
+---@field replacement? string
+---@field replacement_lua? string
 ---@field filesFilter string
 ---@field flags string
 ---@field paths string
@@ -506,6 +507,7 @@ M.defaultOptions = {
 ---@class PlaceholdersTableOverride
 ---@field enabled? boolean
 ---@field search? string
+---@field rules? string
 ---@field replacement? string
 ---@field replacement_lua? string
 ---@field filesFilter? string
@@ -514,6 +516,7 @@ M.defaultOptions = {
 
 ---@class GrugFarPrefills
 ---@field search? string
+---@field rules? string
 ---@field replacement? string
 ---@field filesFilter? string
 ---@field flags? string
