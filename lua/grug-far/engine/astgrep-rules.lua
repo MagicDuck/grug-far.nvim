@@ -12,6 +12,22 @@ local AstgrepRulesEngine = {
       iconName = 'searchInput',
       highlightLang = 'yaml',
       trim = false,
+      getDefaultValue = function(context)
+        local lang = ''
+        if context.prevWin ~= nil then
+          local bufId = vim.api.nvim_win_get_buf(context.prevWin)
+          local filetype = vim.bo[bufId].filetype
+          lang = filetype
+        end
+
+        local existingPattern = context.state.previousInputValues.search or ''
+
+        return [[
+id: my-rule-1
+language: ]] .. lang .. '\n' .. [[
+rule:
+  pattern: ]] .. existingPattern
+      end,
     },
     {
       name = 'filesFilter',
