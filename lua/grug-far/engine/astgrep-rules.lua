@@ -124,7 +124,7 @@ rule:
   end,
 
   getSearchDescription = function(inputs)
-    return inputs.search
+    return inputs.rules
   end,
 
   isEmptySearch = function(inputs)
