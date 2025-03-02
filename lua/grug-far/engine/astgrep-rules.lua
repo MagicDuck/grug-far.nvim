@@ -1,24 +1,42 @@
 local search = require('grug-far.engine.astgrep.search')
 local replace = require('grug-far.engine.astgrep.replace')
 
-local shallow_copy_table = function(tbl)
-  local copy = {}
-  for k, v in pairs(tbl) do
-    copy[k] = v
-  end
-  return copy
-end
-
 ---@type GrugFarEngine
-local AstgrepEngine = {
+local AstgrepRulesEngine = {
   type = 'astgrep-rules',
 
-  isSearchWithReplacement = function(raw, options)
-    -- todo: stop patching `s/search/rules/`, once per-engine inputs land
-    local inputs = shallow_copy_table(raw)
-    inputs.rules = inputs.search
-    inputs.search = nil
+  inputs = {
+    {
+      name = 'rules',
+      label = 'Rules',
+      iconName = 'searchInput',
+      highlightLang = 'yaml',
+      trim = false,
+    },
+    {
+      name = 'filesFilter',
+      label = 'Files Filter',
+      iconName = 'filesFilterInput',
+      highlightLang = 'gitignore',
+      trim = true,
+    },
+    {
+      name = 'flags',
+      label = 'Flags',
+      iconName = 'flagsInput',
+      highlightLang = 'bash',
+      trim = true,
+    },
+    {
+      name = 'paths',
+      label = 'Paths',
+      iconName = 'pathsInput',
+      highlightLang = 'bash',
+      trim = true,
+    },
+  },
 
+  isSearchWithReplacement = function(inputs, options)
     local args = search.getSearchArgs(inputs, options)
     return search.isSearchWithReplacement(args)
   end,
@@ -27,23 +45,9 @@ local AstgrepEngine = {
     return true
   end,
 
-  search = function(raw)
-    local params = shallow_copy_table(raw)
-    params.inputs = shallow_copy_table(params.inputs)
-    params.inputs.rules = params.inputs.search
-    params.inputs.search = nil
+  search = search.search,
 
-    return search.search(params)
-  end,
-
-  replace = function(raw)
-    local params = shallow_copy_table(raw)
-    params.inputs = shallow_copy_table(params.inputs)
-    params.inputs.rules = params.inputs.search
-    params.inputs.search = nil
-
-    return replace.replace(params)
-  end,
+  replace = replace.replace,
 
   isSyncSupported = function()
     return false
@@ -58,6 +62,14 @@ local AstgrepEngine = {
     prefills.search = table.concat(visual_selection, '\n')
     return prefills
   end,
+
+  getSearchDescription = function(inputs)
+    return inputs.search
+  end,
+
+  isEmptySearch = function(inputs)
+    return #inputs.rules == 0
+  end,
 }
 
-return AstgrepEngine
+return AstgrepRulesEngine
