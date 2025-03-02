@@ -110,11 +110,9 @@ M.defaultOptions = {
         -- whether to show placeholders
         enabled = true,
 
-        search = 'e.g. $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
-        replacement = 'e.g. $A?.()   blah($$$ARGS)',
-        replacement_lua = 'e.g. return vars.A == "blah" and "foo(" .. table.concat(vars.ARGS, ", ") .. ")" or match',
+        rules = 'TODO',
         filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
-        flags = 'e.g. --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
+        flags = 'e.g. --help (-h) --debug-query=ast --strictness=<STRICTNESS>',
         paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
       },
     },
@@ -622,6 +620,7 @@ M.defaultOptions = {
 ---@field instanceName? string
 ---@field folding FoldingTable
 ---@field engines EnginesTable
+---@field enginesOrder string[]
 ---@field engine GrugFarEngineType
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]
