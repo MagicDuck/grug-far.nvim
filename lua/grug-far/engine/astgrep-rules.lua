@@ -1,6 +1,24 @@
 local search = require('grug-far.engine.astgrep.search')
 local replace = require('grug-far.engine.astgrep.replace')
 
+local function matches_glob(filename, glob)
+  local pattern = vim.fn.glob2regpat(glob)
+  if vim.fn.match(filename, pattern) ~= -1 then
+    return true
+  end
+  return false
+end
+
+local function get_language_by_glob(filename, languageGlobs)
+  for lang, globs in pairs(languageGlobs) do
+    for _, glob in ipairs(globs) do
+      if matches_glob(filename, glob) then
+        return lang
+      end
+    end
+  end
+end
+
 ---@type GrugFarEngine
 local AstgrepRulesEngine = {
   type = 'astgrep-rules',
@@ -18,6 +36,12 @@ local AstgrepRulesEngine = {
           local bufId = vim.api.nvim_win_get_buf(context.prevWin)
           local filetype = vim.bo[bufId].filetype
           lang = filetype
+
+          local filename = vim.api.nvim_buf_get_name(bufId)
+          lang = get_language_by_glob(
+            filename,
+            context.options.engines['astgrep-rules'].languageGlobs
+          ) or lang
         end
 
         local existingPattern = context.state.previousInputValues.search or ''
