@@ -115,7 +115,10 @@ M.defaultOptions = {
         -- whether to show placeholders
         enabled = true,
 
-        rules = 'TODO',
+        --  rules would normally be multi-line, but we don't support multi-line
+        --  placeholders. rules is filled with a default-value though, so it's
+        --  rare to see it empty
+        rules = 'id: my-rule-1',
         filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
         flags = 'e.g. --help (-h) --debug-query=ast --strictness=<STRICTNESS>',
         paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
