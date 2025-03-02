@@ -260,11 +260,11 @@ M.defaultOptions = {
   -- require('grug-far').open({ prefills = { search = vim.fn.expand("<cword>") } })
   --
   prefills = {
-    search = '',
-    replacement = '',
-    filesFilter = '',
-    flags = '',
-    paths = '',
+    search = nil,
+    replacement = nil,
+    filesFilter = nil,
+    flags = nil,
+    paths = nil,
   },
 
   -- search history settings
@@ -489,13 +489,6 @@ M.defaultOptions = {
 ---@field paths? string
 
 ---@class GrugFarPrefills
----@field search string
----@field replacement string
----@field filesFilter string
----@field flags string
----@field paths string
-
----@class GrugFarPrefillsOverride
 ---@field search? string
 ---@field replacement? string
 ---@field filesFilter? string
@@ -641,7 +634,7 @@ M.defaultOptions = {
 ---@field spinnerStates? string[] | false
 ---@field reportDuration? boolean
 ---@field icons? IconsTableOverride
----@field prefills? GrugFarPrefillsOverride
+---@field prefills? GrugFarPrefills
 ---@field history? HistoryTableOverride
 ---@field instanceName? string
 ---@field folding? FoldingTableOverride

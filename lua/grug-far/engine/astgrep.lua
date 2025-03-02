@@ -7,19 +7,11 @@ local AstgrepEngine = {
 
   inputs = {
     {
-      -- TODO (sbadragan): test with a rules one
-      -- TODO (sbadragan): set back
-      name = 'rules',
-      label = 'Rules',
+      name = 'search',
+      label = 'Search',
       iconName = 'searchInput',
       highlightLang = 'regex',
       trim = false,
-      getDefaultValue = function(context)
-        return [[
-hello world
-of many rules]]
-      end,
-      -- TODO (sbadragan): clear the flags with default value??
     },
     {
       name = 'replacement',
