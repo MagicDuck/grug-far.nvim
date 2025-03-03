@@ -14,7 +14,7 @@ local rewriteFlags = {
 ---@param forceReplace? boolean
 ---@return string[]? args, string[]? blacklisted
 local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplace)
-  local isRuleMode = inputs.isRuleMode or false
+  local isRuleMode = inputs.rules ~= nil
 
   local searchInputLen = 0
   if isRuleMode then

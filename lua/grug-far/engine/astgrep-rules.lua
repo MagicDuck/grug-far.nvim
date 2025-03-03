@@ -19,14 +19,6 @@ local function get_language_by_glob(filename, languageGlobs)
   end
 end
 
-local function shallow_copy(tbl)
-  local copy = {}
-  for k, v in pairs(tbl) do
-    copy[k] = v
-  end
-  return copy
-end
-
 ---@type GrugFarEngine
 local AstgrepRulesEngine = {
   type = 'astgrep-rules',
@@ -91,9 +83,7 @@ rule:
     },
   },
 
-  isSearchWithReplacement = function(i, options)
-    local inputs = shallow_copy(i)
-    inputs.isRuleMode = true
+  isSearchWithReplacement = function(inputs, options)
     local args = search.getSearchArgs(inputs, options)
     return search.isSearchWithReplacement(args)
   end,
@@ -102,19 +92,9 @@ rule:
     return true
   end,
 
-  search = function(p)
-    local params = shallow_copy(p)
-    p.inputs = shallow_copy(params.inputs)
-    params.inputs.isRuleMode = true
-    search.search(params)
-  end,
+  search = search.search,
 
-  replace = function(p)
-    local params = shallow_copy(p)
-    p.inputs = shallow_copy(params.inputs)
-    params.inputs.isRuleMode = true
-    replace.replace(params)
-  end,
+  replace = replace.replace,
 
   isSyncSupported = function()
     return false
