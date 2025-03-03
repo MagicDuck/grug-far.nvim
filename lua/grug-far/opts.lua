@@ -107,6 +107,11 @@ M.defaultOptions = {
       -- like for example if you always want context lines around matches
       extraArgs = '',
 
+      -- Globs to define non-standard mappings of file extension to language,
+      -- as you might define in an ast-grep project config. Here they're used
+      -- to fill a reasonable language (which is required) in the default-value
+      -- for the the rules YAML input. Ideally these would be read directly
+      -- from `sgconfig.yml`, but we're not going to implement that parsing
       languageGlobs = {},
 
       -- placeholders to show in input areas when they are empty
