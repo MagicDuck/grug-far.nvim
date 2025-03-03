@@ -136,9 +136,11 @@ function M.search(params)
     return
   end
   local isRuleMode = params.inputs.rules ~= nil
-  local numSearchChars = #params.inputs.search
+  local numSearchChars
   if isRuleMode then
     numSearchChars = #params.inputs.rules
+  else
+    numSearchChars = #params.inputs.search
   end
   if numSearchChars > 0 and numSearchChars < (params.options.minSearchChars or 1) then
     params.on_finish(
