@@ -113,7 +113,7 @@ end
 function M.replace(params)
   local report_progress = params.report_progress
   local on_finish = params.on_finish
-  local isRuleMode = params.inputs.isRuleMode or false
+  local isRuleMode = params.inputs.rules ~= nil
 
   local extraArgs = {
     '--update-all',

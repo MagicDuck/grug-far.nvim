@@ -135,7 +135,7 @@ function M.search(params)
     )
     return
   end
-  local isRuleMode = params.inputs.isRuleMode or false
+  local isRuleMode = params.inputs.rules ~= nil
   local numSearchChars = #params.inputs.search
   if isRuleMode then
     numSearchChars = #params.inputs.rules
