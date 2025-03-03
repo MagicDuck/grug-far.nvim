@@ -7,8 +7,9 @@ local utils = require('grug-far.utils')
 ---@param cursor_row integer
 ---@param increment -1 | 1 | nil
 ---@param count integer?
+---@param includeUncounted boolean?
 ---@return ResultLocation?, integer?
-local function getLocation(buf, context, cursor_row, increment, count)
+local function getLocation(buf, context, cursor_row, increment, count, includeUncounted)
   if increment then
     local start_location = resultsList.getResultLocation(cursor_row - 1, buf, context)
 
@@ -18,6 +19,7 @@ local function getLocation(buf, context, cursor_row, increment, count)
       if
         location
         and location.lnum
+        and (includeUncounted or location.count)
         and not (
           start_location
           and location.filename == start_location.filename
@@ -54,16 +56,17 @@ end
 --- opens location at current cursor line (if there is one) in previous window
 --- if count > 0 given, it will use the result location with that number instead
 --- if increment is given, it will use the first location that is at least <increment> away from the current line
----@param params { buf: integer, context: GrugFarContext, increment: -1 | 1 | nil, count: number? }
+---@param params { buf: integer, context: GrugFarContext, increment: -1 | 1 | nil, count: number?, includeUncounted: boolean? }
 local function openLocation(params)
   local buf = params.buf
   local context = params.context
   local increment = params.increment
+  local includeUncounted = params.includeUncounted
   local count = params.count or 0
   local grugfar_win = vim.fn.bufwinid(buf)
 
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
-  local location, row = getLocation(buf, context, cursor_row, increment, count)
+  local location, row = getLocation(buf, context, cursor_row, increment, count, includeUncounted)
 
   if not location then
     return
