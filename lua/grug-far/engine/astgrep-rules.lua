@@ -9,6 +9,7 @@ local function matches_glob(filename, glob)
   return false
 end
 
+---@return string | nil
 local function get_language_by_glob(filename, languageGlobs)
   for lang, globs in pairs(languageGlobs) do
     for _, glob in ipairs(globs) do
@@ -32,16 +33,17 @@ local AstgrepRulesEngine = {
       trim = false,
       getDefaultValue = function(context)
         local lang = ''
-        if context.prevWin ~= nil then
-          local bufId = vim.api.nvim_win_get_buf(context.prevWin)
-          local filetype = vim.bo[bufId].filetype
-          lang = filetype
-
-          local filename = vim.api.nvim_buf_get_name(bufId)
-          lang = get_language_by_glob(
-            filename,
+        if context.prevBufFiletype ~= nil then
+          lang = context.prevBufFiletype
+        end
+        if context.prevBufName ~= nil then
+          local byGlob = get_language_by_glob(
+            context.prevBufName,
             context.options.engines['astgrep-rules'].languageGlobs
-          ) or lang
+          )
+          if byGlob ~= nil then
+            lang = byGlob
+          end
         end
 
         local existingPattern = context.state.previousInputValues.search or ''
