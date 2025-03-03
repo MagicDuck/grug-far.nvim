@@ -120,7 +120,7 @@ local function applyChange(params)
     return
   end
 
-  openLocation({ buf = buf, context = context, increment = increment })
+  openLocation({ buf = buf, context = context, increment = increment, includeUncounted = true })
   local new_cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
   local syncStartRow, syncEndRow = getSyncRange(buf, context, initial_cursor_row, start_location)
 
