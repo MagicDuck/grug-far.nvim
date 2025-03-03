@@ -59,6 +59,11 @@ local AstgrepRulesEngine = {
       highlightLang = 'yaml',
       trim = false,
       getDefaultValue = function(context)
+        local existingValue = context.state.previousInputValues.rules or ''
+        if #existingValue > 0 then
+          return existingValue
+        end
+
         -- If the user was already working on search and replace patterns with
         -- the astgrep engine, those can be injected into the YAML as a good
         -- starting point
