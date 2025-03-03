@@ -25,6 +25,7 @@ local function swapEngine(params)
   end
   inputs.fill(context, buf, emptyValues, true)
   vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
+  context.extmarkIds = {}
 
   -- fill in inputs
   local values = {}
