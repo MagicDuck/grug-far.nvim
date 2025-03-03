@@ -38,6 +38,7 @@ local function swapEngine(params)
 
   vim.schedule(function()
     inputs.fill(context, buf, values, true)
+    context.state.inputs = values
 
     vim.notify('grug-far: swapped to engine: ' .. context.engine.type .. '!', vim.log.levels.INFO)
 
