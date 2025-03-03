@@ -29,9 +29,12 @@ local function swapEngine(params)
   -- fill in inputs
   local values = {}
   for _, input in ipairs(context.engine.inputs) do
-    local value = context.state.previousInputValues[input.name]
-    if value == nil and input.getDefaultValue then
+    local value
+    if input.getDefaultValue then
       value = input.getDefaultValue(context)
+    end
+    if value == nil then
+      value = context.state.previousInputValues[input.name] or ''
     end
     values[input.name] = value
   end
