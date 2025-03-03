@@ -43,7 +43,7 @@ M.defaultOptions = {
   extraRgArgs = '',
 
   -- Order to rotate through engines when swapping engines
-  enginesOrder = { 'ripgrep', 'astgrep', 'astgrep-rules' },
+  enabledEngines = { 'ripgrep', 'astgrep', 'astgrep-rules' },
 
   -- search and replace engines configuration
   engines = {
@@ -641,7 +641,7 @@ M.defaultOptions = {
 ---@field instanceName? string
 ---@field folding FoldingTable
 ---@field engines EnginesTable
----@field enginesOrder string[]
+---@field enabledEngines string[]
 ---@field engine GrugFarEngineType
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]

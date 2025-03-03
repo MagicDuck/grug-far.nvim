@@ -8,7 +8,7 @@ local function swapEngine(params)
   local context = params.context
   local buf = params.buf
 
-  local engineTypes = context.options.enginesOrder
+  local engineTypes = context.options.enabledEngines
   local currentIndex = vim.fn.index(engineTypes, context.engine.type)
   local nextIndex = (currentIndex + 1) % #engineTypes
   local nextEngineType = engineTypes[nextIndex + 1]
