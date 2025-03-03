@@ -500,16 +500,6 @@ M.defaultOptions = {
 ---@field newline? string
 
 ---@class PlaceholdersTable
----@field enabled boolean
----@field search? string
----@field rules? string
----@field replacement? string
----@field replacement_lua? string
----@field filesFilter string
----@field flags string
----@field paths string
-
----@class PlaceholdersTableOverride
 ---@field enabled? boolean
 ---@field search? string
 ---@field rules? string
@@ -549,7 +539,7 @@ M.defaultOptions = {
 ---@field path? string
 ---@field extraArgs? string
 ---@field showReplaceDiff? boolean
----@field placeholders? PlaceholdersTableOverride
+---@field placeholders? PlaceholdersTable
 
 ---@class AstgrepEngineTable
 ---@field path string
@@ -565,12 +555,12 @@ M.defaultOptions = {
 ---@class AstgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
----@field placeholders? PlaceholdersTableOverride
+---@field placeholders? PlaceholdersTable
 
 ---@class AstgrepRulesEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
----@field placeholders? PlaceholdersTableOverride
+---@field placeholders? PlaceholdersTable
 ---@field languageGlobs? LanguageGlobsTable
 
 ---@class EnginesTable
