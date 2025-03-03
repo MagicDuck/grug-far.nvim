@@ -8,7 +8,7 @@ local function swapEngine(params)
   local context = params.context
   local buf = params.buf
 
-  local engineTypes = vim.fn.keys(context.options.engines)
+  local engineTypes = context.options.enabledEngines
   local currentIndex = vim.fn.index(engineTypes, context.engine.type)
   local nextIndex = (currentIndex + 1) % #engineTypes
   local nextEngineType = engineTypes[nextIndex + 1]
@@ -29,9 +29,12 @@ local function swapEngine(params)
   -- fill in inputs
   local values = {}
   for _, input in ipairs(context.engine.inputs) do
-    local value = context.state.previousInputValues[input.name]
-    if value == nil and input.getDefaultValue then
+    local value
+    if input.getDefaultValue then
       value = input.getDefaultValue(context)
+    end
+    if value == nil then
+      value = context.state.previousInputValues[input.name] or ''
     end
     values[input.name] = value
   end

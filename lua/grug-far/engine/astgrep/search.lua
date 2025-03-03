@@ -19,7 +19,7 @@ function M.getSearchArgs(inputs, options)
   local extraArgs = {
     '--json=stream',
   }
-  return getArgs(inputs, options, extraArgs, blacklistedSearchFlags)
+  return getArgs(inputs, options, extraArgs, blacklistedSearchFlags, false)
 end
 
 --- is doing a search with replacement?
@@ -135,7 +135,13 @@ function M.search(params)
     )
     return
   end
-  local numSearchChars = #params.inputs.search
+  local isRuleMode = params.inputs.rules ~= nil
+  local numSearchChars
+  if isRuleMode then
+    numSearchChars = #params.inputs.rules
+  else
+    numSearchChars = #params.inputs.search
+  end
   if numSearchChars > 0 and numSearchChars < (params.options.minSearchChars or 1) then
     params.on_finish(
       'success',

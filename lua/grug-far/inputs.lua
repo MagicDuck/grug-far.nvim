@@ -19,7 +19,7 @@ local function fillInput(context, buf, name, value, clearOld)
 
   if inputRow then
     local oldValue = context.state.inputs[name]
-    local oldNumInputLines = #vim.split(oldValue, '\n')
+    local oldNumInputLines = #vim.split(oldValue or '', '\n')
     local newLines = vim.split(value or '', '\n')
     -- note: we need to adopt this tricky way of inserting the value in order to move
     -- the next inputs extmark position down appropriately
