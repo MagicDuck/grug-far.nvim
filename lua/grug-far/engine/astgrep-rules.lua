@@ -1,6 +1,8 @@
 local search = require('grug-far.engine.astgrep.search')
 local replace = require('grug-far.engine.astgrep.replace')
 
+---@param filename string
+---@param glob string
 local function matches_glob(filename, glob)
   local pattern = vim.fn.glob2regpat(glob)
   if vim.fn.match(filename, pattern) ~= -1 then
@@ -9,6 +11,7 @@ local function matches_glob(filename, glob)
   return false
 end
 
+---@param filename string
 ---@return string | nil
 local function get_language_by_glob(filename, languageGlobs)
   for lang, globs in pairs(languageGlobs) do
@@ -18,6 +21,30 @@ local function get_language_by_glob(filename, languageGlobs)
       end
     end
   end
+end
+
+---@param context GrugFarContext
+local function get_default_astgrep_language(context)
+  local lang = ''
+
+  -- Filetype of the recently opened buffer is a reasonable guess
+  if context.prevBufFiletype ~= nil then
+    lang = context.prevBufFiletype
+  end
+
+  -- If the user has configure any globs to map filenames to languages, we can
+  -- use those
+  if context.prevBufName ~= nil then
+    local byGlob = get_language_by_glob(
+      context.prevBufName,
+      context.options.engines['astgrep-rules'].languageGlobs
+    )
+    if byGlob ~= nil then
+      lang = byGlob
+    end
+  end
+
+  return lang
 end
 
 ---@type GrugFarEngine
@@ -32,21 +59,15 @@ local AstgrepRulesEngine = {
       highlightLang = 'yaml',
       trim = false,
       getDefaultValue = function(context)
-        local lang = ''
-        if context.prevBufFiletype ~= nil then
-          lang = context.prevBufFiletype
-        end
-        if context.prevBufName ~= nil then
-          local byGlob = get_language_by_glob(
-            context.prevBufName,
-            context.options.engines['astgrep-rules'].languageGlobs
-          )
-          if byGlob ~= nil then
-            lang = byGlob
-          end
-        end
-
+        -- If the user was already working on search and replace patterns with
+        -- the astgrep engine, those can be injected into the YAML as a good
+        -- starting point
         local existingPattern = context.state.previousInputValues.search or ''
+        local existingReplacement = context.state.previousInputValues.replacement or ''
+
+        -- a `language` field is compulsory. For convenience, we can try to
+        -- guess what the user willl want
+        local lang = get_default_astgrep_language(context)
 
         local defaultValue = [[
 id: my_rule_1
@@ -54,7 +75,6 @@ language: ]] .. lang .. '\n' .. [[
 rule:
   pattern: ]] .. existingPattern
 
-        local existingReplacement = context.state.previousInputValues.replacement
         if #existingReplacement > 0 then
           defaultValue = (defaultValue .. '\nfix: ' .. existingReplacement)
         end
