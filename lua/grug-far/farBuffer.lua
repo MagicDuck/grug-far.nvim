@@ -265,6 +265,10 @@ end
 ---@return integer bufId
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(not context.options.transient, true)
+  -- bind buf to win immediately, so we can get correct win in buf relative
+  -- event like FileType.
+  vim.api.nvim_win_set_buf(win, buf)
+
   vim.api.nvim_set_option_value('filetype', 'grug-far', { buf = buf })
   vim.api.nvim_set_option_value('swapfile', false, { buf = buf })
   vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
@@ -272,7 +276,6 @@ function M.createBuffer(win, context)
   if context.options.transient then
     vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = buf })
   end
-  vim.api.nvim_win_set_buf(win, buf)
 
   setupGlobalOptOverrides(buf, context)
   context.actions = getActions(buf, context)
