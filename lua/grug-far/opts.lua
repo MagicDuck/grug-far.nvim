@@ -113,7 +113,24 @@ M.defaultOptions = {
       -- as you might define in an ast-grep project config. Here they're used
       -- to fill a reasonable language (which is required) in the default-value
       -- for the the rules YAML input. Ideally these would be read directly
-      -- from `sgconfig.yml`, but we're not going to implement that parsing
+      -- from `sgconfig.yml`, but we're not going to implement that parsing.
+      --
+      -- Example:
+      -- ```
+      -- languageGlobs = { tsx = { "*.ts", ".js", "*.jsx", "*.tsx" } }
+      -- ```
+      --
+      -- This will make then input pre-fill `language: tsx` if the
+      -- current/previous file matches any of that list of globs. Setting these
+      -- globs in`sgconfig.yml` is a way to make rules more-reusable - rather
+      -- than write separate rules for each of the 4 languages, parse them all
+      -- as the "superset" language (tsx), and write one rule based on that
+      -- AST. This plugin will then infer (based on this option) that you
+      -- probably want to target `language: tsx` when writing a rule for files
+      -- that match any of these globs
+      --
+      -- ast-grep docs:
+      -- https://ast-grep.github.io/reference/sgconfig.html#languageglobs
       languageGlobs = {},
 
       -- placeholders to show in input areas when they are empty
