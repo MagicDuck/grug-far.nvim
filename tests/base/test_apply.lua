@@ -86,11 +86,11 @@ T['can apply prev'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   -- check nothing happens when triggering on a non-match location
-  child.type_keys('<esc>' .. keymaps.applyNext.n)
+  child.type_keys('<esc>' .. keymaps.applyPrev.n)
   vim.uv.sleep(50)
   helpers.childExpectScreenshot(child)
 
-  child.type_keys('<esc>' .. keymaps.openNextLocation.n, 'k', keymaps.applyNext.n)
+  child.type_keys('<esc>' .. keymaps.openNextLocation.n, 'k', keymaps.applyPrev.n)
   vim.uv.sleep(50)
   helpers.childExpectScreenshot(child)
 
