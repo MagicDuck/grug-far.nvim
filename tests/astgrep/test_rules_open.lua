@@ -31,14 +31,14 @@ T['can open a given location'] = function()
     engine = 'astgrep-rules',
     prefills = { rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug.$A
     ]] },
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>9G')
+  child.type_keys('<esc>/3:7:<CR>')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
   helpers.childWaitForScreenshotText(child, '3,7')
   helpers.childExpectScreenshot(child)

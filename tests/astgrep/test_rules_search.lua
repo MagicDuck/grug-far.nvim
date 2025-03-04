@@ -30,7 +30,7 @@ T['can search for some string'] = function()
     engine = 'astgrep-rules',
     prefills = { rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug.$A
     ]] },
@@ -58,7 +58,7 @@ T['can search for some string with placeholders on'] = function()
     engine = 'astgrep-rules',
     prefills = { rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
     ]] },
@@ -94,7 +94,7 @@ T['reports error from sg'] = function()
       flags = '--strictness',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
     ]],
@@ -124,7 +124,7 @@ T['can search with flags'] = function()
       flags = '--lang=ts',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
     ]],
@@ -155,7 +155,7 @@ T['can search with flags resulting in plain text output'] = function()
       flags = '--help',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug.$A
     ]],
@@ -184,7 +184,7 @@ T['can search with particular file in paths'] = function()
       paths = './file2.ts',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
       ]],
@@ -215,7 +215,7 @@ T['can search with particular dir in paths'] = function()
       paths = '.',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
     ]],
@@ -246,7 +246,7 @@ T['can search with file filter'] = function()
       filesFilter = '**/*.ts',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
     ]],
@@ -277,7 +277,7 @@ T['can search with replace string'] = function()
       replacement = 'curly',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 fix: curly
@@ -308,7 +308,7 @@ T['can search with no matches'] = function()
     prefills = {
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: george
     ]],
@@ -339,7 +339,7 @@ T['can search with files filter and no matches'] = function()
       filesFilter = '*.ts',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: george
     ]],
@@ -371,7 +371,7 @@ T['can search for some string with many matches'] = function()
     prefills = {
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 ]],
@@ -463,7 +463,7 @@ T['is prevented from searching with blacklisted flags'] = function()
       flags = '--rule',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
       ]],
