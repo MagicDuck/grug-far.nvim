@@ -16,12 +16,7 @@ local rewriteFlags = {
 local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplace)
   local isRuleMode = inputs.rules ~= nil
 
-  local searchInputLen = 0
-  if isRuleMode then
-    searchInputLen = #inputs.rules
-  else
-    searchInputLen = #inputs.search
-  end
+  local searchInputLen = isRuleMode and #inputs.rules or #inputs.search
 
   if searchInputLen < (options.minSearchChars or 1) then
     return nil
