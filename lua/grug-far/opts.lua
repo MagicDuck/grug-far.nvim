@@ -42,7 +42,9 @@ M.defaultOptions = {
   -- deprecated, please use engines.ripgrep.extraArgs
   extraRgArgs = '',
 
-  -- Order to rotate through engines when swapping engines
+  -- engines that are enabled to use
+  -- The order of the array dictates the order to rotate through when swappping
+  -- engines
   enabledEngines = { 'ripgrep', 'astgrep', 'astgrep-rules' },
 
   -- search and replace engines configuration
