@@ -28,8 +28,14 @@ T['can replace with replace string'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly' },
+    engine = 'astgrep-rules',
+    prefills = { rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+fix: curly
+    ]] },
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -57,8 +63,17 @@ T['can replace with file filter'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', filesFilter = '**/*.ts' },
+    engine = 'astgrep-rules',
+    prefills = {
+      filesFilter = '**/*.ts',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+fix: curly
+    ]],
+    },
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -86,8 +101,17 @@ T['can replace within one file'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', paths = './file2.ts' },
+    engine = 'astgrep-rules',
+    prefills = {
+      paths = './file2.ts',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+fix: curly
+    ]],
+    },
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -114,8 +138,17 @@ T['can replace within one dir'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', paths = './' },
+    engine = 'astgrep-rules',
+    prefills = {
+      paths = './',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+fix: curly
+    ]],
+    },
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -142,8 +175,17 @@ T['can replace within one dir with spaces'] = function()
   }, { 'foo bar' })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', paths = './foo\\ bar' },
+    engine = 'astgrep-rules',
+    prefills = {
+      paths = './foo\\ bar',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+fix: curly
+    ]],
+    },
   })
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
@@ -171,8 +213,17 @@ T['can replace within multiple dirs with spaces'] = function()
   }, { 'foo bar', 'hello world' })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly', paths = './foo\\ bar ./hello\\ world' },
+    engine = 'astgrep-rules',
+    prefills = {
+      paths = './foo\\ bar ./hello\\ world',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+fix: curly
+    ]],
+    },
   })
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
@@ -200,8 +251,16 @@ T['can replace with empty string'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', flags = '--rewrite=' },
+    engine = 'astgrep-rules',
+    prefills = {
+      flags = '--rewrite=',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+    ]],
+    },
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -229,8 +288,17 @@ T['is prevented from replacing with blacklisted flags'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replace = 'curly', flags = '--json' },
+    engine = 'astgrep-rules',
+    prefills = {
+      flags = '--json',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+fix: curly
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)

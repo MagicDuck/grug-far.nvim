@@ -28,8 +28,13 @@ T['can open a given location'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug.$A' },
+    engine = 'astgrep-rules',
+    prefills = { rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug.$A
+    ]] },
   })
   helpers.childWaitForFinishedStatus(child)
 

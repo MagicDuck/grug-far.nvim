@@ -36,8 +36,13 @@ T['sync all is not supported'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug' },
+    engine = 'astgrep-rules',
+    prefills = { rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+    ]] },
   })
   helpers.childWaitForFinishedStatus(child)
 
@@ -70,8 +75,13 @@ T['sync line is not supported'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug' },
+    engine = 'astgrep-rules',
+    prefills = { rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+    ]] },
   })
   helpers.childWaitForFinishedStatus(child)
 

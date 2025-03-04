@@ -27,8 +27,13 @@ T['can search for some string'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug.$A' },
+    engine = 'astgrep-rules',
+    prefills = { rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug.$A
+    ]] },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -50,10 +55,15 @@ T['can search for some string with placeholders on'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug' },
+    engine = 'astgrep-rules',
+    prefills = { rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+    ]] },
     engines = {
-      astgrep = {
+      ['astgrep-rules'] = {
         placeholders = { enabled = true },
       },
     },
@@ -78,9 +88,17 @@ T['reports error from sg'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
+    engine = 'astgrep-rules',
     -- note: invalid regex
-    prefills = { search = 'grug', flags = '--strictness' },
+    prefills = {
+      flags = '--strictness',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -101,8 +119,16 @@ T['can search with flags'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', flags = '--lang=ts' },
+    engine = 'astgrep-rules',
+    prefills = {
+      flags = '--lang=ts',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -124,12 +150,20 @@ T['can search with flags resulting in plain text output'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug.$A', flags = '--help' },
+    engine = 'astgrep-rules',
+    prefills = {
+      flags = '--help',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug.$A
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
-  helpers.childWaitForScreenshotText(child, 'Usage: sg run')
+  helpers.childWaitForScreenshotText(child, 'Usage: ast-grep scan')
 end
 
 T['can search with particular file in paths'] = function()
@@ -145,8 +179,16 @@ T['can search with particular file in paths'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', paths = './file2.ts' },
+    engine = 'astgrep-rules',
+    prefills = {
+      paths = './file2.ts',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+      ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -168,8 +210,16 @@ T['can search with particular dir in paths'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', paths = '.' },
+    engine = 'astgrep-rules',
+    prefills = {
+      paths = '.',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -191,8 +241,16 @@ T['can search with file filter'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', filesFilter = '**/*.ts' },
+    engine = 'astgrep-rules',
+    prefills = {
+      filesFilter = '**/*.ts',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -214,8 +272,17 @@ T['can search with replace string'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', replacement = 'curly' },
+    engine = 'astgrep-rules',
+    prefills = {
+      replacement = 'curly',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+fix: curly
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -237,8 +304,15 @@ T['can search with no matches'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'george' },
+    engine = 'astgrep-rules',
+    prefills = {
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: george
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -260,8 +334,16 @@ T['can search with files filter and no matches'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'george', filesFilter = '*.ts' },
+    engine = 'astgrep-rules',
+    prefills = {
+      filesFilter = '*.ts',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: george
+    ]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -285,8 +367,15 @@ T['can search for some string with many matches'] = function()
   helpers.writeTestFiles(files)
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug' },
+    engine = 'astgrep-rules',
+    prefills = {
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+]],
+    },
   })
 
   helpers.childWaitForFinishedStatus(child)
@@ -369,8 +458,16 @@ T['is prevented from searching with blacklisted flags'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
-    prefills = { search = 'grug', flags = '--stdin' },
+    engine = 'astgrep-rules',
+    prefills = {
+      flags = '--rule',
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug
+      ]],
+    },
   })
 
   helpers.childWaitForScreenshotText(child, 'search cannot work')
