@@ -31,7 +31,7 @@ T['can replace with replace string'] = function()
     engine = 'astgrep-rules',
     prefills = { rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 fix: curly
@@ -68,7 +68,7 @@ T['can replace with file filter'] = function()
       filesFilter = '**/*.ts',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 fix: curly
@@ -106,7 +106,7 @@ T['can replace within one file'] = function()
       paths = './file2.ts',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 fix: curly
@@ -143,7 +143,7 @@ T['can replace within one dir'] = function()
       paths = './',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 fix: curly
@@ -180,7 +180,7 @@ T['can replace within one dir with spaces'] = function()
       paths = './foo\\ bar',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 fix: curly
@@ -218,7 +218,7 @@ T['can replace within multiple dirs with spaces'] = function()
       paths = './foo\\ bar ./hello\\ world',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 fix: curly
@@ -256,7 +256,7 @@ T['can replace with empty string'] = function()
       flags = '--rewrite=',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
     ]],
@@ -293,7 +293,7 @@ T['is prevented from replacing with blacklisted flags'] = function()
       flags = '--json',
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug
 fix: curly

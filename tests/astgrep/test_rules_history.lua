@@ -32,7 +32,7 @@ T['engine swaps when reloading from history'] = function()
     engine = 'astgrep',
     prefills = { rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug.$A
     ]] },
@@ -85,7 +85,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
     prefills = {
       rules = [[
 id: grug_test
-language: lua
+language: typescript
 rule:
   pattern: grug.$A
 fix: return vars.A
