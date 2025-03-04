@@ -134,7 +134,7 @@ rule:
 
   getInputPrefillsForVisualSelection = function(visual_selection, initialPrefills)
     local prefills = vim.deepcopy(initialPrefills)
-    prefills.search = table.concat(visual_selection, '\n')
+    prefills.rules = table.concat(visual_selection, '\n')
     return prefills
   end,
 
