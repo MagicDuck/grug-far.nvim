@@ -1,0 +1,23 @@
+--|
+01|
+02|id: grug_test
+03|language: typescript
+04|rule:
+05|  pattern: george
+06|
+07|
+08|
+09|
+10|no matches
+
+--|-
+01| 
+02| 
+03| 
+04| 
+05| 
+06| 
+07| 
+08| 
+09| 
+10| 
