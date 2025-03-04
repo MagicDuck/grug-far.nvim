@@ -24,8 +24,9 @@ local function get_language_by_glob(filename, languageGlobs)
 end
 
 ---@param context GrugFarContext
+---@return string | nil
 local function get_default_astgrep_language(context)
-  local lang = ''
+  local lang = nil
 
   -- Filetype of the recently opened buffer is a reasonable guess
   if context.prevBufFiletype ~= nil then
@@ -72,7 +73,7 @@ local AstgrepRulesEngine = {
 
         -- a `language` field is compulsory. For convenience, we can try to
         -- guess what the user willl want
-        local lang = get_default_astgrep_language(context)
+        local lang = get_default_astgrep_language(context) or ''
 
         local defaultValue = [[
 id: my_rule_1
