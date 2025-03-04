@@ -32,7 +32,7 @@ T['can replace with replace string'] = function()
     prefills = { rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 fix: curly
     ]] },
@@ -69,7 +69,7 @@ T['can replace with file filter'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 fix: curly
     ]],
@@ -107,7 +107,7 @@ T['can replace within one file'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 fix: curly
     ]],
@@ -144,7 +144,7 @@ T['can replace within one dir'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 fix: curly
     ]],
@@ -181,7 +181,7 @@ T['can replace within one dir with spaces'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 fix: curly
     ]],
@@ -219,7 +219,7 @@ T['can replace within multiple dirs with spaces'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 fix: curly
     ]],
@@ -257,7 +257,7 @@ T['can replace with empty string'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
     ]],
     },
@@ -294,7 +294,7 @@ T['is prevented from replacing with blacklisted flags'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 fix: curly
     ]],

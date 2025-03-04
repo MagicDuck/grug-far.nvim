@@ -40,7 +40,7 @@ T['sync all is not supported'] = function()
     prefills = { rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
     ]] },
   })
@@ -79,7 +79,7 @@ T['sync line is not supported'] = function()
     prefills = { rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
     ]] },
   })
