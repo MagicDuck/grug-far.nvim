@@ -30,7 +30,12 @@ T['engine swaps when reloading from history'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    prefills = { search = 'grug.$A' },
+    prefills = { rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug.$A
+    ]] },
   })
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
@@ -77,7 +82,15 @@ T['replacement interpreter swaps when reloading from history'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
-    prefills = { search = 'grug.$A', replacement = 'return vars.A' },
+    prefills = {
+      rules = [[
+id: grug_test
+language: lua
+rules:
+  pattern: grug.$A
+fix: return vars.A
+    ]],
+    },
     replacementInterpreter = 'lua',
   })
   helpers.childWaitForFinishedStatus(child)

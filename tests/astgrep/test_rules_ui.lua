@@ -14,10 +14,10 @@ local T = MiniTest.new_set({
   },
 })
 
-T['can launch with :GrugFar astgrep'] = function()
-  child.type_keys('<esc>:GrugFar astgrep<cr>')
-  helpers.childWaitForScreenshotText(child, 'Search:')
-  helpers.childWaitForScreenshotText(child, 'astgrep')
+T['can launch with :GrugFar astgrep-rules'] = function()
+  child.type_keys('<esc>:GrugFar astgrep-rules<cr>')
+  helpers.childWaitForScreenshotText(child, 'Rules:')
+  helpers.childWaitForScreenshotText(child, 'astgrep-rules')
 end
 
 return T
