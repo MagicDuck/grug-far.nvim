@@ -32,7 +32,7 @@ T['can open a given location'] = function()
     prefills = { rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug.$A
     ]] },
   })

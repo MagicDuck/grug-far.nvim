@@ -31,7 +31,7 @@ T['can search for some string'] = function()
     prefills = { rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug.$A
     ]] },
   })
@@ -59,7 +59,7 @@ T['can search for some string with placeholders on'] = function()
     prefills = { rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
     ]] },
     engines = {
@@ -95,7 +95,7 @@ T['reports error from sg'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
     ]],
     },
@@ -125,7 +125,7 @@ T['can search with flags'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
     ]],
     },
@@ -156,7 +156,7 @@ T['can search with flags resulting in plain text output'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug.$A
     ]],
     },
@@ -185,7 +185,7 @@ T['can search with particular file in paths'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
       ]],
     },
@@ -216,7 +216,7 @@ T['can search with particular dir in paths'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
     ]],
     },
@@ -247,7 +247,7 @@ T['can search with file filter'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
     ]],
     },
@@ -278,7 +278,7 @@ T['can search with replace string'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 fix: curly
     ]],
@@ -309,7 +309,7 @@ T['can search with no matches'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: george
     ]],
     },
@@ -340,7 +340,7 @@ T['can search with files filter and no matches'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: george
     ]],
     },
@@ -372,7 +372,7 @@ T['can search for some string with many matches'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
 ]],
     },
@@ -464,7 +464,7 @@ T['is prevented from searching with blacklisted flags'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug
       ]],
     },

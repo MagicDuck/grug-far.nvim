@@ -33,7 +33,7 @@ T['engine swaps when reloading from history'] = function()
     prefills = { rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug.$A
     ]] },
   })
@@ -86,7 +86,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
       rules = [[
 id: grug_test
 language: lua
-rules:
+rule:
   pattern: grug.$A
 fix: return vars.A
     ]],
