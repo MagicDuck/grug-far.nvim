@@ -29,13 +29,15 @@ T['can replace with replace string'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep-rules',
-    prefills = { rules = [[
+    prefills = {
+      rules = [[
 id: grug_test
 language: typescript
 rule:
   pattern: grug
 fix: curly
-    ]] },
+    ]],
+    },
   })
   helpers.childWaitForFinishedStatus(child)
 
