@@ -19,7 +19,7 @@ function M.getSearchArgs(inputs, options)
   local extraArgs = {
     '--json=stream',
   }
-  return getArgs(inputs, options, extraArgs, blacklistedSearchFlags, false)
+  return getArgs(inputs, options, extraArgs, blacklistedSearchFlags)
 end
 
 --- is doing a search with replacement?
