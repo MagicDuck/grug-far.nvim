@@ -86,7 +86,8 @@ Using [lazy.nvim][lazy]:
       require('grug-far').setup({
         -- options, see Configuration section below
         -- there are no required options atm
-        -- engine = 'ripgrep' is default, but 'astgrep' can be specified
+        -- engine = 'ripgrep' is default, but 'astgrep' or 'astgrep-rules' can
+        -- be specified
       });
     end
   },
@@ -209,7 +210,7 @@ Note that you can edit the history buffer and save just like any other buffer if
 The format of a history entry is:
 ```
 <optional comment, e.g. My special search>
-Engine: <astgrep|ripgrep>(|lua)?
+Engine: <astgrep|astgrep-rules|ripgrep>(|lua)?
 Search: <text>
 Replace: <text>
 Files Filter: <text>
@@ -225,8 +226,8 @@ History entries are separated by one or more empty lines.
 
 _Note_: **grug-far** will ignore lines that do not start with the prefixes above
 
-### Seeing the full rg search command
-Sometimes, mostly for debug purposes, it's useful to see the full `rg` command that gets executed on search. You
+### Seeing the full search command
+Sometimes, mostly for debug purposes, it's useful to see the full CLI command that gets executed on search. You
 can toggle that on with the `Toggle Show rg Command` action, and the command will appear as the first thing in the
 search results area.
 
@@ -236,7 +237,11 @@ The command is shell-escaped, so you can copy and execute it in a shell manually
 If you inadvertently launched a wrong search/sync/replace, you can abort early using the `Abort` action.
 
 ### Swapping search engine
-You can swap search engines with the `Swap Engine` action. Currently `ripgrep` (default) and `astgrep` are supported. 
+You can swap search engines with the `Swap Engine` action. Currently `ripgrep` (default), `astgrep`, and `astgrep-rules` are supported. 
+
+`ripgrep` uses the `rg` CLI command to search and replace. See [ripgrep docs](https://github.com/BurntSushi/ripgrep) for more information about CLI options and regex syntax.
+
+`astgrep` and `astgrep-rules` are two different interfaces to the `sg` CLI command. `astgrep` is limited to single [patterns](https://ast-grep.github.io/guide/pattern-syntax.html), with `astgrep run --pattern=<your_search_string>`. `astgrep-rules` takes YAML input to define [rules](https://ast-grep.github.io/guide/rule-config.html), run with `sg scan --inline-rules=<your_rules_yaml>`, which is more verbose but more powerful. See [ast-grep docs](https://ast-grep.github.io/guide/introduction.html) for more information. grug-far will attempt to pre-populate reasonable YAML boilerplate when selecting the `astgrep-rules` engine. If you've been working on a pattern with `astgrep`, then swap engine to `astgrep-rules`, grug-far will include your existing pattern in the rule so you can build on it from there.
 
 ### Closing
 When you are done, it is recommended to close the buffer with the configured keybinding 
