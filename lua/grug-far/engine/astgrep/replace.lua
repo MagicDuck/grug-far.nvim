@@ -113,6 +113,7 @@ end
 function M.replace(params)
   local report_progress = params.report_progress
   local on_finish = params.on_finish
+  local isRuleMode = params.inputs.rules ~= nil
 
   local extraArgs = {
     '--update-all',
@@ -130,7 +131,7 @@ function M.replace(params)
     return
   end
 
-  if #params.inputs.replacement == 0 then
+  if not isRuleMode and #params.inputs.replacement == 0 then
     local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
     if choice ~= 1 then
       on_finish(nil, nil, 'replace with empty string canceled!')

@@ -5,4 +5,7 @@ return {
   '--interactive',
   '-U',
   '--update-all',
+  '-r',
+  '--rule',
+  '--inline-rules',
 }

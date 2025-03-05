@@ -42,6 +42,11 @@ M.defaultOptions = {
   -- deprecated, please use engines.ripgrep.extraArgs
   extraRgArgs = '',
 
+  -- engines that are enabled to use
+  -- The order of the array dictates the order to rotate through when swappping
+  -- engines
+  enabledEngines = { 'ripgrep', 'astgrep', 'astgrep-rules' },
+
   -- search and replace engines configuration
   engines = {
     -- see https://github.com/BurntSushi/ripgrep
@@ -95,10 +100,58 @@ M.defaultOptions = {
         paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
       },
     },
+
+    ['astgrep-rules'] = {
+      -- ast-grep executable to use, can be a different path if you need to configure
+      path = 'sg',
+
+      -- extra args that you always want to pass
+      -- like for example if you always want context lines around matches
+      extraArgs = '',
+
+      -- Globs to define non-standard mappings of file extension to language,
+      -- as you might define in an ast-grep project config. Here they're used
+      -- to fill a reasonable language (which is required) in the default-value
+      -- for the the rules YAML input. Ideally these would be read directly
+      -- from `sgconfig.yml`, but we're not going to implement that parsing.
+      --
+      -- Example:
+      -- ```
+      -- languageGlobs = { tsx = { "*.ts", ".js", "*.jsx", "*.tsx" } }
+      -- ```
+      --
+      -- This will make then input pre-fill `language: tsx` if the
+      -- current/previous file matches any of that list of globs. Setting these
+      -- globs in`sgconfig.yml` is a way to make rules more-reusable - rather
+      -- than write separate rules for each of the 4 languages, parse them all
+      -- as the "superset" language (tsx), and write one rule based on that
+      -- AST. This plugin will then infer (based on this option) that you
+      -- probably want to target `language: tsx` when writing a rule for files
+      -- that match any of these globs
+      --
+      -- ast-grep docs:
+      -- https://ast-grep.github.io/reference/sgconfig.html#languageglobs
+      languageGlobs = {},
+
+      -- placeholders to show in input areas when they are empty
+      -- set individual ones to '' to disable, or set enabled = false for complete disable
+      placeholders = {
+        -- whether to show placeholders
+        enabled = true,
+
+        --  rules would normally be multi-line, but we don't support multi-line
+        --  placeholders. rules is filled with a default-value though, so it's
+        --  rare to see it empty
+        rules = 'e.g. id: my_rule_1 \\n language: lua\\nrule: \\n  pattern: await $A',
+        filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
+        flags = 'e.g. --help (-h) --debug-query=ast --strictness=<STRICTNESS>',
+        paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
+      },
+    },
   },
 
   -- search and replace engine to use.
-  -- Must be one of 'ripgrep' | 'astgrep' | nil
+  -- Must be one of 'ripgrep' | 'astgrep' | 'astgrep-rules' | nil
   -- if nil, defaults to 'ripgrep'
   engine = 'ripgrep',
 
@@ -471,25 +524,20 @@ M.defaultOptions = {
 ---@field newline? string
 
 ---@class PlaceholdersTable
----@field enabled boolean
----@field search string
----@field replacement string
----@field replacement_lua string
----@field filesFilter string
----@field flags string
----@field paths string
-
----@class PlaceholdersTableOverride
 ---@field enabled? boolean
 ---@field search? string
+---@field rules? string
 ---@field replacement? string
 ---@field replacement_lua? string
 ---@field filesFilter? string
 ---@field flags? string
 ---@field paths? string
 
+---@alias LanguageGlobsTable table<string, string[]>
+
 ---@class GrugFarPrefills
 ---@field search? string
+---@field rules? string
 ---@field replacement? string
 ---@field filesFilter? string
 ---@field flags? string
@@ -515,27 +563,41 @@ M.defaultOptions = {
 ---@field path? string
 ---@field extraArgs? string
 ---@field showReplaceDiff? boolean
----@field placeholders? PlaceholdersTableOverride
+---@field placeholders? PlaceholdersTable
 
 ---@class AstgrepEngineTable
 ---@field path string
 ---@field extraArgs string
 ---@field placeholders PlaceholdersTable
 
+---@class AstgrepRulesEngineTable
+---@field path string
+---@field extraArgs string
+---@field placeholders PlaceholdersTable
+---@field languageGlobs LanguageGlobsTable
+
 ---@class AstgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
----@field placeholders? PlaceholdersTableOverride
+---@field placeholders? PlaceholdersTable
+
+---@class AstgrepRulesEngineTableOverride
+---@field path? string
+---@field extraArgs? string
+---@field placeholders? PlaceholdersTable
+---@field languageGlobs? LanguageGlobsTable
 
 ---@class EnginesTable
 ---@field ripgrep RipgrepEngineTable
 ---@field astgrep AstgrepEngineTable
+---@field astgrep-rules AstgrepRulesEngineTable
 
 ---@class EnginesTableOverride
 ---@field ripgrep? RipgrepEngineTableOverride
 ---@field astgrep? AstgrepEngineTableOverride
+---@field astgrep-rules? AstgrepRulesEngineTableOverride
 
----@alias GrugFarEngineType "ripgrep" | "astgrep"
+---@alias GrugFarEngineType "ripgrep" | "astgrep" | "astgrep-rules"
 ---@alias GrugFarReplacementInterpreterType "lua" | "vimscript" | "default"
 
 ---@alias NumberLabelPosition "right_align" | "eol" | "inline"
@@ -598,6 +660,7 @@ M.defaultOptions = {
 ---@field instanceName? string
 ---@field folding FoldingTable
 ---@field engines EnginesTable
+---@field enabledEngines string[]
 ---@field engine GrugFarEngineType
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]

@@ -102,7 +102,8 @@ local contextCount = 0
 ---@field count? integer
 
 ---@class GrugFarInputs
----@field search string
+---@field search? string
+---@field rules? string
 ---@field replacement string
 ---@field filesFilter string
 ---@field flags string
@@ -145,6 +146,8 @@ local contextCount = 0
 ---@field extmarkIds {[string]: integer}
 ---@field state GrugFarState
 ---@field prevWin? integer
+---@field prevBufName? string
+---@field prevBufFiletype? string
 ---@field actions GrugFarAction[]
 ---@field engine GrugFarEngine
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
@@ -206,6 +209,10 @@ end
 ---@return integer windowId
 local function createWindow(context)
   context.prevWin = vim.api.nvim_get_current_win()
+  local prevBuf = vim.api.nvim_win_get_buf(context.prevWin)
+  context.prevBufName = vim.api.nvim_buf_get_name(prevBuf)
+  context.prevBufFiletype = vim.bo[prevBuf].filetype
+
   vim.cmd(context.options.windowCreationCommand)
   local win = vim.api.nvim_get_current_win()
 
