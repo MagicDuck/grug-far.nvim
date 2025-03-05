@@ -463,6 +463,9 @@ T['is prevented from searching with blacklisted flags'] = function()
       flags = '--rule',
       rules = [[
 id: grug_test
+language: typescript
+rule:
+  pattern: grug
       ]],
     },
   })
