@@ -30,6 +30,7 @@ T['engine swaps when reloading from history'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
+    enabledEngines = { 'ripgrep', 'astgrep' },
     prefills = { search = 'grug.$A' },
   })
   helpers.childWaitForFinishedStatus(child)
@@ -77,6 +78,7 @@ T['replacement interpreter swaps when reloading from history'] = function()
 
   helpers.childRunGrugFar(child, {
     engine = 'astgrep',
+    enabledEngines = { 'ripgrep', 'astgrep' },
     prefills = { search = 'grug.$A', replacement = 'return vars.A' },
     replacementInterpreter = 'lua',
   })
