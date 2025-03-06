@@ -3,16 +3,12 @@ local history = require('grug-far.history')
 local utils = require('grug-far.utils')
 local tasks = require('grug-far.tasks')
 local opts = require('grug-far.opts')
-local engine = require('grug-far.engine')
-local replacementInterpreter = require('grug-far.replacementInterpreter')
-local inputs = require('grug-far.inputs')
 
 --- gets history entry at given 0-based buffer row
----@param context GrugFarContext
 ---@param historyBuf integer
 ---@param row integer
 ---@return HistoryEntry | nil
-local function getHistoryEntryAtRow(context, historyBuf, row)
+local function getHistoryEntryAtRow(historyBuf, row)
   local firstEntryRow = nil
   for i = row, 0, -1 do
     local bufline = unpack(vim.api.nvim_buf_get_lines(historyBuf, i, i + 1, false))
@@ -37,7 +33,7 @@ local function getHistoryEntryAtRow(context, historyBuf, row)
   end
 
   local entryLines = vim.api.nvim_buf_get_lines(historyBuf, firstEntryRow, lastEntryRow + 1, false)
-  local entry = history.getHistoryEntryFromLines(context, entryLines)
+  local entry = history.getHistoryEntryFromLines(entryLines)
   return entry
 end
 
@@ -55,24 +51,14 @@ end
 ---@param context GrugFarContext
 local function pickHistoryEntry(historyWin, historyBuf, buf, context)
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0)) - 1
-  local entry = getHistoryEntryAtRow(context, historyBuf, cursor_row)
+  local entry = getHistoryEntryAtRow(historyBuf, cursor_row)
   if not entry then
     return
   end
 
   closeHistoryWindow(historyWin)
 
-  context.state.searchDisabled = true
-  context.engine = engine.getEngine(entry.engine)
-  inputs.fill(context, buf, {
-    search = entry.search,
-    replacement = entry.replacement,
-    filesFilter = entry.filesFilter,
-    flags = entry.flags,
-    paths = entry.paths,
-  }, true)
-  context.state.searchDisabled = false
-  replacementInterpreter.setReplacementInterpreter(buf, context, entry.replacementInterpreter)
+  history.fillInputsFromEntry(context, buf, entry)
 end
 
 --- set up key maps for history buffer

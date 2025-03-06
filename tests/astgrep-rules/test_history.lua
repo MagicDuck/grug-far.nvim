@@ -29,7 +29,8 @@ T['engine swaps when reloading from history'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
+    engine = 'astgrep-rules',
+    enabledEngines = { 'ripgrep', 'astgrep-rules' },
     prefills = { rules = [[
 id: grug_test
 language: typescript
@@ -41,8 +42,9 @@ rule:
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
   helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
-  child.type_keys('<esc>cc', 'grug')
   child.type_keys('<esc>' .. keymaps.swapEngine.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: swapped to engine')
+  child.type_keys('<esc>cc', 'grug')
   helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
@@ -81,7 +83,8 @@ T['replacement interpreter swaps when reloading from history'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    engine = 'astgrep',
+    engine = 'astgrep-rules',
+    enabledEngines = { 'ripgrep', 'astgrep-rules' },
     prefills = {
       rules = [[
 id: grug_test
