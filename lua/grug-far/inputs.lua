@@ -4,18 +4,20 @@ local M = {}
 ---@param context GrugFarContext
 ---@param buf integer
 ---@param name string
----@return string[]
+---@return string[], GrugFarEngineInput?
 local function getInputLines(context, buf, name)
   local nextExtmarkName = nil
+  local theInput = nil
   for i, input in ipairs(context.engine.inputs) do
     if input.name == name then
+      theInput = input
       local nextInput = context.engine.inputs[i + 1]
       nextExtmarkName = nextInput and nextInput.name or 'results_header'
     end
   end
 
   if not nextExtmarkName then
-    return { '' }
+    return { '' }, theInput
   end
 
   local startRow =
@@ -30,10 +32,38 @@ local function getInputLines(context, buf, name)
   ) --[[@as integer?]]
 
   if not (startRow and endRow) then
-    return { '' }
+    return { '' }, theInput
   end
 
-  return vim.api.nvim_buf_get_lines(buf, startRow, endRow, false)
+  return vim.api.nvim_buf_get_lines(buf, startRow, endRow, false), theInput
+end
+
+--- gets input value for given input name
+---@param context GrugFarContext
+---@param buf integer
+---@param name string
+---@return string
+function M.getInputValue(context, buf, name)
+  local lines, input = getInputLines(context, buf, name)
+  local value = table.concat(lines, '\n')
+  if input and input.trim then
+    value = vim.trim(value)
+  end
+
+  return value
+end
+
+--- gets input values
+---@param context GrugFarContext
+---@param buf integer
+---@return GrugFarInputs
+function M.getValues(context, buf)
+  local values = {}
+  for _, input in ipairs(context.engine.inputs) do
+    values[input.name] = M.getInputValue(context, buf, input.name)
+  end
+
+  return values
 end
 
 --- fills in given input

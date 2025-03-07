@@ -3,6 +3,7 @@ local utils = require('grug-far.utils')
 local treesitter = require('grug-far.render.treesitter')
 local ResultHighlightType = require('grug-far.engine').ResultHighlightType
 local ResultLineGroup = require('grug-far.engine').ResultLineGroup
+local inputs = require('grug-far.inputs')
 
 local M = {}
 
@@ -377,8 +378,9 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
   if not context.engine.isSyncSupported() then
     return
   end
+  local _inputs = inputs.getValues(context, buf)
   if
-    context.engine.isSearchWithReplacement(context.state.inputs, context.options)
+    context.engine.isSearchWithReplacement(_inputs, context.options)
     and context.engine.showsReplaceDiff(context.options)
   then
     return
@@ -436,7 +438,7 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
         vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, row, 0, details)
       end
     end,
-    context.engine.isSearchWithReplacement(context.state.inputs, context.options)
+    context.engine.isSearchWithReplacement(_inputs, context.options)
   )
 end
 

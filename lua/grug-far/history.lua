@@ -38,11 +38,13 @@ end
 
 --- adds entry to history
 ---@param context GrugFarContext
+---@param buf integer
 ---@param notify? boolean
-function M.addHistoryEntry(context, notify)
+function M.addHistoryEntry(context, buf, notify)
   local inputsLen = 0
+  local _inputs = inputs.getValues(context, buf)
   for _, input in ipairs(context.engine.inputs) do
-    local value = context.state.inputs[input.name]
+    local value = _inputs[input.name]
     inputsLen = inputsLen + #value
   end
 
@@ -74,11 +76,7 @@ function M.addHistoryEntry(context, notify)
           or ''
         )
       for _, input in ipairs(context.engine.inputs) do
-        entry = entry
-          .. '\n'
-          .. input.label
-          .. ': '
-          .. formatInputValue(context.state.inputs[input.name])
+        entry = entry .. '\n' .. input.label .. ': ' .. formatInputValue(_inputs[input.name])
       end
       entry = entry .. '\n'
 
@@ -171,25 +169,20 @@ end
 function M.fillInputsFromEntry(context, buf, entry, callback)
   context.state.searchDisabled = true
 
+  local _inputs = inputs.getValues(context, buf)
   context.engine = engine.getEngine(entry.engine)
 
   -- get the values and stuff them into savedValues
-  for name, value in pairs(context.state.inputs) do
+  for name, value in pairs(_inputs) do
     context.state.previousInputValues[name] = value
   end
   -- clear the values and input label extmarks from the buffer
-  local emptyValues = {}
-  for _, input in ipairs(context.engine.inputs) do
-    emptyValues[input.name] = ''
-  end
-  context.state.inputs = emptyValues
   vim.api.nvim_buf_set_lines(buf, 0, 0, false, {})
   vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
   context.extmarkIds = {}
 
   vim.schedule(function()
     inputs.fill(context, buf, entry --[[@as GrugFarPrefills]], true)
-    context.state.inputs = entry --[[@as GrugFarInputs]]
     if entry.replacementInterpreter then
       replacementInterpreter.setReplacementInterpreter(buf, context, entry.replacementInterpreter)
     end
@@ -202,6 +195,7 @@ function M.fillInputsFromEntry(context, buf, entry, callback)
       callback()
     end
 
+    -- TODO (sbadragan): should we call search here, relying on input comparison
     context.state.searchDisabled = false
   end)
 end

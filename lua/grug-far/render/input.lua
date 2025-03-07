@@ -14,7 +14,6 @@ local treesitter = require('grug-far.render.treesitter')
 
 ---@param params InputRenderParams
 ---@param context GrugFarContext
----@return string textContent
 local function renderInput(params, context)
   local buf = params.buf
   local minLineNr = params.lineNr
@@ -142,8 +141,6 @@ local function renderInput(params, context)
       context.extmarkIds[placeholderExtmarkName] = nil
     end
   end
-
-  return table.concat(input_lines, '\n')
 end
 
 return renderInput

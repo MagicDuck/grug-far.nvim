@@ -232,7 +232,7 @@ local function setupCleanup(buf, context)
   local function cleanup()
     local autoSave = context.options.history.autoSave
     if autoSave.enabled and autoSave.onBufDelete then
-      history.addHistoryEntry(context)
+      history.addHistoryEntry(context, buf)
     end
 
     tasks.abortAndFinishAllTasks(context)
@@ -334,7 +334,7 @@ function M.toggle_flags(flags)
 
   local instance = namedInstances[instanceName]
 
-  local flags_value = instance.context.state.inputs.flags
+  local flags_value = inputs.getInputValue(instance.context, instance.buf, 'flags')
   local states = {}
   for _, flag in ipairs(flags) do
     local i, j = flags_value:find(' ' .. flag, 1, true)

@@ -8,7 +8,6 @@ local TOP_EMPTY_LINES = 1
 ---@param buf integer
 ---@param context GrugFarContext
 local function render(buf, context)
-  local state = context.state
   local placeholders = context.options.engines[context.engine.type].placeholders
   local inputsHighlight = context.options.inputsHighlight
 
@@ -44,7 +43,7 @@ local function render(buf, context)
       end
     end
 
-    local value = renderInput({
+    renderInput({
       buf = buf,
       lineNr = lineNr,
       extmarkName = input.name,
@@ -55,8 +54,6 @@ local function render(buf, context)
       placeholder = placeholders.enabled and placeholder,
       highlightLang = inputsHighlight and highlightLang or nil,
     }, context)
-
-    state.inputs[input.name] = input.trim and vim.trim(value) or value
 
     lineNr = lineNr + 1
   end
