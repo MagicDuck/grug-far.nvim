@@ -69,9 +69,9 @@ local function renderResults(params, context)
   local buf = params.buf
   local minLineNr = params.minLineNr
 
-  context.state.headerRow = ensureMinLineNr(buf, context, minLineNr, params.prevLabelExtmarkName)
+  local headerRow = ensureMinLineNr(buf, context, minLineNr, params.prevLabelExtmarkName)
 
-  renderResultsHeader(buf, context)
+  renderResultsHeader(buf, context, headerRow)
 end
 
 return renderResults

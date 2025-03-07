@@ -112,7 +112,6 @@ local contextCount = 0
 ---@class GrugFarState
 ---@field inputs GrugFarInputs
 ---@field lastInputs? GrugFarInputs
----@field headerRow integer
 ---@field status? GrugFarStatus
 ---@field progressCount? integer
 ---@field stats? { matches: integer, files: integer }
@@ -178,7 +177,6 @@ local function createContext(options)
     ) or nil,
     state = {
       inputs = {},
-      headerRow = 0,
       resultLocationByExtmarkId = {},
       resultMatchLineCount = 0,
       tasks = {},

@@ -1,4 +1,5 @@
 local engine = require('grug-far.engine')
+local resultsList = require('grug-far.render.resultsList')
 local M = {}
 
 ---@param line string
@@ -41,7 +42,8 @@ function M.setup(context, win)
 
     M._getFoldLevelFns[context.options.instanceName] = function()
       -- ignore stuff in the inputs area
-      if vim.v.lnum <= context.state.headerRow then
+      local buf = vim.api.nvim_win_get_buf(win)
+      if vim.v.lnum <= resultsList.getHeaderRow(context, buf) then
         return 0
       end
 
