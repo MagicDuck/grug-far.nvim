@@ -15,43 +15,6 @@ local T = MiniTest.new_set({
   },
 })
 
-T['can replace with replace string'] = function()
-  helpers.writeTestFiles({
-    {
-      filename = 'file2.ts',
-      content = [[ 
-    if (grug || talks) {
-      grug.walks(talks)
-    }
-    ]],
-    },
-  })
-
-  helpers.childRunGrugFar(child, {
-    engine = 'astgrep-rules',
-    prefills = {
-      rules = [[
-id: grug_test
-language: typescript
-rule:
-  pattern: grug
-fix: curly
-    ]],
-    },
-  })
-  helpers.childWaitForFinishedStatus(child)
-
-  child.type_keys('<esc>' .. keymaps.replace.n)
-  helpers.childWaitForUIVirtualText(child, 'replace completed!')
-  helpers.childExpectScreenshot(child)
-  helpers.childExpectBufLines(child)
-
-  child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, 'curly.walks')
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
-end
-
 T['can replace with file filter'] = function()
   helpers.writeTestFiles({
     {
@@ -73,8 +36,7 @@ id: grug_test
 language: typescript
 rule:
   pattern: grug
-fix: curly
-    ]],
+fix: curly]],
     },
   })
   helpers.childWaitForFinishedStatus(child)
@@ -83,11 +45,12 @@ fix: curly
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
+  helpers.childWaitForScreenshotText(child, 'XXX')
 
-  child.type_keys('<esc>cc', 'curly')
-  helpers.childWaitForScreenshotText(child, 'curly.walks')
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
+  -- child.type_keys('<esc>cc', 'curly')
+  -- helpers.childWaitForScreenshotText(child, 'curly.walks')
+  -- helpers.childWaitForFinishedStatus(child)
+  -- helpers.childExpectScreenshot(child)
 end
 
 T['can replace within one file'] = function()

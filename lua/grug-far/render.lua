@@ -24,7 +24,9 @@ local function render(buf, context)
 
   lineNr = lineNr + TOP_EMPTY_LINES
 
+  local lastInput
   for i, input in ipairs(context.engine.inputs) do
+    lastInput = input
     local prevInput = context.engine.inputs[i - 1]
     local nextInput = context.engine.inputs[i + 1]
 
@@ -62,7 +64,7 @@ local function render(buf, context)
   renderResults({
     buf = buf,
     minLineNr = lineNr,
-    prevLabelExtmarkName = 'paths',
+    prevLabelExtmarkName = lastInput.name,
   }, context)
 end
 

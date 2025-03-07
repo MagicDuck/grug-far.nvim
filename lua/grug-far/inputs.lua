@@ -1,4 +1,37 @@
+local resultsList = require('grug-far.render.resultsList')
 local M = {}
+
+-- TODO (sbadragan): remove?
+local function getInputLines(context, buf, name)
+  local nextExtmarkName = nil
+  for i, input in ipairs(context.engine.inputs) do
+    if input.name == name then
+      local nextInput = context.engine.inputs[i + 1]
+      nextExtmarkName = nextInput and nextInput.name or 'results_header'
+    end
+  end
+
+  if not nextExtmarkName then
+    return { '' }
+  end
+
+  local startRow =
+    unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, context.extmarkIds[name], {})) --[[@as integer?]]
+  local endRow = unpack(
+    vim.api.nvim_buf_get_extmark_by_id(
+      buf,
+      context.namespace,
+      context.extmarkIds[nextExtmarkName],
+      {}
+    )
+  ) --[[@as integer?]]
+
+  if not (startRow and endRow) then
+    return { '' }
+  end
+
+  return vim.api.nvim_buf_get_lines(buf, startRow, endRow, false)
+end
 
 --- fills in given input
 ---@param context GrugFarContext
@@ -19,7 +52,9 @@ local function fillInput(context, buf, name, value, clearOld)
 
   if inputRow then
     local oldValue = context.state.inputs[name]
-    local oldNumInputLines = #vim.split(oldValue or '', '\n')
+    -- TODO (sbadragan): remove?
+    -- local oldNumInputLines = #vim.split(oldValue or '', '\n')
+    local oldNumInputLines = #getInputLines(context, buf, name)
     local newLines = vim.split(value or '', '\n')
     -- note: we need to adopt this tricky way of inserting the value in order to move
     -- the next inputs extmark position down appropriately
@@ -36,10 +71,12 @@ end
 ---@param clearOld boolean
 function M.fill(context, buf, values, clearOld)
   -- filling in reverse order as it's more reliable with the left gravity extmarks
+  context.state.searchDisabled = true
   for i = #context.engine.inputs, 1, -1 do
     local input = context.engine.inputs[i]
     fillInput(context, buf, input.name, values[input.name], clearOld)
   end
+  context.state.searchDisabled = false
   vim.schedule(function()
     -- hack to get syntax highlighting to render correctly
     vim.api.nvim_buf_set_lines(buf, 0, 0, false, {})
