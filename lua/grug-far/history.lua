@@ -3,6 +3,7 @@ local inputs = require('grug-far.inputs')
 local replacementInterpreter = require('grug-far.replacementInterpreter')
 local engine = require('grug-far.engine')
 local resultsList = require('grug-far.render.resultsList')
+local search = require('grug-far.actions.search')
 local M = {}
 
 local continuation_prefix = '| '
@@ -195,7 +196,9 @@ function M.fillInputsFromEntry(context, buf, entry, callback)
       callback()
     end
 
-    -- TODO (sbadragan): should we call search here, relying on input comparison
+    search({ buf = buf, context = context })
+    -- prevent search on change (double search) since we are searching manually already
+    context.state.lastInputs = vim.deepcopy(inputs.getValues(context, buf))
     context.state.searchDisabled = false
   end)
 end
