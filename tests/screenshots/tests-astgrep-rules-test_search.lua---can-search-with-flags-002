@@ -6,17 +6,13 @@
 05|  pattern: grug
 06|    
 07|
-08|--lang=ts
+08|--threads=1
 09|
 10|
-11|error: unexpected argument '--lang' found
-12|
-13|  tip: to pass '--lang' as a value, use '-- --lang'
+11|file2.ts
+12|2:9:       if (grug || talks) {
+13|3:7:         grug.walks(talks)
 14|
-15|Usage: sg scan [OPTIONS] [PATHS]...
-16|
-17|For more information, try '--help'.
-18|
 
 --|-
 01| 
@@ -33,7 +29,3 @@
 12| 
 13| 
 14| 
-15| 
-16| 
-17| 
-18| 

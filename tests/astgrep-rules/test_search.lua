@@ -121,7 +121,7 @@ T['can search with flags'] = function()
   helpers.childRunGrugFar(child, {
     engine = 'astgrep-rules',
     prefills = {
-      flags = '--lang=ts',
+      flags = '--threads=1',
       rules = [[
 id: grug_test
 language: typescript
