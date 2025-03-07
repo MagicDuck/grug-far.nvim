@@ -377,6 +377,7 @@ function M.createBuffer(win, context)
       end
 
       -- launch a search in case there are prefills
+      render(buf, context)
       searchOnChange()
     end)
   end)
