@@ -14,10 +14,11 @@
 13|| language: typescript
 14|| rule:
 15||   pattern: grug.$A
-16|Files Filter: 
-17|Flags: 
-18|Paths: 
-19|
+16||     
+17|Files Filter: 
+18|Flags: 
+19|Paths: 
+20|
 
 --|-
 01| 
@@ -39,3 +40,4 @@
 17| 
 18| 
 19| 
+20| 
