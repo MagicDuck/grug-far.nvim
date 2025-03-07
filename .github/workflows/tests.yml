@@ -62,12 +62,12 @@ jobs:
         run: |
           mkdir astgrep
           cd astgrep
-          wget https://github.com/ast-grep/ast-grep/releases/download/0.31.0/app-x86_64-unknown-linux-gnu.zip
+          wget https://github.com/ast-grep/ast-grep/releases/download/0.35.0/app-x86_64-unknown-linux-gnu.zip
           unzip app-x86_64-unknown-linux-gnu.zip
       - name: Run tests
         run: | 
           make prepare
-          env RG_PATH=$(realpath ./ripgrep/rg) SG_PATH=$(realpath ./astgrep/sg) make test dir=astgrep
+          env RG_PATH=$(realpath ./ripgrep/rg) SG_PATH=$(realpath ./astgrep/ast-grep) make test dir=astgrep
   test-astgrep-rules:
     name: Run astgrep-rules tests
     timeout-minutes: 10
@@ -94,9 +94,9 @@ jobs:
         run: |
           mkdir astgrep
           cd astgrep
-          wget https://github.com/ast-grep/ast-grep/releases/download/0.31.0/app-x86_64-unknown-linux-gnu.zip
+          wget https://github.com/ast-grep/ast-grep/releases/download/0.35.0/app-x86_64-unknown-linux-gnu.zip
           unzip app-x86_64-unknown-linux-gnu.zip
       - name: Run tests
         run: | 
           make prepare
-          env RG_PATH=$(realpath ./ripgrep/rg) SG_PATH=$(realpath ./astgrep/sg) make test dir=astgrep-rules
+          env RG_PATH=$(realpath ./ripgrep/rg) SG_PATH=$(realpath ./astgrep/ast-grep) make test dir=astgrep-rules

@@ -20,7 +20,7 @@
 19|                                                                                
 20|  tip: a similar argument exists: '--stdin'                                     
 21|                                                                                
-22|Usage: sg scan <PATHS|--follow|--no-ignore <FILE_TYPE>|--stdin|--globs <GLOBS@@@
+22|Usage: ast-grep scan <PATHS|--follow|--no-ignore <FILE_TYPE>|--stdin|--globs @@@
 23|Grug FAR - 1: id: grug_test^@language: typesc...              2,14           Top
 24|-- INSERT --                                                                    
 
