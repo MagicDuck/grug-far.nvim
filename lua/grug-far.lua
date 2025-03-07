@@ -110,7 +110,6 @@ local contextCount = 0
 ---@field paths string
 
 ---@class GrugFarState
----@field inputs GrugFarInputs
 ---@field lastInputs? GrugFarInputs
 ---@field status? GrugFarStatus
 ---@field progressCount? integer
