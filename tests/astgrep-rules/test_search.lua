@@ -152,6 +152,7 @@ T['can search with flags resulting in plain text output'] = function()
   helpers.childRunGrugFar(child, {
     engine = 'astgrep-rules',
     prefills = {
+      flags = '--help',
       rules = [[
       id: grug_test
       language: typescript
@@ -160,8 +161,6 @@ T['can search with flags resulting in plain text output'] = function()
           ]],
     },
   })
-
-  child.type_keys('<esc>jjjjja' .. '--help')
 
   helpers.childWaitForFinishedStatus(child)
   helpers.childWaitForScreenshotText(child, 'Usage: sg scan')
@@ -461,6 +460,7 @@ T['is prevented from searching with blacklisted flags'] = function()
   helpers.childRunGrugFar(child, {
     engine = 'astgrep-rules',
     prefills = {
+      flags = '--rule',
       rules = [[
 id: grug_test
 language: typescript
@@ -470,7 +470,6 @@ rule:
     },
   })
 
-  child.type_keys('<esc>jjjjja' .. '--rule')
   helpers.childWaitForScreenshotText(child, 'search cannot work')
   helpers.childExpectScreenshot(child)
 end
