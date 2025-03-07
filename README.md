@@ -207,7 +207,7 @@ When you would like to pick one of your history entries to reuse, you can use th
 open the search history as a buffer. From there you can pick an entry that will be auto-filled in.
 
 Note that you can edit the history buffer and save just like any other buffer if you need to do some cleanup.
-The format of a history entry is:
+The format of a history entry looks like:
 ```
 <optional comment, e.g. My special search>
 Engine: <astgrep|astgrep-rules|ripgrep>(|lua)?
@@ -222,6 +222,7 @@ Replace: something
 | additional replace text
 | more replace text
 ```
+Note that some engines might use other inputs. For example, `astgrep-rules` uses `Rules` instead of `Search` and does not have `Replace`.
 History entries are separated by one or more empty lines.
 
 _Note_: **grug-far** will ignore lines that do not start with the prefixes above
