@@ -1,6 +1,7 @@
 local renderResultsHeader = require('grug-far.render.resultsHeader')
 local resultsList = require('grug-far.render.resultsList')
 local tasks = require('grug-far.tasks')
+local inputs = require('grug-far.inputs')
 local uv = vim.uv
 
 --- gets action message to display
@@ -32,9 +33,10 @@ end
 ---@param context GrugFarContext
 ---@param startRow integer
 ---@param endRow integer
+---@param _inputs GrugFarInputs
 ---@return ChangedFile[]
-local function getChangedFiles(buf, context, startRow, endRow)
-  local isReplacing = context.engine.isSearchWithReplacement(context.state.inputs, context.options)
+local function getChangedFiles(buf, context, startRow, endRow, _inputs)
+  local isReplacing = context.engine.isSearchWithReplacement(_inputs, context.options)
 
   local changedFilesByFilename = {}
   resultsList.forEachChangedLocation(buf, context, startRow, endRow, function(location, newLine)
@@ -104,7 +106,8 @@ local function sync(params)
 
   local task = tasks.createTask(context, 'sync')
   local startTime = uv.now()
-  local changedFiles = getChangedFiles(buf, context, startRow, endRow)
+  local _inputs = inputs.getValues(context, buf)
+  local changedFiles = getChangedFiles(buf, context, startRow, endRow, _inputs)
 
   if #changedFiles == 0 then
     state.actionMessage = 'no changes to sync!'
@@ -136,7 +139,7 @@ local function sync(params)
   end
 
   task.abort = context.engine.sync({
-    inputs = context.state.inputs,
+    inputs = _inputs,
     options = context.options,
     changedFiles = changedFiles,
     report_progress = tasks.task_callback_wrap(context, task, function(update)

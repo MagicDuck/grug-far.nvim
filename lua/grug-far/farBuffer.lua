@@ -73,7 +73,7 @@ local function getActions(buf, context)
       keymap = keymaps.historyAdd,
       description = 'Add current search/replace as a history entry.',
       action = function()
-        historyAdd({ context = context })
+        historyAdd({ buf = buf, context = context })
       end,
     },
     {
@@ -223,7 +223,7 @@ local function updateBufName(buf, context)
   else
     title = getNextUniqueBufName(buf, 'Grug FAR', true)
       .. utils.strEllideAfter(
-        context.engine.getSearchDescription(context.state.inputs),
+        context.engine.getSearchDescription(inputs.getValues(context, buf)),
         context.options.maxSearchCharsInTitles,
         ': '
       )
@@ -292,17 +292,18 @@ function M.createBuffer(win, context)
       return
     end
 
+    local _inputs = inputs.getValues(context, buf)
     -- only re-issue search when inputs have changed
-    if vim.deep_equal(state.inputs, state.lastInputs) then
+    if vim.deep_equal(_inputs, state.lastInputs) then
       return
     end
 
-    state.lastInputs = vim.deepcopy(state.inputs)
+    state.lastInputs = vim.deepcopy(_inputs)
 
     -- do a search immediately if either:
     -- 1. manually searching
     -- 2. auto debounce searching and query is empty, to improve responsiveness
-    if state.normalModeSearch or context.engine.isEmptySearch(state.inputs, context.options) then
+    if state.normalModeSearch or context.engine.isEmptySearch(_inputs, context.options) then
       search({ buf = buf, context = context })
     else
       debouncedSearch({ buf = buf, context = context })
@@ -377,6 +378,7 @@ function M.createBuffer(win, context)
       end
 
       -- launch a search in case there are prefills
+      -- TODO (sbadragan): can we now remove this one?
       render(buf, context)
       searchOnChange()
     end)

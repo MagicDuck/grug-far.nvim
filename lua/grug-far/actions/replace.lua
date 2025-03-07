@@ -2,6 +2,7 @@ local renderResultsHeader = require('grug-far.render.resultsHeader')
 local resultsList = require('grug-far.render.resultsList')
 local history = require('grug-far.history')
 local tasks = require('grug-far.tasks')
+local inputs = require('grug-far.inputs')
 local uv = vim.uv
 
 --- gets action message to display
@@ -110,7 +111,7 @@ local function replace(params)
 
       local autoSave = context.options.history.autoSave
       if autoSave.enabled and autoSave.onReplace then
-        history.addHistoryEntry(context)
+        history.addHistoryEntry(context, buf)
       end
       tasks.finishTask(context, task)
     end
@@ -118,7 +119,7 @@ local function replace(params)
 
   startTime = uv.now()
   task.abort = context.engine.replace({
-    inputs = context.state.inputs,
+    inputs = inputs.getValues(context, buf),
     options = context.options,
     replacementInterpreter = context.replacementInterpreter,
 

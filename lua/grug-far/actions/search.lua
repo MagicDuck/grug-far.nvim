@@ -3,6 +3,7 @@ local resultsList = require('grug-far.render.resultsList')
 local fold = require('grug-far.fold')
 local tasks = require('grug-far.tasks')
 local utils = require('grug-far.utils')
+local inputs = require('grug-far.inputs')
 
 ---@enum SearchUpdateType
 local SearchUpdateType = {
@@ -148,7 +149,7 @@ local function search(params)
 
   local fetched_matches = 0
   abort, effectiveArgs = context.engine.search({
-    inputs = state.inputs,
+    inputs = inputs.getValues(context, buf),
     options = context.options,
     replacementInterpreter = context.replacementInterpreter,
     on_fetch_chunk = tasks.task_callback_wrap(context, task, function(data)

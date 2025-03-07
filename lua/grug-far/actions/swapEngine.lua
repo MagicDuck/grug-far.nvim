@@ -1,5 +1,6 @@
 local engine = require('grug-far.engine')
 local history = require('grug-far.history')
+local inputs = require('grug-far.inputs')
 
 --- swaps engine with the next one
 ---@param params { buf: integer, context: GrugFarContext }
@@ -13,7 +14,7 @@ local function swapEngine(params)
   local nextEngineType = engineTypes[nextIndex + 1]
   local nextEngine = engine.getEngine(nextEngineType)
 
-  for name, value in pairs(context.state.inputs) do
+  for name, value in pairs(inputs.getValues(context, buf)) do
     context.state.previousInputValues[name] = value
   end
 

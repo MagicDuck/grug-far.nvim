@@ -1,4 +1,5 @@
 local utils = require('grug-far.utils')
+local inputs = require('grug-far.inputs')
 
 --- opens quickfix list
 ---@param buf integer
@@ -8,7 +9,7 @@ local function openQuickfixList(buf, context, resultsLocations)
   vim.fn.setqflist(resultsLocations, ' ')
   vim.fn.setqflist({}, 'a', {
     title = 'Grug FAR results' .. utils.strEllideAfter(
-      context.engine.getSearchDescription(context.state.inputs),
+      context.engine.getSearchDescription(inputs.getValues(context, buf)),
       context.options.maxSearchCharsInTitles,
       ' for: '
     ),

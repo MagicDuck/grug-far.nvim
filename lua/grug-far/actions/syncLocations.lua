@@ -15,7 +15,7 @@ local function syncLocations(params)
     on_success = function()
       local autoSave = context.options.history.autoSave
       if autoSave.enabled and autoSave.onSyncAll then
-        history.addHistoryEntry(context)
+        history.addHistoryEntry(context, buf)
       end
     end,
   })
