@@ -188,10 +188,9 @@ function M.fillInputsFromEntry(context, buf, entry, callback)
       replacementInterpreter.setReplacementInterpreter(buf, context, entry.replacementInterpreter)
     end
 
-    resultsList.clear(buf, context)
     local win = vim.fn.bufwinid(buf)
     pcall(vim.api.nvim_win_set_cursor, win, { context.options.startCursorRow, 0 })
-
+    resultsList.clear(buf, context)
     if callback then
       callback()
     end
