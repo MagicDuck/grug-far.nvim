@@ -6,6 +6,29 @@ local ResultLineGroup = require('grug-far.engine').ResultLineGroup
 
 local M = {}
 
+--- gets 0-based row of results header
+---@param context GrugFarContext
+---@param buf integer
+---@return integer
+M.getHeaderRow = function(context, buf)
+  local headerRow = 0
+  if context.extmarkIds.results_header then
+    local row = unpack(
+      vim.api.nvim_buf_get_extmark_by_id(
+        buf,
+        context.namespace,
+        context.extmarkIds.results_header,
+        {}
+      )
+    ) --[[@as integer]]
+    if row then
+      headerRow = row
+    end
+  end
+
+  return headerRow
+end
+
 --- sets buf lines, even when buf is not modifiable
 ---@param buf integer
 ---@param start integer
@@ -59,7 +82,7 @@ local function addLocationMark(buf, context, line, end_col, options)
   })
 end
 
---- adds highlight result. line is relative to context.state.headerRow
+--- adds highlight result. line is relative to headerRow
 --- in order to support inputs fields with growing number of lines
 ---@param context GrugFarContext
 ---@param line integer
@@ -174,6 +197,7 @@ function M.appendResultsChunk(buf, context, data)
   local resultLocationByExtmarkId = state.resultLocationByExtmarkId
   ---@type ResultLocation?
   local lastLocation = nil
+  local headerRow = M.getHeaderRow(context, buf)
 
   for i = 1, #data.highlights do
     local highlight = data.highlights[i]
@@ -218,11 +242,7 @@ function M.appendResultsChunk(buf, context, data)
       resultLocationByExtmarkId[markId] = lastLocation
 
       if context.options.resultsHighlight and lastLocation.text then
-        addHighlightResult(
-          context,
-          lastline + highlight.start_line - context.state.headerRow,
-          lastLocation
-        )
+        addHighlightResult(context, lastline + highlight.start_line - headerRow, lastLocation)
       end
     elseif
       hl_type == ResultHighlightType.ColumnNumber
@@ -278,7 +298,8 @@ end
 function M.setError(buf, context, error)
   M.clear(buf, context)
 
-  local startLine = context.state.headerRow + 1
+  local headerRow = M.getHeaderRow(context, buf)
+  local startLine = headerRow + 1
 
   local err_lines = vim.split((error and #error > 0) and error or 'Unexpected error!', '\n')
   setBufLines(buf, startLine, startLine, false, err_lines)
@@ -434,7 +455,7 @@ function M.clear(buf, context)
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
 
   -- remove all lines after heading and add one blank line
-  local headerRow = context.state.headerRow
+  local headerRow = M.getHeaderRow(context, buf)
   setBufLines(buf, headerRow, -1, false, { '' })
 end
 
@@ -480,8 +501,9 @@ end
 function M.forceRedrawBuffer(buf, context)
   ---@diagnostic disable-next-line
   if vim.api.nvim__redraw then
+    local headerRow = M.getHeaderRow(context, buf)
     ---@diagnostic disable-next-line
-    vim.api.nvim__redraw({ buf = buf, flush = true, range = { 0, context.state.headerRow + 100 } })
+    vim.api.nvim__redraw({ buf = buf, flush = true, range = { 0, headerRow + 100 } })
   end
 end
 
@@ -492,6 +514,7 @@ function M.highlight(buf, context)
     return
   end
   local regions = context.state.highlightRegions
+  local headerRow = M.getHeaderRow(context, buf)
 
   -- Process any pending results
   for filename, results in pairs(context.state.highlightResults) do
@@ -501,7 +524,7 @@ function M.highlight(buf, context)
       regions[lang] = regions[lang] or {}
       local last_line ---@type number?
       for _, line in ipairs(results.lines) do
-        local row = context.state.headerRow + line.row
+        local row = headerRow + line.row
         local node = { row, line.col, row, line.end_col }
         -- put consecutive lines in the same region
         if line.lnum - 1 ~= last_line then

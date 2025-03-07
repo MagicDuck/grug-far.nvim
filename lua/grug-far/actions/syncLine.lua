@@ -1,12 +1,15 @@
 local sync = require('grug-far.actions.sync')
+local resultsList = require('grug-far.render.resultsList')
 
 --- syncs current result line with original file location
 ---@param params { buf: integer, context: GrugFarContext }
 local function syncLine(params)
   local context = params.context
+  local buf = params.buf
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0)) - 1
 
-  if cursor_row <= context.state.headerRow then
+  local headerRow = resultsList.getHeaderRow(context, buf)
+  if cursor_row <= headerRow then
     return
   end
 

@@ -1,4 +1,5 @@
 local opts = require('grug-far.opts')
+local resultsList = require('grug-far.render.resultsList')
 
 --- gets status text
 ---@param context GrugFarContext
@@ -80,8 +81,9 @@ end
 
 ---@param buf integer
 ---@param context GrugFarContext
-local function renderResultsHeader(buf, context)
-  local headerRow = context.state.headerRow
+---@param row? integer 0-based row, defaults to headerRow
+local function renderResultsHeader(buf, context, row)
+  local headerRow = row or resultsList.getHeaderRow(context, buf)
 
   context.extmarkIds.results_header =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, headerRow, 0, {
