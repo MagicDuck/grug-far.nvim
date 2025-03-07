@@ -20,7 +20,7 @@ update-screenshots:
 prepare:
 	make clean
 	@mkdir -p deps
-	git clone --depth=1 --single-branch https://github.com/echasnovski/mini.nvim deps/mini.nvim
+	git clone --depth=1 --branch=v0.15.0 https://github.com/echasnovski/mini.nvim deps/mini.nvim
 	@mkdir -p temp_test_dir
 	@mkdir -p temp_history_dir
 # clean up
