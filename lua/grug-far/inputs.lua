@@ -1,7 +1,10 @@
-local resultsList = require('grug-far.render.resultsList')
 local M = {}
 
--- TODO (sbadragan): remove?
+--- gets input lines for given input name
+---@param context GrugFarContext
+---@param buf integer
+---@param name string
+---@return string[]
 local function getInputLines(context, buf, name)
   local nextExtmarkName = nil
   for i, input in ipairs(context.engine.inputs) do
@@ -51,9 +54,6 @@ local function fillInput(context, buf, name, value, clearOld)
   end
 
   if inputRow then
-    local oldValue = context.state.inputs[name]
-    -- TODO (sbadragan): remove?
-    -- local oldNumInputLines = #vim.split(oldValue or '', '\n')
     local oldNumInputLines = #getInputLines(context, buf, name)
     local newLines = vim.split(value or '', '\n')
     -- note: we need to adopt this tricky way of inserting the value in order to move

@@ -4,14 +4,16 @@
 03|language: typescript
 04|rule:
 05|  pattern: grug
-06|
-07|
+06|fix:
+07|    
 08|
 09|
-10|file2.ts
-11|2:9:       if (grug || talks) {
-12|3:7:         grug.walks(talks)
-13|
+10|
+11|
+12|file2.ts
+13|2:9:       if (grug || talks) {
+14|3:7:         grug.walks(talks)
+15|
 
 --|-
 01| 
@@ -27,3 +29,5 @@
 11| 
 12| 
 13| 
+14| 
+15| 

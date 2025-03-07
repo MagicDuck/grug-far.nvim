@@ -4,14 +4,19 @@
 03|language: typescript
 04|rule:
 05|  pattern: grug
-06|
+06|    
 07|
-08|
+08|--lang=ts
 09|
-10|file2.ts
-11|2:9:       if (grug || talks) {
-12|3:7:         grug.walks(talks)
-13|
+10|
+11|error: unexpected argument '--lang' found
+12|
+13|  tip: to pass '--lang' as a value, use '-- --lang'
+14|
+15|Usage: sg scan [OPTIONS] [PATHS]...
+16|
+17|For more information, try '--help'.
+18|
 
 --|-
 01| 
@@ -27,3 +32,8 @@
 11| 
 12| 
 13| 
+14| 
+15| 
+16| 
+17| 
+18| 

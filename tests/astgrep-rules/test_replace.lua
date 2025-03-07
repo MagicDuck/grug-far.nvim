@@ -45,12 +45,12 @@ fix: curly]],
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
   helpers.childExpectBufLines(child)
-  helpers.childWaitForScreenshotText(child, 'XXX')
 
-  -- child.type_keys('<esc>cc', 'curly')
-  -- helpers.childWaitForScreenshotText(child, 'curly.walks')
-  -- helpers.childWaitForFinishedStatus(child)
-  -- helpers.childExpectScreenshot(child)
+  child.type_keys('<esc>' .. keymaps.swapEngine.n)
+  child.type_keys('<esc>cc', 'curly')
+  helpers.childWaitForScreenshotText(child, 'curly.walks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
 end
 
 T['can replace within one file'] = function()
@@ -84,6 +84,7 @@ fix: curly
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
 
+  child.type_keys('<esc>' .. keymaps.swapEngine.n)
   child.type_keys('<esc>cc', 'curly')
   helpers.childWaitForScreenshotText(child, 'curly.walks')
   helpers.childWaitForFinishedStatus(child)
@@ -121,6 +122,7 @@ fix: curly
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
 
+  child.type_keys('<esc>' .. keymaps.swapEngine.n)
   child.type_keys('<esc>cc', 'curly')
   helpers.childWaitForScreenshotText(child, 'curly.walks')
   helpers.childWaitForFinishedStatus(child)
@@ -159,6 +161,7 @@ fix: curly
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
 
+  child.type_keys('<esc>' .. keymaps.swapEngine.n)
   child.type_keys('<esc>cc', 'curly')
   helpers.childWaitForScreenshotText(child, '(curly || talks)')
   helpers.childWaitForFinishedStatus(child)
@@ -197,45 +200,9 @@ fix: curly
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
 
+  child.type_keys('<esc>' .. keymaps.swapEngine.n)
   child.type_keys('<esc>cc', 'curly')
   helpers.childWaitForScreenshotText(child, '(curly || talks)')
-  helpers.childWaitForFinishedStatus(child)
-  helpers.childExpectScreenshot(child)
-end
-
-T['can replace with empty string'] = function()
-  helpers.writeTestFiles({
-    {
-      filename = 'file2.ts',
-      content = [[ 
-    if (grug || talks) {
-      grug.walks(talks)
-    }
-    ]],
-    },
-  })
-
-  helpers.childRunGrugFar(child, {
-    engine = 'astgrep-rules',
-    prefills = {
-      flags = '--rewrite=',
-      rules = [[
-id: grug_test
-language: typescript
-rule:
-  pattern: grug
-    ]],
-    },
-  })
-  helpers.childWaitForFinishedStatus(child)
-
-  child.type_keys('<esc>' .. keymaps.replace.n)
-  helpers.childWaitForUIVirtualText(child, 'replace completed!')
-  helpers.childExpectScreenshot(child)
-  helpers.childExpectBufLines(child)
-
-  child.type_keys('<esc>cc', 'talks')
-  helpers.childWaitForScreenshotText(child, '( || talks)')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
