@@ -48,8 +48,11 @@ Grug find! Grug replace! Grug happy!
 #### Ripgrep with lua interpreted replacement
 <img width="1259" alt="image" src="https://github.com/user-attachments/assets/e2b9ca48-e0cc-49d1-b048-5042f40b774b" />
 
-#### Astgrep with vimscript interpreted replacement
+#### Ast-grep with vimscript interpreted replacement
 <img width="1257" alt="image" src="https://github.com/user-attachments/assets/34eebeda-4e29-4fed-a751-eac3f879425c" />
+
+#### Ast-grep rules
+![image](https://github.com/user-attachments/assets/123c5c3e-85c1-45d3-89a1-167dc3376b62)
 
 </details>
 
