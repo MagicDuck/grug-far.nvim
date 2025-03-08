@@ -494,4 +494,66 @@ function M.grug_far(options)
   return M.open(options)
 end
 
+--- jumps to the next result in any open grug-far instance
+--- can be called from any buffer, not just the grug-far buffer
+--- @param instanceName? string optional instance name, if nil uses the first found instance
+function M.jump_next_result(instanceName)
+  ensure_configured()
+
+  -- If no instance name provided, find any instance
+  if not instanceName then
+    for name, _ in pairs(namedInstances) do
+      instanceName = name
+      break
+    end
+  end
+
+  if not instanceName or not namedInstances[instanceName] then
+    vim.notify('grug-far: No active instances found', vim.log.levels.ERROR)
+    return
+  end
+
+  local inst = namedInstances[instanceName]
+  local openLocation = require('grug-far.actions.openLocation')
+
+  -- Call the openLocation function with increment=1 to go to next result
+  openLocation({
+    buf = inst.buf,
+    context = inst.context,
+    increment = 1,
+    includeUncounted = true,
+  })
+end
+
+--- jumps to the previous result in any open grug-far instance
+--- can be called from any buffer, not just the grug-far buffer
+--- @param instanceName? string optional instance name, if nil uses the first found instance
+function M.jump_prev_result(instanceName)
+  ensure_configured()
+
+  -- If no instance name provided, find any instance
+  if not instanceName then
+    for name, _ in pairs(namedInstances) do
+      instanceName = name
+      break
+    end
+  end
+
+  if not instanceName or not namedInstances[instanceName] then
+    vim.notify('grug-far: No active instances found', vim.log.levels.ERROR)
+    return
+  end
+
+  local inst = namedInstances[instanceName]
+  local openLocation = require('grug-far.actions.openLocation')
+
+  -- Call the openLocation function with increment=-1 to go to previous result
+  openLocation({
+    buf = inst.buf,
+    context = inst.context,
+    increment = -1,
+    includeUncounted = true,
+  })
+end
+
 return M
