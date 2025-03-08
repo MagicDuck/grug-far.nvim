@@ -172,7 +172,7 @@ function M.search(params)
   end
 
   local eval_fn
-  if params.replacementInterpreter then
+  if not isRuleMode and params.replacementInterpreter then
     local interpreterError
     eval_fn, interpreterError =
       params.replacementInterpreter.get_eval_fn(params.inputs.replacement, { 'match', 'vars' })
