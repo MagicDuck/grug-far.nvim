@@ -1,7 +1,7 @@
 ---@type string?
 local sg_version = nil
 
---- gets the rg version in use.
+--- gets the ast-grep version in use.
 ---Only first call does an actual check rest are from cache
 ---@param options GrugFarOptions
 ---@return string? version
