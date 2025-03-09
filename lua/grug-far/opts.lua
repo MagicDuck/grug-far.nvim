@@ -80,7 +80,9 @@ M.defaultOptions = {
     -- see https://ast-grep.github.io
     astgrep = {
       -- ast-grep executable to use, can be a different path if you need to configure
-      path = 'sg',
+      -- Note: as of this change in ast-grep: https://github.com/ast-grep/ast-grep/commit/15295de3f48aa39bee7c2af642fceb7742d9c156
+      -- `sg` is compiled as an alias to `ast-grep` so cannot be used in here. Always use the path to `ast-grep`.
+      path = 'ast-grep',
 
       -- extra args that you always want to pass
       -- like for example if you always want context lines around matches
