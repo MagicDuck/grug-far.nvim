@@ -1,8 +1,11 @@
 name: Bump version and release
 on:
-  pull_request:
-    types:
-      - closed
+  # pull_request:
+  #   types:
+  #     - closed
+  #   branches:
+  #     - main
+  push:
     branches:
       - main
 
@@ -26,11 +29,11 @@ jobs:
         WITH_V: false
         DEFAULT_BUMP: patch
 
-    - name: check outputs
-      run: |
-        echo "tag is now"
-        echo ${{ steps.bump_version.outputs.new_tag }}
-        export GITHUB_EVENT_NAME="nope"
+    # - name: check outputs
+    #   run: |
+    #     echo "tag is now"
+    #     echo ${{ steps.bump_version.outputs.new_tag }}
+    #     export GITHUB_EVENT_NAME="nope"
 
     - name: LuaRocks Upload 
       uses: nvim-neorocks/luarocks-tag-release@v7
