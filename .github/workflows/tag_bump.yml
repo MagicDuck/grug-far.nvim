@@ -26,11 +26,16 @@ jobs:
         WITH_V: false
         DEFAULT_BUMP: patch
 
+    - name: check outputs
+      run: |
+        echo "tag is now"
+        echo ${{ steps.bump_version.outputs.new_tag }}
+
     - name: LuaRocks Upload 
       uses: nvim-neorocks/luarocks-tag-release@v7
       with:
         name: grug-far.nvim
         labels: neovim
-        version: ${{steps.bump_version.outputs.new_tag}}
+        version: ${{ steps.bump_version.outputs.new_tag }}
       env:
         LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
