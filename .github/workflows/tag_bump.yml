@@ -24,4 +24,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
         WITH_V: false
         DEFAULT_BUMP: patch
-        GIT_API_TAGGING: true # this allows release to happen when new tag is generated 
+
+    - name: LuaRocks Upload 
+      uses: nvim-neorocks/luarocks-tag-release@v7
+      with:
+        name: grug-far.nvim
+        labels: neovim
+      env:
+        LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
