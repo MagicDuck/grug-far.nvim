@@ -30,6 +30,7 @@ jobs:
       run: |
         echo "tag is now"
         echo ${{ steps.bump_version.outputs.new_tag }}
+        export GITHUB_EVENT_NAME="nope"
 
     - name: LuaRocks Upload 
       uses: nvim-neorocks/luarocks-tag-release@v7
