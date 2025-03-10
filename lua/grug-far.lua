@@ -1,3 +1,8 @@
+if vim.fn.has('nvim-0.10.0') == 0 then
+  vim.api.nvim_err_writeln('grug-far needs nvim >= 0.10.0')
+  return
+end
+
 local opts = require('grug-far.opts')
 local highlights = require('grug-far.highlights')
 local farBuffer = require('grug-far.farBuffer')
@@ -13,8 +18,7 @@ local fileIconsProvider = require('grug-far.fileIconsProvider')
 
 local M = {}
 
----@type GrugFarOptions
-local globalOptions = nil
+local contextCount = 0
 
 ---@class NamedInstance
 ---@field buf integer
@@ -23,16 +27,7 @@ local globalOptions = nil
 ---@type table<string, NamedInstance>
 local namedInstances = {}
 
----@return boolean
-local function is_configured()
-  return globalOptions ~= nil
-end
-
-local function ensure_configured()
-  if not is_configured() then
-    error('Please call require("grug-far").setup(...) beforehand!')
-  end
-end
+highlights.setup()
 
 ---@param instanceName string
 local function ensure_instance_name(instanceName)
@@ -60,35 +55,29 @@ function GrugFarCompleteEngine()
   return table.concat(vim.fn.keys(opts.defaultOptions.engines), '\n')
 end
 
+vim.api.nvim_create_user_command('GrugFar', function(params)
+  local engineParam = params.fargs[1]
+  local visual_selection_lines
+  if params.range > 0 then
+    visual_selection_lines = M.get_current_visual_selection_lines()
+  end
+  local resolvedOpts = opts.with_defaults({ engine = engineParam }, opts.getGlobalOptions())
+  if params.mods and #params.mods > 0 then
+    resolvedOpts.windowCreationCommand = params.mods .. ' split'
+  end
+  M._open_internal(resolvedOpts, { visual_selection_lines = visual_selection_lines })
+end, {
+  nargs = '?',
+  range = true,
+  complete = 'custom,v:lua.GrugFarCompleteEngine',
+})
+
 --- set up grug-far
+--- sets global options, which can also be configured through vim.g.grug_far
 ---@param options? GrugFarOptionsOverride
 function M.setup(options)
-  if vim.fn.has('nvim-0.10.0') == 0 then
-    vim.api.nvim_err_writeln('grug-far needs nvim >= 0.10.0')
-    return
-  end
-
-  globalOptions = opts.with_defaults(options or {}, opts.defaultOptions)
-  highlights.setup()
-  vim.api.nvim_create_user_command('GrugFar', function(params)
-    local engineParam = params.fargs[1]
-    local visual_selection_lines
-    if params.range > 0 then
-      visual_selection_lines = M.get_current_visual_selection_lines()
-    end
-    local resolvedOpts = opts.with_defaults({ engine = engineParam }, globalOptions)
-    if params.mods and #params.mods > 0 then
-      resolvedOpts.windowCreationCommand = params.mods .. ' split'
-    end
-    M._open_internal(resolvedOpts, { visual_selection_lines = visual_selection_lines })
-  end, {
-    nargs = '?',
-    range = true,
-    complete = 'custom,v:lua.GrugFarCompleteEngine',
-  })
+  opts.setGlobalOptionsOverride(options)
 end
-
-local contextCount = 0
 
 ---@alias GrugFarStatus nil | "success" | "error" | "progress"
 
@@ -267,8 +256,7 @@ end
 ---@param options? GrugFarOptionsOverride
 ---@return string instanceName
 function M.open(options)
-  ensure_configured()
-  local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
+  local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
   local visual_selection_lines
   if not resolvedOpts.ignoreVisualSelection then
     visual_selection_lines = M.get_current_visual_selection_lines(true)
@@ -359,7 +347,6 @@ end
 --- requires options.instanceName to be given in order to identify the grug-far instance to toggle
 ---@param options GrugFarOptionsOverride
 function M.toggle_instance(options)
-  ensure_configured()
   ensure_instance_name(options.instanceName)
 
   local inst = namedInstances[options.instanceName]
@@ -426,7 +413,6 @@ end
 --- otherwise focuses the window
 ---@param instanceName string
 function M.open_instance(instanceName)
-  ensure_configured()
   local inst = ensure_instance(instanceName)
 
   local win = vim.fn.bufwinid(inst.buf)
@@ -446,7 +432,6 @@ end
 ---@param prefills GrugFarPrefills
 ---@param clearOld boolean
 function M.update_instance_prefills(instanceName, prefills, clearOld)
-  ensure_configured()
   local inst = ensure_instance(instanceName)
 
   vim.schedule(function()
@@ -458,9 +443,7 @@ end
 --- search with current visual selection.
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
-  ensure_configured()
-
-  local resolvedOpts = opts.with_defaults(options or {}, globalOptions)
+  local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
   local visual_selection_lines = M.get_current_visual_selection_lines()
   return M._open_internal(resolvedOpts, { visual_selection_lines = visual_selection_lines })
 end

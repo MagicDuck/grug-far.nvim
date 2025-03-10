@@ -788,4 +788,19 @@ function M.getIcon(iconName, context)
   return icons[iconName]
 end
 
+---@type GrugFarOptionsOverride?
+local _globalOptionsOverride = nil
+
+--- sets global opts override
+---@param options GrugFarOptionsOverride?
+function M.setGlobalOptionsOverride(options)
+  _globalOptionsOverride = options
+end
+
+--- gets global opts
+---@return GrugFarOptions
+function M.getGlobalOptions()
+  return M.with_defaults(_globalOptionsOverride or vim.g.grug_far or {}, M.defaultOptions)
+end
+
 return M
