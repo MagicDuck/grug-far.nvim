@@ -1,17 +1,11 @@
 name: Bump version and release
 on:
-  # pull_request:
-  #   types:
-  #     - closed
-  #   branches:
-  #     - main
   push:
     branches:
       - main
 
 jobs:
   build:
-    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -28,12 +22,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
         WITH_V: false
         DEFAULT_BUMP: patch
-
-    # - name: check outputs
-    #   run: |
-    #     echo "tag is now"
-    #     echo ${{ steps.bump_version.outputs.new_tag }}
-    #     export GITHUB_EVENT_NAME="nope"
 
     - name: LuaRocks Upload 
       uses: nvim-neorocks/luarocks-tag-release@v7
