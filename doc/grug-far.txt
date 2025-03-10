@@ -16,10 +16,14 @@ grug-far adds search/replace inside a buffer to neovim.
 ==============================================================================
 2. SETUP                                             *grug-far-setup*
 
-Make sure to add to call the setup function with the proper configuration in
-your `init` file.
+Setup is way to override plugin options that apply to all instances of the
+plugin. It's entirely optional.
 
     require('grug-far').setup({ ... })
+
+You can also do it like so if you prefer not calling a setup() function:
+
+    vim.g.grug_far = { ... }
 
 ==============================================================================
 3. COMMANDS                                       *grug-far-commands*
