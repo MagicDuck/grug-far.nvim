@@ -51,7 +51,7 @@ M.sync = function(params)
         if err then
           params.on_finish('error', err)
         else
-          -- TODO (sbadragan): message to user here?
+          params.report_progress({ type = 'update_count', count = 1 })
           params.on_finish('success')
         end
       end,

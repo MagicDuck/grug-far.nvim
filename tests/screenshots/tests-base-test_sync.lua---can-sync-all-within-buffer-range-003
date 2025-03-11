@@ -1,0 +1,31 @@
+--|
+01|
+02|curly
+03|curly
+04|
+05|
+06|buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file1.txt:2:12-4:21
+07|
+08|/opt/repos/grug-far.nvim/temp_test_dir/file1.txt
+09|3:23:      then curly thinks a deep depth indeed!
+10|3:23:      then curly thinks a deep depth indeed!
+11|4:22:      and curly fli
+12|4:22:      and curly fli
+13|
+14|
+
+--|-
+01| 
+02| 
+03| 
+04| 
+05| 
+06| 
+07| 
+08| 
+09| 
+10| 
+11| 
+12| 
+13| 
+14| 

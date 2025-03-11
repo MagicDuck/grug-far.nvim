@@ -146,4 +146,43 @@ T['can sync individual line'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can sync all within buffer range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug flies
+      but grug is confused
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.txt')
+  child.type_keys(10, 'ggjwwvjj$')
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'curly' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.cmd('set number')
+  child.type_keys(10, '<esc>9G', 'dddd', 'j')
+  child.type_keys(10, 'A', ' a deep depth indeed!')
+
+  child.type_keys('<esc>' .. keymaps.syncLocations.n)
+
+  helpers.childWaitForUIVirtualText(child, 'sync completed!')
+  helpers.childExpectScreenshot(child)
+
+  child.type_keys(10, '<esc>2G', 'cc', 'curly')
+  helpers.childWaitForScreenshotText(child, '2 matches in 1 files')
+  helpers.childWaitForScreenshotText(child, 'a deep depth indeed')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 return T

@@ -31,6 +31,8 @@ local function syncBufrange(params)
     bufrange.end_col < 0 and bufrange.end_col or bufrange.end_col - 1,
     lines
   )
+
+  return on_done()
 end
 
 return syncBufrange
