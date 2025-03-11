@@ -184,91 +184,20 @@ function M.search(params)
   end
 
   local hadOutput = false
-  local filesFilter = params.inputs.filesFilter
-  local version = getAstgrepVersion(params.options)
-  if filesFilter and #filesFilter > 0 and version and vim.version.gt(version, '0.28.0') then
-    -- note: astgrep added --glob support in v0.28.0
-    -- this if-branch uses rg to get the files and can be removed in the future once everybody uses new astgrep
-
-    local on_abort = nil
-    local function abort()
-      if on_abort then
-        on_abort()
-      end
+  return run_astgrep_search(args, params.options, eval_fn, function(data)
+    if not hadOutput and #data.lines > 0 then
+      hadOutput = true
+    end
+    params.on_fetch_chunk(data)
+  end, function(status, errorMessage)
+    -- give the user more feedback when there are no matches
+    if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
+      status = 'error'
+      errorMessage = 'no matches'
     end
 
-    on_abort = fetchFilteredFilesList({
-      inputs = params.inputs,
-      options = params.options,
-      report_progress = function() end,
-      on_finish = function(status, errorMessage, files)
-        on_abort = nil
-        if not status then
-          on_finish(nil, nil, nil)
-          return
-        elseif status == 'error' then
-          on_finish(status, errorMessage)
-          return
-        end
-
-        on_abort = runWithChunkedFiles({
-          files = files,
-          chunk_size = 200,
-          options = params.options,
-          run_chunk = function(chunk, on_done)
-            local chunk_args = vim.deepcopy(args)
-            for _, file in ipairs(vim.split(chunk, '\n')) do
-              table.insert(chunk_args, file)
-            end
-
-            return run_astgrep_search(chunk_args, params.options, eval_fn, function(data)
-              if not hadOutput and #data.lines > 0 then
-                hadOutput = true
-              end
-              params.on_fetch_chunk(data)
-            end, function(_status, _errorMessage)
-              if _status == 'error' then
-                local err = (_errorMessage and #_errorMessage > 0) and _errorMessage
-                  or 'Unexpected Error!'
-                return on_done(err)
-              end
-              return on_done(nil)
-            end)
-          end,
-          on_finish = function(_status, _errorMessage)
-            -- give the user more feedback when there are no matches
-            if
-              _status == 'success'
-              and not (_errorMessage and #_errorMessage > 0)
-              and not hadOutput
-            then
-              _status = 'error'
-              _errorMessage = 'no matches'
-            end
-
-            on_finish(_status, _errorMessage)
-          end,
-        })
-      end,
-    })
-
-    return abort, args
-  else
-    return run_astgrep_search(args, params.options, eval_fn, function(data)
-      if not hadOutput and #data.lines > 0 then
-        hadOutput = true
-      end
-      params.on_fetch_chunk(data)
-    end, function(status, errorMessage)
-      -- give the user more feedback when there are no matches
-      if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
-        status = 'error'
-        errorMessage = 'no matches'
-      end
-
-      on_finish(status, errorMessage)
-    end)
-  end
+    on_finish(status, errorMessage)
+  end)
 end
 
 return M
