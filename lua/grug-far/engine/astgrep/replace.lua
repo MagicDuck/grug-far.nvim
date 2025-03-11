@@ -2,12 +2,11 @@ local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 local utils = require('grug-far.utils')
 local getArgs = require('grug-far.engine.astgrep.getArgs')
 local blacklistedReplaceFlags = require('grug-far.engine.astgrep.blacklistedReplaceFlags')
-local fetchFilteredFilesList = require('grug-far.engine.ripgrep.fetchFilteredFilesList')
-local runWithChunkedFiles = require('grug-far.engine.runWithChunkedFiles')
 local argUtils = require('grug-far.engine.astgrep.argUtils')
 local parseResults = require('grug-far.engine.astgrep.parseResults')
 local ProcessingQueue = require('grug-far.engine.ProcessingQueue')
-local getAstgrepVersion = require('grug-far.engine.astgrep.getAstgrepVersion')
+local search = require('grug-far.engine.astgrep.search')
+local uv = vim.uv
 
 local M = {}
 
@@ -107,19 +106,109 @@ local function replace_with_eval(params, args, eval_fn)
   return abort
 end
 
+---@class replaceInAstgrepBufrangeParams
+---@field options GrugFarOptions
+---@field args string[]
+---@field replacement_eval_fn? fun(...): (string?, string?)
+---@field bufrange VisualSelectionInfo
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
+
+--- replaces in bufrange
+---@param params replaceInAstgrepBufrangeParams
+local function replaceInBufrange(params)
+  local on_finish = params.on_finish
+  local replacement_eval_fn = params.replacement_eval_fn
+  local bufrange = params.bufrange
+
+  local chunk_error = nil
+  local abort
+  local stdin = uv.new_pipe()
+  local input_text = table.concat(bufrange.lines, '\n')
+  local search_args = vim.deepcopy(params.args)
+  table.insert(search_args, '--json=stream')
+
+  local matches = {}
+  abort = fetchCommandOutput({
+    cmd_path = params.options.engines.astgrep.path,
+    args = search_args,
+    stdin = stdin,
+    on_fetch_chunk = function(data)
+      if chunk_error then
+        return
+      end
+
+      local err = parseResults.json_decode_matches(matches, data, replacement_eval_fn)
+      if err then
+        chunk_error = err
+        return
+      end
+    end,
+    on_finish = function(status, errorMessage)
+      if status == 'error' then
+        return on_finish('error', errorMessage)
+      end
+
+      if chunk_error then
+        return on_finish(chunk_error)
+      end
+
+      if status == 'success' and #matches > 0 then
+        local new_text = parseResults.getReplacedContents(input_text, matches)
+
+        local buf = vim.fn.bufnr(bufrange.file_name)
+        vim.api.nvim_buf_set_text(
+          buf,
+          bufrange.start_row - 1,
+          bufrange.start_col - 1,
+          bufrange.end_row - 1,
+          bufrange.end_col < 0 and bufrange.end_col or bufrange.end_col - 1,
+          vim.split(new_text, '\n')
+        )
+      end
+
+      return on_finish('success')
+    end,
+  })
+
+  uv.write(stdin, input_text, function()
+    uv.shutdown(stdin)
+  end)
+
+  return abort
+end
+
 --- does replace
 ---@param params EngineReplaceParams
 ---@return fun()? abort
 function M.replace(params)
   local report_progress = params.report_progress
   local on_finish = params.on_finish
-  local isRuleMode = params.inputs.rules ~= nil
+  local inputs = vim.deepcopy(params.inputs)
+  local isRuleMode = inputs.rules ~= nil
 
-  local extraArgs = {
-    '--update-all',
-  }
+  local extraArgs = { '--update-all' }
+  local bufrange = nil
+  if #inputs.paths > 0 then
+    local paths = utils.splitPaths(inputs.paths)
+    local bufrange_err
+    for _, path in ipairs(paths) do
+      bufrange, bufrange_err = utils.parse_buf_range_str(path)
+      if bufrange_err then
+        params.on_finish('error', bufrange_err)
+        return
+      end
+      if bufrange then
+        break
+      end
+    end
+  end
+  if bufrange then
+    inputs.paths = ''
+    extraArgs = { '--update-all', '--stdin', '--lang=' .. search.get_language(bufrange.file_name) }
+  end
+
   local args, blacklistedArgs =
-    getArgs(params.inputs, params.options, extraArgs, blacklistedReplaceFlags, true)
+    getArgs(inputs, params.options, extraArgs, blacklistedReplaceFlags, true)
 
   if blacklistedArgs and #blacklistedArgs > 0 then
     on_finish(nil, nil, 'replace cannot work with flags: ' .. table.concat(blacklistedArgs, ', '))
@@ -131,7 +220,7 @@ function M.replace(params)
     return
   end
 
-  if not isRuleMode and #params.inputs.replacement == 0 then
+  if not isRuleMode and #inputs.replacement == 0 then
     local choice = vim.fn.confirm('Replace matches with empty string?', '&yes\n&cancel')
     if choice ~= 1 then
       on_finish(nil, nil, 'replace with empty string canceled!')
@@ -143,7 +232,7 @@ function M.replace(params)
   if params.replacementInterpreter then
     local interpreterError
     eval_fn, interpreterError =
-      params.replacementInterpreter.get_eval_fn(params.inputs.replacement, { 'match', 'vars' })
+      params.replacementInterpreter.get_eval_fn(inputs.replacement, { 'match', 'vars' })
     if not eval_fn then
       params.on_finish('error', interpreterError)
       return
@@ -163,73 +252,25 @@ function M.replace(params)
     end
   end
 
-  local filesFilter = params.inputs.filesFilter
-  local version = getAstgrepVersion(params.options)
-  if filesFilter and #filesFilter > 0 and version and vim.version.lt(version, '0.28.0') then
-    -- note: astgrep added --glob support in v0.28.0
-    -- this if-branch uses rg to get the files and can be removed in the future once everybody uses new astgrep
-    on_abort = fetchFilteredFilesList({
-      inputs = params.inputs,
+  if bufrange then
+    on_abort = replaceInBufrange({
+      args = args,
       options = params.options,
-      report_progress = function() end,
-      on_finish = function(status, errorMessage, files)
-        if not status then
-          on_finish(nil, nil, nil)
-          return
-        elseif status == 'error' then
-          on_finish(status, errorMessage)
-          return
-        end
-
-        on_abort = runWithChunkedFiles({
-          files = files,
-          chunk_size = 200,
-          options = params.options,
-          run_chunk = function(chunk, on_done)
-            local chunk_args = vim.deepcopy(args)
-            for _, file in ipairs(vim.split(chunk, '\n')) do
-              table.insert(chunk_args, file)
-            end
-
-            local on_finish_chunk = function(_, _errorMessage)
-              return on_done((_errorMessage and #_errorMessage > 0) and _errorMessage or nil)
-            end
-
-            if eval_fn then
-              return replace_with_eval({
-                inputs = params.inputs,
-                options = params.options,
-                report_progress = report_progress,
-                on_finish = on_finish_chunk,
-              }, chunk_args, eval_fn)
-            else
-              return fetchCommandOutput({
-                cmd_path = params.options.engines.astgrep.path,
-                args = chunk_args,
-                on_fetch_chunk = function()
-                  -- astgrep does not report progress while replacing
-                end,
-                on_finish = on_finish_chunk,
-              })
-            end
-          end,
-          on_finish = on_finish,
-        })
-      end,
+      bufrange = bufrange,
+      replacement_eval_fn = eval_fn,
+      on_finish = on_finish,
     })
+  elseif eval_fn then
+    on_abort = replace_with_eval(params, args, eval_fn)
   else
-    if eval_fn then
-      on_abort = replace_with_eval(params, args, eval_fn)
-    else
-      on_abort = fetchCommandOutput({
-        cmd_path = params.options.engines.astgrep.path,
-        args = args,
-        on_fetch_chunk = function()
-          -- astgrep does not report progress while replacing
-        end,
-        on_finish = on_finish,
-      })
-    end
+    on_abort = fetchCommandOutput({
+      cmd_path = params.options.engines.astgrep.path,
+      args = args,
+      on_fetch_chunk = function()
+        -- astgrep does not report progress while replacing
+      end,
+      on_finish = on_finish,
+    })
   end
 
   return abort

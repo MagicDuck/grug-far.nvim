@@ -20,7 +20,10 @@ function M.getSearchArgs(inputs, options, extraArgs)
   return getArgs(inputs, options, _extraArgs, blacklistedSearchFlags)
 end
 
-local function get_language(file_name)
+--- gets astgrep language for given filename
+---@param file_name string
+---@return string
+function M.get_language(file_name)
   local ext = string.match(file_name, '^.+%.(.+)$')
   return ext
 end
@@ -180,7 +183,7 @@ function M.search(params)
   end
   if bufrange then
     inputs.paths = ''
-    extraArgs = { '--stdin', '--lang=' .. get_language(bufrange.file_name) }
+    extraArgs = { '--stdin', '--lang=' .. M.get_language(bufrange.file_name) }
   end
 
   local args, blacklistedArgs = M.getSearchArgs(inputs, params.options, extraArgs)

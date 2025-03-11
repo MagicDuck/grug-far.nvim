@@ -28,7 +28,7 @@ local function isEmptyStringReplace(args)
   return true
 end
 
----@class replaceInBufrangeParams
+---@class replaceInRipgrepBufrangeParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field replacement_eval_fn? fun(...): (string?, string?)
@@ -37,7 +37,7 @@ end
 ---@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
 
 --- replaces in bufrange
----@param params replaceInBufrangeParams
+---@param params replaceInRipgrepBufrangeParams
 local function replaceInBufrange(params)
   local on_finish = params.on_finish
   local replacement_eval_fn = params.replacement_eval_fn
