@@ -97,8 +97,6 @@ local RipgrepEngine = {
   isEmptySearch = function(inputs)
     return #inputs.search == 0
   end,
-
-  getBufrange = search.getBufrange,
 }
 
 return RipgrepEngine
