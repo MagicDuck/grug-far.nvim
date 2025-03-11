@@ -350,8 +350,13 @@ function M.search(params)
   local bufrange = nil
   if #params.inputs.paths > 0 then
     local paths = utils.splitPaths(params.inputs.paths)
+    local bufrange_err
     for _, path in ipairs(paths) do
-      bufrange = utils.parse_buf_range_str(path)
+      bufrange, bufrange_err = utils.parse_buf_range_str(path)
+      if bufrange_err then
+        params.on_finish('error', bufrange_err)
+        return
+      end
       if bufrange then
         break
       end
@@ -368,7 +373,6 @@ function M.search(params)
 
   local abort, effectiveArgs
   if params.replacementInterpreter then
-    -- TODO (sbadragan): do this one
     abort, effectiveArgs = run_search_with_replace_interpreter(params.replacementInterpreter, {
       stdin = stdin,
       options = options,
@@ -379,7 +383,6 @@ function M.search(params)
       on_finish = params.on_finish,
     })
   elseif isSearchWithReplace then
-    -- TODO (sbadragan): do this one
     abort, effectiveArgs = run_search_with_replace({
       stdin = stdin,
       options = options,

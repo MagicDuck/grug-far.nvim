@@ -1,6 +1,11 @@
 local fetchFilesWithMatches = require('grug-far.engine.ripgrep.fetchFilesWithMatches')
+local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 local replaceInMatchedFiles = require('grug-far.engine.ripgrep.replaceInMatchedFiles')
 local getArgs = require('grug-far.engine.ripgrep.getArgs')
+local argUtils = require('grug-far.engine.ripgrep.argUtils')
+local parseResults = require('grug-far.engine.ripgrep.parseResults')
+local utils = require('grug-far.utils')
+local uv = vim.uv
 
 local M = {}
 
@@ -23,7 +28,111 @@ local function isEmptyStringReplace(args)
   return true
 end
 
--- TODO (sbadragan): handle replace with bufrange
+---@class replaceInBufrangeParams
+---@field inputs GrugFarInputs
+---@field options GrugFarOptions
+---@field replacement_eval_fn? fun(...): (string?, string?)
+---@field bufrange VisualSelectionInfo
+---@field report_progress fun(count: integer)
+---@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
+
+--- replaces in bufrange
+---@param params replaceInBufrangeParams
+local function replaceInBufrange(params)
+  local on_finish = params.on_finish
+  local replacement_eval_fn = params.replacement_eval_fn
+  local bufrange = params.bufrange
+
+  local inputs = vim.deepcopy(params.inputs)
+  inputs.paths = ''
+  local args
+  if replacement_eval_fn then
+    args = getArgs(inputs, params.options, { '--json' })
+    args = argUtils.stripReplaceArgs(args)
+  else
+    args = getArgs(inputs, params.options, {
+      '--passthrough',
+      '--no-line-number',
+      '--no-column',
+      '--color=never',
+      '--no-heading',
+      '--no-filename',
+    })
+  end
+
+  local json_data = {}
+  local text_data = ''
+  local chunk_error = nil
+  local abort
+  local stdin = uv.new_pipe()
+  local input_text = table.concat(bufrange.lines, '\n')
+  abort = fetchCommandOutput({
+    cmd_path = params.options.engines.ripgrep.path,
+    args = args,
+    stdin = stdin,
+    on_fetch_chunk = function(data)
+      if chunk_error then
+        return
+      end
+
+      if replacement_eval_fn then
+        local json_list = utils.str_to_json_list(data)
+        for _, entry in ipairs(json_list) do
+          if entry.type == 'match' then
+            for _, submatch in ipairs(entry.data.submatches) do
+              local replacementText, err = replacement_eval_fn(submatch.match.text)
+              if err then
+                chunk_error = err
+                if abort then
+                  abort()
+                end
+                return
+              end
+              submatch.replacement = { text = replacementText }
+            end
+          end
+          table.insert(json_data, entry)
+        end
+      else
+        text_data = text_data .. data
+      end
+    end,
+    on_finish = function(status, errorMessage)
+      if status == 'error' then
+        return on_finish('error', errorMessage)
+      end
+
+      if chunk_error then
+        return on_finish(chunk_error)
+      end
+
+      if status == 'success' and (#json_data > 0 or #text_data > 0) then
+        local new_text = replacement_eval_fn
+            and parseResults.getReplacedContents(input_text, json_data)
+          or text_data
+
+        local buf = vim.fn.bufnr(bufrange.file_name)
+        vim.api.nvim_buf_set_text(
+          buf,
+          bufrange.start_row - 1,
+          bufrange.start_col - 1,
+          bufrange.end_row - 1,
+          bufrange.end_col < 0 and bufrange.end_col or bufrange.end_col - 1,
+          vim.split(new_text, '\n')
+        )
+      end
+
+      return on_finish('success')
+    end,
+  })
+
+  uv.write(stdin, input_text, function()
+    uv.shutdown(stdin)
+  end)
+
+  return abort
+end
+
 --- does replace
 ---@param params EngineReplaceParams
 ---@return fun()? abort
@@ -63,39 +172,68 @@ M.replace = function(params)
     end
   end
 
-  on_abort = fetchFilesWithMatches({
-    inputs = params.inputs,
-    options = params.options,
-    report_progress = function(count)
-      report_progress({ type = 'update_total', count = count })
-    end,
-    on_finish = function(status, errorMessage, files, blacklistedArgs)
-      if not status then
-        on_finish(
-          nil,
-          nil,
-          blacklistedArgs
-              and 'replace cannot work with flags: ' .. table.concat(blacklistedArgs, ', ')
-            or nil
-        )
-        return
-      elseif status == 'error' then
-        on_finish(status, errorMessage)
+  local bufrange = nil
+  if #params.inputs.paths > 0 then
+    local paths = utils.splitPaths(params.inputs.paths)
+    local bufrange_err
+    for _, path in ipairs(paths) do
+      bufrange, bufrange_err = utils.parse_buf_range_str(path)
+      if bufrange_err then
+        params.on_finish('error', bufrange_err)
         return
       end
+      if bufrange then
+        break
+      end
+    end
+  end
 
-      on_abort = replaceInMatchedFiles({
-        files = files,
-        inputs = params.inputs,
-        options = params.options,
-        replacement_eval_fn = replacement_eval_fn,
-        report_progress = function(count)
-          report_progress({ type = 'update_count', count = count })
-        end,
-        on_finish = on_finish,
-      })
-    end,
-  })
+  if bufrange then
+    on_abort = replaceInBufrange({
+      inputs = params.inputs,
+      options = params.options,
+      bufrange = bufrange,
+      replacement_eval_fn = replacement_eval_fn,
+      report_progress = function(count)
+        report_progress({ type = 'update_count', count = count })
+      end,
+      on_finish = on_finish,
+    })
+  else
+    on_abort = fetchFilesWithMatches({
+      inputs = params.inputs,
+      options = params.options,
+      report_progress = function(count)
+        report_progress({ type = 'update_total', count = count })
+      end,
+      on_finish = function(status, errorMessage, files, blacklistedArgs)
+        if not status then
+          on_finish(
+            nil,
+            nil,
+            blacklistedArgs
+                and 'replace cannot work with flags: ' .. table.concat(blacklistedArgs, ', ')
+              or nil
+          )
+          return
+        elseif status == 'error' then
+          on_finish(status, errorMessage)
+          return
+        end
+
+        on_abort = replaceInMatchedFiles({
+          files = files,
+          inputs = params.inputs,
+          options = params.options,
+          replacement_eval_fn = replacement_eval_fn,
+          report_progress = function(count)
+            report_progress({ type = 'update_count', count = count })
+          end,
+          on_finish = on_finish,
+        })
+      end,
+    })
+  end
 
   return abort
 end
