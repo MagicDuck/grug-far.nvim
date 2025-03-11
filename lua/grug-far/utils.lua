@@ -280,6 +280,7 @@ function M.leaveVisualMode()
 end
 
 --- get text lines in visual selection
+--- range row/col are 1-based
 ---@return string[] lines, integer start_row, integer start_col, integer end_row, integer end_col
 function M.getVisualSelectionLines()
   local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, '<'))
@@ -298,6 +299,11 @@ function M.getVisualSelectionLines()
   if last_line and end_col > string.len(last_line) then
     end_col = -1
   end
+
+  -- convert cols to 1-based
+  start_col = start_col + 1
+  end_col = end_col == -1 and -1 or end_col + 1
+
   return lines, start_row, start_col, end_row, end_col
 end
 
@@ -623,6 +629,73 @@ function M.get_visual_selection_info_as_str(visual_selection_info)
     .. visual_selection_info.end_row
     .. ','
     .. visual_selection_info.end_col
+end
+
+--- gets buf range from string representation
+---@param str string
+---@return VisualSelectionInfo?
+function M.parse_buf_range_str(str)
+  local prefix = 'buffer-range='
+  if str:sub(1, #prefix) ~= prefix then
+    -- TODO (sbadragan): should we return errors that get displayed?
+    return nil
+  end
+
+  local file_name, start_row, start_col, end_row, end_col =
+    string.match(str, 'buffer%-range=(.+):(%d+),(%d+)-(%d+),(-?%d+)')
+
+  -- TODO (sbadragan): not sure if this stuff is needed
+  if not file_name then
+    return nil
+  end
+
+  local buf = vim.fn.bufnr(file_name)
+  local num_lines = vim.api.nvim_buf_line_count(buf)
+
+  start_col = tonumber(start_col) --[[@as integer]]
+  if start_col < 1 then
+    start_col = 1
+  end
+
+  end_col = tonumber(end_col) --[[@as integer]]
+  if end_col == 0 then
+    end_col = 1
+  end
+
+  start_row = tonumber(start_row) --[[@as integer]]
+  if start_row < 1 then
+    start_row = 1
+  elseif start_row > num_lines then
+    start_row = num_lines
+  end
+
+  end_row = tonumber(end_row) --[[@as integer]]
+  if end_row < 1 then
+    end_row = 1
+  elseif end_row > num_lines then
+    end_row = num_lines
+  end
+  if end_row < start_row then
+    end_row = start_row
+  end
+
+  local lines = vim.api.nvim_buf_get_text(
+    buf,
+    start_row - 1,
+    start_col - 1,
+    end_row - 1,
+    end_col < 0 and end_col or end_col - 1,
+    {}
+  )
+
+  return {
+    file_name = file_name,
+    lines = lines,
+    start_col = start_col,
+    start_row = start_row,
+    end_col = end_col,
+    end_row = end_row,
+  }
 end
 
 return M
