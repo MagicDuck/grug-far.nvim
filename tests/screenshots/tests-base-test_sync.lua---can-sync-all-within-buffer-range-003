@@ -4,9 +4,9 @@
 03|curly
 04|
 05|
-06|buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file1.txt:2:11-4:-1
+06|buffer-range=file1.txt:2:11-4:-1
 07|
-08|/opt/repos/grug-far.nvim/temp_test_dir/file1.txt
+08|file1.txt
 09|3:23:      then curly thinks a deep depth indeed!
 10|3:23:      then curly thinks a deep depth indeed!
 11|4:22:      and curly flies

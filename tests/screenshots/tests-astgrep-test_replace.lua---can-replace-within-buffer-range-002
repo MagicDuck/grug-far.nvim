@@ -4,9 +4,9 @@
 03|bruv
 04|
 05|
-06|buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file2.ts:2:13-3:-1
+06|buffer-range=file2.ts:2:13-3:-1
 07|
-08|/opt/repos/grug-far.nvim/temp_test_dir/file2.ts
+08|file2.ts
 09|3:20:        grug.walks(talks)
 10|3:20:        bruv.walks(talks)
 11|
