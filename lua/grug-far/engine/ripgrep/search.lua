@@ -122,6 +122,7 @@ end
 ---@field args string[]?
 ---@field options GrugFarOptions
 ---@field inputs GrugFarInputs
+---@field bufrange? VisualSelectionInfo
 ---@field on_fetch_chunk fun(data: ParsedResultsData)
 ---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 
@@ -129,9 +130,12 @@ end
 ---@param params RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search(params)
-  return fetchCommandOutput({
+  local stdin = params.bufrange and uv.new_pipe() or nil
+
+  local abort, effectiveArgs = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = params.args,
+    stdin = stdin,
     on_fetch_chunk = function(data)
       -- handle non-json data (like when running rg with --help flag)
       if not vim.startswith(data, '{') then
@@ -154,6 +158,15 @@ local function run_search(params)
       params.on_finish(status, errorMessage)
     end,
   })
+
+  if stdin and params.bufrange then
+    local text = table.concat(params.bufrange.lines, '\n')
+    uv.write(stdin, text, function()
+      uv.shutdown(stdin)
+    end)
+  end
+
+  return abort, effectiveArgs
 end
 
 --- runs search with replace diff
@@ -340,21 +353,38 @@ function M.search(params)
     return
   end
 
-  local args = M.getSearchArgs(params.inputs, params.options)
+  local bufrange = nil
+  if #params.inputs.paths > 0 then
+    local paths = utils.splitPaths(params.inputs.paths)
+    for _, path in ipairs(paths) do
+      bufrange = utils.parse_buf_range_str(path)
+      if bufrange then
+        break
+      end
+    end
+  end
+
+  local inputs = vim.deepcopy(params.inputs)
+  if bufrange then
+    inputs.paths = ''
+  end
+  local args = M.getSearchArgs(inputs, params.options)
   local isSearchWithReplace = M.isSearchWithReplacement(args)
 
   if params.replacementInterpreter then
+    -- TODO (sbadragan): do this one
     return run_search_with_replace_interpreter(params.replacementInterpreter, {
       options = options,
-      inputs = params.inputs,
+      inputs = inputs,
       args = args,
       on_fetch_chunk = params.on_fetch_chunk,
       on_finish = params.on_finish,
     })
   elseif isSearchWithReplace then
+    -- TODO (sbadragan): do this one
     return run_search_with_replace({
       options = options,
-      inputs = params.inputs,
+      inputs = inputs,
       args = args,
       on_fetch_chunk = params.on_fetch_chunk,
       on_finish = params.on_finish,
@@ -362,7 +392,8 @@ function M.search(params)
   else
     return run_search({
       options = options,
-      inputs = params.inputs,
+      inputs = inputs,
+      bufrange = bufrange,
       args = args,
       on_fetch_chunk = params.on_fetch_chunk,
       on_finish = params.on_finish,

@@ -82,7 +82,7 @@ local RipgrepEngine = {
         flags = (#flags > 0 and flags .. ' ' or flags) .. '--multiline'
       end
       prefills.flags = flags
-    -- TODO (sbadragan): update logic and add tests
+    -- TODO (sbadragan): update logic
     elseif visualSelectionUsage == 'operate-within-range' then
       prefills.paths = utils.get_visual_selection_info_as_str(visual_selection_info)
     end
