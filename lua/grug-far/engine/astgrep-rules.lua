@@ -1,5 +1,6 @@
 local search = require('grug-far.engine.astgrep.search')
 local replace = require('grug-far.engine.astgrep.replace')
+local utils = require('grug-far.utils')
 
 ---@param filename string
 ---@param glob string
@@ -132,9 +133,18 @@ rule:
     -- not supported
   end,
 
-  getInputPrefillsForVisualSelection = function(visual_selection, initialPrefills)
+  getInputPrefillsForVisualSelection = function(
+    visual_selection_info,
+    initialPrefills,
+    visualSelectionUsage
+  )
     local prefills = vim.deepcopy(initialPrefills)
-    prefills.rules = table.concat(visual_selection, '\n')
+    if visualSelectionUsage == 'prefill-search' then
+      prefills.rules = table.concat(visual_selection_info.lines, '\n')
+    -- TODO (sbadragan): update logic and add tests
+    elseif visualSelectionUsage == 'operate-within-range' then
+      prefills.paths = utils.get_visual_selection_info_as_str(visual_selection_info)
+    end
     return prefills
   end,
 

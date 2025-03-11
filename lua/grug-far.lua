@@ -57,15 +57,34 @@ end
 
 vim.api.nvim_create_user_command('GrugFar', function(params)
   local engineParam = params.fargs[1]
-  local visual_selection_lines
+  local visual_selection_info
   if params.range > 0 then
-    visual_selection_lines = M.get_current_visual_selection_lines()
+    visual_selection_info = utils.get_current_visual_selection_info()
   end
   local resolvedOpts = opts.with_defaults({ engine = engineParam }, opts.getGlobalOptions())
   if params.mods and #params.mods > 0 then
     resolvedOpts.windowCreationCommand = params.mods .. ' split'
   end
-  M._open_internal(resolvedOpts, { visual_selection_lines = visual_selection_lines })
+  M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
+end, {
+  nargs = '?',
+  range = true,
+  complete = 'custom,v:lua.GrugFarCompleteEngine',
+})
+
+-- TODO (sbadragan): document
+vim.api.nvim_create_user_command('GrugFarWithin', function(params)
+  local engineParam = params.fargs[1]
+  local visual_selection_info
+  if params.range > 0 then
+    visual_selection_info = utils.get_current_visual_selection_info()
+  end
+  local resolvedOpts = opts.with_defaults({ engine = engineParam }, opts.getGlobalOptions())
+  if params.mods and #params.mods > 0 then
+    resolvedOpts.windowCreationCommand = params.mods .. ' split'
+  end
+  resolvedOpts.visualSelectionUsage = 'operate-within-range'
+  M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
 end, {
   nargs = '?',
   range = true,
@@ -140,6 +159,14 @@ end
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field fileIconsProvider? FileIconsProvider
 ---@field winDefaultOpts table<string, any>
+
+---@class VisualSelectionInfo
+---@field file_name string
+---@field lines string[]
+---@field start_col integer
+---@field start_row integer
+---@field end_col integer
+---@field end_row integer
 
 --- generate instance specific context
 ---@param options GrugFarOptions
@@ -257,17 +284,17 @@ end
 ---@return string instanceName
 function M.open(options)
   local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
-  local visual_selection_lines
-  if not resolvedOpts.ignoreVisualSelection then
-    visual_selection_lines = M.get_current_visual_selection_lines(true)
+  local visual_selection_info
+  if resolvedOpts.visualSelectionUsage ~= 'ignore' then
+    visual_selection_info = utils.get_current_visual_selection_info(true)
   end
 
-  return M._open_internal(resolvedOpts, { visual_selection_lines = visual_selection_lines })
+  return M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
 end
 
 --- launch grug-far with the given options and params
 ---@param options GrugFarOptions
----@param params { visual_selection_lines: string[]? }
+---@param params { visual_selection_info: VisualSelectionInfo? }
 ---@return string instanceName
 function M._open_internal(options, params)
   if options.instanceName and namedInstances[options.instanceName] then
@@ -278,10 +305,11 @@ function M._open_internal(options, params)
   if not options.instanceName then
     options.instanceName = '__grug_far_instance__' .. context.count
   end
-  if params.visual_selection_lines then
+  if params.visual_selection_info then
     options.prefills = context.engine.getInputPrefillsForVisualSelection(
-      params.visual_selection_lines,
-      options.prefills
+      params.visual_selection_info,
+      options.prefills,
+      options.visualSelectionUsage
     )
   end
 
@@ -444,8 +472,8 @@ end
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
   local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
-  local visual_selection_lines = M.get_current_visual_selection_lines()
-  return M._open_internal(resolvedOpts, { visual_selection_lines = visual_selection_lines })
+  local visual_selection_info = utils.get_current_visual_selection_info()
+  return M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
 end
 
 --- gets the current visual selection as a string array of lines
@@ -457,7 +485,8 @@ function M.get_current_visual_selection_lines(strict)
   if strict and not was_visual then
     return
   end
-  return utils.getVisualSelectionLines()
+  local lines = utils.getVisualSelectionLines()
+  return lines
 end
 
 --- gets the current visual selection as a single string
@@ -467,6 +496,20 @@ end
 function M.get_current_visual_selection(strict)
   local selection_lines = M.get_current_visual_selection_lines(strict)
   return selection_lines and table.concat(selection_lines, '\n')
+end
+
+--- gets the current visual selection as a range string
+--- useful for passing as a prefill when searching within a buffer
+---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
+---@return string?
+-- TODO (sbadragan): document
+function M.get_current_visual_selection_as_range_str(strict)
+  local visual_selection_info = utils.get_current_visual_selection_info(strict)
+  if not visual_selection_info then
+    return
+  end
+
+  return utils.get_visual_selection_info_as_str(visual_selection_info)
 end
 
 ---@deprecated use open(same options) instead

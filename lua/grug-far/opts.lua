@@ -213,7 +213,14 @@ M.defaultOptions = {
 
   -- by default, in visual mode, the visual selection is used to prefill the search
   -- setting this option to true disables that behaviour
+  -- TODO (sbadragan): deprecate
   ignoreVisualSelection = false,
+
+  -- how to treat current visual selection when grug-far is invoked
+  -- prefill-search - use to prefill "search string"
+  -- operate-within-range - use as buffer range to operate within
+  -- ignore - ignore/discard visual selection
+  visualSelectionUsage = 'prefill',
 
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' or false to unset. Mappings with no normal mode value will be removed from the help header
@@ -631,6 +638,8 @@ M.defaultOptions = {
 ---@field exclude? (string | FilterWindowFn)[]
 ---@field preferredLocation? WinPreferredLocation
 
+---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -650,6 +659,7 @@ M.defaultOptions = {
 ---@field wrap boolean
 ---@field transient boolean
 ---@field ignoreVisualSelection boolean
+---@field visualSelectionUsage VisualSelectionUsageType
 ---@field keymaps Keymaps
 ---@field resultsSeparatorLineChar string
 ---@field resultsHighlight boolean
@@ -692,6 +702,7 @@ M.defaultOptions = {
 ---@field wrap? boolean
 ---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
+---@field visualSelectionUsage? VisualSelectionUsageType
 ---@field keymaps? KeymapsOverride
 ---@field resultsSeparatorLineChar? string
 ---@field resultsHighlight? boolean

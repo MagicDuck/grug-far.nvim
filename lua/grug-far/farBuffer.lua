@@ -378,7 +378,6 @@ function M.createBuffer(win, context)
       end
 
       -- launch a search in case there are prefills
-      -- TODO (sbadragan): can we now remove this one?
       render(buf, context)
       searchOnChange()
     end)

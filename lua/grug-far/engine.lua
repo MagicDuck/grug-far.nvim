@@ -94,7 +94,7 @@ M.DiffSeparatorChars = ' '
 ---@field replace fun(params: EngineReplaceParams): (abort: fun()?) performs replace
 ---@field isSyncSupported fun(): boolean whether sync operation is supported
 ---@field sync fun(params: EngineSyncParams): (abort: fun()?) syncs given changes to their originating files
----@field getInputPrefillsForVisualSelection fun(visual_selection: string[], initialPrefills: GrugFarPrefills): GrugFarPrefills gets prefills updated with visual selection searchand any additional flags that are necessary (for example --fixed-strings for rg)
+---@field getInputPrefillsForVisualSelection fun(visual_selection_info: VisualSelectionInfo, initialPrefills: GrugFarPrefills, visualSelectionUsage: VisualSelectionUsageType): GrugFarPrefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
 ---@field getSearchDescription fun(inputs: GrugFarInputs): string a string describing the current search to be used as buffer title for example
 ---@field isEmptySearch fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean whether search query is empty
 
