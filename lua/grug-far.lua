@@ -72,7 +72,6 @@ end, {
   complete = 'custom,v:lua.GrugFarCompleteEngine',
 })
 
--- TODO (sbadragan): document
 vim.api.nvim_create_user_command('GrugFarWithin', function(params)
   local engineParam = params.fargs[1]
   local visual_selection_info
