@@ -55,41 +55,6 @@ function GrugFarCompleteEngine()
   return table.concat(vim.fn.keys(opts.defaultOptions.engines), '\n')
 end
 
-vim.api.nvim_create_user_command('GrugFar', function(params)
-  local engineParam = params.fargs[1]
-  local visual_selection_info
-  if params.range > 0 then
-    visual_selection_info = utils.get_current_visual_selection_info()
-  end
-  local resolvedOpts = opts.with_defaults({ engine = engineParam }, opts.getGlobalOptions())
-  if params.mods and #params.mods > 0 then
-    resolvedOpts.windowCreationCommand = params.mods .. ' split'
-  end
-  M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
-end, {
-  nargs = '?',
-  range = true,
-  complete = 'custom,v:lua.GrugFarCompleteEngine',
-})
-
-vim.api.nvim_create_user_command('GrugFarWithin', function(params)
-  local engineParam = params.fargs[1]
-  local visual_selection_info
-  if params.range > 0 then
-    visual_selection_info = utils.get_current_visual_selection_info()
-  end
-  local resolvedOpts = opts.with_defaults({ engine = engineParam }, opts.getGlobalOptions())
-  if params.mods and #params.mods > 0 then
-    resolvedOpts.windowCreationCommand = params.mods .. ' split'
-  end
-  resolvedOpts.visualSelectionUsage = 'operate-within-range'
-  M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
-end, {
-  nargs = '?',
-  range = true,
-  complete = 'custom,v:lua.GrugFarCompleteEngine',
-})
-
 --- set up grug-far
 --- sets global options, which can also be configured through vim.g.grug_far
 ---@param options? GrugFarOptionsOverride
@@ -501,7 +466,6 @@ end
 --- useful for passing as a prefill when searching within a buffer
 ---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
 ---@return string?
--- TODO (sbadragan): document
 function M.get_current_visual_selection_as_range_str(strict)
   local visual_selection_info = utils.get_current_visual_selection_info(strict)
   if not visual_selection_info then
