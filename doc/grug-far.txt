@@ -30,10 +30,16 @@ You can also do it like so if you prefer not calling a setup() function:
 
 :GrugFar                                                *GrugFar*
 
-Opens up a grug-far buffer in a vertical split. Multiple such buffers can
+Opens up a grug-far buffer in a split. Multiple such buffers can
 be opened, each with their potentially different searches and they will
 show up in your buffers list. In visual mode, it will pre-fill search
 with the current visual selection.
+
+:GrugFarWithin                                          *GrugFarWithin*
+
+Same as :GrugFar, except that in visual mode, it will search and replace
+within the range.
+
 
 ==============================================================================
 4. API                                                 *grug-far-api*
@@ -182,6 +188,19 @@ require('grug-far').get_current_visual_selection_lines({strict})
 
 	Return: ~
 	    {visual_selection}(string[])
+
+require('grug-far').get_current_visual_selection_as_range_str({strict})
+                                        *grug-far.get_current_visual_selection_as_range_str()*
+	Gets the current visual selection as a range string representation.
+	Useful when passing as a prefill for Paths: input in some situations
+	where you would like to search and replace within a range.
+
+        Parameters: ~
+            {strict}(boolean) If true, only return selection string if currently in
+	      visual mode
+
+	Return: ~
+	    {range_str}(string)
 
 ==============================================================================
 4. Highlights                                          *grug-far-highlights*

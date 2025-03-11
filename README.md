@@ -74,7 +74,7 @@ Grug find! Grug replace! Grug happy!
 - Neovim >= **0.10.0**
 - [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) >= 14 recommended
 - a [Nerd Font](https://www.nerdfonts.com/) **_(optional)_**
-- [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine. Version >= `0.36` recommended.
+- [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine. ersion >= `0.36` recommended.
 - either [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) or [mini.icons](https://github.com/echasnovski/mini.icons) for file icons support **_(optional)_**
 
 Run `:checkhealth grug-far` if you see unexpected issues.
@@ -119,6 +119,8 @@ vim.g.maplocalleader = ','
 You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command.
 Note that command supports the typical `command-modifiers` like `botright`, `aboveleft`, etc. and visual ranges.
 In visual mode, the command will pre-fill the search string with the current visual selection.
+Note that if you would like to search and replace *within* the visual selection range, you should use `:GrugFarWithin` instead.
+
 Possibly best to map a keybind to it for easy triggering.
 Since it's *just a buffer*, you can edit in it as you see fit. The UI will try to guide
 you along and recover gracefully if you do things like `ggVGd` (delete all lines).
