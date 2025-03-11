@@ -38,6 +38,31 @@ T['can search with replace interpreter'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search within line range with replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug is confused!
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.txt')
+  child.type_keys(10, 'ggjVj')
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'return match .. "_and_curly"' },
+    replacementInterpreter = 'vimscript',
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 T['search can report eval error from replace interpreter'] = function()
   helpers.writeTestFiles({
     { filename = 'file1.txt', content = [[ grug walks ]] },

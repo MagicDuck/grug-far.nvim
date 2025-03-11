@@ -377,4 +377,75 @@ T['is prevented from searching with blacklisted flags'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can search within full line range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.ts')
+  child.type_keys(10, 'ggjV')
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can search within partial line range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.ts')
+  child.type_keys(10, 'ggjwwwwvj$')
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['will error out on bad buffer-range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', paths = 'buffer-range=bad_one' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T

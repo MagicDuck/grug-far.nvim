@@ -623,11 +623,11 @@ function M.get_visual_selection_info_as_str(visual_selection_info)
     .. visual_selection_info.file_name
     .. ':'
     .. visual_selection_info.start_row
-    .. ','
+    .. ':'
     .. visual_selection_info.start_col
     .. '-'
     .. visual_selection_info.end_row
-    .. ','
+    .. ':'
     .. visual_selection_info.end_col
 end
 
@@ -641,11 +641,11 @@ function M.parse_buf_range_str(str)
   end
 
   local file_name, start_row, start_col, end_row, end_col =
-    string.match(str, 'buffer%-range=(.+):(%d+),(%d+)-(%d+),(-?%d+)')
+    string.match(str, 'buffer%-range=(.+):(%d+):(%d+)-(%d+):(-?%d+)')
 
   if not file_name then
     return nil,
-      'Invalid buffer range provided! Format is "buffer-range=<file_path>:<start_row>,<start_col>-<end_row>,<end_col>"'
+      'Invalid buffer range provided! Format is "buffer-range=<file_path>:<start_row>:<start_col>-<end_row>:<end_col>"'
   end
 
   local buf = vim.fn.bufnr(file_name)
