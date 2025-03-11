@@ -23,6 +23,7 @@ local function isEmptyStringReplace(args)
   return true
 end
 
+-- TODO (sbadragan): handle replace with bufrange
 --- does replace
 ---@param params EngineReplaceParams
 ---@return fun()? abort

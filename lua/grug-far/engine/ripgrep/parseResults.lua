@@ -74,6 +74,7 @@ end
 ---@param line_group ResultLineGroup
 ---@param lineNumberSign? ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
+---@param bufrange? VisualSelectionInfo
 local function addResultLines(
   resultLines,
   ranges,
@@ -81,7 +82,8 @@ local function addResultLines(
   highlights,
   line_group,
   lineNumberSign,
-  matchHighlightType
+  matchHighlightType,
+  bufrange
 )
   local line_group_id = get_next_line_group_id()
   local numlines = #lines
@@ -89,8 +91,13 @@ local function addResultLines(
   for j, resultLine in ipairs(resultLines) do
     local current_line = numlines + j - 1
     local current_line_number = first_range.start.line + j - 1
-    local line_no = tostring(current_line_number)
-    local col_no = first_range.start.column and tostring(first_range.start.column) or nil
+    local line_no =
+      tostring(bufrange and current_line_number + bufrange.start_row - 1 or current_line_number)
+    local column_number = first_range.start.column
+    if bufrange and column_number then
+      column_number = column_number + bufrange.start_col - 1
+    end
+    local col_no = column_number and tostring(column_number) or nil
     local prefix = line_no .. (col_no and ':' .. col_no .. ':' or '-')
 
     table.insert(highlights, {
@@ -147,8 +154,9 @@ end
 ---@param matches RipgrepJson[]
 ---@param isSearchWithReplace boolean
 ---@param showDiff boolean
+---@param bufrange? VisualSelectionInfo
 ---@return ParsedResultsData
-function M.parseResults(matches, isSearchWithReplace, showDiff)
+function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
   local stats = { files = 0, matches = 0 }
   local lines = {}
   local highlights = {}
@@ -182,6 +190,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
 
     if match.type == 'begin' then
       stats.files = stats.files + 1
+      local file_name = bufrange and bufrange.file_name or data.path.text
       table.insert(highlights, {
         line_group = ResultLineGroup.FilePath,
         line_group_id = get_next_line_group_id(),
@@ -190,9 +199,9 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
         start_line = #lines,
         start_col = 0,
         end_line = #lines,
-        end_col = #data.path.text,
+        end_col = #file_name,
       })
-      table.insert(lines, data.path.text)
+      table.insert(lines, file_name)
     elseif match.type == 'end' then
       last_line_number = nil
       table.insert(lines, '')
@@ -235,7 +244,8 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
           highlights,
           ResultLineGroup.MatchLines,
           lineNumberSign,
-          matchHighlightType
+          matchHighlightType,
+          bufrange
         )
       end
 
@@ -285,7 +295,8 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
           highlights,
           ResultLineGroup.ReplacementLines,
           lineNumberSign,
-          matchHighlightType
+          matchHighlightType,
+          bufrange
         )
       end
     elseif match.type == 'context' then
@@ -304,7 +315,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff)
             column = nil,
           },
         },
-      }, lines, highlights, ResultLineGroup.ContextLines, change_sign)
+      }, lines, highlights, ResultLineGroup.ContextLines, change_sign, nil, bufrange)
     end
   end
 

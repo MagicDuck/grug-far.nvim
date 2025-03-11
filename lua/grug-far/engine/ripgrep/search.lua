@@ -39,6 +39,7 @@ end
 ---@field json_data RipgrepJson[]
 ---@field options GrugFarOptions
 ---@field inputs GrugFarInputs
+---@field bufrange VisualSelectionInfo
 ---@field on_finish fun(status: GrugFarStatus, errorMessage: string?, results: ParsedResultsData?)
 
 --- adds results of doing a replace to results of doing a search
@@ -103,7 +104,7 @@ local function getResultsWithReplaceDiff(params)
         end
 
         local showDiff = params.options.engines.ripgrep.showReplaceDiff
-        local results = parseResults.parseResults(json_data, true, showDiff)
+        local results = parseResults.parseResults(json_data, true, showDiff, params.bufrange)
         params.on_finish(status, nil, results)
       else
         params.on_finish(status, errorMessage)
@@ -119,6 +120,7 @@ local function getResultsWithReplaceDiff(params)
 end
 
 ---@class RipgrepEngineSearchParams
+---@field stdin uv_pipe_t?
 ---@field args string[]?
 ---@field options GrugFarOptions
 ---@field inputs GrugFarInputs
@@ -130,12 +132,10 @@ end
 ---@param params RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search(params)
-  local stdin = params.bufrange and uv.new_pipe() or nil
-
-  local abort, effectiveArgs = fetchCommandOutput({
+  return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = params.args,
-    stdin = stdin,
+    stdin = params.stdin,
     on_fetch_chunk = function(data)
       -- handle non-json data (like when running rg with --help flag)
       if not vim.startswith(data, '{') then
@@ -148,7 +148,7 @@ local function run_search(params)
       end
 
       local json_list = utils.str_to_json_list(data)
-      local results = parseResults.parseResults(json_list, false, false)
+      local results = parseResults.parseResults(json_list, false, false, params.bufrange)
       params.on_fetch_chunk(results)
     end,
     on_finish = function(status, errorMessage)
@@ -158,15 +158,6 @@ local function run_search(params)
       params.on_finish(status, errorMessage)
     end,
   })
-
-  if stdin and params.bufrange then
-    local text = table.concat(params.bufrange.lines, '\n')
-    uv.write(stdin, text, function()
-      uv.shutdown(stdin)
-    end)
-  end
-
-  return abort, effectiveArgs
 end
 
 --- runs search with replace diff
@@ -218,6 +209,7 @@ local function run_search_with_replace(params)
       json_data = json_data,
       inputs = params.inputs,
       options = params.options,
+      bufrange = params.bufrange,
       on_finish = function(status, errorMessage, results)
         if status == 'success' then
           if results then
@@ -236,6 +228,7 @@ local function run_search_with_replace(params)
   abortSearch, effectiveArgs = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = searchArgs,
+    stdin = params.stdin,
     on_fetch_chunk = function(data)
       processingQueue:push(data)
     end,
@@ -276,6 +269,7 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
   abort, effectiveArgs = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = searchArgs,
+    stdin = params.stdin,
     on_fetch_chunk = function(data)
       if chunk_error then
         return
@@ -308,7 +302,7 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
           end
         end
       end
-      local results = parseResults.parseResults(json_list, true, true)
+      local results = parseResults.parseResults(json_list, true, true, params.bufrange)
       params.on_fetch_chunk(results)
     end,
     on_finish = function(status, errorMessage)
@@ -370,27 +364,34 @@ function M.search(params)
   end
   local args = M.getSearchArgs(inputs, params.options)
   local isSearchWithReplace = M.isSearchWithReplacement(args)
+  local stdin = bufrange and uv.new_pipe() or nil
 
+  local abort, effectiveArgs
   if params.replacementInterpreter then
     -- TODO (sbadragan): do this one
-    return run_search_with_replace_interpreter(params.replacementInterpreter, {
+    abort, effectiveArgs = run_search_with_replace_interpreter(params.replacementInterpreter, {
+      stdin = stdin,
       options = options,
       inputs = inputs,
+      bufrange = bufrange,
       args = args,
       on_fetch_chunk = params.on_fetch_chunk,
       on_finish = params.on_finish,
     })
   elseif isSearchWithReplace then
     -- TODO (sbadragan): do this one
-    return run_search_with_replace({
+    abort, effectiveArgs = run_search_with_replace({
+      stdin = stdin,
       options = options,
       inputs = inputs,
+      bufrange = bufrange,
       args = args,
       on_fetch_chunk = params.on_fetch_chunk,
       on_finish = params.on_finish,
     })
   else
-    return run_search({
+    abort, effectiveArgs = run_search({
+      stdin = stdin,
       options = options,
       inputs = inputs,
       bufrange = bufrange,
@@ -399,6 +400,15 @@ function M.search(params)
       on_finish = params.on_finish,
     })
   end
+
+  if stdin and bufrange then
+    local text = table.concat(bufrange.lines, '\n')
+    uv.write(stdin, text, function()
+      uv.shutdown(stdin)
+    end)
+  end
+
+  return abort, effectiveArgs
 end
 
 return M
