@@ -10,7 +10,7 @@
 09| 󰮚 Flags:                                                                       
 10|                                                                                
 11|  Paths:                                                                       
-12|  buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file1.txt:2:12-3:23       
+12|  buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file1.txt:2:11-3:-1       
 13|                                                                                
 14| STATUS_SUCCESS ⟪ ripgrep ⟫
 15| 2 matches in 1 files                                                           
@@ -18,8 +18,8 @@
 17|  /opt/repos/grug-far.nvim/temp_test_dir/file1.txt                              
 18|▒ 2:22:talks and curly drinks                                                [1]
 19|▒ 2:22:talks and curly drinks                                                   
-20|▒ 3:23:      then curly thin                                                 [2]
-21|▒ 3:23:      then curly thin                                                    
+20|▒ 3:23:      then curly thinks                                               [2]
+21|▒ 3:23:      then curly thinks                                                  
 22|                                                                                
 23|Grug FAR - 1: curly                                           2,6            Top
 24|-- INSERT --                                                                    

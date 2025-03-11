@@ -155,15 +155,7 @@ local function replaceInBufrange(params)
       if status == 'success' and #matches > 0 then
         local new_text = parseResults.getReplacedContents(input_text, matches)
 
-        local buf = vim.fn.bufnr(bufrange.file_name)
-        vim.api.nvim_buf_set_text(
-          buf,
-          bufrange.start_row - 1,
-          bufrange.start_col - 1,
-          bufrange.end_row - 1,
-          bufrange.end_col < 0 and bufrange.end_col or bufrange.end_col - 1,
-          vim.split(new_text, '\n')
-        )
+        utils.writeInBufrange(bufrange, vim.split(new_text, '\n'))
       end
 
       return on_finish('success')

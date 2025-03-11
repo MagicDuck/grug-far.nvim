@@ -1,0 +1,25 @@
+--|
+01|
+02|grug.$A
+03|return match .. "_" .. vars.A
+04|
+05|
+06|buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file2.ts:3:0-3:-1
+07|
+08|/opt/repos/grug-far.nvim/temp_test_dir/file2.ts
+09|3:7:         grug.walks(talks)
+10|3:7:         grug.walks_walks(talks)
+11|
+
+--|-
+01| 
+02| 
+03| 
+04| 
+05| 
+06| 
+07| 
+08| 
+09| 
+10| 
+11| 

@@ -10,7 +10,7 @@
 09| 󰮚 Flags:                                                                       
 10|    5                                                                           
 11|  Paths:                                                                       
-12|    6 buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file1.txt:2:12-4:21   
+12|    6 buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file1.txt:2:11-4:-1   
 13|                                                                                
 14| STATUS_SUCCESS ⟪ ripgrep ⟫
 15| 2 matches in 1 files                                                           
@@ -18,8 +18,8 @@
 17|    8 /opt/repos/grug-far.nvim/temp_test_dir/file1.txt                          
 18|▒   9 3:23:      then curly thinks a deep depth indeed!                      [1]
 19|▒  10 3:23:      then curly thinks a deep depth indeed!                         
-20|▒  11 4:22:      and curly fli                                               [2]
-21|▒  12 4:22:      and curly fli                                                  
+20|▒  11 4:22:      and curly flies                                             [2]
+21|▒  12 4:22:      and curly flies                                                
 22|   13                                                                           
 23|Grug FAR - 1: curly                                           2,6            Top
 24|-- INSERT --                                                                    
