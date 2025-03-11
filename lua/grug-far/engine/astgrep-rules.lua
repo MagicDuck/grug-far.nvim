@@ -141,7 +141,6 @@ rule:
     local prefills = vim.deepcopy(initialPrefills)
     if visualSelectionUsage == 'prefill-search' then
       prefills.rules = table.concat(visual_selection_info.lines, '\n')
-    -- TODO (sbadragan): update tests
     elseif visualSelectionUsage == 'operate-within-range' then
       prefills.paths = utils.get_visual_selection_info_as_str(visual_selection_info)
     end
