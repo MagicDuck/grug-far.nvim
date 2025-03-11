@@ -64,6 +64,7 @@ end
 ---@param line_group ResultLineGroup
 ---@param lineNumberSign? ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
+---@param bufrange? VisualSelectionInfo
 local function addResultLines(
   resultLines,
   range,
@@ -71,15 +72,21 @@ local function addResultLines(
   highlights,
   line_group,
   lineNumberSign,
-  matchHighlightType
+  matchHighlightType,
+  bufrange
 )
   local line_group_id = get_next_line_group_id()
   local numlines = #lines
   for j, resultLine in ipairs(resultLines) do
     local current_line = numlines + j - 1
     local isLastLine = j == #resultLines
-    local line_no = tostring(range.start.line + j)
-    local col_no = range.start.column and tostring(range.start.column + 1) or nil
+    local line_no =
+      tostring(bufrange and bufrange.start_row - 1 + range.start.line + j or range.start.line + j)
+    local column_number = range.start.column and range.start.column + 1 or nil
+    if bufrange and column_number then
+      column_number = column_number + bufrange.start_col - 1
+    end
+    local col_no = range.start.column and tostring(column_number) or nil
     local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))
 
     table.insert(highlights, {
@@ -145,8 +152,9 @@ end
 
 --- parse results data and get info
 ---@param matches AstgrepMatch[]
+---@param bufrange VisualSelectionInfo
 ---@return ParsedResultsData
-function M.parseResults(matches)
+function M.parseResults(matches, bufrange)
   local stats = { files = 0, matches = 0 }
   local lines = {}
   local highlights = {}
@@ -162,6 +170,7 @@ function M.parseResults(matches)
 
     if isFileBoundary then
       stats.files = stats.files + 1
+      local file_name = bufrange and bufrange.file_name or match.file
       table.insert(highlights, {
         line_group = ResultLineGroup.FilePath,
         line_group_id = get_next_line_group_id(),
@@ -170,9 +179,9 @@ function M.parseResults(matches)
         start_line = #lines,
         start_col = 0,
         end_line = #lines,
-        end_col = #match.file,
+        end_col = #file_name,
       })
-      table.insert(lines, match.file)
+      table.insert(lines, file_name)
     end
 
     local leading = match.charCount and match.charCount.leading or match.range.start.column
@@ -194,7 +203,9 @@ function M.parseResults(matches)
         lines,
         highlights,
         ResultLineGroup.ContextLines,
-        change_sign
+        change_sign,
+        nil,
+        bufrange
       )
     end
 
@@ -210,7 +221,8 @@ function M.parseResults(matches)
       highlights,
       ResultLineGroup.MatchLines,
       lineNumberSign,
-      matchHighlightType
+      matchHighlightType,
+      bufrange
     )
 
     -- add replacements lines
@@ -231,7 +243,8 @@ function M.parseResults(matches)
         highlights,
         ResultLineGroup.ReplacementLines,
         added_sign,
-        ResultHighlightType.MatchAdded
+        ResultHighlightType.MatchAdded,
+        bufrange
       )
     end
 
@@ -247,7 +260,9 @@ function M.parseResults(matches)
         lines,
         highlights,
         ResultLineGroup.ContextLines,
-        change_sign
+        change_sign,
+        nil,
+        bufrange
       )
     end
 
