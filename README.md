@@ -319,7 +319,7 @@ For more API, see [docs][docs]
 ```
 or 
 ```lua
-:lua require('grug-far').open({ visualSelectionUsage = 'operate-within-range' } })
+:lua require('grug-far').open({ visualSelectionUsage = 'operate-within-range' })
 ```
 
 #### Toggle visibility of a particular instance and set title to a fixed string
