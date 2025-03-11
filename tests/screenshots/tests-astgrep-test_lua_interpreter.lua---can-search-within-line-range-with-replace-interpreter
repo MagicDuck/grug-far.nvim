@@ -10,7 +10,7 @@
 09| 󰮚 Flags:                                                                       
 10|                                                                                
 11|  Paths:                                                                       
-12|buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file2.ts:2:0-2:-1           
+12|buffer-range=file2.ts:2:0-2:-1                                                  
 13|                                                                                
 14| STATUS_ERROR ⟪ astgrep ⟫
 15|                                                                                

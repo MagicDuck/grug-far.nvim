@@ -4,9 +4,9 @@
 03|return match .. "_" .. vars.A
 04|
 05|
-06|buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file2.ts:3:0-3:-1
+06|buffer-range=file2.ts:3:0-3:-1
 07|
-08|/opt/repos/grug-far.nvim/temp_test_dir/file2.ts
+08|file2.ts
 09|3:7:         grug.walks(talks)
 10|3:7:         grug.walks_walks(talks)
 11|
