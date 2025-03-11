@@ -88,6 +88,8 @@ local AstgrepEngine = {
   isEmptySearch = function(inputs)
     return #inputs.search == 0
   end,
+
+  getBufrange = search.getBufrange,
 }
 
 return AstgrepEngine

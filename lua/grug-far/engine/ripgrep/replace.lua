@@ -5,6 +5,7 @@ local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local argUtils = require('grug-far.engine.ripgrep.argUtils')
 local parseResults = require('grug-far.engine.ripgrep.parseResults')
 local utils = require('grug-far.utils')
+local search = require('grug-far.engine.ripgrep.search')
 local uv = vim.uv
 
 local M = {}
@@ -172,20 +173,10 @@ M.replace = function(params)
     end
   end
 
-  local bufrange = nil
-  if #params.inputs.paths > 0 then
-    local paths = utils.splitPaths(params.inputs.paths)
-    local bufrange_err
-    for _, path in ipairs(paths) do
-      bufrange, bufrange_err = utils.parse_buf_range_str(path)
-      if bufrange_err then
-        params.on_finish('error', bufrange_err)
-        return
-      end
-      if bufrange then
-        break
-      end
-    end
+  local bufrange, bufrange_err = search.getBufrange(params.inputs)
+  if bufrange_err then
+    params.on_finish('error', bufrange_err)
+    return
   end
 
   if bufrange then

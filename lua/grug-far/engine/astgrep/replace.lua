@@ -187,20 +187,10 @@ function M.replace(params)
   local isRuleMode = inputs.rules ~= nil
 
   local extraArgs = { '--update-all' }
-  local bufrange = nil
-  if #inputs.paths > 0 then
-    local paths = utils.splitPaths(inputs.paths)
-    local bufrange_err
-    for _, path in ipairs(paths) do
-      bufrange, bufrange_err = utils.parse_buf_range_str(path)
-      if bufrange_err then
-        params.on_finish('error', bufrange_err)
-        return
-      end
-      if bufrange then
-        break
-      end
-    end
+  local bufrange, bufrange_err = search.getBufrange(inputs)
+  if bufrange_err then
+    params.on_finish('error', bufrange_err)
+    return
   end
   if bufrange then
     inputs.paths = ''

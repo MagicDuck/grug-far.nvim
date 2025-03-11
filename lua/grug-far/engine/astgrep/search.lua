@@ -28,6 +28,20 @@ function M.get_language(file_name)
   return ext
 end
 
+--- gets bufrange if we have one specified in paths
+---@param inputs GrugFarInputs
+---@return VisualSelectionInfo? bufrange,string? err
+function M.getBufrange(inputs)
+  if #inputs.paths > 0 then
+    local paths = utils.splitPaths(inputs.paths)
+    for _, path in ipairs(paths) do
+      return utils.parse_buf_range_str(path)
+    end
+  end
+
+  return nil, nil
+end
+
 --- is doing a search with replacement?
 ---@param args string[]?
 ---@return boolean
@@ -166,20 +180,10 @@ function M.search(params)
   end
 
   local extraArgs = {}
-  local bufrange = nil
-  if #inputs.paths > 0 then
-    local paths = utils.splitPaths(inputs.paths)
-    local bufrange_err
-    for _, path in ipairs(paths) do
-      bufrange, bufrange_err = utils.parse_buf_range_str(path)
-      if bufrange_err then
-        params.on_finish('error', bufrange_err)
-        return
-      end
-      if bufrange then
-        break
-      end
-    end
+  local bufrange, bufrange_err = M.getBufrange(params.inputs)
+  if bufrange_err then
+    params.on_finish('error', bufrange_err)
+    return
   end
   if bufrange then
     inputs.paths = ''
