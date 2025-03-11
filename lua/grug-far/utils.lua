@@ -307,23 +307,6 @@ function M.getVisualSelectionLines()
 
   local lines = vim.api.nvim_buf_get_text(0, start_row - 1, start_col, end_row - 1, end_col, {})
 
-  -- TODO (sbadragan): remove?
-  -- local lines = vim.fn.getline(start_row, end_row) --[[ @as string[] ]]
-  -- if #lines > 0 and start_col and end_col and end_col < string.len(lines[#lines]) then
-  --   print('yeppers', end_col)
-  --   if start_row == end_row then
-  --     lines[1] = lines[1]:sub(start_col + 1, end_col + 1)
-  --   else
-  --     lines[1] = lines[1]:sub(start_col + 1, -1)
-  --     lines[#lines] = lines[#lines]:sub(1, end_col + 1)
-  --   end
-  -- end
-
-  -- local last_line = lines[#lines]
-  -- if last_line and end_col > string.len(last_line) then
-  --   end_col = -1
-  -- end
-
   return lines, start_row, start_col, end_row, end_col
 end
 
@@ -627,7 +610,7 @@ function M.get_current_visual_selection_info(strict)
   local lines, start_row, start_col, end_row, end_col = M.getVisualSelectionLines()
 
   return {
-    file_name = vim.api.nvim_buf_get_name(0),
+    file_name = vim.fn.expand('%:p:.'), -- relative path
     lines = lines,
     start_row = start_row,
     start_col = start_col,
