@@ -18,6 +18,7 @@ Grug find! Grug replace! Grug happy!
 - Syntax highlighted search results
 - Search results folding
 - Multiline search & replace
+- Search/Replace within buffer range denoted by visual selection
 - "Preview" result source while "scrolling" through results 
 - Replace using lua interpreted replacement for each match
 
@@ -35,6 +36,9 @@ Grug find! Grug replace! Grug happy!
 
 #### Help:
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/5da63e72-f768-46e7-a807-b26c6f44c42c">
+
+#### Searching wihin buffer range
+<img width="2500" alt="image" src="https://github.com/user-attachments/assets/497e8024-4823-4331-92ac-d78cdae332f0" />
 
 #### History:
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
@@ -307,6 +311,15 @@ For more API, see [docs][docs]
 #### Launch with the current visual selection, searching only current file
 ```lua
 :<C-u>lua require('grug-far').with_visual_selection({ prefills = { paths = vim.fn.expand("%") } })
+```
+
+#### Launch, limiting search to the current buffer visual selection range
+```lua
+:GrugFarWithin
+```
+or 
+```lua
+:lua require('grug-far').open({ visualSelectionUsage = 'operate-within-range' } })
 ```
 
 #### Toggle visibility of a particular instance and set title to a fixed string
