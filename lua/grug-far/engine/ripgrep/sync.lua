@@ -1,6 +1,8 @@
 local syncChangedFiles = require('grug-far.engine.syncChangedFiles')
 local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local utils = require('grug-far.utils')
+local search = require('grug-far.engine.astgrep.search')
+local syncBufrange = require('grug-far.engine.syncBufrange')
 
 local M = {}
 
@@ -35,14 +37,35 @@ M.sync = function(params)
     return
   end
 
-  return syncChangedFiles({
-    options = params.options,
-    report_progress = function(count)
-      params.report_progress({ type = 'update_count', count = count })
-    end,
-    on_finish = params.on_finish,
-    changedFiles = params.changedFiles,
-  })
+  local bufrange, bufrange_err = search.getBufrange(params.inputs)
+  if bufrange_err then
+    params.on_finish('error', bufrange_err)
+    return
+  end
+
+  if bufrange then
+    return syncBufrange({
+      changes = params.changedFiles[1],
+      bufrange = bufrange,
+      on_done = function(err)
+        if err then
+          params.on_finish('error', err)
+        else
+          -- TODO (sbadragan): message to user here?
+          params.on_finish('success')
+        end
+      end,
+    })
+  else
+    return syncChangedFiles({
+      options = params.options,
+      report_progress = function(count)
+        params.report_progress({ type = 'update_count', count = count })
+      end,
+      on_finish = params.on_finish,
+      changedFiles = params.changedFiles,
+    })
+  end
 end
 
 return M
