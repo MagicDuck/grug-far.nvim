@@ -633,20 +633,19 @@ end
 
 --- gets buf range from string representation
 ---@param str string
----@return VisualSelectionInfo?
+---@return VisualSelectionInfo?, string? err
 function M.parse_buf_range_str(str)
   local prefix = 'buffer-range='
   if str:sub(1, #prefix) ~= prefix then
-    -- TODO (sbadragan): should we return errors that get displayed?
     return nil
   end
 
   local file_name, start_row, start_col, end_row, end_col =
     string.match(str, 'buffer%-range=(.+):(%d+),(%d+)-(%d+),(-?%d+)')
 
-  -- TODO (sbadragan): not sure if this stuff is needed
   if not file_name then
-    return nil
+    return nil,
+      'Invalid buffer range provided! Format is "buffer-range=<file_path>:<start_row>,<start_col>-<end_row>,<end_col>"'
   end
 
   local buf = vim.fn.bufnr(file_name)
