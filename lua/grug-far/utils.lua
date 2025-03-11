@@ -280,7 +280,7 @@ function M.leaveVisualMode()
 end
 
 --- get text lines in visual selection
----@return string[]
+---@return string[] lines, integer start_row, integer start_col, integer end_row, integer end_col
 function M.getVisualSelectionLines()
   local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, '<'))
   local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(0, '>'))
@@ -293,7 +293,12 @@ function M.getVisualSelectionLines()
       lines[#lines] = lines[#lines]:sub(1, end_col + 1)
     end
   end
-  return lines
+
+  local last_line = lines[#lines]
+  if last_line and end_col > string.len(last_line) then
+    end_col = -1
+  end
+  return lines, start_row, start_col, end_row, end_col
 end
 
 ---@param keymap KeymapDef
@@ -584,6 +589,40 @@ M.str_to_json_list = function(str)
   end
 
   return json_data
+end
+
+---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
+---@return VisualSelectionInfo?
+function M.get_current_visual_selection_info(strict)
+  local was_visual = M.leaveVisualMode()
+  if strict and not was_visual then
+    return
+  end
+  local lines, start_row, start_col, end_row, end_col = M.getVisualSelectionLines()
+
+  return {
+    file_name = vim.api.nvim_buf_get_name(0),
+    lines = lines,
+    start_row = start_row,
+    start_col = start_col,
+    end_row = end_row,
+    end_col = end_col,
+  }
+end
+
+--- gets visual selection info as string
+---@param visual_selection_info VisualSelectionInfo
+function M.get_visual_selection_info_as_str(visual_selection_info)
+  return 'buffer-range='
+    .. visual_selection_info.file_name
+    .. ':'
+    .. visual_selection_info.start_row
+    .. ','
+    .. visual_selection_info.start_col
+    .. '-'
+    .. visual_selection_info.end_row
+    .. ','
+    .. visual_selection_info.end_col
 end
 
 return M
