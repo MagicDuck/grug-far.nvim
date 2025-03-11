@@ -213,14 +213,14 @@ M.defaultOptions = {
 
   -- by default, in visual mode, the visual selection is used to prefill the search
   -- setting this option to true disables that behaviour
-  -- TODO (sbadragan): deprecate
+  -- deprecated, please use visualSelectionUsage instead
   ignoreVisualSelection = false,
 
   -- how to treat current visual selection when grug-far is invoked
   -- prefill-search - use to prefill "search string"
   -- operate-within-range - use as buffer range to operate within
   -- ignore - ignore/discard visual selection
-  visualSelectionUsage = 'prefill',
+  visualSelectionUsage = 'prefill-search',
 
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' or false to unset. Mappings with no normal mode value will be removed from the help header
@@ -781,6 +781,20 @@ function M.with_defaults(options, defaults)
       'grug-far.nvim'
     )
     newOptions.engines.ripgrep.extraArgs = options.extraRgArgs
+  end
+
+  if options.ignoreVisualSelection ~= nil then
+    vim.deprecate(
+      'options.ignoreVisualSelection',
+      'options.visualSelectionUsage',
+      'soon',
+      'grug-far.nvim'
+    )
+    if options.ignoreVisualSelection == true then
+      newOptions.visualSelectionUsage = 'prefill-search'
+    elseif options.ignoreVisualSelection == false then
+      newOptions.visualSelectionUsage = 'ignore'
+    end
   end
 
   return newOptions
