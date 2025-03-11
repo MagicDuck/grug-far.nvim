@@ -84,7 +84,7 @@ local function addResultLines(
       tostring(bufrange and bufrange.start_row - 1 + range.start.line + j or range.start.line + j)
     local column_number = range.start.column and range.start.column + 1 or nil
     if bufrange and column_number then
-      column_number = column_number + bufrange.start_col - 1
+      column_number = column_number + bufrange.start_col
     end
     local col_no = range.start.column and tostring(column_number) or nil
     local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))

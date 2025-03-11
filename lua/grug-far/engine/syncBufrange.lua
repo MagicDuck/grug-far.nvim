@@ -1,3 +1,5 @@
+local utils = require('grug-far.utils')
+
 --- performs sync for given bufrange
 ---@param params { bufrange: VisualSelectionInfo, changes: ChangedFile, on_done: fun(errorMessage: string?) }
 local function syncBufrange(params)
@@ -22,15 +24,7 @@ local function syncBufrange(params)
     lines[lnum] = changedLine.newLine
   end
 
-  local buf = vim.fn.bufnr(bufrange.file_name)
-  vim.api.nvim_buf_set_text(
-    buf,
-    bufrange.start_row - 1,
-    bufrange.start_col - 1,
-    bufrange.end_row - 1,
-    bufrange.end_col < 0 and bufrange.end_col or bufrange.end_col - 1,
-    lines
-  )
+  utils.writeInBufrange(bufrange, lines)
 
   return on_done()
 end

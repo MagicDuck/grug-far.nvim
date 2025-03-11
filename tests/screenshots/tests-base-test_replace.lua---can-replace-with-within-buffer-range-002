@@ -4,13 +4,13 @@
 03|curly
 04|
 05|
-06|buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file1.txt:2:12-3:23
+06|buffer-range=/opt/repos/grug-far.nvim/temp_test_dir/file1.txt:2:11-3:-1
 07|
 08|/opt/repos/grug-far.nvim/temp_test_dir/file1.txt
 09|2:22:talks and grug drinks
 10|2:22:talks and curly drinks
-11|3:23:      then grug think
-12|3:23:      then curly think
+11|3:23:      then grug thinks
+12|3:23:      then curly thinks
 13|
 14|
 
