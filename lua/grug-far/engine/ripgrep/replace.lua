@@ -110,7 +110,7 @@ local function replaceInBufrange(params)
       if status == 'success' and (#json_data > 0 or #text_data > 0) then
         local new_text = replacement_eval_fn
             and parseResults.getReplacedContents(input_text, json_data)
-          or text_data
+          or text_data:sub(1, -2) -- strip of extra \n introduced by rg
 
         utils.writeInBufrange(bufrange, vim.split(new_text, '\n'))
       end
