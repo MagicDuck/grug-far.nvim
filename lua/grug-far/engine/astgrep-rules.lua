@@ -155,6 +155,8 @@ rule:
   isEmptySearch = function(inputs)
     return #inputs.rules == 0
   end,
+
+  getBufrange = search.getBufrange,
 }
 
 return AstgrepRulesEngine

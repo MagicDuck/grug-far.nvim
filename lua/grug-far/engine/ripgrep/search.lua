@@ -35,6 +35,20 @@ function M.isSearchWithReplacement(args)
   return false
 end
 
+--- gets bufrange if we have one specified in paths
+---@param inputs GrugFarInputs
+---@return VisualSelectionInfo? bufrange,string? err
+function M.getBufrange(inputs)
+  if #inputs.paths > 0 then
+    local paths = utils.splitPaths(inputs.paths)
+    for _, path in ipairs(paths) do
+      return utils.parse_buf_range_str(path)
+    end
+  end
+
+  return nil, nil
+end
+
 ---@class ResultsWithReplaceDiffParams
 ---@field json_data RipgrepJson[]
 ---@field options GrugFarOptions
@@ -347,20 +361,10 @@ function M.search(params)
     return
   end
 
-  local bufrange = nil
-  if #params.inputs.paths > 0 then
-    local paths = utils.splitPaths(params.inputs.paths)
-    local bufrange_err
-    for _, path in ipairs(paths) do
-      bufrange, bufrange_err = utils.parse_buf_range_str(path)
-      if bufrange_err then
-        params.on_finish('error', bufrange_err)
-        return
-      end
-      if bufrange then
-        break
-      end
-    end
+  local bufrange, bufrange_err = M.getBufrange(params.inputs)
+  if bufrange_err then
+    params.on_finish('error', bufrange_err)
+    return
   end
 
   local inputs = vim.deepcopy(params.inputs)

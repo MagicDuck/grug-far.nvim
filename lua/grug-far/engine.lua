@@ -97,6 +97,7 @@ M.DiffSeparatorChars = ' '
 ---@field getInputPrefillsForVisualSelection fun(visual_selection_info: VisualSelectionInfo, initialPrefills: GrugFarPrefills, visualSelectionUsage: VisualSelectionUsageType): GrugFarPrefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
 ---@field getSearchDescription fun(inputs: GrugFarInputs): string a string describing the current search to be used as buffer title for example
 ---@field isEmptySearch fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean whether search query is empty
+---@field getBufrange fun(inputs: GrugFarInputs): (bufrange: VisualSelectionInfo?, err: string?) gets the bufrange we are searching within, should return non-nil value when searching within a buffer
 
 --- returns engine given type
 ---@param type GrugFarEngineType
