@@ -37,7 +37,7 @@ Grug find! Grug replace! Grug happy!
 #### Help:
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/5da63e72-f768-46e7-a807-b26c6f44c42c">
 
-#### Searching wihin buffer range
+#### Searching within buffer range
 <img width="2500" alt="image" src="https://github.com/user-attachments/assets/497e8024-4823-4331-92ac-d78cdae332f0" />
 
 #### History:
