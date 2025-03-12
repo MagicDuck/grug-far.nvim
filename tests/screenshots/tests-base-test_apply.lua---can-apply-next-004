@@ -3,24 +3,24 @@
 02|      grug talks and grug drinks        │                                       
 03|      then grug thinks                  │  Search:                             
 04|                                        │  grug                                 
-05|~                                       │  Replace:                            
-06|~                                       │  curly                                
-07|~                                       │  Files Filter:                       
-08|~                                       │                                       
-09|~                                       │ 󰮚 Flags:                              
-10|~                                       │                                       
-11|~                                       │  Paths:                              
-12|~                                       │                                       
-13|~                                       │                                       
-14|~                                       │ STATUS_SUCCESS ⟪ ripgrep ⟫
-15|~                                       │ 5 matches in 2 files   sync completed
-16|~                                       │                                       
-17|~                                       │  file2.doc                            
-18|~                                       │▒ 2:7:      grug talks and grug dri [3]
-19|~                                       │▒ 2:7:      curly talks and curly drink
-20|~                                       │  s                                    
-21|~                                       │▒ 3:12:      then grug thinks       [4]
-22|~                                       │▒ 3:12:      then curly thinks         
+05|                                        │  Replace:                            
+06|                                        │  curly                                
+07|                                        │  Files Filter:                       
+08|                                        │                                       
+09|                                        │ 󰮚 Flags:                              
+10|                                        │                                       
+11|                                        │  Paths:                              
+12|                                        │                                       
+13|                                        │                                       
+14|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+15|                                        │ 5 matches in 2 files   sync completed
+16|                                        │                                       
+17|                                        │  file2.doc                            
+18|                                        │▒ 2:7:      grug talks and grug dri [3]
+19|                                        │▒ 2:7:      curly talks and curly drink
+20|                                        │  s                                    
+21|                                        │▒ 3:12:      then grug thinks       [4]
+22|                                        │▒ 3:12:      then curly thinks         
 23|file2.doc             2,7            All Grug FAR - 1: grug   9,2            Top
 24|                                                                                
 
