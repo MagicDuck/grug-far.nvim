@@ -17,9 +17,9 @@
 16|    7                                                                           
 17|    8 file1.txt                                                                 
 18|▒   9 3:23:      then curly thinks a deep depth indeed!                      [1]
-19|▒  10 3:23:      then curly thinks a deep depth indeed!                         
-20|▒  11 4:22:      and curly flies                                             [2]
-21|▒  12 4:22:      and curly flies                                                
+19|▒  10 3:12:      then curly thinks a deep depth indeed!                         
+20|▒  11 4:11:      and curly flies                                             [2]
+21|▒  12 4:11:      and curly flies                                                
 22|   13                                                                           
 23|Grug FAR - 1: curly                                           2,6            Top
 24|-- INSERT --                                                                    
