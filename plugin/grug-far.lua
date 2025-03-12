@@ -1,3 +1,10 @@
+-- note: unfortunately has to be global so it can be passed to command complete= opt
+-- selene: allow(unused_variable)
+function GrugFarCompleteEngine()
+  local opts = require('grug-far.opts')
+  return table.concat(vim.fn.keys(opts.defaultOptions.engines), '\n')
+end
+
 vim.api.nvim_create_user_command('GrugFar', function(params)
   local utils = require('grug-far.utils')
   local opts = require('grug-far.opts')

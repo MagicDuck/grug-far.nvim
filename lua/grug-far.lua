@@ -49,12 +49,6 @@ local function ensure_instance(instanceName)
   return inst
 end
 
--- note: unfortunately has to be global so it can be passed to command complete= opt
--- selene: allow(unused_variable)
-function GrugFarCompleteEngine()
-  return table.concat(vim.fn.keys(opts.defaultOptions.engines), '\n')
-end
-
 --- set up grug-far
 --- sets global options, which can also be configured through vim.g.grug_far
 ---@param options? GrugFarOptionsOverride
