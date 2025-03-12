@@ -95,6 +95,7 @@ local function getResultsWithReplaceDiff(params)
     inputString = inputString .. piece .. match_separator
   end
 
+  local bufrange = vim.deepcopy(params.bufrange)
   local abort = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = replaceArgs,
@@ -118,7 +119,7 @@ local function getResultsWithReplaceDiff(params)
         end
 
         local showDiff = params.options.engines.ripgrep.showReplaceDiff
-        local results = parseResults.parseResults(json_data, true, showDiff, params.bufrange)
+        local results = parseResults.parseResults(json_data, true, showDiff, bufrange)
         params.on_finish(status, nil, results)
       else
         params.on_finish(status, errorMessage)
@@ -146,6 +147,8 @@ end
 ---@param params RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search(params)
+  local bufrange = vim.deepcopy(params.bufrange)
+
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = params.args,
@@ -162,7 +165,7 @@ local function run_search(params)
       end
 
       local json_list = utils.str_to_json_list(data)
-      local results = parseResults.parseResults(json_list, false, false, params.bufrange)
+      local results = parseResults.parseResults(json_list, false, false, bufrange)
       params.on_fetch_chunk(results)
     end,
     on_finish = function(status, errorMessage)
@@ -280,6 +283,7 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
   local searchArgs = argUtils.stripReplaceArgs(params.args)
   local chunk_error = nil
   local abort, effectiveArgs
+  local bufrange = vim.deepcopy(params.bufrange)
   abort, effectiveArgs = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = searchArgs,
@@ -316,7 +320,7 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
           end
         end
       end
-      local results = parseResults.parseResults(json_list, true, true, params.bufrange)
+      local results = parseResults.parseResults(json_list, true, true, bufrange)
       params.on_fetch_chunk(results)
     end,
     on_finish = function(status, errorMessage)

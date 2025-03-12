@@ -285,7 +285,7 @@ end
 function M.getVisualSelectionLines()
   local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, '<'))
   if not start_col then
-    start_col = -1
+    start_col = 0
   end
 
   local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(0, '>'))
@@ -298,7 +298,7 @@ function M.getVisualSelectionLines()
 
   local first_line = unpack(vim.api.nvim_buf_get_lines(0, start_row - 1, start_row, true))
   if first_line and start_col > #first_line then
-    start_col = -1
+    start_col = #first_line
   end
   local last_line = unpack(vim.api.nvim_buf_get_lines(0, end_row - 1, end_row, true))
   if last_line and end_col > #last_line then
@@ -644,7 +644,7 @@ function M.parse_buf_range_str(str)
   end
 
   local file_name, start_row, start_col, end_row, end_col =
-    string.match(str, 'buffer%-range=(.+):(%d+):(-?%d+)-(%d+):(-?%d+)')
+    string.match(str, 'buffer%-range=(.+):(%d+):(%d+)-(%d+):(-?%d+)')
 
   if not file_name then
     return nil,
@@ -672,7 +672,16 @@ function M.parse_buf_range_str(str)
   end
 
   start_col = tonumber(start_col)
+  local first_line = unpack(vim.api.nvim_buf_get_lines(buf, start_row - 1, start_row, true))
+  if first_line and start_col > #first_line then
+    start_col = #first_line
+  end
+
   end_col = tonumber(end_col)
+  local last_line = unpack(vim.api.nvim_buf_get_lines(buf, end_row - 1, end_row, true))
+  if last_line and end_col > #last_line then
+    end_col = -1
+  end
 
   local bufrange = {
     file_name = file_name,
