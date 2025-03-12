@@ -94,8 +94,9 @@ local function addResultLines(
     local line_no =
       tostring(bufrange and current_line_number + bufrange.start_row - 1 or current_line_number)
     local column_number = first_range.start.column
-    if bufrange and column_number then
+    if bufrange and bufrange.start_col and column_number then
       column_number = column_number + bufrange.start_col
+      bufrange.start_col = nil -- we only want to add col to first line
     end
     local col_no = column_number and tostring(column_number) or nil
     local prefix = line_no .. (col_no and ':' .. col_no .. ':' or '-')

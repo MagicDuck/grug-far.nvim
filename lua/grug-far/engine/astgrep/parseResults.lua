@@ -83,8 +83,9 @@ local function addResultLines(
     local line_no =
       tostring(bufrange and bufrange.start_row - 1 + range.start.line + j or range.start.line + j)
     local column_number = range.start.column and range.start.column + 1 or nil
-    if bufrange and column_number then
+    if bufrange and bufrange.start_col and column_number then
       column_number = column_number + bufrange.start_col
+      bufrange.start_col = nil -- we only want to add col to first line
     end
     local col_no = range.start.column and tostring(column_number) or nil
     local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))
@@ -152,7 +153,7 @@ end
 
 --- parse results data and get info
 ---@param matches AstgrepMatch[]
----@param bufrange VisualSelectionInfo
+---@param bufrange VisualSelectionInfo?
 ---@return ParsedResultsData
 function M.parseResults(matches, bufrange)
   local stats = { files = 0, matches = 0 }

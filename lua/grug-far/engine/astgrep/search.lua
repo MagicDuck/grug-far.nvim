@@ -79,13 +79,15 @@ end
 
 --- runs search
 ---@param args string[]?
+---@param _bufrange? VisualSelectionInfo
 ---@param options GrugFarOptions
 ---@param eval_fn? fun(...): string
 ---@param on_fetch_chunk fun(data: ParsedResultsData)
 ---@param on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 ---@return fun()? abort, string[]? effectiveArgs
-local function run_astgrep_search(args, bufrange, options, eval_fn, on_fetch_chunk, on_finish)
+local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_chunk, on_finish)
   local isTextOutput = isSearchWithTextOutput(args)
+  local bufrange = _bufrange and vim.deepcopy(_bufrange) or nil
 
   local matches = {}
   local chunk_error = nil
