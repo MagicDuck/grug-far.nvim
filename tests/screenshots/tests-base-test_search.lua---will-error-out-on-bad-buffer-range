@@ -16,11 +16,11 @@
 15|                                                                                
 16|Invalid buffer range provided! Format is "buffer-range=<file_path>:<start_row>:<
 17|start_col>-<end_row>:<end_col>"                                                 
-18|~                                                                               
-19|~                                                                               
-20|~                                                                               
-21|~                                                                               
-22|~                                                                               
+18|                                                                                
+19|                                                                                
+20|                                                                                
+21|                                                                                
+22|                                                                                
 23|Grug FAR - 1: grug                                            2,5            All
 24|-- INSERT --                                                                    
 

@@ -16,11 +16,11 @@
 15|                                                                                
 16|[string "Replace"]:1: attempt to concatenate global 'non_existent_one' (a nil va
 17|lue)                                                                            
-18|~                                                                               
-19|~                                                                               
-20|~                                                                               
-21|~                                                                               
-22|~                                                                               
+18|                                                                                
+19|                                                                                
+20|                                                                                
+21|                                                                                
+22|                                                                                
 23|Grug FAR - 1: grug                                            2,5            All
 24|-- INSERT --                                                                    
 

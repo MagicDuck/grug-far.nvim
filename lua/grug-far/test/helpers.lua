@@ -171,6 +171,7 @@ function M.initChildNeovim(child)
     GrugFar.setup(...)
     Helpers = require('grug-far.test.helpers')
     vim.cmd('set showtabline=0')
+    vim.opt.fillchars = {  eob = ' ' }
   ]],
     {
       M.getSetupOptions(),

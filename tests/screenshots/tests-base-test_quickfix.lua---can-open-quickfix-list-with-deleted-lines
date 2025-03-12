@@ -3,24 +3,24 @@
 02|       grug walks                       │                                       
 03|       then grug swims                  │ STATUS_SUCCESS ⟪ ripgrep ⟫
 04|                                        │ 6 matches in 2 files                  
-05|~                                       │                                       
-06|~                                       │file1.txt                              
-07|~                                       │3:13:       then grug swims         [2]
-08|~                                       │                                       
-09|~                                       │file2.doc                              
-10|~                                       │3:12:      then grug thinks         [4]
-11|~                                       │4:11:      and grug flies           [5]
+05|                                        │                                       
+06|                                        │file1.txt                              
+07|                                        │3:13:       then grug swims         [2]
+08|                                        │                                       
+09|                                        │file2.doc                              
+10|                                        │3:12:      then grug thinks         [4]
+11|                                        │4:11:      and grug flies           [5]
 12|file1.txt             3,13           All Grug FAR - 1: grug   12,4           75%
 13|file1.txt|3 col 13-4| then grug swims                                           
 14|file2.doc|3 col 12-4| then grug thinks                                          
 15|file2.doc|4 col 11-4| and grug flies                                            
-16|~                                                                               
-17|~                                                                               
-18|~                                                                               
-19|~                                                                               
-20|~                                                                               
-21|~                                                                               
-22|~                                                                               
+16|                                                                                
+17|                                                                                
+18|                                                                                
+19|                                                                                
+20|                                                                                
+21|                                                                                
+22|                                                                                
 23|[Quickfix List] Grug FAR results for: grug                   1,1             All
 24|                                                                                
 

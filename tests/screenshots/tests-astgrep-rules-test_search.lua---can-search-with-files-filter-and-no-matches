@@ -17,10 +17,10 @@
 16| STATUS_ERROR ⟪ astgrep-rules ⟫
 17|                                                                                
 18|no matches                                                                      
-19|~                                                                               
-20|~                                                                               
-21|~                                                                               
-22|~                                                                               
+19|                                                                                
+20|                                                                                
+21|                                                                                
+22|                                                                                
 23|Grug FAR - 1: id: grug_test^@language: typesc...              2,14           All
 24|-- INSERT --                                                                    
 

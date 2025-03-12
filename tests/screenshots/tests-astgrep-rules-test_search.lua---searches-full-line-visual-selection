@@ -19,8 +19,8 @@
 18|2:1:    if (grug || talks) {                                                 [1]
 19|                                                                                
 20|                                                                                
-21|~                                                                               
-22|~                                                                               
+21|                                                                                
+22|                                                                                
 23|Grug FAR - 1:     if (grug || talks) {                        2,25           All
 24|-- INSERT --                                                                    
 
