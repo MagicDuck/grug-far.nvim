@@ -317,9 +317,11 @@ For more API, see [docs][docs]
 ```lua
 :GrugFarWithin
 ```
-or 
+or as a keymap if you want to go fully lua:
 ```lua
-:lua require('grug-far').open({ visualSelectionUsage = 'operate-within-range' })
+vim.keymap.set({ 'n', 'x' }, '<leader>si', function()
+  require('grug-far').open({ visualSelectionUsage = 'operate-within-range' })
+end, { desc = 'grug-far: Search within range' })
 ```
 
 #### Toggle visibility of a particular instance and set title to a fixed string
