@@ -324,6 +324,23 @@ vim.keymap.set({ 'n', 'x' }, '<leader>si', function()
 end, { desc = 'grug-far: Search within range' })
 ```
 
+#### Launch, with @/ register value as the search query, falling back to visual selection
+Note that `@/` register holds your last `/` or `*`, etc search query.
+```lua
+vim.keymap.set({ 'n', 'x' }, '<leader>ss', function()
+  local search = vim.fn.getreg('/')
+  -- surround with \b if "word" search (such as when pressing `*`)
+  if search and vim.startswith(search, '\\<') and vim.endswith(search, '\\>') then
+    search = '\\b' .. search:sub(3, -3) .. '\\b'
+  end
+  require('grug-far').open({
+    prefills = {
+      search = search,
+    },
+  })
+end, { desc = 'grug-far: Search using @/ register value or visual selection' })
+```
+
 #### Toggle visibility of a particular instance and set title to a fixed string
 ```lua
 :lua require('grug-far').toggle_instance({ instanceName="far", staticTitle="Find and Replace" })
