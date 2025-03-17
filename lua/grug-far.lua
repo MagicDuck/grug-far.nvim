@@ -295,6 +295,7 @@ end
 
 --- toggles given list of flags in the current grug-far buffer
 ---@param flags string[]
+---@return boolean[] states
 function M.toggle_flags(flags)
   if #flags == 0 then
     return {}
@@ -302,7 +303,7 @@ function M.toggle_flags(flags)
 
   local instanceName = M.get_instance_name_by_buf(0)
   if not instanceName then
-    return
+    return {}
   end
 
   local instance = namedInstances[instanceName]
