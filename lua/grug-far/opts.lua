@@ -250,6 +250,8 @@ M.defaultOptions = {
     swapReplacementInterpreter = { n = '<localleader>x' },
     applyNext = { n = '<localleader>j' },
     applyPrev = { n = '<localleader>k' },
+    nextInput = { n = '<tab>' },
+    prevInput = { n = '<s-tab>' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -443,6 +445,8 @@ M.defaultOptions = {
 ---@field swapReplacementInterpreter KeymapDef
 ---@field applyNext KeymapDef
 ---@field applyPrev KeymapDef
+---@field nextInput KeymapDef
+---@field prevInput KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -467,6 +471,8 @@ M.defaultOptions = {
 ---@field swapReplacementInterpreter? KeymapDef
 ---@field applyNext? KeymapDef
 ---@field applyPrev? KeymapDef
+---@field nextInput? KeymapDef
+---@field prevInput? KeymapDef
 
 ---@class AutoSaveTable
 ---@field enabled boolean
