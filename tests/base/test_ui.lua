@@ -50,14 +50,6 @@ T['can launch with :GrugFar ripgrep'] = function()
   helpers.childWaitForScreenshotText(child, 'ripgrep')
 end
 
-T['can launch with deprecated grug_far api'] = function()
-  child.lua_get('GrugFar.grug_far(...)', {
-    {},
-  })
-  helpers.childWaitForScreenshotText(child, 'ripgrep')
-  helpers.childExpectScreenshot(child)
-end
-
 T['can search manually on insert leave or normal mode change'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
