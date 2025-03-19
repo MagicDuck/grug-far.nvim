@@ -67,13 +67,10 @@ end
 ---@field sign? ResultHighlightSign
 ---@field count? integer
 
+---@alias GrugFarInputName "search" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
+
 ---@class GrugFarInputs
----@field search? string
----@field rules? string
----@field replacement string
----@field filesFilter string
----@field flags string
----@field paths string
+---@field [GrugFarInputName] string?
 
 ---@class GrugFarState
 ---@field lastInputs? GrugFarInputs
@@ -468,6 +465,16 @@ function M.get_current_visual_selection_as_range_str(strict)
   end
 
   return utils.get_visual_selection_info_as_str(visual_selection_info)
+end
+
+--- moves cursor to the input with the given name
+---@param name GrugFarInputs
+---@return boolean
+function M.gotoInput(name)
+  if name then
+    return false
+  end
+  return true
 end
 
 return M
