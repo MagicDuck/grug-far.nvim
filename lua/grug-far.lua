@@ -470,12 +470,4 @@ function M.get_current_visual_selection_as_range_str(strict)
   return utils.get_visual_selection_info_as_str(visual_selection_info)
 end
 
----@deprecated use open(same options) instead
---- launch grug-far with the given overrides
----@param options? GrugFarOptionsOverride
----@return string instanceName
-function M.grug_far(options)
-  return M.open(options)
-end
-
 return M
