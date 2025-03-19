@@ -1,11 +1,11 @@
 local M = {}
 
---- gets input lines for given input name
+--- gets position of input within buffer
 ---@param context GrugFarContext
 ---@param buf integer
 ---@param name string
----@return string[], GrugFarEngineInput?
-local function getInputLines(context, buf, name)
+---@return integer? startRow, integer? endRow, GrugFarEngineInput? input
+function M.getInputPos(context, buf, name)
   local nextExtmarkName = nil
   local theInput = nil
   for i, input in ipairs(context.engine.inputs) do
@@ -17,7 +17,7 @@ local function getInputLines(context, buf, name)
   end
 
   if not nextExtmarkName then
-    return { '' }, theInput
+    return nil, nil, theInput
   end
 
   local startRow =
@@ -31,7 +31,18 @@ local function getInputLines(context, buf, name)
     )
   ) --[[@as integer?]]
 
-  if not (startRow and endRow) then
+  return startRow, endRow, theInput
+end
+
+--- gets input lines for given input name
+---@param context GrugFarContext
+---@param buf integer
+---@param name string
+---@return string[], GrugFarEngineInput?
+local function getInputLines(context, buf, name)
+  local startRow, endRow, theInput = M.getInputPos(context, buf, name)
+
+  if not (startRow and endRow and theInput) then
     return { '' }, theInput
   end
 
