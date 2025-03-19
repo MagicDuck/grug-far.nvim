@@ -29,20 +29,18 @@ local namedInstances = {}
 
 highlights.setup()
 
----@param instanceName string
-local function ensure_instance_name(instanceName)
+---@param instanceName string?
+---@param accept_nil boolean?
+local function ensure_instance(instanceName, accept_nil)
   if not instanceName then
-    error(
-      'instanceName is required! This just needs to be any string you want to use to identify the grug-far instance.'
-    )
+    instanceName = M.get_instance_name_by_buf(0)
+    if not instanceName then
+      error('could not get grug-far instace for current buffer!')
+    end
   end
-end
 
----@param instanceName string
-local function ensure_instance(instanceName)
-  ensure_instance_name(instanceName)
   local inst = namedInstances[instanceName]
-  if not inst then
+  if not inst and not accept_nil then
     error('No such grug-far instance: ' .. instanceName)
   end
 
@@ -196,6 +194,21 @@ local function createWindow(context)
   return win
 end
 
+--- ensure instance exists and is open
+--- @param instanceName string?
+--- @return NamedInstance inst, integer win
+local function ensure_open_instance(instanceName)
+  local inst = ensure_instance(instanceName)
+  local win = vim.fn.bufwinid(inst.buf)
+  if win == -1 then
+    -- toggle it on
+    win = createWindow(inst.context)
+    vim.api.nvim_win_set_buf(win, inst.buf)
+  end
+
+  return inst, win
+end
+
 ---@param buf integer
 ---@param context GrugFarContext
 local function setupCleanup(buf, context)
@@ -327,13 +340,11 @@ function M.toggle_flags(flags)
   return states
 end
 
---- toggles visibility of grug-far instance with given instance name
---- requires options.instanceName to be given in order to identify the grug-far instance to toggle
+--- toggles visibility of grug-far instance with given instance name or current buffer instance
+--- options.instanceName can be used to identify a specific grug-far instance to toggle
 ---@param options GrugFarOptionsOverride
 function M.toggle_instance(options)
-  ensure_instance_name(options.instanceName)
-
-  local inst = namedInstances[options.instanceName]
+  local inst = ensure_instance(options.instanceName, true)
   if not inst then
     M.open(options)
     return
@@ -370,21 +381,20 @@ function M.is_instance_open(instanceName)
   return win ~= -1
 end
 
---- closes grug-far instance with given name
----@param instanceName string
+--- closes grug-far instance with given name or current buffer instance
+---@param instanceName string?
 function M.kill_instance(instanceName)
-  ensure_instance_name(instanceName)
-  local inst = namedInstances[instanceName]
+  local inst = ensure_instance(instanceName, true)
   if inst then
     close({ context = inst.context, buf = inst.buf })
   end
 end
 
---- hides grug-far instance with given name
----@param instanceName string
+-- TODO (sbadragan): update docs
+--- hides grug-far instance with given name or current buffer instance
+---@param instanceName string?
 function M.close_instance(instanceName)
-  ensure_instance_name(instanceName)
-  local inst = namedInstances[instanceName]
+  local inst = ensure_instance(instanceName)
   if inst then
     local win = vim.fn.bufwinid(inst.buf)
     if win ~= -1 then
@@ -393,9 +403,9 @@ function M.close_instance(instanceName)
   end
 end
 
---- opens grug-far instance with given name if window closed
+--- opens grug-far instance with given name (or current buffer instance) if window closed
 --- otherwise focuses the window
----@param instanceName string
+---@param instanceName string?
 function M.open_instance(instanceName)
   local inst = ensure_instance(instanceName)
 
@@ -411,8 +421,9 @@ function M.open_instance(instanceName)
 end
 
 --- updates grug-far instance with given input prefills
+--- operates on grug-far instance with given instance name or current buffer instance (if nil)
 --- if clearOld=true is given, the old input values are ignored
----@param instanceName string
+---@param instanceName string?
 ---@param prefills GrugFarPrefills
 ---@param clearOld boolean
 function M.update_instance_prefills(instanceName, prefills, clearOld)
@@ -467,14 +478,81 @@ function M.get_current_visual_selection_as_range_str(strict)
   return utils.get_visual_selection_info_as_str(visual_selection_info)
 end
 
---- moves cursor to the input with the given name
----@param name GrugFarInputs
----@return boolean
-function M.gotoInput(name)
-  if name then
-    return false
+---@param instanceName? string
+---@param getInputName fun(inst: NamedInstance, win: integer): GrugFarInputName
+local function _gotoInputInternal(instanceName, getInputName)
+  local inst, win = ensure_open_instance(instanceName)
+  local inputName = getInputName(inst, win)
+  local startRow, _, input = inputs.getInputPos(inst.context, inst.buf, inputName)
+  if not (startRow and input) then
+    error('could not get row of input with given name: ' .. inputName)
   end
-  return true
+  pcall(vim.api.nvim_win_set_cursor, win, { startRow + 1, 0 })
+end
+
+--- moves cursor to the input with the given name
+--- operates on grug-far instance with given instance name or current buffer instance
+---@param inputName GrugFarInputName
+---@param instanceName? string
+function M.goto_input(inputName, instanceName)
+  return _gotoInputInternal(instanceName, function()
+    return inputName
+  end)
+end
+
+--- moves cursor to the first input
+--- operates on grug-far instance with given instance name or current buffer instance
+---@param instanceName? string
+function M.goto_first_input(instanceName)
+  return _gotoInputInternal(instanceName, function(inst)
+    return inst.context.engine.inputs[1].name
+  end)
+end
+
+--- moves cursor to the next input
+--- operates on grug-far instance with given instance name or current buffer instance
+---@param instanceName? string
+function M.goto_next_input(instanceName)
+  return _gotoInputInternal(instanceName, function(inst, win)
+    local engineInputs = inst.context.engine.inputs
+    local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
+    local current_input = inputs.getInputAtRow(inst.context, inst.buf, cursor_row - 1)
+
+    local next_input_name = engineInputs[1].name
+    if current_input then
+      for i, input in ipairs(engineInputs) do
+        if input.name == current_input.name then
+          local next_input = engineInputs[i + 1] or engineInputs[1]
+          next_input_name = next_input.name
+        end
+      end
+    end
+
+    return next_input_name
+  end)
+end
+
+--- moves cursor to the next input
+--- operates on grug-far instance with given instance name or current buffer instance
+---@param instanceName? string
+function M.goto_prev_input(instanceName)
+  return _gotoInputInternal(instanceName, function(inst, win)
+    local engineInputs = inst.context.engine.inputs
+    local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
+    local current_input = inputs.getInputAtRow(inst.context, inst.buf, cursor_row - 1)
+
+    local next_input_name = engineInputs[#engineInputs].name
+    if current_input then
+      for i, input in ipairs(engineInputs) do
+        if input.name == current_input.name then
+          local next_input = engineInputs[i - 1] or engineInputs[#engineInputs]
+          next_input_name = next_input.name
+        end
+      end
+    end
+
+    return next_input_name
+  end)
 end
 
 return M
