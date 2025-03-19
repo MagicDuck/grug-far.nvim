@@ -188,6 +188,22 @@ local function getActions(buf, context)
         swapReplacementInterpreter({ buf = buf, context = context })
       end,
     },
+    {
+      text = 'Next Input',
+      keymap = keymaps.nextInput,
+      description = 'Goto next input. Cycles back.',
+      action = function()
+        require('grug-far').goto_next_input()
+      end,
+    },
+    {
+      text = 'Prev Input',
+      keymap = keymaps.prevInput,
+      description = 'Goto prev input. Cycles back.',
+      action = function()
+        require('grug-far').goto_prev_input()
+      end,
+    },
   }
 end
 
