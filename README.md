@@ -372,15 +372,15 @@ vim.api.nvim_create_autocmd('FileType', {
 ```
 (where `<localleader>o` and `<localleader>c` are the default keybindings for Open and Close actions. You will need to change them if you set them to something different)
 
-#### Create a buffer local keybinding to jump back to Search input
+#### Create a buffer local keybinding to jump back to first input
 ``` lua
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('grug-far-keymap', { clear = true }),
   pattern = { 'grug-far' },
   callback = function()
-    -- jump back to search input by hitting left arrow in normal mode:
+    -- jump back to first input by hitting left arrow in normal mode:
     vim.keymap.set('n', '<left>', function()
-      vim.api.nvim_win_set_cursor(vim.fn.bufwinid(0), { 2, 0 })
+      require('grug-far').goto_first_input()
     end, { buffer = true })
   end,
 })
