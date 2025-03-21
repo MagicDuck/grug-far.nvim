@@ -9,46 +9,82 @@ local M = {}
 ---@field icon? string
 ---@field text? string
 
----@enum ResultHighlightType
-M.ResultHighlightType = {
-  LineNumber = 1,
-  ColumnNumber = 2,
-  NumbersSeparator = 3,
-  LinePrefixEdge = 4,
-  FilePath = 5,
-  Match = 6,
-  MatchAdded = 7,
-  MatchRemoved = 8,
-  DiffSeparator = 9,
+---@enum ResultMarkType
+M.ResultMarkType = {
+  DiffSeparator = 1,
+  SourceLocation = 2,
+  MatchCounter = 3,
 }
 
----@enum ResultLineGroup
-M.ResultLineGroup = {
-  MatchLines = 1,
-  ReplacementLines = 2,
-  ContextLines = 3,
-  DiffSeparator = 4,
-  FilePath = 5,
+---@enum ResultHighlightType
+M.ResultHighlightType = {
+  Match = 1,
+  MatchAdded = 2,
+  MatchRemoved = 3,
+  FilePath = 4,
+  NumberLabel = 5,
+  LineNumber = 6,
+  ColumnNumber = 7,
+  NumbersSeparator = 8,
+  LinePrefixEdge = 9,
+}
+
+---@type { [ResultHighlightType]: string }
+M.ResultHighlightByType = {
+  [M.ResultHighlightType.FilePath] = 'GrugFarResultsPath',
+  [M.ResultHighlightType.Match] = 'GrugFarResultsMatch',
+  [M.ResultHighlightType.MatchAdded] = 'GrugFarResultsMatchAdded',
+  [M.ResultHighlightType.MatchRemoved] = 'GrugFarResultsMatchRemoved',
+  [M.ResultHighlightType.NumberLabel] = 'GrugFarResultsNumberLabel',
+
+  [M.ResultHighlightType.LineNumber] = 'GrugFarResultsLineNo',
+  [M.ResultHighlightType.ColumnNumber] = 'GrugFarResultsLineColumn',
+  [M.ResultHighlightType.NumbersSeparator] = 'GrugFarResultsNumbersSeparator',
+  [M.ResultHighlightType.LinePrefixEdge] = 'GrugFarResultsLinePrefixEdge',
+}
+
+---@type { [string]: ResultHighlightSign }
+M.ResultSigns = {
+  Changed = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' },
+  Removed = { icon = 'resultsRemovedIndicator', hl = 'GrugFarResultsRemoveIndicator' },
+  Added = { icon = 'resultsAddedIndicator', hl = 'GrugFarResultsAddIndicator' },
+  DiffSeparator = {
+    icon = 'resultsDiffSeparatorIndicator',
+    hl = 'GrugFarResultsDiffSeparatorIndicator',
+  },
 }
 
 M.DiffSeparatorChars = ' '
 
+---@class SourceLocation
+---@field filename string
+---@field lnum? integer
+---@field col? integer
+---@field text? string
+---@field is_counted? boolean
+
 ---@class ResultHighlight
----@field hl string
----@field hl_type? ResultHighlightType
+---@field hl_group string
 ---@field start_line integer
 ---@field start_col integer
 ---@field end_line integer
 ---@field end_col integer
+
+---@class ResultMark
+---@field type ResultMarkType
+---@field start_line integer
+---@field start_col integer
+---@field end_line integer
+---@field end_col integer
+---@field location? SourceLocation
 ---@field sign? ResultHighlightSign
----@field line_group ResultLineGroup
----@field line_group_id integer
----@field line_no_len? integer
----@field col_no_len? integer
+---@field virt_text? string[][]
+---@field virt_text_pos? string
 
 ---@class ParsedResultsData
 ---@field lines string[]
----@field highlights ResultHighlight[] in source order
+---@field marks ResultMark[]
+---@field highlights ResultHighlight[]
 ---@field stats ParsedResultsStats
 
 ---@class EngineSearchParams

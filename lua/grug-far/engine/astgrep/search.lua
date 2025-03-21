@@ -106,6 +106,7 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
         on_fetch_chunk({
           lines = vim.iter(vim.split(data, '\n')):map(utils.getLineWithoutCarriageReturn):totable(),
           highlights = {},
+          marks = {},
           stats = { matches = 0, files = 0 },
         })
         return

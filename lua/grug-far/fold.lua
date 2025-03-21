@@ -2,12 +2,6 @@ local engine = require('grug-far.engine')
 local resultsList = require('grug-far.render.resultsList')
 local M = {}
 
----@param line string
----@return boolean
-local function isPartOfFold(line)
-  return line and #line > 0 and (line == engine.DiffSeparatorChars or line:match('^(%s*%d+)'))
-end
-
 --- updates folds of first window associated with given buffer
 ---@param buf integer
 M.updateFolds = function(buf)
@@ -46,7 +40,8 @@ function M.setup(context, win)
       end
 
       local line = vim.fn.getline(vim.v.lnum)
-      if isPartOfFold(line) then
+      local loc = resultsList.getResultLocation(vim.v.lnum - 1, buf, context)
+      if line and #line > 0 and (line == engine.DiffSeparatorChars or (loc and loc.lnum)) then
         return 1
       end
       return 0
