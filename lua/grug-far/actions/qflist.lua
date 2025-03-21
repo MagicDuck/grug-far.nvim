@@ -51,8 +51,8 @@ local function getResultsLocations(buf, context)
       -- get the current text on row
       local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
 
-      -- ignore ones where user has messed with row:col: prefix
-      local numColPrefix = string.sub(location.text, 1, location.end_col + 1)
+      -- ignore ones where user has messed with prefix
+      local numColPrefix = string.sub(location.text, 1, location.prefixLen)
       if bufline and vim.startswith(bufline, numColPrefix) then
         local newLocation = vim.deepcopy(location)
         newLocation.text = string.sub(location.text, #numColPrefix + 1)

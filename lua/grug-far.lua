@@ -61,7 +61,7 @@ end
 ---@field lnum? integer
 ---@field col? integer
 ---@field text? string
----@field end_col? integer
+---@field prefixLen? integer
 ---@field sign? ResultHighlightSign
 ---@field count? integer
 
