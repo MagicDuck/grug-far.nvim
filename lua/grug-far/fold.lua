@@ -5,9 +5,7 @@ local M = {}
 ---@param line string
 ---@return boolean
 local function isPartOfFold(line)
-  return line
-    and #line > 0
-    and (line == engine.DiffSeparatorChars or line:match('^(%d+:%d+:)') or line:match('^(%d+%-)'))
+  return line and #line > 0 and (line == engine.DiffSeparatorChars or line:match('^(%s*%d+)'))
 end
 
 --- updates folds of first window associated with given buffer

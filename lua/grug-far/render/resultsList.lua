@@ -87,12 +87,11 @@ end
 --- in order to support inputs fields with growing number of lines
 ---@param context GrugFarContext
 ---@param line integer
+---@param start_col integer
 ---@param loc ResultLocation
-local function addHighlightResult(context, line, loc)
-  local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
-  if not from then
-    return
-  end
+local function addHighlightResult(context, line, start_col, loc)
+  -- TODO (sbadragan): find all these and change
+  -- local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
   local results = context.state.highlightResults[loc.filename]
   if not results then
     results = {
@@ -107,11 +106,11 @@ local function addHighlightResult(context, line, loc)
     return
   end
   local end_col = #loc.text
-  local res = { row = line, col = #from, end_col = end_col, lnum = loc.lnum }
+  local res = { row = line, col = start_col, end_col = end_col, lnum = loc.lnum }
   table.insert(results.lines, res)
 end
 
-function getTrimmedLineMessage(maxLineLength)
+local function getTrimmedLineMessage(maxLineLength)
   return ' ... (very long line, trimmed to ' .. maxLineLength .. ' chars)'
 end
 
@@ -241,10 +240,6 @@ function M.appendResultsChunk(buf, context, data)
         { sign = highlight.sign, matchLineCount = lastLocation.count }
       )
       resultLocationByExtmarkId[markId] = lastLocation
-
-      if context.options.resultsHighlight and lastLocation.text then
-        addHighlightResult(context, lastline + highlight.start_line - headerRow, lastLocation)
-      end
     elseif
       hl_type == ResultHighlightType.ColumnNumber
       and lastLocation
@@ -253,6 +248,15 @@ function M.appendResultsChunk(buf, context, data)
       -- omit ending ':', use first match on that line
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
       lastLocation.end_col = highlight.end_col
+    elseif hl_type == ResultHighlightType.LinePrefixEdge and lastLocation then
+      if context.options.resultsHighlight and lastLocation.text then
+        addHighlightResult(
+          context,
+          lastline + highlight.start_line - headerRow,
+          highlight.end_col,
+          lastLocation
+        )
+      end
     elseif hl_type == ResultHighlightType.DiffSeparator then
       addLocationMark(
         buf,
