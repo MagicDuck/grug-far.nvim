@@ -367,6 +367,7 @@ function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forc
     end
   end
 end
+-- TODO (sbadragan): check that marking / syncing / highlighting still works correctly
 
 --- marks un-synced lines
 ---@param buf integer

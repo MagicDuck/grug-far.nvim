@@ -18,6 +18,8 @@ local separator_sign =
 local HighlightByType = {
   [ResultHighlightType.LineNumber] = 'GrugFarResultsLineNo',
   [ResultHighlightType.ColumnNumber] = 'GrugFarResultsLineColumn',
+  [ResultHighlightType.NumbersSeparator] = 'GrugFarResultsNumbersSeparator',
+  [ResultHighlightType.LinePrefixEdge] = 'GrugFarResultsLinePrefixEdge',
   [ResultHighlightType.FilePath] = 'GrugFarResultsPath',
   [ResultHighlightType.Match] = 'GrugFarResultsMatch',
   [ResultHighlightType.MatchAdded] = 'GrugFarResultsMatchAdded',
@@ -99,8 +101,20 @@ local function addResultLines(
       bufrange.start_col = nil -- we only want to add col to first line
     end
     local col_no = column_number and tostring(column_number) or nil
-    local prefix = line_no .. (col_no and ':' .. col_no .. ':' or '-')
 
+    local padded_line_no = ' ' .. ('%3s'):format(line_no)
+    local padded_col_no = ('%-3s'):format(col_no)
+    -- TODO (sbadragan): use configurable char here at end?
+    -- local edge_symbol = ' ' -- or '│'
+    -- local edge_symbol = '│'
+    -- local edge_symbol = '┇'
+    -- local edge_symbol = '║'
+    -- local edge_symbol = '⦚'
+    -- local edge_symbol = '┊'
+    local edge_symbol = ' '
+    local prefix = padded_line_no .. (col_no and ':' or ' ') .. padded_col_no .. edge_symbol
+
+    -- TODO (sbadragan): highlights here
     table.insert(highlights, {
       line_group = line_group,
       line_group_id = line_group_id,
@@ -109,19 +123,42 @@ local function addResultLines(
       start_line = current_line,
       start_col = 0,
       end_line = current_line,
-      end_col = #line_no,
+      end_col = #padded_line_no,
       sign = lineNumberSign,
     })
     if col_no then
       table.insert(highlights, {
         line_group = line_group,
         line_group_id = line_group_id,
+        hl_type = ResultHighlightType.NumbersSeparator,
+        hl = HighlightByType[ResultHighlightType.NumbersSeparator],
+        start_line = current_line,
+        start_col = #padded_line_no,
+        end_line = current_line,
+        end_col = #padded_line_no + 1,
+      })
+      table.insert(highlights, {
+        line_group = line_group,
+        line_group_id = line_group_id,
         hl_type = ResultHighlightType.ColumnNumber,
         hl = HighlightByType[ResultHighlightType.ColumnNumber],
         start_line = current_line,
-        start_col = #line_no + 1, -- skip ':'
+        -- TODO (sbadragan): find other places that do this and rely on something like a prefix instead?
+        start_col = #padded_line_no + 1, -- skip ':'
         end_line = current_line,
-        end_col = #line_no + 1 + #col_no,
+        end_col = #padded_line_no + 1 + #padded_col_no,
+      })
+    end
+    if #edge_symbol > 0 then
+      table.insert(highlights, {
+        line_group = line_group,
+        line_group_id = line_group_id,
+        hl_type = ResultHighlightType.LinePrefixEdge,
+        hl = HighlightByType[ResultHighlightType.LinePrefixEdge],
+        start_line = current_line,
+        start_col = #padded_line_no + 1 + #padded_col_no,
+        end_line = current_line,
+        end_col = #padded_line_no + 1 + #padded_col_no + #edge_symbol,
       })
     end
 
