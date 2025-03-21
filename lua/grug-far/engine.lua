@@ -43,6 +43,8 @@ M.DiffSeparatorChars = ' '
 ---@field sign? ResultHighlightSign
 ---@field line_group ResultLineGroup
 ---@field line_group_id integer
+---@field line_no_len? integer
+---@field col_no_len? integer
 
 ---@class ParsedResultsData
 ---@field lines string[]

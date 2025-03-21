@@ -83,13 +83,34 @@ local function addLocationMark(buf, context, line, end_col, options)
   })
 end
 
+-- TODO (sbadragan): we can just move the line and column into inline virt text
+-- TODO (sbadragan): remove
+local function addMark(buf, context, line, end_col)
+  return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
+    end_col = end_col,
+    end_row = line,
+    invalidate = true,
+    right_gravity = true,
+    virt_text = {
+      {
+        'Line' .. line,
+        'GrugFarResultsLineNo',
+      },
+      {
+        'Col 1',
+        'GrugFarResultsLineColumn',
+      },
+    },
+    virt_text_pos = 'inline',
+  })
+end
+
 --- adds highlight result. line is relative to headerRow
 --- in order to support inputs fields with growing number of lines
 ---@param context GrugFarContext
 ---@param line integer
----@param start_col integer
 ---@param loc ResultLocation
-local function addHighlightResult(context, line, start_col, loc)
+local function addHighlightResult(context, line, loc)
   -- TODO (sbadragan): find all these and change
   -- local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
   local results = context.state.highlightResults[loc.filename]
@@ -106,7 +127,7 @@ local function addHighlightResult(context, line, start_col, loc)
     return
   end
   local end_col = #loc.text
-  local res = { row = line, col = start_col, end_col = end_col, lnum = loc.lnum }
+  local res = { row = line, col = loc.prefixLen, end_col = end_col, lnum = loc.lnum }
   table.insert(results.lines, res)
 end
 
@@ -240,22 +261,18 @@ function M.appendResultsChunk(buf, context, data)
         { sign = highlight.sign, matchLineCount = lastLocation.count }
       )
       resultLocationByExtmarkId[markId] = lastLocation
+      -- TODO (sbadragan): remove
+      -- addMark(buf, context, lastline + highlight.start_line, #line)
     elseif
       hl_type == ResultHighlightType.ColumnNumber
       and lastLocation
       and not lastLocation.col
     then
-      -- omit ending ':', use first match on that line
       lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
-      lastLocation.end_col = highlight.end_col
     elseif hl_type == ResultHighlightType.LinePrefixEdge and lastLocation then
+      lastLocation.prefixLen = highlight.end_col
       if context.options.resultsHighlight and lastLocation.text then
-        addHighlightResult(
-          context,
-          lastline + highlight.start_line - headerRow,
-          highlight.end_col,
-          lastLocation
-        )
+        addHighlightResult(context, lastline + highlight.start_line - headerRow, lastLocation)
       end
     elseif hl_type == ResultHighlightType.DiffSeparator then
       addLocationMark(

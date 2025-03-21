@@ -93,28 +93,28 @@ local function addResultLines(
   for j, resultLine in ipairs(resultLines) do
     local current_line = numlines + j - 1
     local current_line_number = first_range.start.line + j - 1
-    local line_no =
-      tostring(bufrange and current_line_number + bufrange.start_row - 1 or current_line_number)
+    local line_no = ' '
+      .. tostring(bufrange and current_line_number + bufrange.start_row - 1 or current_line_number)
     local column_number = first_range.start.column
     if bufrange and bufrange.start_col and column_number then
       column_number = column_number + bufrange.start_col
       bufrange.start_col = nil -- we only want to add col to first line
     end
-    local col_no = column_number and tostring(column_number) or nil
+    local col_no = column_number and tostring(column_number) .. ' ' or ' '
 
-    local padded_line_no = ' ' .. ('%3s'):format(line_no)
-    local padded_col_no = ('%-3s'):format(col_no)
+    local num_sep = col_no and ':' or ' '
     -- TODO (sbadragan): use configurable char here at end?
-    -- local edge_symbol = ' ' -- or '│'
     -- local edge_symbol = '│'
     -- local edge_symbol = '┇'
     -- local edge_symbol = '║'
     -- local edge_symbol = '⦚'
     -- local edge_symbol = '┊'
+    -- local edge_symbol = '│'
     local edge_symbol = ' '
-    local prefix = padded_line_no .. (col_no and ':' or ' ') .. padded_col_no .. edge_symbol
+    local line_no_len = #line_no
+    local col_no_len = #col_no
+    local line_prefix_len = line_no_len + #num_sep + col_no_len + #edge_symbol
 
-    -- TODO (sbadragan): highlights here
     table.insert(highlights, {
       line_group = line_group,
       line_group_id = line_group_id,
@@ -123,19 +123,23 @@ local function addResultLines(
       start_line = current_line,
       start_col = 0,
       end_line = current_line,
-      end_col = #padded_line_no,
+      end_col = #line_no,
       sign = lineNumberSign,
+      line_no_len = line_no_len,
+      col_no_len = col_no_len,
     })
-    if col_no then
+    if column_number then
       table.insert(highlights, {
         line_group = line_group,
         line_group_id = line_group_id,
         hl_type = ResultHighlightType.NumbersSeparator,
         hl = HighlightByType[ResultHighlightType.NumbersSeparator],
         start_line = current_line,
-        start_col = #padded_line_no,
+        start_col = #line_no,
         end_line = current_line,
-        end_col = #padded_line_no + 1,
+        end_col = #line_no + 1,
+        line_no_len = line_no_len,
+        col_no_len = col_no_len,
       })
       table.insert(highlights, {
         line_group = line_group,
@@ -143,10 +147,11 @@ local function addResultLines(
         hl_type = ResultHighlightType.ColumnNumber,
         hl = HighlightByType[ResultHighlightType.ColumnNumber],
         start_line = current_line,
-        -- TODO (sbadragan): find other places that do this and rely on something like a prefix instead?
-        start_col = #padded_line_no + 1, -- skip ':'
+        start_col = #line_no + 1,
         end_line = current_line,
-        end_col = #padded_line_no + 1 + #padded_col_no,
+        end_col = #line_no + 1 + #col_no,
+        line_no_len = line_no_len,
+        col_no_len = col_no_len,
       })
     end
     if #edge_symbol > 0 then
@@ -156,13 +161,15 @@ local function addResultLines(
         hl_type = ResultHighlightType.LinePrefixEdge,
         hl = HighlightByType[ResultHighlightType.LinePrefixEdge],
         start_line = current_line,
-        start_col = #padded_line_no + 1 + #padded_col_no,
+        start_col = #line_no + 1 + #col_no,
         end_line = current_line,
-        end_col = #padded_line_no + 1 + #padded_col_no + #edge_symbol,
+        end_col = #line_no + 1 + #col_no + #edge_symbol,
+        line_no_len = line_no_len,
+        col_no_len = col_no_len,
       })
     end
 
-    resultLine = prefix .. resultLine
+    resultLine = resultLine
     if matchHighlightType then
       for _, range in ipairs(ranges) do
         if range.start.line <= current_line_number and range['end'].line >= current_line_number then
@@ -173,18 +180,87 @@ local function addResultLines(
             hl = HighlightByType[matchHighlightType],
             start_line = current_line,
             start_col = range.start.line == current_line_number
-                and #prefix + range.start.column - 1
-              or #prefix,
+                and line_prefix_len + range.start.column - 1
+              or line_prefix_len,
             end_line = current_line,
             end_col = range['end'].line == current_line_number
-                and #prefix + range['end'].column - 1
-              or #resultLine,
+                and line_prefix_len + range['end'].column - 1
+              or (line_prefix_len + #resultLine),
+            line_no_len = line_no_len,
+            col_no_len = col_no_len,
           })
         end
       end
     end
 
-    table.insert(lines, utils.getLineWithoutCarriageReturn(resultLine))
+    table.insert(lines, {
+      line_no = line_no,
+      num_sep = num_sep,
+      col_no = col_no,
+      edge_symbol = edge_symbol,
+      line = utils.getLineWithoutCarriageReturn(resultLine),
+    })
+  end
+end
+
+-- TODO (sbadragan): could be reusable function across parsers
+local function align_prefixes(lines, line_range, highlights, hl_range)
+  -- fix line:col alignment
+  -- TODO (sbadragan): have configurable min values for those?
+  local max_line_no_len = 0 -- 4
+  local max_col_no_len = 0 -- 4
+  for i = hl_range[1], hl_range[2], 1 do
+    local highlight = highlights[i]
+    if highlight.hl_type == ResultHighlightType.LineNumber then
+      local len = highlight.end_col - highlight.start_col
+      if len > max_line_no_len then
+        max_line_no_len = len
+      end
+    end
+    if highlight.hl_type == ResultHighlightType.ColumnNumber then
+      local len = highlight.end_col - highlight.start_col
+      if len > max_col_no_len then
+        max_col_no_len = len
+      end
+    end
+  end
+
+  -- shift highlights
+  for i = hl_range[1], hl_range[2], 1 do
+    local highlight = highlights[i]
+    if
+      highlight.line_no_len
+      and not (highlight.line_no_len == max_line_no_len and highlight.col_no_len == max_col_no_len)
+    then
+      local col_no_diff = max_col_no_len - highlight.col_no_len
+      local line_no_diff = max_line_no_len - highlight.line_no_len
+      if highlight.hl_type == ResultHighlightType.LineNumber then
+        highlight.start_col = 0
+        highlight.end_col = highlight.end_col + line_no_diff
+      elseif highlight.hl_type == ResultHighlightType.NumbersSeparator then
+        highlight.start_col = highlight.start_col + line_no_diff
+        highlight.end_col = highlight.end_col + line_no_diff
+      elseif highlight.hl_type == ResultHighlightType.ColumnNumber then
+        highlight.start_col = highlight.start_col + line_no_diff
+        highlight.end_col = highlight.end_col + line_no_diff + col_no_diff
+      else
+        highlight.start_col = highlight.start_col + line_no_diff + col_no_diff
+        highlight.end_col = highlight.end_col + line_no_diff + col_no_diff
+      end
+      highlight.line_no_len = nil
+      highlight.col_no_len = nil
+    end
+  end
+
+  for i = line_range[1], line_range[2], 1 do
+    local line = lines[i]
+    if type(line) == 'table' then
+      lines[i] = ('%' .. max_line_no_len .. 's'):format(line.line_no)
+        .. line.num_sep
+        .. ('%-' .. max_col_no_len .. 's'):format(line.col_no)
+        .. line.edge_symbol
+        .. line.line
+    end
   end
 end
 
@@ -194,10 +270,13 @@ end
 ---@param showDiff boolean
 ---@param bufrange? VisualSelectionInfo
 ---@return ParsedResultsData
+-- TODO (sbadragan): need to make sure all the matches for one file are passed in together, as the maxima are calculated per-file
 function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
   local stats = { files = 0, matches = 0 }
   local lines = {}
   local highlights = {}
+  local last_aligned_line = 0
+  local last_aligned_highlight = 0
 
   local last_line_number = nil
   for _, match in ipairs(matches) do
@@ -243,6 +322,14 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
     elseif match.type == 'end' then
       last_line_number = nil
       table.insert(lines, '')
+      align_prefixes(
+        lines,
+        { last_aligned_line + 1, #lines },
+        highlights,
+        { last_aligned_highlight + 1, #highlights }
+      )
+      last_aligned_line = #lines
+      last_aligned_highlight = #highlights
     elseif match.type == 'match' then
       stats.matches = stats.matches + #data.submatches
       local match_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
@@ -356,6 +443,13 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
       }, lines, highlights, ResultLineGroup.ContextLines, change_sign, nil, bufrange)
     end
   end
+
+  align_prefixes(
+    lines,
+    { last_aligned_line + 1, #lines },
+    highlights,
+    { last_aligned_highlight + 1, #highlights }
+  )
 
   return {
     lines = lines,
