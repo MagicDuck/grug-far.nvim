@@ -13,11 +13,13 @@ local M = {}
 M.ResultHighlightType = {
   LineNumber = 1,
   ColumnNumber = 2,
-  FilePath = 3,
-  Match = 4,
-  MatchAdded = 5,
-  MatchRemoved = 6,
-  DiffSeparator = 7,
+  NumbersSeparator = 3,
+  LinePrefixEdge = 4,
+  FilePath = 5,
+  Match = 6,
+  MatchAdded = 7,
+  MatchRemoved = 8,
+  DiffSeparator = 9,
 }
 
 ---@enum ResultLineGroup
