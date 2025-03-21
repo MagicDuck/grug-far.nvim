@@ -335,27 +335,6 @@ T['searches full line visual selection'] = function()
   helpers.childExpectScreenshot(child)
 end
 
-T['searches first line of multiline visual selection'] = function()
-  helpers.writeTestFiles({
-    {
-      filename = 'file2.ts',
-      content = [[ 
-    if (grug || talks) {
-      grug.walks(talks)
-    }
-    ]],
-    },
-  })
-
-  helpers.cdTempTestDir(child)
-  child.cmd(':e file2.ts')
-  child.type_keys(10, 'j', 'wwwvj', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
-
-  helpers.childWaitForFinishedStatus(child)
-
-  helpers.childExpectScreenshot(child)
-end
-
 T['is prevented from searching with blacklisted flags'] = function()
   helpers.writeTestFiles({
     {

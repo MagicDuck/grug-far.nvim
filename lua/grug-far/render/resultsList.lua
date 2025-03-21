@@ -2,7 +2,8 @@ local opts = require('grug-far.opts')
 local utils = require('grug-far.utils')
 local treesitter = require('grug-far.render.treesitter')
 local ResultHighlightType = require('grug-far.engine').ResultHighlightType
-local ResultLineGroup = require('grug-far.engine').ResultLineGroup
+local ResultMarkType = require('grug-far.engine').ResultMarkType
+local ResultHighlightByType = require('grug-far.engine').ResultHighlightByType
 local inputs = require('grug-far.inputs')
 
 local M = {}
@@ -43,65 +44,29 @@ local function setBufLines(buf, start, ending, strict_indexing, replacement)
   vim.api.nvim_set_option_value('modifiable', isModifiable, { buf = buf })
 end
 
----@class addLocationMarkOpts
----@field sign? ResultHighlightSign
----@field matchLineCount? integer
----@field virt_text? string[][]
----@field virt_text_pos? string
-
 --- adds location mark
 ---@param buf integer
 ---@param context GrugFarContext
----@param line integer
----@param end_col integer
----@param options addLocationMarkOpts
+---@param namespace integer
+---@param startLine integer
+---@param mark ResultMark
 ---@return integer markId
-local function addLocationMark(buf, context, line, end_col, options)
+local function addMark(buf, context, namespace, startLine, mark)
   local sign_text = nil
-  if options.sign then
-    sign_text = options.sign.text or opts.getIcon(options.sign.icon, context)
+  if mark.sign then
+    sign_text = mark.sign.text or opts.getIcon(mark.sign.icon, context)
   end
-  local resultLocationOpts = context.options.resultLocation
 
-  return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
-    end_col = end_col,
+  local line = startLine + mark.start_line
+  return vim.api.nvim_buf_set_extmark(buf, namespace, line, mark.start_col, {
+    end_col = mark.end_col,
     end_row = line,
     invalidate = true,
     right_gravity = true,
     sign_text = sign_text,
-    sign_hl_group = options.sign and options.sign.hl or nil,
-    virt_text = resultLocationOpts.showNumberLabel and options.matchLineCount and {
-      {
-        resultLocationOpts.numberLabelFormat:format(options.matchLineCount),
-        'GrugFarResultsNumberLabel',
-      },
-    } or options.virt_text,
-    virt_text_pos = resultLocationOpts.showNumberLabel
-        and options.matchLineCount
-        and resultLocationOpts.numberLabelPosition
-      or options.virt_text_pos,
-  })
-end
-
--- TODO (sbadragan): we can just move the line and column into inline virt text
--- TODO (sbadragan): remove
-local function addMark(buf, context, line, end_col)
-  return vim.api.nvim_buf_set_extmark(buf, context.locationsNamespace, line, 0, {
-    end_col = end_col,
-    end_row = line,
-    invalidate = true,
-    right_gravity = true,
-    virt_text = {
-      {
-        'Line' .. line,
-        'GrugFarResultsLineNo',
-      },
-      {
-        'Col 1',
-        'GrugFarResultsLineColumn',
-      },
-    },
-    virt_text_pos = 'inline',
+    sign_hl_group = mark.sign and mark.sign.hl or nil,
+    virt_text = mark.virt_text,
+    virt_text_pos = mark.virt_text_pos,
   })
 end
 
@@ -109,10 +74,9 @@ end
 --- in order to support inputs fields with growing number of lines
 ---@param context GrugFarContext
 ---@param line integer
----@param loc ResultLocation
-local function addHighlightResult(context, line, loc)
-  -- TODO (sbadragan): find all these and change
-  -- local from = loc.text:match('^(%d+:%d+:)') or loc.text:match('^(%d+%-)')
+---@param end_col integer
+---@param loc SourceLocation
+local function addHighlightResult(context, line, end_col, loc)
   local results = context.state.highlightResults[loc.filename]
   if not results then
     results = {
@@ -126,8 +90,7 @@ local function addHighlightResult(context, line, loc)
     -- try to detect the filetype again
     return
   end
-  local end_col = #loc.text
-  local res = { row = line, col = loc.prefixLen, end_col = end_col, lnum = loc.lnum }
+  local res = { row = line, col = 0, end_col = end_col, lnum = loc.lnum }
   table.insert(results.lines, res)
 end
 
@@ -135,11 +98,12 @@ local function getTrimmedLineMessage(maxLineLength)
   return ' ... (very long line, trimmed to ' .. maxLineLength .. ' chars)'
 end
 
---- append a bunch of result lines to the buffer
+--- adds result text to buffer
 ---@param buf integer
 ---@param context GrugFarContext
 ---@param data ParsedResultsData
-function M.appendResultsChunk(buf, context, data)
+---@return integer lastline number before adding the text
+local function addResultChunkLines(buf, context, data)
   -- trim long lines
   local maxLineLength = context.options.maxLineLength
   if maxLineLength > -1 then
@@ -155,9 +119,17 @@ function M.appendResultsChunk(buf, context, data)
   local lastline = vim.api.nvim_buf_line_count(buf)
   setBufLines(buf, lastline, lastline, false, data.lines)
 
-  -- add highlights
-  for i = 1, #data.highlights do
-    local highlight = data.highlights[i]
+  return lastline
+end
+
+--- adds result highlights to buffer
+---@param buf integer
+---@param context GrugFarContext
+---@param data ParsedResultsData
+---@param startLine integer
+local function addResultChunkHighlights(buf, context, data, startLine)
+  local maxLineLength = context.options.maxLineLength
+  for _, highlight in ipairs(data.highlights) do
     for j = highlight.start_line, highlight.end_line do
       if
         maxLineLength > -1
@@ -167,7 +139,7 @@ function M.appendResultsChunk(buf, context, data)
         break
       end
 
-      local lineNr = lastline + j
+      local lineNr = startLine + j
       local start_col = j == highlight.start_line and highlight.start_col or 0
 
       local end_col = -1
@@ -185,7 +157,7 @@ function M.appendResultsChunk(buf, context, data)
       vim.api.nvim_buf_add_highlight(
         buf,
         context.namespace,
-        highlight.hl,
+        highlight.hl_group,
         lineNr,
         start_col,
         end_col
@@ -198,7 +170,7 @@ function M.appendResultsChunk(buf, context, data)
     for i = 1, #data.lines do
       local line = data.lines[i]
       if #line > maxLineLength then
-        local lineNr = lastline + i - 1
+        local lineNr = startLine + i - 1
         local start_col = #line - trimmedLineMsgLen
         vim.api.nvim_buf_add_highlight(
           buf,
@@ -211,79 +183,149 @@ function M.appendResultsChunk(buf, context, data)
       end
     end
   end
+end
 
-  -- compute result locations based on highlights and add location marks
-  -- those are used for actions like quickfix list and go to location
-  local state = context.state
-  local resultLocationByExtmarkId = state.resultLocationByExtmarkId
-  ---@type ResultLocation?
-  local lastLocation = nil
+--- adds result marks to buffer
+---@param buf integer
+---@param context GrugFarContext
+---@param data ParsedResultsData
+---@param startLine integer
+local function addResultChunkMarks(buf, context, data, startLine)
+  local resultLocationByExtmarkId = context.state.resultLocationByExtmarkId
   local headerRow = M.getHeaderRow(context, buf)
+  local resultLocationOpts = context.options.resultLocation
+  local edge_symbol = opts.getIcon('resultsPrefixEdge', context) or ''
+  local maxLineLength = context.options.maxLineLength
 
-  for i = 1, #data.highlights do
-    local highlight = data.highlights[i]
-    local hl_type = highlight.hl_type
-    local line = data.lines[highlight.start_line + 1]
-
-    if hl_type == ResultHighlightType.FilePath then
-      state.resultsLastFilename = string.sub(line, highlight.start_col + 1, highlight.end_col + 1)
-      local options = {}
-      if context.fileIconsProvider then
-        local icon, icon_hl = context.fileIconsProvider:get_icon(state.resultsLastFilename)
-        options.virt_text = { { icon .. '  ', icon_hl } }
-        options.virt_text_pos = 'inline'
+  -- get max line and col len
+  local max_line_no_len = {}
+  local max_col_no_len = {}
+  for _, mark in ipairs(data.marks) do
+    if maxLineLength > -1 and mark.end_col > maxLineLength then
+      mark.end_col = maxLineLength
+      if mark.location then
+        mark.location.text = data.lines[mark.start_line + 1]
       end
+    end
 
-      local markId = addLocationMark(buf, context, lastline + highlight.start_line, #line, options)
-      resultLocationByExtmarkId[markId] = { filename = state.resultsLastFilename }
-    elseif hl_type == ResultHighlightType.LineNumber then
-      lastLocation = { filename = state.resultsLastFilename }
-      lastLocation.sign = highlight.sign
-      lastLocation.lnum = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
-      lastLocation.text = line
-
-      if
-        highlight.line_group == ResultLineGroup.MatchLines
-        and not (
-          data.highlights[i - 1]
-          and data.highlights[i - 1].line_group_id == highlight.line_group_id
-        )
-      then
-        state.resultMatchLineCount = state.resultMatchLineCount + 1
-        lastLocation.count = state.resultMatchLineCount
+    if mark.type == ResultMarkType.SourceLocation and mark.location.lnum then
+      local filename = mark.location.filename
+      local num_len = #tostring(mark.location.lnum)
+      local col_len = mark.location.col and #tostring(mark.location.col) or nil
+      if not max_line_no_len[filename] or max_line_no_len[filename] < num_len then
+        max_line_no_len[filename] = num_len
       end
-
-      local markId = addLocationMark(
-        buf,
-        context,
-        lastline + highlight.start_line,
-        #line,
-        { sign = highlight.sign, matchLineCount = lastLocation.count }
-      )
-      resultLocationByExtmarkId[markId] = lastLocation
-      -- TODO (sbadragan): remove
-      -- addMark(buf, context, lastline + highlight.start_line, #line)
-    elseif
-      hl_type == ResultHighlightType.ColumnNumber
-      and lastLocation
-      and not lastLocation.col
-    then
-      lastLocation.col = tonumber(string.sub(line, highlight.start_col + 1, highlight.end_col))
-    elseif hl_type == ResultHighlightType.LinePrefixEdge and lastLocation then
-      lastLocation.prefixLen = highlight.end_col
-      if context.options.resultsHighlight and lastLocation.text then
-        addHighlightResult(context, lastline + highlight.start_line - headerRow, lastLocation)
+      if col_len and (not max_col_no_len[filename] or max_col_no_len[filename] < col_len) then
+        max_col_no_len[filename] = col_len
       end
-    elseif hl_type == ResultHighlightType.DiffSeparator then
-      addLocationMark(
-        buf,
-        context,
-        lastline + highlight.start_line,
-        #line,
-        { sign = highlight.sign }
-      )
     end
   end
+
+  for _, mark in ipairs(data.marks) do
+    local namespace = context.resultListNamespace
+    if mark.type == ResultMarkType.SourceLocation then
+      namespace = context.locationsNamespace
+      if context.fileIconsProvider and mark.location.filename and not mark.location.lnum then
+        local icon, icon_hl = context.fileIconsProvider:get_icon(mark.location.filename)
+        mark.virt_text = { { icon .. '  ', icon_hl } }
+        mark.virt_text_pos = 'inline'
+      end
+
+      if mark.location.lnum then
+        if context.options.resultsHighlight then
+          addHighlightResult(
+            context,
+            startLine + mark.start_line - headerRow,
+            #data.lines[mark.start_line + 1],
+            mark.location
+          )
+        end
+
+        mark.virt_text = {
+          {
+            (' %' .. max_line_no_len[mark.location.filename] .. 's'):format(mark.location.lnum),
+            ResultHighlightByType[ResultHighlightType.LineNumber],
+          },
+          {
+            mark.location.col and ':' or ' ',
+            ResultHighlightByType[ResultHighlightType.NumbersSeparator],
+          },
+          {
+            ('%-' .. (max_col_no_len[mark.location.filename] or 0) .. 's '):format(
+              mark.location.col or ''
+            ),
+            ResultHighlightByType[ResultHighlightType.ColumnNumber],
+          },
+          {
+            edge_symbol,
+            ResultHighlightByType[ResultHighlightType.LinePrefixEdge],
+          },
+        }
+        mark.virt_text_pos = 'inline'
+
+        -- TODO (sbadragan): remove this
+        -- TODO (sbadragan): we can make the UI look just like before for the purpose of testing, and then change it
+        -- and update snapshots when it passes
+        -- TODO (sbadragan): remove
+        -- local col_no = range.start.column and tostring(column_number) or nil
+        -- local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))
+        mark.virt_text = {
+          {
+            tostring(mark.location.lnum),
+            ResultHighlightByType[ResultHighlightType.LineNumber],
+          },
+          {
+            mark.location.col and ':' or '-',
+            'Normal',
+          },
+          {
+            mark.location.col and tostring(mark.location.col) .. ':' or '',
+            ResultHighlightByType[ResultHighlightType.ColumnNumber],
+          },
+        }
+      end
+    end
+
+    -- TODO (sbadragan): astgrep lines has a marker?? Looks like the spacing offset is wrong...
+    local markId = addMark(buf, context, namespace, startLine, mark)
+    if mark.type == ResultMarkType.SourceLocation then
+      local loc = mark.location --[[@as ResultLocation]]
+
+      if mark.location.is_counted then
+        context.state.resultMatchLineCount = context.state.resultMatchLineCount + 1
+        loc.count = context.state.resultMatchLineCount
+
+        if resultLocationOpts.showNumberLabel then
+          addMark(buf, context, context.resultListNamespace, startLine, {
+            type = ResultMarkType.MatchCounter,
+            start_line = mark.start_line,
+            start_col = mark.start_col,
+            end_line = mark.end_line,
+            end_col = mark.end_col,
+            virt_text = {
+              {
+                resultLocationOpts.numberLabelFormat:format(context.state.resultMatchLineCount),
+                ResultHighlightByType[ResultHighlightType.NumberLabel],
+              },
+            },
+            virt_text_pos = resultLocationOpts.numberLabelPosition,
+          })
+        end
+      end
+
+      resultLocationByExtmarkId[markId] = loc
+    end
+  end
+end
+
+--- append a bunch of result lines to the buffer
+---@param buf integer
+---@param context GrugFarContext
+---@param data ParsedResultsData
+function M.appendResultsChunk(buf, context, data)
+  local lastline = addResultChunkLines(buf, context, data)
+  addResultChunkHighlights(buf, context, data, lastline)
+  addResultChunkMarks(buf, context, data, lastline)
 end
 
 --- gets result location at given row if available
@@ -375,21 +417,18 @@ function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forc
       -- get the current text on row
       local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
       local isChanged = forceChanged or bufline ~= location.text
+      -- TODO (sbadragan): remove
+      print('isChanged', isChanged)
       if bufline and isChanged then
-        -- ignore ones where user has messed with row:col: or row- prefix as we can't get actual changed text
-        local prefix_end = location.end_col and location.end_col + 1 or #tostring(location.lnum) + 1
-        local numColPrefix = string.sub(location.text, 1, prefix_end + 1)
-        if vim.startswith(bufline, numColPrefix) then
-          local newLine = string.sub(bufline, prefix_end + 1, -1)
-          ---@cast markId integer
-          callback(location, newLine, bufline, markId, row, details)
-        end
+        ---@cast markId integer
+        callback(location, bufline, bufline, markId, row, details)
       end
     end
   end
 end
--- TODO (sbadragan): check that marking / syncing / highlighting still works correctly
 
+-- TODO (sbadragan): -C1 results in error
+---
 --- marks un-synced lines
 ---@param buf integer
 ---@param context GrugFarContext
@@ -397,6 +436,10 @@ end
 ---@param endRow? integer
 ---@param sync? boolean whether to sync with current line contents, this removes indicators
 function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
+  -- TODO (sbadragan): remove
+  if true then
+    return
+  end
   if not context.engine.isSyncSupported() then
     return
   end
@@ -451,7 +494,7 @@ function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
       if sync then
         location.text = bufLine
       else
-        local sign = location.sign or changedSign
+        local sign = changedSign
         details.ns_id = nil
         ---@cast details vim.api.keyset.set_extmark
         details.id = markId
@@ -469,7 +512,6 @@ end
 ---@param context GrugFarContext
 function M.clear(buf, context)
   context.state.resultLocationByExtmarkId = {}
-  context.state.resultsLastFilename = nil
   context.state.resultMatchLineCount = 0
   context.state.highlightResults = {}
   context.state.highlightRegions = {}
@@ -477,6 +519,7 @@ function M.clear(buf, context)
     treesitter.clear(buf, true)
   end
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
+  vim.api.nvim_buf_clear_namespace(buf, context.resultListNamespace, 0, -1)
 
   -- remove all lines after heading and add one blank line
   local headerRow = M.getHeaderRow(context, buf)

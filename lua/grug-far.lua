@@ -56,13 +56,7 @@ end
 
 ---@alias GrugFarStatus nil | "success" | "error" | "progress"
 
----@class ResultLocation
----@field filename string
----@field lnum? integer
----@field col? integer
----@field text? string
----@field prefixLen? integer
----@field sign? ResultHighlightSign
+---@class ResultLocation: SourceLocation
 ---@field count? integer
 
 ---@alias GrugFarInputName "search" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
@@ -78,7 +72,6 @@ end
 ---@field actionMessage? string
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultMatchLineCount integer
----@field resultsLastFilename? string
 ---@field tasks GrugFarTask[]
 ---@field showSearchCommand boolean
 ---@field bufClosed boolean
@@ -99,6 +92,7 @@ end
 ---@field options GrugFarOptions
 ---@field namespace integer
 ---@field locationsNamespace integer
+---@field resultListNamespace integer
 ---@field historyHlNamespace integer
 ---@field helpHlNamespace integer
 ---@field augroup integer
@@ -135,6 +129,7 @@ local function createContext(options)
     ),
     namespace = vim.api.nvim_create_namespace('grug-far-namespace'),
     locationsNamespace = vim.api.nvim_create_namespace(''),
+    resultListNamespace = vim.api.nvim_create_namespace(''),
     historyHlNamespace = vim.api.nvim_create_namespace(''),
     helpHlNamespace = vim.api.nvim_create_namespace(''),
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
@@ -390,7 +385,6 @@ function M.kill_instance(instanceName)
   end
 end
 
--- TODO (sbadragan): update docs
 --- hides grug-far instance with given name or current buffer instance
 ---@param instanceName string?
 function M.close_instance(instanceName)

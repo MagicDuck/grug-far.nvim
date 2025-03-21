@@ -310,6 +310,7 @@ M.defaultOptions = {
     resultsAddedIndicator = '▒',
     resultsRemovedIndicator = '▒',
     resultsDiffSeparatorIndicator = '┊',
+    resultsPrefixEdge = ' ',
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
 
