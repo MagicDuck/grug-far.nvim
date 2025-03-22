@@ -1,0 +1,26 @@
+--|
+01|
+02|
+03|Engine: ripgrep
+04|Search: talks
+05|Replace: 
+06|Files Filter: 
+07|Flags: -i
+08|Paths: 
+09|
+10|
+11|Engine: ripgrep
+12|Search: walks
+13|Replace: 
+14|Files Filter: 
+15|Flags: -i
+16|Paths: 
+17|
+18|
+19|Engine: ripgrep
+20|Search: grug
+21|Replace: 
+22|Files Filter: 
+23|Flags: -i
+24|Paths: 
+25|
