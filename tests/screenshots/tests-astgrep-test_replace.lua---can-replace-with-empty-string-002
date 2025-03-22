@@ -7,11 +7,11 @@
 06|
 07|
 08|file2.ts
-09|2:9:       if (grug || talks) {
-10|2:9:       if ( || talks) {
+09|    if (grug || talks) {
+10|    if ( || talks) {
 11| 
-12|3:7:         grug.walks(talks)
-13|3:7:         .walks(talks)
+12|      grug.walks(talks)
+13|      .walks(talks)
 14|
 
 --|-
