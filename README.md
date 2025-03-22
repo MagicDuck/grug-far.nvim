@@ -23,10 +23,10 @@ Grug find! Grug replace! Grug happy!
 - Replace using lua interpreted replacement for each match
 
 #### Searching:
-<img width="1263" alt="image" src="https://github.com/user-attachments/assets/7851bc37-bd88-473d-a09a-1510088e074c" />
+<img width="1268" alt="image" src="https://github.com/user-attachments/assets/1d1fba11-8813-4a7f-b0d0-25d058413539" />
 
 #### Replacing:
-<img width="1260" alt="image" src="https://github.com/user-attachments/assets/c8edd521-9321-4e83-a4ce-e3d98ac1b346" />
+<img width="1266" alt="image" src="https://github.com/user-attachments/assets/87a150a7-0e0f-4e42-b7e1-3e0308922f06" />
 
 <details>
 <summary>More screenshots:</summary>
@@ -38,7 +38,7 @@ Grug find! Grug replace! Grug happy!
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/5da63e72-f768-46e7-a807-b26c6f44c42c">
 
 #### Searching within buffer range
-<img width="2500" alt="image" src="https://github.com/user-attachments/assets/497e8024-4823-4331-92ac-d78cdae332f0" />
+<img width="2508" alt="image" src="https://github.com/user-attachments/assets/203128a4-a0b7-424b-94c8-38ac8753c2f7" />
 
 #### History:
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
