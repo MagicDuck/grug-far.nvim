@@ -1,25 +1,25 @@
---|
-01|
-02|grug.$A
-03|return match .. "_" .. vars.A
-04|**/*.ts
-05|
-06|
-07|
-08|file2.ts
-09|      grug.walks(talks)
-10|      grug.walks_walks(talks)
-11|
-
---|-
-01| 
-02| 
-03| 
-04| 
-05| 
-06| 
-07| 
-08| 
-09| 
-10| 
-11| 
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|   Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...       
+02|                                                                                
+03|  Search:                                                                      
+04|  $A                                                                            
+05|  Replace [vimscript]:                                                         
+06|  return match .. "_" .. vars.A                                                 
+07|  Files Filter:                                                                
+08|  **/*.ts                                                                       
+09| 󰮚 Flags:                                                                       
+10|                                                                                
+11|  Paths:                                                                       
+12|                                                                                
+13|                                                                                
+14| STATUS_SUCCESS ⟪ astgrep ⟫
+15| 14 matches in 1 files                                                          
+16|                                                                                
+17|  file2.ts                                                                      
+18|▒   2:5       if (grug || talks) {                                           [1]
+19|▒   3:5         grug.walks_walks(talks)                                         
+20|▒   4:5       }                                                                 
+21|▒   5:5                                                                         
+22|▒   6:5                                                                         
+23|Grug FAR - 1: $A                                                             2,3
+24|-- INSERT --                                                                    

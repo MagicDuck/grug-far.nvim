@@ -119,7 +119,7 @@ T['can goto prev input'] = function()
 
   child.type_keys('<esc>GG')
   child.lua('GrugFar.goto_prev_input()')
-  helpers.childWaitForScreenshotText(child, '6,0-1')
+  helpers.childWaitForScreenshotText(child, '6,0')
 
   -- check it works with keymap
   child.type_keys('<esc>' .. keymaps.prevInput.n)

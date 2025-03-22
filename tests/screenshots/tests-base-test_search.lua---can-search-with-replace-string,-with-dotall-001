@@ -1,0 +1,19 @@
+--|
+01|
+02|grug(.*)
+03|curly$1
+04|
+05|
+06|
+07|
+08|file1
+09| grug walks 
+10| curly walks 
+11|
+12|file2
+13|      grug talks and grug drinks
+14|      curly talks and grug drinks
+15|      then grug thinks
+16|      then curly thinks
+17|
+18|

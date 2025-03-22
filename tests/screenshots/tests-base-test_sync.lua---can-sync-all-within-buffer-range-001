@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|    1  Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...   
+02|                                                                                
+03|  Search:                                                                      
+04|    2 curly                                                                     
+05|  Replace:                                                                     
+06|    3 curly                                                                     
+07|  Files Filter:                                                                
+08|    4                                                                           
+09| 󰮚 Flags:                                                                       
+10|    5                                                                           
+11|  Paths:                                                                       
+12|    6 buffer-range=file1.txt:2:11-4:-1                                          
+13|                                                                                
+14| STATUS_SUCCESS ⟪ ripgrep ⟫
+15| 2 matches in 1 files                                                           
+16|    7                                                                           
+17|    8 file1.txt                                                                 
+18|▒   9  3:23        then curly thinks a deep depth indeed!                    [1]
+19|▒  10  3:12        then curly thinks a deep depth indeed!                       
+20|▒  11  4:11        and curly flies                                           [2]
+21|▒  12  4:11        and curly flies                                              
+22|   13                                                                           
+23|Grug FAR - 1: curly                                                          2,6
+24|-- INSERT --                                                                    
