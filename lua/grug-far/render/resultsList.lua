@@ -262,31 +262,9 @@ local function addResultChunkMarks(buf, context, data, startLine)
           },
         }
         mark.virt_text_pos = 'inline'
-
-        -- TODO (sbadragan): remove this
-        -- TODO (sbadragan): we can make the UI look just like before for the purpose of testing, and then change it
-        -- and update snapshots when it passes
-        -- TODO (sbadragan): remove
-        -- local col_no = range.start.column and tostring(column_number) or nil
-        -- local prefix = string.format('%-7s', line_no .. (col_no and ':' .. col_no .. ':' or '-'))
-        mark.virt_text = {
-          {
-            tostring(mark.location.lnum),
-            ResultHighlightByType[ResultHighlightType.LineNumber],
-          },
-          {
-            mark.location.col and ':' or '-',
-            'Normal',
-          },
-          {
-            mark.location.col and tostring(mark.location.col) .. ':' or '',
-            ResultHighlightByType[ResultHighlightType.ColumnNumber],
-          },
-        }
       end
     end
 
-    -- TODO (sbadragan): astgrep lines has a marker?? Looks like the spacing offset is wrong...
     local markId = addMark(buf, context, namespace, startLine, mark)
     if mark.type == ResultMarkType.SourceLocation then
       local loc = mark.location --[[@as ResultLocation]]
@@ -417,8 +395,6 @@ function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forc
       -- get the current text on row
       local bufline = unpack(vim.api.nvim_buf_get_lines(buf, row, row + 1, false))
       local isChanged = forceChanged or bufline ~= location.text
-      -- TODO (sbadragan): remove
-      print('isChanged', isChanged)
       if bufline and isChanged then
         ---@cast markId integer
         callback(location, bufline, bufline, markId, row, details)
@@ -427,8 +403,6 @@ function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forc
   end
 end
 
--- TODO (sbadragan): -C1 results in error
----
 --- marks un-synced lines
 ---@param buf integer
 ---@param context GrugFarContext
@@ -436,10 +410,6 @@ end
 ---@param endRow? integer
 ---@param sync? boolean whether to sync with current line contents, this removes indicators
 function M.markUnsyncedLines(buf, context, startRow, endRow, sync)
-  -- TODO (sbadragan): remove
-  if true then
-    return
-  end
   if not context.engine.isSyncSupported() then
     return
   end

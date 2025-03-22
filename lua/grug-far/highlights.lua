@@ -29,10 +29,10 @@ local highlights = {
   GrugFarResultsPath = { default = true, link = '@string.special.path' },
 
   -- TODO (sbadragan): use vim.g.background? But does it adjust to colorscheme change?
-  GrugFarResultsLineNo = { link = 'Number', default = true },
-  GrugFarResultsLineColumn = { link = 'Number', default = true },
-  GrugFarResultsNumbersSeparator = { link = 'Normal', default = true },
-  GrugFarResultsLinePrefixEdge = { default = true, link = 'Normal' },
+  -- GrugFarResultsLineNo = { link = 'Number', default = true },
+  -- GrugFarResultsLineColumn = { link = 'Number', default = true },
+  -- GrugFarResultsNumbersSeparator = { link = 'Normal', default = true },
+  -- GrugFarResultsLinePrefixEdge = { default = true, link = 'Normal' },
   --
   -- GrugFarResultsLineNo = prefixhl,
   -- GrugFarResultsLineColumn = prefixhl,
@@ -41,11 +41,11 @@ local highlights = {
 
   -- TODO (sbadragan): we'll have to change the names for the first two, since themes already have
   -- them overriden, and they will look weird
-  -- GrugFarResultsLineNo = { default = true, link = 'NormalFloat' },
-  -- GrugFarResultsLineColumn = { default = true, link = 'NormalFloat' },
-  -- GrugFarResultsNumbersSeparator = { default = true, link = 'NormalFloat' },
-  -- -- GrugFarResultsLinePrefixEdge = { default = true, link = 'FloatBorder' },
-  -- GrugFarResultsLinePrefixEdge = { default = true, link = 'Normal' },
+  GrugFarResultsLineNo = { default = true, link = 'NormalFloat' },
+  GrugFarResultsLineColumn = { default = true, link = 'NormalFloat' },
+  GrugFarResultsNumbersSeparator = { default = true, link = 'NormalFloat' },
+  -- GrugFarResultsLinePrefixEdge = { default = true, link = 'FloatBorder' },
+  GrugFarResultsLinePrefixEdge = { default = true, link = 'Normal' },
 
   GrugFarResultsChangeIndicator = { default = true, bg = 'NONE', fg = '#d1242f' },
   GrugFarResultsRemoveIndicator = { default = true, bg = 'NONE', fg = '#d1242f' },
