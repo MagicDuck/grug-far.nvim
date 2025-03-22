@@ -7,11 +7,11 @@
 06|.
 07|
 08|file1
-09|1:2: grug walks 
+09| grug walks 
 10|
 11|file2
-12|2:7:      grug talks and grug drinks
-13|3:12:      then grug thinks
+12|      grug talks and grug drinks
+13|      then grug thinks
 14|
 15|
 

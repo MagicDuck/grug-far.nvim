@@ -7,14 +7,14 @@
 06|
 07|
 08|file1.txt
-09|1:6: and grug walks 
-10|1:6: and  walks 
+09| and grug walks 
+10| and  walks 
 11|
 12|file2.doc
-13|2:7:      grug talks and grug drinks
-14|2:7:       talks and  drinks
-15|3:16:      and then grug thinks
-16|3:16:      and then  thinks
+13|      grug talks and grug drinks
+14|       talks and  drinks
+15|      and then grug thinks
+16|      and then  thinks
 17|
 18|
 

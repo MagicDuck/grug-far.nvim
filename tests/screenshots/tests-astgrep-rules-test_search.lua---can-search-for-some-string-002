@@ -10,7 +10,7 @@
 09|
 10|
 11|file2.ts
-12|3:7:         grug.walks(talks)
+12|      grug.walks(talks)
 13|
 
 --|-

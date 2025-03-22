@@ -10,11 +10,11 @@
 09|
 10|
 11|file2.ts
-12|2:9:       if (grug || talks) {
-13|2:9:       if (curly || talks) {
+12|    if (grug || talks) {
+13|    if (curly || talks) {
 14| 
-15|3:7:         grug.walks(talks)
-16|3:7:         curly.walks(talks)
+15|      grug.walks(talks)
+16|      curly.walks(talks)
 17|
 
 --|-

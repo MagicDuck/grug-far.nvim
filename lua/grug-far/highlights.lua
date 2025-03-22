@@ -26,7 +26,7 @@ local highlights = {
   GrugFarResultsMatchAdded = { default = true, link = '@diff.plus' },
   GrugFarResultsMatchRemoved = { default = true, link = '@diff.minus' },
   -- TODO (sbadragan): should be nicer??
-  GrugFarResultsPath = { default = true, link = '@string.special.path' },
+  GrugFarResultsPath = { default = true, link = 'Title' },
 
   -- TODO (sbadragan): use vim.g.background? But does it adjust to colorscheme change?
   -- GrugFarResultsLineNo = { link = 'Number', default = true },
