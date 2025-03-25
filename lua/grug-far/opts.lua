@@ -25,7 +25,7 @@ M.defaultOptions = {
 
   -- breakindentopt value to set on grug-far window. This controls the indentation of wrapped text.
   -- see :h breakindentopt for more details
-  breakindentopt = 'column:4',
+  breakindentopt = 'column:6',
 
   -- disable automatic debounced search and trigger search when leaving insert mode or making normal mode changes instead
   -- Note that normal mode changes such as `diw`, `rF`, etc will still trigger a search
@@ -272,17 +272,15 @@ M.defaultOptions = {
   -- should return a list of `[text, highlight]` tuples
   -- see LineNumberLabelType below for more type details
   lineNumberLabel = function(params)
+    local separator = params.line_number and '┃' or '┋'
     return {
       {
-        ('%' .. params.max_line_number_length .. 's ┃'):format(params.line_number),
-        'LineNr',
+        ('%' .. params.max_line_number_length .. 's ' .. separator):format(
+          params.line_number or ''
+        ),
+        'GrugFarResultsLineNo',
       },
-      -- { params.column_number and ':' or ' ', 'GrugFarResultsNumbersSeparator' },
-      -- {
-      --   ('%-' .. params.max_column_number_length .. 's '):format(params.column_number or ''),
-      --   'GrugFarResultsLineColumn',
-      -- },
-      { ' ', 'Normal' },
+      { ' ', 'GrugFarResultsLineNumberBoundary' },
     }
   end,
 
@@ -669,7 +667,7 @@ M.defaultOptions = {
 
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
 
----@alias LineNumberLabelType fun(params: { line_number: integer, column_number: integer?, max_line_number_length: integer, max_column_number_length: integer  }): string[][]  A list of `[text, highlight]` tuples
+---@alias LineNumberLabelType fun(params: { line_number: integer?, column_number: integer?, max_line_number_length: integer, max_column_number_length: integer, is_context: boolean? }): string[][]  A list of `[text, highlight]` tuples
 
 ---@class GrugFarOptions
 ---@field debounceMs integer

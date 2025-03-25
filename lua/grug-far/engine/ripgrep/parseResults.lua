@@ -52,6 +52,7 @@ local M = {}
 ---@param sign? ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
 ---@param bufrange? VisualSelectionInfo
+---@param mark_opts? any
 local function addResultLines(
   file_name,
   resultLines,
@@ -61,7 +62,8 @@ local function addResultLines(
   marks,
   sign,
   matchHighlightType,
-  bufrange
+  bufrange,
+  mark_opts
 )
   local numlines = #lines
   local first_range = ranges[1]
@@ -76,7 +78,7 @@ local function addResultLines(
     end
     resultLine = utils.getLineWithoutCarriageReturn(resultLine)
 
-    table.insert(marks, {
+    local mark = {
       type = ResultMarkType.SourceLocation,
       start_line = current_line,
       start_col = 0,
@@ -89,7 +91,13 @@ local function addResultLines(
         text = resultLine,
       },
       sign = sign,
-    })
+    }
+    if mark_opts then
+      for key, value in pairs(mark_opts) do
+        mark[key] = value
+      end
+    end
+    table.insert(marks, mark)
 
     if matchHighlightType then
       for _, range in ipairs(ranges) do
@@ -128,6 +136,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
 
   local last_line_number = nil
   local file_name = nil
+  local last_context_line_number = nil
   for _, match in ipairs(matches) do
     local data = match.data
 
@@ -142,10 +151,13 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
       table.insert(marks, {
         type = ResultMarkType.DiffSeparator,
         start_line = #lines,
-        start_col = 1,
+        start_col = 0,
         end_line = #lines,
-        end_col = 1,
-        sign = ResultSigns.DiffSeparator,
+        end_col = 0,
+        sign = isSearchWithReplace and ResultSigns.DiffSeparator or nil,
+        location = {
+          filename = file_name,
+        },
       })
       table.insert(lines, engine.DiffSeparatorChars)
       last_line_number = nil
@@ -153,6 +165,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
 
     if match.type == 'begin' then
       stats.files = stats.files + 1
+      last_context_line_number = nil
       file_name = bufrange and bufrange.file_name or data.path.text
       table.insert(highlights, {
         hl_group = ResultHighlightByType[ResultHighlightType.FilePath],
@@ -176,6 +189,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
       last_line_number = nil
       table.insert(lines, '')
     elseif match.type == 'match' then
+      last_context_line_number = nil
       stats.matches = stats.matches + #data.submatches
       local match_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
       local match_lines = vim.split(match_lines_text, '\n')
@@ -274,6 +288,24 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
         )
       end
     elseif match.type == 'context' then
+      if
+        not isSearchWithReplace
+        and last_context_line_number
+        and last_context_line_number + 1 < match.data.line_number
+      then
+        table.insert(marks, {
+          type = ResultMarkType.DiffSeparator,
+          start_line = #lines,
+          start_col = 0,
+          end_line = #lines,
+          end_col = 0,
+          location = {
+            filename = file_name,
+          },
+        })
+        table.insert(lines, engine.DiffSeparatorChars)
+      end
+      last_context_line_number = match.data.line_number
       local context_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
       local context_lines = vim.split(context_lines_text, '\n')
       last_line_number = data.line_number + #context_lines - 1
@@ -299,7 +331,8 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
         marks,
         isSearchWithReplace and ResultSigns.Changed or nil,
         nil,
-        bufrange
+        bufrange,
+        { is_context = true }
       )
     end
   end

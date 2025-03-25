@@ -21,10 +21,10 @@ local highlights = {
   GrugFarResultsMatchRemoved = { default = true, link = '@diff.minus' },
   GrugFarResultsPath = { default = true, link = '@markup.link' },
 
-  GrugFarResultsLineNo = { default = true, link = 'Pmenu' },
+  GrugFarResultsLineNo = { default = true, link = 'LineNr' },
   GrugFarResultsLineColumn = { default = true, link = 'GrugFarResultsLineNo' },
   GrugFarResultsNumbersSeparator = { default = true, link = 'GrugFarResultsLineNo' },
-  GrugFarResultsLinePrefixEdge = { default = true, link = 'Normal' },
+  GrugFarResultsLineNumberBoundary = { default = true, link = 'Normal' },
 
   GrugFarResultsChangeIndicator = { default = true, bg = 'NONE', fg = '#d1242f' },
   GrugFarResultsRemoveIndicator = { default = true, bg = 'NONE', fg = '#d1242f' },
