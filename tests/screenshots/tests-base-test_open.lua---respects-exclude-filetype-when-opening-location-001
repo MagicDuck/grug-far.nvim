@@ -1,25 +1,25 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|  Search:                │                          │                          
-02|grug                      │      grug talks and grug │                          
-03|  Replace:               │drinks                    │                          
-04|                          │      then grug thinks    │                          
-05|  Files Filter:          │                          │                          
-06|                          │                          │                          
-07| 󰮚 Flags:                 │                          │                          
-08|                          │                          │                          
-09|  Paths:                 │                          │                          
-10|                          │                          │                          
+01|                          │                          │                          
+02|  Search:                │      grug talks and grug │                          
+03|grug                      │drinks                    │                          
+04|  Replace:               │      then grug thinks    │                          
+05|                          │                          │                          
+06|  Files Filter:          │                          │                          
+07|                          │                          │                          
+08| 󰮚 Flags:                 │                          │                          
+09|                          │                          │                          
+10|  Paths:                 │                          │                          
 11|                          │                          │                          
-12| STATUS_SUCCESS ⟪ ripgrep │                          │                          
-13| 5 matches in 2 files     │                          │                          
-14|                          │                          │                          
-15|file1.txt                 │                          │                          
-16| 2:8          grug wal [1]│                          │                          
-17| 3:13         then gru [2]│                          │                          
-18|ims                       │                          │                          
+12|                          │                          │                          
+13| STATUS_SUCCESS ⟪ ripgrep │                          │                          
+14| 5 matches in 2 files     │                          │                          
+15|                          │                          │                          
+16|file1.txt                 │                          │                          
+17|2 ┃        grug walks  [1]│                          │                          
+18|3 ┃        then grug s [2]│                          │                          
 19|                          │                          │                          
 20|file2.doc                 │                          │                          
-21| 2:7         grug talk [3]│                          │                          
-22|d grug drinks             │                          │                          
+21|2 ┃       grug talks a [3]│                          │                          
+22|      rug drinks          │                          │                          
 23|Grug FAR - 1: grug    13,2 file2.doc              2,7 [No Name]              0,0
 24|                                                                                

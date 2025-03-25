@@ -16,10 +16,10 @@
 15|                                        │ 5 matches in 2 files                  
 16|                                        │                                       
 17|                                        │file1.txt                              
-18|                                        │ 2:8          grug walks            [1]
-19|                                        │ 3:13         then grug swims       [2]
+18|                                        │2 ┃        grug walks               [1]
+19|                                        │3 ┃        then grug swims          [2]
 20|                                        │                                       
 21|                                        │file2.doc                              
-22|                                        │ 2:7         grug talks and grug dr [3]
+22|                                        │2 ┃       grug talks and grug drink [3]
 23|file2.doc                            2,7 Grug FAR - 1: grug                 13,2
 24|                                                                                

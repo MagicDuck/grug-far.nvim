@@ -16,10 +16,10 @@
 15| 6 matches in 2 files   sync completed!                                        
 16|                                                                                
 17|  file1.txt                                                                     
-18|▒  3:13         then grug swims                                              [2]
-19|▒  3:13         then curly swims a deep depth indeed!                           
+18|▒ 3 ┃        then grug swims                                                 [2]
+19|▒ 3 ┃        then curly swims a deep depth indeed!                              
 20|                                                                                
 21|  file2.doc                                                                     
-22|▒  3:12        then grug believes he thinks                                  [4]
+22|▒ 3 ┃       then grug believes he thinks                                     [4]
 23|Grug FAR - 1: grug                                                         13,28
 24|grug-far: synced changes!                                                       

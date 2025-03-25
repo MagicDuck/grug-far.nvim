@@ -16,10 +16,10 @@
 15| 5 matches in 2 files   sync completed!                                        
 16|                                                                                
 17|file1.txt                                                                       
-18| 2:8          grug walks                                                     [1]
-19| 3:13         then grug swims a deep depth indeed!                           [2]
+18|2 ┃        grug walks                                                        [1]
+19|3 ┃        then grug swims a deep depth indeed!                              [2]
 20|                                                                                
 21|file2.doc                                                                       
-22| 2:7         grug talks and grug drinks                                      [3]
+22|2 ┃       grug talks and grug drinks                                         [3]
 23|Grug FAR - 1: grug                                                         10,43
 24|grug-far: synced changes!                                                       

@@ -19,7 +19,7 @@
 18| 2 matches in 1 files                                                           
 19|                                                                                
 20|  hello world/file2.ts                                                          
-21|▒  2:11        if (grug || talks) {                                          [1]
-22|▒  2:11        if (curly || talks) {                                            
+21|▒ 2 ┃       if (grug || talks) {                                             [1]
+22|▒ 2 ┃       if (curly || talks) {                                               
 23|Grug FAR - 1: id: grug_test^@language: typesc...                            2,14
 24|-- INSERT --                                                                    

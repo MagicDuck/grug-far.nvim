@@ -15,7 +15,7 @@
 14| STATUS_ERROR ⟪ astgrep ⟫
 15|                                                                                
 16|[string "Replace"]:1: attempt to concatenate global 'non_existent_one' (a nil va
-17|lue)                                                                            
+17|      lue)                                                                      
 18|                                                                                
 19|                                                                                
 20|                                                                                

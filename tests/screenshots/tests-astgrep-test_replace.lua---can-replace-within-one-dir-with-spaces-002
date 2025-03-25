@@ -16,10 +16,10 @@
 15| 2 matches in 1 files                                                           
 16|                                                                                
 17|  foo bar/file2.ts                                                              
-18|▒  2:9      if (curly || talks) {                                            [1]
-19|▒  2:9      if (curly || talks) {                                               
-20|┊                                                                               
-21|▒  3:7        curly.walks(talks)                                             [2]
-22|▒  3:7        curly.walks(talks)                                                
+18|▒ 2 ┃     if (curly || talks) {                                              [1]
+19|▒ 2 ┃     if (curly || talks) {                                                 
+20|┊   ┋                                                                           
+21|▒ 3 ┃       curly.walks(talks)                                               [2]
+22|▒ 3 ┃       curly.walks(talks)                                                  
 23|Grug FAR - 1: curly                                                          2,6
 24|-- INSERT --                                                                    

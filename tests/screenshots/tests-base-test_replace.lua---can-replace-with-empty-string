@@ -16,10 +16,10 @@
 15| 4 matches in 2 files   replace completed!                                     
 16|                                                                                
 17|  file1.txt                                                                     
-18|▒  1:6   and grug walks                                                      [1]
-19|▒  1:6   and  walks                                                             
+18|▒ 1 ┃  and grug walks                                                        [1]
+19|▒ 1 ┃  and  walks                                                               
 20|                                                                                
 21|  file2.doc                                                                     
-22|▒  2:7         grug talks and grug drinks                                    [2]
+22|▒ 2 ┃       grug talks and grug drinks                                       [2]
 23|Grug FAR - 1: grug                                                           2,4
 24|grug-far: replace completed!                                                    
