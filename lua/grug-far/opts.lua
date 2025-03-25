@@ -23,6 +23,10 @@ M.defaultOptions = {
   -- set to -1 to disable
   maxLineLength = 1000,
 
+  -- breakindentopt value to set on grug-far window. This controls the indentation of wrapped text.
+  -- see :h breakindentopt for more details
+  breakindentopt = 'column:4',
+
   -- disable automatic debounced search and trigger search when leaving insert mode or making normal mode changes instead
   -- Note that normal mode changes such as `diw`, `rF`, etc will still trigger a search
   normalModeSearch = false,
@@ -652,6 +656,7 @@ M.defaultOptions = {
 ---@field minSearchChars integer
 ---@field maxSearchMatches integer?
 ---@field maxLineLength integer
+---@field breakindentopt string
 ---@field searchOnInsertLeave boolean
 ---@field normalModeSearch boolean
 ---@field maxWorkers integer
@@ -695,6 +700,7 @@ M.defaultOptions = {
 ---@field minSearchChars? integer
 ---@field maxSearchMatches? integer
 ---@field maxLineLength? integer
+---@field breakindentopt? string
 ---@field searchOnInsertLeave? boolean
 ---@field normalModeSearch? boolean
 ---@field maxWorkers? integer
