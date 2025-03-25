@@ -68,7 +68,7 @@ T['can search manually on insert leave or normal mode change'] = function()
 
   helpers.childWaitForScreenshotText(child, 'Search:')
   child.type_keys('<esc>cc', 'walks')
-  vim.uv.sleep(100)
+  helpers.sleep(child, 100)
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>')

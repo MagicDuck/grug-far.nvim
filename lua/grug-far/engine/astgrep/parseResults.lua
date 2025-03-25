@@ -294,16 +294,18 @@ function M.json_decode_matches(matches, data, eval_fn)
       local match = vim.json.decode(json_line)
       if eval_fn then
         local vars = {}
-        for name, value in pairs(match.metaVariables.single) do
-          vars[name] = value.text
-        end
-        for name, value in pairs(match.metaVariables.multi) do
-          vars[name] = vim
-            .iter(value)
-            :map(function(v)
-              return v.text
-            end)
-            :totable()
+        if match.metaVariables then
+          for name, value in pairs(match.metaVariables.single) do
+            vars[name] = value.text
+          end
+          for name, value in pairs(match.metaVariables.multi) do
+            vars[name] = vim
+              .iter(value)
+              :map(function(v)
+                return v.text
+              end)
+              :totable()
+          end
         end
         local replacementText, err = eval_fn(match.text, vars)
         if err then

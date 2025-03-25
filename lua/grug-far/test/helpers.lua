@@ -89,7 +89,7 @@ function M.childWaitForCondition(child, condition, timeout, interval)
     if condition() then
       return
     else
-      vim.uv.sleep(inc)
+      M.sleep(child, inc)
     end
   end
 
@@ -265,7 +265,6 @@ end
 --- expect child screenshot to match saved refeence screenshot
 ---@param child NeovimChild
 function M.childExpectScreenshot(child)
-  vim.uv.sleep(20)
   vim.api.nvim__redraw({ flush = true })
   screenshot.reference_screenshot(
     child.get_screenshot(),
@@ -278,7 +277,6 @@ end
 --- expect child buf lines to match saved refeence screenshot
 ---@param child NeovimChild
 function M.childExpectBufLines(child)
-  vim.uv.sleep(20)
   vim.api.nvim__redraw({ flush = true })
   screenshot.reference_screenshot(
     screenshot.fromChildBufLines(child),
@@ -286,6 +284,10 @@ function M.childExpectBufLines(child)
     { force = not not vim.env['update_screenshots'], count = test_screenshot_counter }
   )
   test_screenshot_counter = test_screenshot_counter + 1
+end
+
+function M.sleep(child, ms)
+  child.cmd('sleep ' .. ms .. 'm')
 end
 
 -- NOTE: for testing uncomment the following line, then open a grug-far buffer and execute
