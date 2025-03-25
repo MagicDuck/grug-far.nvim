@@ -37,8 +37,8 @@ M.ResultHighlightByType = {
   [M.ResultHighlightType.MatchRemoved] = 'GrugFarResultsMatchRemoved',
   [M.ResultHighlightType.NumberLabel] = 'GrugFarResultsNumberLabel',
 
-  [M.ResultHighlightType.LineNumber] = 'GrugFarResultsLineNo',
-  [M.ResultHighlightType.ColumnNumber] = 'GrugFarResultsLineColumn',
+  [M.ResultHighlightType.LineNumber] = 'GrugFarResultsLineNr',
+  [M.ResultHighlightType.ColumnNumber] = 'GrugFarResultsColumnNr',
   [M.ResultHighlightType.NumbersSeparator] = 'GrugFarResultsNumbersSeparator',
 }
 
