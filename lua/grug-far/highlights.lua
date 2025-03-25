@@ -25,6 +25,7 @@ local highlights = {
   GrugFarResultsCursorLineNo = { default = true, link = 'CursorLineNr' },
   GrugFarResultsColumnNr = { default = true, link = 'GrugFarResultsLineNr' },
   GrugFarResultsNumbersSeparator = { default = true, link = 'GrugFarResultsLineNr' },
+  GrugFarResultsLineNumberEdge = { default = true, link = 'LineNr' },
   GrugFarResultsLineNumberBoundary = { default = true, link = 'Normal' },
 
   GrugFarResultsChangeIndicator = { default = true, bg = 'NONE', fg = '#d1242f' },

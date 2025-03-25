@@ -277,7 +277,7 @@ M.defaultOptions = {
         ('%' .. params.max_line_number_length .. 's '):format(params.line_number or ''),
         params.is_current_line and 'GrugFarResultsCursorLineNo' or 'GrugFarResultsLineNr',
       },
-      { params.line_number and '║' or '┊', 'GrugFarResultsLineNr' },
+      { params.line_number and '║' or '┊', 'GrugFarResultsLineNumberEdge' },
       { ' ', 'GrugFarResultsLineNumberBoundary' },
     }
   end,
