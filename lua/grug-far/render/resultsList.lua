@@ -240,21 +240,34 @@ local function addResultChunkMarks(buf, context, data, startLine)
           )
         end
 
+        local max_line_number_length = max_line_no_len[mark.location.filename]
+        local max_column_number_length = max_col_no_len[mark.location.filename] or 0
         mark.virt_text = context.options.lineNumberLabel({
-          max_line_number_length = max_line_no_len[mark.location.filename],
-          max_column_number_length = max_col_no_len[mark.location.filename] or 0,
+          max_line_number_length = max_line_number_length,
+          max_column_number_length = max_column_number_length,
           line_number = mark.location.lnum,
           column_number = mark.location.col,
           is_context = mark.is_context,
         })
+        local loc = mark.location
+        ---@cast loc ResultLocation
+        loc.max_line_number_length = max_line_number_length
+        loc.max_column_number_length = max_column_number_length
+        loc.is_context = mark.is_context
 
         mark.virt_text_pos = 'inline'
       end
     elseif mark.type == ResultMarkType.DiffSeparator then
+      local max_line_number_length = max_line_no_len[mark.location.filename]
+      local max_column_number_length = max_col_no_len[mark.location.filename] or 0
       mark.virt_text = context.options.lineNumberLabel({
-        max_line_number_length = max_line_no_len[mark.location.filename],
-        max_column_number_length = max_col_no_len[mark.location.filename] or 0,
+        max_line_number_length = max_line_number_length,
+        max_column_number_length = max_column_number_length,
       })
+      local loc = mark.location
+      ---@cast loc ResultLocation
+      loc.max_line_number_length = max_line_number_length
+      loc.max_column_number_length = max_column_number_length
 
       mark.virt_text_pos = 'inline'
     end
@@ -307,7 +320,7 @@ end
 ---@param row integer
 ---@param buf integer
 ---@param context GrugFarContext
----@return ResultLocation?
+---@return ResultLocation?, vim.api.keyset.get_extmark_item?
 function M.getResultLocation(row, buf, context)
   local marks = vim.api.nvim_buf_get_extmarks(
     buf,
@@ -320,7 +333,7 @@ function M.getResultLocation(row, buf, context)
   for _, mark in ipairs(marks) do
     local markId, _, _, details = unpack(mark)
     if not details.invalid then
-      return context.state.resultLocationByExtmarkId[markId]
+      return context.state.resultLocationByExtmarkId[markId], mark
     end
   end
 
@@ -573,6 +586,36 @@ function M.highlight(buf, context)
   if not vim.tbl_isempty(regions) then
     treesitter.attach(buf, regions)
   end
+end
+
+--- re-renders line number at given location
+---@param context GrugFarContext
+---@param buf integer
+---@param loc ResultLocation
+---@param mark vim.api.keyset.get_extmark_item
+---@param is_current_line boolean
+function M.rerenderLineNumber(context, buf, loc, mark, is_current_line)
+  local markId, start_row, start_col, details = unpack(mark)
+  details.ns_id = nil
+  ---@cast details vim.api.keyset.set_extmark
+  ---@cast markId integer
+  details.id = markId
+  details.virt_text = context.options.lineNumberLabel({
+    max_line_number_length = loc.max_line_number_length,
+    max_column_number_length = loc.max_column_number_length,
+    line_number = loc.lnum,
+    column_number = loc.col,
+    is_context = loc.is_context,
+    is_current_line = is_current_line,
+  })
+  pcall(
+    vim.api.nvim_buf_set_extmark,
+    buf,
+    context.locationsNamespace,
+    start_row,
+    start_col,
+    details
+  )
 end
 
 M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)

@@ -58,6 +58,9 @@ end
 
 ---@class ResultLocation: SourceLocation
 ---@field count? integer
+---@field max_line_number_length? integer
+---@field max_column_number_length? integer
+---@field is_context? boolean
 
 ---@alias GrugFarInputName "search" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
 
@@ -72,6 +75,7 @@ end
 ---@field actionMessage? string
 ---@field resultLocationByExtmarkId { [integer]: ResultLocation }
 ---@field resultMatchLineCount integer
+---@field lastCursorLocation { loc:  ResultLocation, row: integer, markId: integer }
 ---@field tasks GrugFarTask[]
 ---@field showSearchCommand boolean
 ---@field bufClosed boolean
@@ -142,6 +146,7 @@ local function createContext(options)
       inputs = {},
       resultLocationByExtmarkId = {},
       resultMatchLineCount = 0,
+      lastCursorLocation = nil,
       tasks = {},
       showSearchCommand = false,
       bufClosed = false,

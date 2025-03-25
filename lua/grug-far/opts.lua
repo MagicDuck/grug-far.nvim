@@ -272,14 +272,12 @@ M.defaultOptions = {
   -- should return a list of `[text, highlight]` tuples
   -- see LineNumberLabelType below for more type details
   lineNumberLabel = function(params)
-    local separator = params.line_number and '┃' or '┋'
     return {
       {
-        ('%' .. params.max_line_number_length .. 's ' .. separator):format(
-          params.line_number or ''
-        ),
-        'GrugFarResultsLineNo',
+        ('%' .. params.max_line_number_length .. 's '):format(params.line_number or ''),
+        params.is_current_line and 'GrugFarResultsCursorLineNo' or 'GrugFarResultsLineNo',
       },
+      { params.line_number and '┃' or '┋', 'GrugFarResultsLineNo' },
       { ' ', 'GrugFarResultsLineNumberBoundary' },
     }
   end,
@@ -667,7 +665,7 @@ M.defaultOptions = {
 
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
 
----@alias LineNumberLabelType fun(params: { line_number: integer?, column_number: integer?, max_line_number_length: integer, max_column_number_length: integer, is_context: boolean? }): string[][]  A list of `[text, highlight]` tuples
+---@alias LineNumberLabelType fun(params: { line_number: integer?, column_number: integer?, max_line_number_length: integer, max_column_number_length: integer, is_context: boolean?, is_current_line: boolean?}): string[][] list of `[text, highlight]` tuples
 
 ---@class GrugFarOptions
 ---@field debounceMs integer
