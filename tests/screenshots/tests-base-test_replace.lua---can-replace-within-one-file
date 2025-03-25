@@ -16,10 +16,10 @@
 15| 3 matches in 1 files   replace completed!                                     
 16|                                                                                
 17|  ./file2.doc                                                                   
-18|▒  2:7         grug talks and grug drinks                                    [1]
-19|▒  2:7         curly talks and curly drinks                                     
-20|▒  3:12        then grug thinks                                              [2]
-21|▒  3:12        then curly thinks                                                
+18|▒ 2 ┃       grug talks and grug drinks                                       [1]
+19|▒ 2 ┃       curly talks and curly drinks                                        
+20|▒ 3 ┃       then grug thinks                                                 [2]
+21|▒ 3 ┃       then curly thinks                                                   
 22|                                                                                
 23|Grug FAR - 1: grug                                                           2,4
 24|grug-far: replace completed!                                                    

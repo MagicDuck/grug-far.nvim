@@ -16,7 +16,7 @@
 15|  replace failed!                                                              
 16|                                                                                
 17|[string "Replace"]:1: attempt to concatenate global 'non_existent_one' (a nil va
-18|lue)                                                                            
+18|      lue)                                                                      
 19|                                                                                
 20|                                                                                
 21|                                                                                

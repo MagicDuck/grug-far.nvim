@@ -18,8 +18,8 @@
 17| 2 matches in 1 files                                                           
 18|                                                                                
 19|file2.ts                                                                        
-20| 2:9      if (grug || talks) {                                               [1]
-21| 3:7        grug.walks(talks)                                                [2]
+20|2 ┃     if (grug || talks) {                                                 [1]
+21|3 ┃       grug.walks(talks)                                                  [2]
 22|                                                                                
 23|Grug FAR - 1: id: grug_test^@language: typesc...                            2,14
 24|-- INSERT --                                                                    

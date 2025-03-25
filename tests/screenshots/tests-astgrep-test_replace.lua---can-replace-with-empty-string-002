@@ -16,10 +16,10 @@
 15| 2 matches in 1 files                                                           
 16|                                                                                
 17|  file2.ts                                                                      
-18|▒  2:13      if ( || talks) {                                                [1]
-19|▒  2:13      if ( || ) {                                                        
-20|┊                                                                               
-21|▒  3:14        .walks(talks)                                                 [2]
-22|▒  3:14        .walks()                                                         
+18|▒ 2 ┃     if ( || talks) {                                                   [1]
+19|▒ 2 ┃     if ( || ) {                                                           
+20|┊   ┋                                                                           
+21|▒ 3 ┃       .walks(talks)                                                    [2]
+22|▒ 3 ┃       .walks()                                                            
 23|Grug FAR - 1: talks                                                          2,6
 24|-- INSERT --                                                                    

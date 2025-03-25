@@ -16,10 +16,10 @@
 15| 2 matches in 1 files                                                           
 16|                                                                                
 17|  hello world/file2.ts                                                          
-18|▒  2:11        if (grug || talks) {                                          [1]
-19|▒  2:11        if (curly || talks) {                                            
-20|┊                                                                               
-21|▒  3:9           grug.walks(talks)                                           [2]
-22|▒  3:9           curly.walks(talks)                                             
+18|▒ 2 ┃       if (grug || talks) {                                             [1]
+19|▒ 2 ┃       if (curly || talks) {                                               
+20|┊   ┋                                                                           
+21|▒ 3 ┃         grug.walks(talks)                                              [2]
+22|▒ 3 ┃         curly.walks(talks)                                                
 23|Grug FAR - 1: grug                                                           2,5
 24|-- INSERT --                                                                    

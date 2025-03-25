@@ -1,18 +1,18 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|                                        │                                       
-02|      grug walks                        │  Paths:                              
+02|      grug walks                        │ 󰮚 Flags:                              
 03|      grug winks                        │                                       
-04|                                        │                                       
-05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-06|                                        │ 5 matches in 2 files   sync completed
-07|                                        │                                       
-08|                                        │  file1.txt                            
-09|                                        │▒  2:7        grug walks            [1]
-10|                                        │▒  2:7        curly walks              
-11|                                        │▒  3:7        grug winks            [2]
-12|                                        │▒  3:7        curly winks              
-13|                                        │                                       
-14|                                        │                                       
+04|                                        │  Paths:                              
+05|                                        │                                       
+06|                                        │                                       
+07|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+08|                                        │ 5 matches in 2 files   sync completed
+09|                                        │                                       
+10|                                        │  file1.txt                            
+11|                                        │▒ 2 ┃       grug walks              [1]
+12|                                        │▒ 2 ┃       curly walks                
+13|                                        │▒ 3 ┃       grug winks              [2]
+14|                                        │▒ 3 ┃       curly winks                
 15|                                        │                                       
 16|                                        │                                       
 17|                                        │                                       

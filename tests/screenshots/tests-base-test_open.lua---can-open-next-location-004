@@ -15,11 +15,11 @@
 14|                                        │ 5 matches in 2 files                  
 15|                                        │                                       
 16|                                        │file1.txt                              
-17|                                        │ 2:8          grug walks            [1]
-18|                                        │ 3:13         then grug swims       [2]
+17|                                        │2 ┃        grug walks               [1]
+18|                                        │3 ┃        then grug swims          [2]
 19|                                        │                                       
 20|                                        │file2.doc                              
-21|                                        │ 2:7         grug talks and grug dr [3]
-22|                                        │ 3:12        then grug thinks       [4]
+21|                                        │2 ┃       grug talks and grug drink [3]
+22|                                        │3 ┃       then grug thinks          [4]
 23|file2.doc                           3,12 Grug FAR - 1: grug                 14,2
 24|                                                                                

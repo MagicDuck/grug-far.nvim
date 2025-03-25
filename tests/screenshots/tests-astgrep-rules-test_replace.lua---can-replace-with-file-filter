@@ -18,8 +18,8 @@
 17| 2 matches in 1 files   replace completed!                                     
 18|                                                                                
 19|  file2.ts                                                                      
-20|▒  2:9      if (grug || talks) {                                             [1]
-21|▒  2:9      if (curly || talks) {                                               
-22|┊                                                                               
+20|▒ 2 ┃     if (grug || talks) {                                               [1]
+21|▒ 2 ┃     if (curly || talks) {                                                 
+22|┊   ┋                                                                           
 23|Grug FAR - 1: id: grug_test^@language: typesc...                            2,13
 24|grug-far: replace completed!                                                    
