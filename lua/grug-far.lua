@@ -183,6 +183,8 @@ local function createWindow(context)
   end
 
   setWinOption(context, win, 'wrap', context.options.wrap)
+  setWinOption(context, win, 'breakindent', true)
+  setWinOption(context, win, 'breakindentopt', context.options.breakindentopt)
 
   fold.setup(context, win)
 
