@@ -16,10 +16,10 @@
 15| 5 matches in 2 files   sync disabled for multiline search/replace!            
 16|                                                                                
 17|file1.txt                                                                       
-18|3 ┃        then grug swims a deep depth indeed!                              [2]
+18|3 ║        then grug swims a deep depth indeed!                              [2]
 19|                                                                                
 20|file2.doc                                                                       
-21|2 ┃       grug talks and grug drinks                                         [3]
-22|3 ┃       then grug thinks                                                   [4]
+21|2 ║       grug talks and grug drinks                                         [3]
+22|3 ║       then grug thinks                                                   [4]
 23|Grug FAR - 1: grug                                                          9,43
 24|                                                                                

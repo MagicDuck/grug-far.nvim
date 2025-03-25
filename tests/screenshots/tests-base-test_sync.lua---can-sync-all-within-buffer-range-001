@@ -16,10 +16,10 @@
 15| 2 matches in 1 files                                                           
 16|    7                                                                           
 17|    8 file1.txt                                                                 
-18|▒   9 3 ┃       then curly thinks a deep depth indeed!                       [1]
-19|▒  10 3 ┃       then curly thinks a deep depth indeed!                          
-20|▒  11 4 ┃       and curly flies                                              [2]
-21|▒  12 4 ┃       and curly flies                                                 
+18|▒   9 3 ║       then curly thinks a deep depth indeed!                       [1]
+19|▒  10 3 ║       then curly thinks a deep depth indeed!                          
+20|▒  11 4 ║       and curly flies                                              [2]
+21|▒  12 4 ║       and curly flies                                                 
 22|   13                                                                           
 23|Grug FAR - 1: curly                                                          2,6
 24|-- INSERT --                                                                    
