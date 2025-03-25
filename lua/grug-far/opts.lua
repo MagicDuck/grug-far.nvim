@@ -267,6 +267,25 @@ M.defaultOptions = {
   -- highlight the inputs with TreeSitter, if available
   inputsHighlight = true,
 
+  -- constructor for label shown on left side of match lines,
+  -- used to display line (and column) numbers
+  -- should return a list of `[text, highlight]` tuples
+  -- see LineNumberLabelType below for more type details
+  lineNumberLabel = function(params)
+    return {
+      {
+        (' %' .. params.max_line_number_length .. 's'):format(params.line_number),
+        'GrugFarResultsLineNo',
+      },
+      { params.column_number and ':' or ' ', 'GrugFarResultsNumbersSeparator' },
+      {
+        ('%-' .. params.max_column_number_length .. 's '):format(params.column_number or ''),
+        'GrugFarResultsLineColumn',
+      },
+      { ' ', 'Normal' },
+    }
+  end,
+
   -- spinner states, default depends on nerdfont, set to false to disable
   spinnerStates = {
     '󱑋 ',
@@ -314,7 +333,6 @@ M.defaultOptions = {
     resultsAddedIndicator = '▒',
     resultsRemovedIndicator = '▒',
     resultsDiffSeparatorIndicator = '┊',
-    resultsPrefixEdge = ' ',
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
 
@@ -651,6 +669,8 @@ M.defaultOptions = {
 
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
 
+---@alias LineNumberLabelType fun(params: { line_number: integer, column_number: integer?, max_line_number_length: integer, max_column_number_length: integer  }): string[][]  A list of `[text, highlight]` tuples
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -676,6 +696,7 @@ M.defaultOptions = {
 ---@field resultsSeparatorLineChar string
 ---@field resultsHighlight boolean
 ---@field inputsHighlight boolean
+---@field lineNumberLabel LineNumberLabelType
 ---@field spinnerStates string[] | false
 ---@field reportDuration boolean
 ---@field icons IconsTable
@@ -720,6 +741,7 @@ M.defaultOptions = {
 ---@field resultsSeparatorLineChar? string
 ---@field resultsHighlight? boolean
 ---@field inputsHighlight? boolean
+---@field lineNumberLabel? LineNumberLabelType
 ---@field spinnerStates? string[] | false
 ---@field reportDuration? boolean
 ---@field icons? IconsTableOverride
