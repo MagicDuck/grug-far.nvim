@@ -34,7 +34,14 @@ local VimscriptInterpreter = {
         end
       end
     else
-      return nil, 'Replace [vimscript]:\n' .. (exec_error or 'could not evaluate vimscript chunk')
+      local err = exec_error --[[@as string?]]
+      if err then
+        local exec_error_prefix = 'nvim_exec2()..'
+        if vim.startswith(err, exec_error_prefix) then
+          err = err:sub(#exec_error_prefix + 1)
+        end
+      end
+      return nil, 'Replace [vimscript]:\n' .. (err or 'could not evaluate vimscript chunk')
     end
   end,
 }

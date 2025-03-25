@@ -8,10 +8,10 @@
 07|                                        │ 5 matches in 2 files   sync completed
 08|                                        │                                       
 09|                                        │  file1.txt                            
-10|                                        │▒ 2 ║       grug walks              [1]
-11|                                        │▒ 2 ║       curly walks                
-12|                                        │▒ 3 ║       grug winks              [2]
-13|                                        │▒ 3 ║       curly winks                
+10|                                        │▒   2       grug walks              [1]
+11|                                        │▒   2       curly walks                
+12|                                        │▒   3       grug winks              [2]
+13|                                        │▒   3       curly winks                
 14|                                        │                                       
 15|                                        │                                       
 16|                                        │                                       

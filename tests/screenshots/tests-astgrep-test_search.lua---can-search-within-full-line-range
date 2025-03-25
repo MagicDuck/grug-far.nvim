@@ -16,7 +16,7 @@
 15| 1 matches in 1 files                                                           
 16|                                                                                
 17|file1.ts                                                                        
-18|2 ║     if (grug || talks) {                                                 [1]
+18|  2     if (grug || talks) {                                                 [1]
 19|                                                                                
 20|                                                                                
 21|                                                                                
