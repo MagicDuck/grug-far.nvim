@@ -271,14 +271,14 @@ M.defaultOptions = {
   -- used to display line (and column) numbers
   -- should return a list of `[text, highlight]` tuples
   -- see LineNumberLabelType below for more type details
-  lineNumberLabel = function(params)
+  lineNumberLabel = function(params, options)
     return {
       {
-        ('%' .. params.max_line_number_length .. 's '):format(params.line_number or ''),
+        ('%' .. math.max(params.max_line_number_length, 3) .. 's '):format(
+          params.line_number or options.icons.lineNumbersEllipsis
+        ),
         params.is_current_line and 'GrugFarResultsCursorLineNo' or 'GrugFarResultsLineNr',
       },
-      { params.line_number and '║' or '┊', 'GrugFarResultsLineNumberEdge' },
-      { ' ', 'GrugFarResultsLineNumberBoundary' },
     }
   end,
 
@@ -331,6 +331,7 @@ M.defaultOptions = {
     resultsDiffSeparatorIndicator = '┊',
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
+    lineNumbersEllipsis = ' ',
 
     newline = ' ',
   },
@@ -535,6 +536,7 @@ M.defaultOptions = {
 ---@field resultsDiffSeparatorIndicator string
 ---@field historyTitle string
 ---@field helpTitle string
+---@field lineNumbersEllipsis string
 ---@field newline string
 
 ---@class IconsTableOverride
@@ -555,6 +557,7 @@ M.defaultOptions = {
 ---@field resultsDiffSeparatorIndicator? string
 ---@field historyTitle? string
 ---@field helpTitle? string
+---@field lineNumbersEllipsis? string
 ---@field newline? string
 
 ---@class PlaceholdersTable
@@ -665,7 +668,15 @@ M.defaultOptions = {
 
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
 
----@alias LineNumberLabelType fun(params: { line_number: integer?, column_number: integer?, max_line_number_length: integer, max_column_number_length: integer, is_context: boolean?, is_current_line: boolean?}): string[][] list of `[text, highlight]` tuples
+---@class LineNumberLabelParams
+---@field line_number integer?
+---@field column_number integer?
+---@field max_line_number_length integer
+---@field max_column_number_length integer
+---@field is_context boolean?
+---@field is_current_line boolean?
+
+---@alias LineNumberLabelType fun(params: LineNumberLabelParams, options: GrugFarOptions): string[][] list of `[text, highlight]` tuples
 
 ---@class GrugFarOptions
 ---@field debounceMs integer
