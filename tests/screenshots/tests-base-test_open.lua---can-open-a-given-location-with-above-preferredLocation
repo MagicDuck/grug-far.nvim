@@ -17,8 +17,8 @@
 16| 5 matches in 2 files                                                           
 17|                                                                                
 18|file1.txt                                                                       
-19|2 ║        grug walks                                                        [1]
-20|3 ║        then grug swims                                                   [2]
+19|  2        grug walks                                                        [1]
+20|  3        then grug swims                                                   [2]
 21|                                                                                
 22|file2.doc                                                                       
 23|Grug FAR - 1: grug                                                          10,2

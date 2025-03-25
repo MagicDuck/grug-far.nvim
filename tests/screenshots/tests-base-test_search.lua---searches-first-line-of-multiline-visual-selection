@@ -18,8 +18,8 @@
 17| 1 matches in 1 files                                                           
 18|                                                                                
 19|file2                                                                           
-20|2 ║       grug talks and grug drinks                                         [1]
-21|3 ║       then grug thinks                                                      
-22|4 ║       something else                                                        
+20|  2       grug talks and grug drinks                                         [1]
+21|  3       then grug thinks                                                      
+22|  4       something else                                                        
 23|Grug FAR - 1: and grug drinks^@      then gru...                            2,16
 24|-- INSERT --                                                                    

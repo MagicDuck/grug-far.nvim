@@ -16,10 +16,10 @@
 15| 4 matches in 2 files                                                           
 16|                                                                                
 17|file1                                                                           
-18|1 ║  grug walks                                                              [1]
+18|  1  grug walks                                                              [1]
 19|                                                                                
 20|file2                                                                           
-21|2 ║       grug talks and grug drinks                                         [2]
-22|3 ║       then grug thinks                                                   [3]
+21|  2       grug talks and grug drinks                                         [2]
+22|  3       then grug thinks                                                   [3]
 23|Grug FAR - 1: grug                                                           2,5
 24|-- INSERT --                                                                    

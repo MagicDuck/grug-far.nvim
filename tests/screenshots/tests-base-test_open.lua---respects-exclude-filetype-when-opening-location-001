@@ -15,11 +15,11 @@
 14| 5 matches in 2 files     │                          │                          
 15|                          │                          │                          
 16|file1.txt                 │                          │                          
-17|2 ║        grug walks  [1]│                          │                          
-18|3 ║        then grug s [2]│                          │                          
+17|  2        grug walks  [1]│                          │                          
+18|  3        then grug s [2]│                          │                          
 19|                          │                          │                          
 20|file2.doc                 │                          │                          
-21|2 ║       grug talks a [3]│                          │                          
+21|  2       grug talks a [3]│                          │                          
 22|      rug drinks          │                          │                          
 23|Grug FAR - 1: grug    13,2 file2.doc              2,7 [No Name]              0,0
 24|                                                                                
