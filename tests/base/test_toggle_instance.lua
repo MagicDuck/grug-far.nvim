@@ -44,7 +44,7 @@ T['can toggle instance'] = function()
 
   -- toggle off
   child.lua('GrugFar.toggle_instance(...)', { { instanceName = 'far' } })
-  vim.uv.sleep(100)
+  helpers.sleep(child, 100)
   helpers.childExpectScreenshot(child)
 
   -- toggle on

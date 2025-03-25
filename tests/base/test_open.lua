@@ -104,7 +104,7 @@ T['can open next location'] = function()
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openNextLocation.n)
-  vim.uv.sleep(100)
+  helpers.sleep(child, 100)
   helpers.childWaitForScreenshotText(child, '3,12')
   helpers.childExpectScreenshot(child)
 end
@@ -143,7 +143,7 @@ T['can open prev location'] = function()
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openPrevLocation.n)
-  vim.uv.sleep(100)
+  helpers.sleep(child, 100)
   helpers.childWaitForScreenshotText(child, '2,8')
   helpers.childExpectScreenshot(child)
 end

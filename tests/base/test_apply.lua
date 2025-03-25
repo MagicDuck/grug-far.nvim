@@ -40,11 +40,11 @@ T['can apply next'] = function()
 
   -- check nothing happens when triggering on a non-match location
   child.type_keys('<esc>' .. keymaps.applyNext.n)
-  vim.uv.sleep(50)
+  helpers.sleep(child, 50)
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>' .. keymaps.openNextLocation.n, 'k', keymaps.applyNext.n)
-  vim.uv.sleep(50)
+  helpers.sleep(child, 50)
   helpers.childExpectScreenshot(child)
 
   -- apply on each item in sequence
@@ -87,11 +87,11 @@ T['can apply prev'] = function()
 
   -- check nothing happens when triggering on a non-match location
   child.type_keys('<esc>' .. keymaps.applyPrev.n)
-  vim.uv.sleep(50)
+  helpers.sleep(child, 50)
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>' .. keymaps.openNextLocation.n, 'k', keymaps.applyPrev.n)
-  vim.uv.sleep(50)
+  helpers.sleep(child, 50)
   helpers.childExpectScreenshot(child)
 
   -- apply on each item in sequence

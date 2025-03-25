@@ -16,7 +16,7 @@
 15|  replace failed!                                                              
 16|                                                                                
 17|Replace [vimscript]:                                                            
-18|line 1: Vim(return):E121: Undefined variable: non_existent_one                  
+18|nvim_exec2()..line 1: Vim(return):E121: Undefined variable: non_existent_one    
 19|                                                                                
 20|                                                                                
 21|                                                                                
