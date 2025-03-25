@@ -25,7 +25,7 @@ M.defaultOptions = {
 
   -- breakindentopt value to set on grug-far window. This controls the indentation of wrapped text.
   -- see :h breakindentopt for more details
-  breakindentopt = 'column:6',
+  breakindentopt = 'shift:6',
 
   -- disable automatic debounced search and trigger search when leaving insert mode or making normal mode changes instead
   -- Note that normal mode changes such as `diw`, `rF`, etc will still trigger a search
