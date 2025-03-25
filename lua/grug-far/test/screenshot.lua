@@ -58,22 +58,21 @@ end
 
 function M.fromChildBufLines(child)
   local lines = child.api.nvim_buf_get_lines(0, 0, -1, true)
-  -- Note: we can use this if we run into random extra lines
-  -- local end_line = #lines
-  -- for i = #lines, 2, -1 do
-  --   if #lines[i] > 0 then
-  --     end_line = i
-  --     break
-  --   end
-  -- end
-  --
-  -- local trimmed = {}
-  -- for i = 1, end_line, 1 do
-  --   table.insert(trimmed, lines[i])
-  -- end
-  --
-  -- return M.from_lines(trimmed)
-  return M.from_lines(lines)
+  -- Note: we use this if we run into random extra lines
+  local end_line = #lines
+  for i = #lines, 2, -1 do
+    if #lines[i] > 0 then
+      end_line = i
+      break
+    end
+  end
+
+  local trimmed = {}
+  for i = 1, end_line, 1 do
+    table.insert(trimmed, lines[i])
+  end
+
+  return M.from_lines(trimmed)
 end
 
 local function case_to_stringid(case)
