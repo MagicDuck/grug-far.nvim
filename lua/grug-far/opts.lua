@@ -274,14 +274,14 @@ M.defaultOptions = {
   lineNumberLabel = function(params)
     return {
       {
-        (' %' .. params.max_line_number_length .. 's'):format(params.line_number),
-        'GrugFarResultsLineNo',
+        ('%' .. params.max_line_number_length .. 's ┃'):format(params.line_number),
+        'LineNr',
       },
-      { params.column_number and ':' or ' ', 'GrugFarResultsNumbersSeparator' },
-      {
-        ('%-' .. params.max_column_number_length .. 's '):format(params.column_number or ''),
-        'GrugFarResultsLineColumn',
-      },
+      -- { params.column_number and ':' or ' ', 'GrugFarResultsNumbersSeparator' },
+      -- {
+      --   ('%-' .. params.max_column_number_length .. 's '):format(params.column_number or ''),
+      --   'GrugFarResultsLineColumn',
+      -- },
       { ' ', 'Normal' },
     }
   end,
