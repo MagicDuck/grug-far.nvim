@@ -16,10 +16,10 @@
 15|                                                                                
 16|                      History (press <:q> or <:bd> to close)                   
 17|file1.txt                                                                       
-18|1 ┃  grug walks                                                              [1]
+18|1 ║  grug walks                                                              [1]
 19|                                                                                
 20|file2.doc                                                                       
-21|1 ┃       grug talks and grug drinks                                         [2]
-22|2 ┃       then grug thinks and talks                                         [3]
+21|1 ║       grug talks and grug drinks                                         [2]
+22|2 ║       then grug thinks and talks                                         [3]
 23|Grug FAR - 1: grug                                                           2,4
 24|grug-far: added current search to history!                    3,1           All 

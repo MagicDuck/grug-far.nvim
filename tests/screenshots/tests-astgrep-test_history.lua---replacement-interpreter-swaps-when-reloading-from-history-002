@@ -16,10 +16,10 @@
 15| 14 matches in 1 files                                                          
 16|                                                                                
 17|  file2.ts                                                                      
-18|▒ 2 ┃     if (grug || talks) {                                               [1]
-19|▒ 3 ┃       grug.walks(talks)                                                   
-20|▒ 4 ┃     }                                                                     
-21|▒ 5 ┃                                                                           
-22|▒ 6 ┃                                                                           
+18|▒ 2 ║     if (grug || talks) {                                               [1]
+19|▒ 3 ║       grug.walks(talks)                                                   
+20|▒ 4 ║     }                                                                     
+21|▒ 5 ║                                                                           
+22|▒ 6 ║                                                                           
 23|Grug FAR - 1: $A                                                             2,1
 24|grug-far: added current search to history!                    3,1               

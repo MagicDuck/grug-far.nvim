@@ -16,10 +16,10 @@
 15| 3 matches in 1 files   sync completed!                                        
 16|    7                                                                           
 17|    8 file1.txt                                                                 
-18|▒   9 3 ┃       then grug thinks                                             [2]
-19|▒  10 3 ┃       then curly thinks a deep depth indeed!                          
-20|▒  11 4 ┃       and grug flies                                               [3]
-21|▒  12 4 ┃       and curly flies                                                 
+18|▒   9 3 ║       then grug thinks                                             [2]
+19|▒  10 3 ║       then curly thinks a deep depth indeed!                          
+20|▒  11 4 ║       and grug flies                                               [3]
+21|▒  12 4 ║       and curly flies                                                 
 22|   13                                                                           
 23|Grug FAR - 1: grug                                                         10,44
 24|grug-far: synced changes!                                                       
