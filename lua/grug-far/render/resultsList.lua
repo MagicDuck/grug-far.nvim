@@ -245,10 +245,18 @@ local function addResultChunkMarks(buf, context, data, startLine)
           max_column_number_length = max_col_no_len[mark.location.filename] or 0,
           line_number = mark.location.lnum,
           column_number = mark.location.col,
+          is_context = mark.is_context,
         })
 
         mark.virt_text_pos = 'inline'
       end
+    elseif mark.type == ResultMarkType.DiffSeparator then
+      mark.virt_text = context.options.lineNumberLabel({
+        max_line_number_length = max_line_no_len[mark.location.filename],
+        max_column_number_length = max_col_no_len[mark.location.filename] or 0,
+      })
+
+      mark.virt_text_pos = 'inline'
     end
 
     local markId = addMark(buf, context, namespace, startLine, mark)

@@ -41,7 +41,7 @@ function M.setup(context, win)
 
       local line = vim.fn.getline(vim.v.lnum)
       local loc = resultsList.getResultLocation(vim.v.lnum - 1, buf, context)
-      if line and #line > 0 and (line == engine.DiffSeparatorChars or (loc and loc.lnum)) then
+      if line == engine.DiffSeparatorChars or (loc and loc.lnum) then
         return 1
       end
       return 0

@@ -42,6 +42,7 @@ local M = {}
 ---@param sign? ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
 ---@param bufrange? VisualSelectionInfo
+---@param mark_opts? any
 local function addResultLines(
   file_name,
   resultLines,
@@ -51,7 +52,8 @@ local function addResultLines(
   marks,
   sign,
   matchHighlightType,
-  bufrange
+  bufrange,
+  mark_opts
 )
   local numlines = #lines
   for j, resultLine in ipairs(resultLines) do
@@ -65,7 +67,7 @@ local function addResultLines(
     end
     resultLine = utils.getLineWithoutCarriageReturn(resultLine)
 
-    table.insert(marks, {
+    local mark = {
       type = ResultMarkType.SourceLocation,
       start_line = current_line,
       start_col = 0,
@@ -78,7 +80,13 @@ local function addResultLines(
         text = resultLine,
       },
       sign = sign,
-    })
+    }
+    if mark_opts then
+      for key, value in pairs(mark_opts) do
+        mark[key] = value
+      end
+    end
+    table.insert(marks, mark)
 
     if matchHighlightType then
       table.insert(highlights, {
@@ -172,7 +180,8 @@ function M.parseResults(matches, bufrange)
         marks,
         match.replacement and ResultSigns.Changed or nil,
         nil,
-        bufrange
+        bufrange,
+        { is_context = true }
       )
     end
 
@@ -234,7 +243,8 @@ function M.parseResults(matches, bufrange)
         marks,
         match.replacement and ResultSigns.Changed or nil,
         nil,
-        bufrange
+        bufrange,
+        { is_context = true }
       )
     end
 
@@ -247,10 +257,13 @@ function M.parseResults(matches, bufrange)
       table.insert(marks, {
         type = ResultMarkType.DiffSeparator,
         start_line = #lines,
-        start_col = 1,
+        start_col = 0,
         end_line = #lines,
-        end_col = 1,
-        sign = ResultSigns.DiffSeparator,
+        end_col = 0,
+        sign = match.replacement and ResultSigns.DiffSeparator or nil,
+        location = {
+          filename = file_name,
+        },
       })
       table.insert(lines, engine.DiffSeparatorChars)
     end

@@ -40,7 +40,6 @@ M.ResultHighlightByType = {
   [M.ResultHighlightType.LineNumber] = 'GrugFarResultsLineNo',
   [M.ResultHighlightType.ColumnNumber] = 'GrugFarResultsLineColumn',
   [M.ResultHighlightType.NumbersSeparator] = 'GrugFarResultsNumbersSeparator',
-  [M.ResultHighlightType.LinePrefixEdge] = 'GrugFarResultsLinePrefixEdge',
 }
 
 ---@type { [string]: ResultHighlightSign }
@@ -80,6 +79,7 @@ M.DiffSeparatorChars = ' '
 ---@field sign? ResultHighlightSign
 ---@field virt_text? string[][]
 ---@field virt_text_pos? string
+---@field is_context? boolean
 
 ---@class ParsedResultsData
 ---@field lines string[]
