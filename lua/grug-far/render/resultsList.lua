@@ -248,7 +248,7 @@ local function addResultChunkMarks(buf, context, data, startLine)
           line_number = mark.location.lnum,
           column_number = mark.location.col,
           is_context = mark.is_context,
-        })
+        }, context.options)
         local loc = mark.location
         ---@cast loc ResultLocation
         loc.max_line_number_length = max_line_number_length
@@ -263,7 +263,7 @@ local function addResultChunkMarks(buf, context, data, startLine)
       mark.virt_text = context.options.lineNumberLabel({
         max_line_number_length = max_line_number_length,
         max_column_number_length = max_column_number_length,
-      })
+      }, context.options)
       local loc = mark.location
       ---@cast loc ResultLocation
       loc.max_line_number_length = max_line_number_length
@@ -607,7 +607,7 @@ function M.rerenderLineNumber(context, buf, loc, mark, is_current_line)
     column_number = loc.col,
     is_context = loc.is_context,
     is_current_line = is_current_line,
-  })
+  }, context.options)
   pcall(
     vim.api.nvim_buf_set_extmark,
     buf,
