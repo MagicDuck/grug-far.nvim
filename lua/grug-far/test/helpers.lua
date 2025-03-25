@@ -266,6 +266,7 @@ end
 ---@param child NeovimChild
 function M.childExpectScreenshot(child)
   vim.uv.sleep(20)
+  vim.api.nvim__redraw({ flush = true })
   screenshot.reference_screenshot(
     child.get_screenshot(),
     nil,
@@ -278,6 +279,7 @@ end
 ---@param child NeovimChild
 function M.childExpectBufLines(child)
   vim.uv.sleep(20)
+  vim.api.nvim__redraw({ flush = true })
   screenshot.reference_screenshot(
     screenshot.fromChildBufLines(child),
     nil,

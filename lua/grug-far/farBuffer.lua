@@ -399,6 +399,51 @@ function M.createBuffer(win, context)
     end)
   end)
 
+  -- set up re-render of line number on cursor moved
+  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = function()
+      local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
+
+      local lastCursorLocation = context.state.lastCursorLocation
+      if lastCursorLocation then
+        if cursor_row == lastCursorLocation.row then
+          return -- nothing to do
+        end
+
+        local mark = vim.api.nvim_buf_get_extmark_by_id(
+          buf,
+          context.locationsNamespace,
+          lastCursorLocation.markId,
+          { details = true }
+        )
+        if mark then
+          local start_row, start_col, details = unpack(mark)
+          ---@cast start_row integer
+          if details and not details.invalid then
+            resultsList.rerenderLineNumber(
+              context,
+              buf,
+              lastCursorLocation.loc,
+              { lastCursorLocation.markId, start_row, start_col, details },
+              false
+            )
+            context.state.lastCursorLocation = nil
+          end
+        end
+      end
+
+      local loc, mark = resultsList.getResultLocation(cursor_row - 1, buf, context)
+      if loc and mark and loc.lnum then
+        resultsList.rerenderLineNumber(context, buf, loc, mark, true)
+        local markId = unpack(mark)
+        ---@cast markId integer
+        context.state.lastCursorLocation = { loc = loc, row = cursor_row, markId = markId }
+      end
+    end,
+  })
+
   return buf
 end
 

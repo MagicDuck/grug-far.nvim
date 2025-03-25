@@ -22,6 +22,7 @@ local highlights = {
   GrugFarResultsPath = { default = true, link = '@markup.link' },
 
   GrugFarResultsLineNo = { default = true, link = 'LineNr' },
+  GrugFarResultsCursorLineNo = { default = true, link = 'CursorLineNr' },
   GrugFarResultsLineColumn = { default = true, link = 'GrugFarResultsLineNo' },
   GrugFarResultsNumbersSeparator = { default = true, link = 'GrugFarResultsLineNo' },
   GrugFarResultsLineNumberBoundary = { default = true, link = 'Normal' },
