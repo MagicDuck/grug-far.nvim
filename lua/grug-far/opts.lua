@@ -273,7 +273,7 @@ M.defaultOptions = {
   -- see LineNumberLabelType below for more type details
   lineNumberLabel = function(params, options)
     local width = math.max(params.max_line_number_length, 3)
-    local lineNumbersEllipsis = options.icons.lineNumbersEllipsis
+    local lineNumbersEllipsis = options.icons.enabled and options.icons.lineNumbersEllipsis or ' '
     return {
       {
         params.line_number and ('%' .. width .. 's '):format(params.line_number)
@@ -286,6 +286,28 @@ M.defaultOptions = {
       },
     }
   end,
+
+  -- long file paths can sometimes be annoying to work with if wrap is not on and they get cut off by the window.
+  -- this option allows you to function which will returns a 0-based range for the part of the file path
+  -- that will be concealed. If nil values are returned by the function, no concealing is done.
+  -- see FilePathConcealType below for more type details
+  -- If option is set to false, no concealing will happen
+  -- if option wrap=true, this option has no effect
+  filePathConceal = function(params)
+    local len = #params.file_path
+    local window_width = params.window_width - 10 -- note: that last bit accounts for sign column, conceal char, etc.
+    if len < params.window_width then
+      return
+    end
+
+    local first_part_len = math.floor(window_width / 3)
+    local delta = len - window_width
+
+    return first_part_len, first_part_len + delta
+  end,
+
+  -- character used as a replacement for the part of the file path that is concealed
+  filePathConcealChar = '…',
 
   -- spinner states, default depends on nerdfont, set to false to disable
   spinnerStates = {
@@ -683,6 +705,12 @@ M.defaultOptions = {
 
 ---@alias LineNumberLabelType fun(params: LineNumberLabelParams, options: GrugFarOptions): string[][] list of `[text, highlight]` tuples
 
+---@class FilePathConcealParams
+---@field file_path string
+---@field window_width integer
+
+---@alias FilePathConcealType fun(params: FilePathConcealParams): (start_col: integer?, end_col: integer?)
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -709,7 +737,9 @@ M.defaultOptions = {
 ---@field resultsHighlight boolean
 ---@field inputsHighlight boolean
 ---@field lineNumberLabel LineNumberLabelType
+---@field filePathConceal FilePathConcealType
 ---@field spinnerStates string[] | false
+---@field filePathConcealChar string
 ---@field reportDuration boolean
 ---@field icons IconsTable
 ---@field prefills GrugFarPrefills
@@ -754,7 +784,9 @@ M.defaultOptions = {
 ---@field resultsHighlight? boolean
 ---@field inputsHighlight? boolean
 ---@field lineNumberLabel? LineNumberLabelType
+---@field filePathConceal FilePathConcealType
 ---@field spinnerStates? string[] | false
+---@field filePathConcealChar? string
 ---@field reportDuration? boolean
 ---@field icons? IconsTableOverride
 ---@field prefills? GrugFarPrefills
@@ -858,6 +890,12 @@ function M.getIcon(iconName, context)
   end
 
   return icons[iconName]
+end
+
+--- whether we should conceal
+---@param options GrugFarOptions
+function M.shouldConceal(options)
+  return (not options.wrap) and options.filePathConceal
 end
 
 ---@type GrugFarOptionsOverride?

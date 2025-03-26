@@ -190,6 +190,9 @@ local function createWindow(context)
   setWinOption(context, win, 'wrap', context.options.wrap)
   setWinOption(context, win, 'breakindent', true)
   setWinOption(context, win, 'breakindentopt', context.options.breakindentopt)
+  if opts.shouldConceal(context.options) then
+    setWinOption(context, win, 'conceallevel', 1)
+  end
 
   fold.setup(context, win)
 

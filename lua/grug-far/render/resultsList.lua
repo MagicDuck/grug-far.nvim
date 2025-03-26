@@ -195,6 +195,7 @@ local function addResultChunkMarks(buf, context, data, startLine)
   local headerRow = M.getHeaderRow(context, buf)
   local resultLocationOpts = context.options.resultLocation
   local maxLineLength = context.options.maxLineLength
+  local window_width = vim.api.nvim_win_get_width(0)
 
   -- get max line and col len
   local max_line_no_len = {}
@@ -299,6 +300,32 @@ local function addResultChunkMarks(buf, context, data, startLine)
       end
 
       resultLocationByExtmarkId[markId] = loc
+    end
+
+    -- concealment for file paths
+    if
+      mark.type == ResultMarkType.SourceLocation
+      and not mark.location.lnum
+      and opts.shouldConceal(context.options)
+      and context.options.filePathConceal
+    then
+      local start_col, end_col = context.options.filePathConceal({
+        file_path = mark.location.filename,
+        window_width = window_width,
+      })
+      if start_col and end_col then
+        local line = startLine + mark.start_line
+        start_col = mark.start_col + math.max(0, start_col)
+        end_col = math.min(mark.start_col + end_col, mark.end_col)
+
+        vim.api.nvim_buf_set_extmark(buf, context.resultListNamespace, line, start_col, {
+          end_col = end_col,
+          end_row = line,
+          invalidate = true,
+          conceal = context.options.filePathConcealChar or ' ',
+          hl_group = ResultHighlightByType[ResultHighlightType.FilePath],
+        })
+      end
     end
   end
 end
