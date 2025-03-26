@@ -272,11 +272,16 @@ M.defaultOptions = {
   -- should return a list of `[text, highlight]` tuples
   -- see LineNumberLabelType below for more type details
   lineNumberLabel = function(params, options)
+    local width = math.max(params.max_line_number_length, 3)
+    local lineNumbersEllipsis = options.icons.lineNumbersEllipsis
     return {
       {
-        ('%' .. math.max(params.max_line_number_length, 3) .. 's '):format(
-          params.line_number or options.icons.lineNumbersEllipsis
-        ),
+        params.line_number and ('%' .. width .. 's '):format(params.line_number)
+          or (
+            (' '):rep(width - vim.fn.strdisplaywidth(lineNumbersEllipsis)) -- to support multi-byte utf-8 chars
+            .. lineNumbersEllipsis
+            .. ' '
+          ),
         params.is_current_line and 'GrugFarResultsCursorLineNo' or 'GrugFarResultsLineNr',
       },
     }
@@ -331,7 +336,7 @@ M.defaultOptions = {
     resultsDiffSeparatorIndicator = '┊',
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
-    lineNumbersEllipsis = ' ',
+    lineNumbersEllipsis = ' ',
 
     newline = ' ',
   },
