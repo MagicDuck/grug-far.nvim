@@ -23,10 +23,10 @@ Grug find! Grug replace! Grug happy!
 - Replace using lua interpreted replacement for each match
 
 #### Searching:
-<img width="1268" alt="image" src="https://github.com/user-attachments/assets/1d1fba11-8813-4a7f-b0d0-25d058413539" />
+<img width="1261" alt="image" src="https://github.com/user-attachments/assets/4d0dae67-1d2e-438a-b295-b4ae8081fa03" />
 
 #### Replacing:
-<img width="1266" alt="image" src="https://github.com/user-attachments/assets/87a150a7-0e0f-4e42-b7e1-3e0308922f06" />
+<img width="1260" alt="image" src="https://github.com/user-attachments/assets/f033fab7-b12d-4227-8d6e-44dd1ce177b5" />
 
 <details>
 <summary>More screenshots:</summary>
