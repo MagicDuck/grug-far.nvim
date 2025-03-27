@@ -295,7 +295,7 @@ M.defaultOptions = {
   -- if option wrap=true, this option has no effect
   filePathConceal = function(params)
     local len = #params.file_path
-    local window_width = params.window_width - 10 -- note: that last bit accounts for sign column, conceal char, etc.
+    local window_width = params.window_width - 8 -- note: that last bit accounts for sign column, conceal char, etc.
     if len < params.window_width then
       return
     end
@@ -784,7 +784,7 @@ M.defaultOptions = {
 ---@field resultsHighlight? boolean
 ---@field inputsHighlight? boolean
 ---@field lineNumberLabel? LineNumberLabelType
----@field filePathConceal FilePathConcealType
+---@field filePathConceal? FilePathConcealType
 ---@field spinnerStates? string[] | false
 ---@field filePathConcealChar? string
 ---@field reportDuration? boolean
