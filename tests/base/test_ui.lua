@@ -292,4 +292,26 @@ T['can change border style for preview window'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can conceal long lines'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2_this_is_indeed_a_file_with_a_very_long_name_my_friends_and_i_reconize_that_it_is_quite_long_indeed',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    wrap = false,
+    prefills = {
+      search = 'grug',
+    },
+  })
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T
