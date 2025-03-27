@@ -25,15 +25,18 @@ end
 M._getFoldLevelFns = {}
 ---@param context GrugFarContext
 ---@param win integer
-function M.setup(context, win)
+function M.setup(context, win, setWinOption)
   local folding = context.options.folding
   if folding.enabled then
-    vim.api.nvim_set_option_value('foldlevel', folding.foldlevel, { win = win })
-    vim.api.nvim_set_option_value('foldcolumn', folding.foldcolumn, { win = win })
-    vim.api.nvim_set_option_value('foldmethod', 'expr', { win = win })
+    setWinOption(context, win, 'foldlevel', folding.foldlevel)
+    setWinOption(context, win, 'foldcolumn', folding.foldcolumn)
+    setWinOption(context, win, 'foldmethod', 'expr')
 
     M._getFoldLevelFns[context.options.instanceName] = function()
       -- ignore stuff in the inputs area
+      if not vim.api.nvim_win_is_valid(win) then
+        return
+      end
       local buf = vim.api.nvim_win_get_buf(win)
       if vim.v.lnum <= resultsList.getHeaderRow(context, buf) then
         return 0
@@ -47,16 +50,13 @@ function M.setup(context, win)
       return 0
     end
 
-    vim.api.nvim_set_option_value(
+    setWinOption(
+      context,
+      win,
       'foldexpr',
-      'v:lua.require("grug-far.fold")._getFoldLevelFns["' .. context.options.instanceName .. '"]()',
-      { win = win }
+      'v:lua.require("grug-far.fold")._getFoldLevelFns["' .. context.options.instanceName .. '"]()'
     )
-    vim.api.nvim_set_option_value(
-      'foldtext',
-      'v:lua.require("grug-far.fold").getFoldText()',
-      { win = win }
-    )
+    setWinOption(context, win, 'foldtext', 'v:lua.require("grug-far.fold").getFoldText()')
   end
 end
 

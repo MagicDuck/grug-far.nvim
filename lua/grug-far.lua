@@ -194,7 +194,7 @@ local function createWindow(context)
     setWinOption(context, win, 'conceallevel', 1)
   end
 
-  fold.setup(context, win)
+  fold.setup(context, win, setWinOption)
 
   return win
 end
