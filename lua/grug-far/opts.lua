@@ -109,7 +109,7 @@ M.defaultOptions = {
 
     ['astgrep-rules'] = {
       -- ast-grep executable to use, can be a different path if you need to configure
-      path = 'sg',
+      path = 'ast-grep',
 
       -- extra args that you always want to pass
       -- like for example if you always want context lines around matches

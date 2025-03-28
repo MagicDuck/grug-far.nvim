@@ -65,7 +65,7 @@ T['can search for some string with placeholders on'] = function()
   helpers.childExpectBufLines(child)
 end
 
-T['reports error from sg'] = function()
+T['reports error from ast-grep'] = function()
   helpers.writeTestFiles({
     {
       filename = 'file2.ts',

@@ -110,7 +110,7 @@ function M.getSetupOptions()
         placeholders = { enabled = false },
       },
       astgrep = {
-        path = vim.env.SG_PATH or 'sg',
+        path = vim.env.SG_PATH or 'ast-grep',
         rgPath = vim.env.RG_PATH or 'rg',
         placeholders = { enabled = false },
       },
