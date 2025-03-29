@@ -50,14 +50,6 @@ T['can launch with :GrugFar ripgrep'] = function()
   helpers.childWaitForScreenshotText(child, 'ripgrep')
 end
 
-T['can launch with deprecated grug_far api'] = function()
-  child.lua_get('GrugFar.grug_far(...)', {
-    {},
-  })
-  helpers.childWaitForScreenshotText(child, 'ripgrep')
-  helpers.childExpectScreenshot(child)
-end
-
 T['can search manually on insert leave or normal mode change'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },
@@ -76,7 +68,7 @@ T['can search manually on insert leave or normal mode change'] = function()
 
   helpers.childWaitForScreenshotText(child, 'Search:')
   child.type_keys('<esc>cc', 'walks')
-  vim.uv.sleep(100)
+  helpers.sleep(child, 100)
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>')
@@ -297,6 +289,28 @@ T['can change border style for preview window'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.previewLocation.n)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can conceal long lines'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    {
+      filename = 'file2_this_is_indeed_a_file_with_a_very_long_name_my_friends_and_i_reconize_that_it_is_quite_long_indeed',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    wrap = false,
+    prefills = {
+      search = 'grug',
+    },
+  })
+  helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
 end
 

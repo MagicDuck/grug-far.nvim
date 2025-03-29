@@ -9,42 +9,82 @@ local M = {}
 ---@field icon? string
 ---@field text? string
 
----@enum ResultHighlightType
-M.ResultHighlightType = {
-  LineNumber = 1,
-  ColumnNumber = 2,
-  FilePath = 3,
-  Match = 4,
-  MatchAdded = 5,
-  MatchRemoved = 6,
-  DiffSeparator = 7,
+---@enum ResultMarkType
+M.ResultMarkType = {
+  DiffSeparator = 1,
+  SourceLocation = 2,
+  MatchCounter = 3,
 }
 
----@enum ResultLineGroup
-M.ResultLineGroup = {
-  MatchLines = 1,
-  ReplacementLines = 2,
-  ContextLines = 3,
-  DiffSeparator = 4,
-  FilePath = 5,
+---@enum ResultHighlightType
+M.ResultHighlightType = {
+  Match = 1,
+  MatchAdded = 2,
+  MatchRemoved = 3,
+  FilePath = 4,
+  NumberLabel = 5,
+  LineNumber = 6,
+  ColumnNumber = 7,
+  NumbersSeparator = 8,
+  LinePrefixEdge = 9,
+}
+
+---@type { [ResultHighlightType]: string }
+M.ResultHighlightByType = {
+  [M.ResultHighlightType.FilePath] = 'GrugFarResultsPath',
+  [M.ResultHighlightType.Match] = 'GrugFarResultsMatch',
+  [M.ResultHighlightType.MatchAdded] = 'GrugFarResultsMatchAdded',
+  [M.ResultHighlightType.MatchRemoved] = 'GrugFarResultsMatchRemoved',
+  [M.ResultHighlightType.NumberLabel] = 'GrugFarResultsNumberLabel',
+
+  [M.ResultHighlightType.LineNumber] = 'GrugFarResultsLineNr',
+  [M.ResultHighlightType.ColumnNumber] = 'GrugFarResultsColumnNr',
+  [M.ResultHighlightType.NumbersSeparator] = 'GrugFarResultsNumbersSeparator',
+}
+
+---@type { [string]: ResultHighlightSign }
+M.ResultSigns = {
+  Changed = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' },
+  Removed = { icon = 'resultsRemovedIndicator', hl = 'GrugFarResultsRemoveIndicator' },
+  Added = { icon = 'resultsAddedIndicator', hl = 'GrugFarResultsAddIndicator' },
+  DiffSeparator = {
+    icon = 'resultsDiffSeparatorIndicator',
+    hl = 'GrugFarResultsDiffSeparatorIndicator',
+  },
 }
 
 M.DiffSeparatorChars = ' '
 
+---@class SourceLocation
+---@field filename string
+---@field lnum? integer
+---@field col? integer
+---@field text? string
+---@field is_counted? boolean
+
 ---@class ResultHighlight
----@field hl string
----@field hl_type? ResultHighlightType
+---@field hl_group string
 ---@field start_line integer
 ---@field start_col integer
 ---@field end_line integer
 ---@field end_col integer
+
+---@class ResultMark
+---@field type ResultMarkType
+---@field start_line integer
+---@field start_col integer
+---@field end_line integer
+---@field end_col integer
+---@field location? SourceLocation
 ---@field sign? ResultHighlightSign
----@field line_group ResultLineGroup
----@field line_group_id integer
+---@field virt_text? string[][]
+---@field virt_text_pos? string
+---@field is_context? boolean
 
 ---@class ParsedResultsData
 ---@field lines string[]
----@field highlights ResultHighlight[] in source order
+---@field marks ResultMark[]
+---@field highlights ResultHighlight[]
 ---@field stats ParsedResultsStats
 
 ---@class EngineSearchParams
@@ -94,7 +134,7 @@ M.DiffSeparatorChars = ' '
 ---@field replace fun(params: EngineReplaceParams): (abort: fun()?) performs replace
 ---@field isSyncSupported fun(): boolean whether sync operation is supported
 ---@field sync fun(params: EngineSyncParams): (abort: fun()?) syncs given changes to their originating files
----@field getInputPrefillsForVisualSelection fun(visual_selection: string[], initialPrefills: GrugFarPrefills): GrugFarPrefills gets prefills updated with visual selection searchand any additional flags that are necessary (for example --fixed-strings for rg)
+---@field getInputPrefillsForVisualSelection fun(visual_selection_info: VisualSelectionInfo, initialPrefills: GrugFarPrefills, visualSelectionUsage: VisualSelectionUsageType): GrugFarPrefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
 ---@field getSearchDescription fun(inputs: GrugFarInputs): string a string describing the current search to be used as buffer title for example
 ---@field isEmptySearch fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean whether search query is empty
 

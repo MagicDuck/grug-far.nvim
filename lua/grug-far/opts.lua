@@ -23,6 +23,10 @@ M.defaultOptions = {
   -- set to -1 to disable
   maxLineLength = 1000,
 
+  -- breakindentopt value to set on grug-far window. This controls the indentation of wrapped text.
+  -- see :h breakindentopt for more details
+  breakindentopt = 'shift:6',
+
   -- disable automatic debounced search and trigger search when leaving insert mode or making normal mode changes instead
   -- Note that normal mode changes such as `diw`, `rF`, etc will still trigger a search
   normalModeSearch = false,
@@ -80,7 +84,9 @@ M.defaultOptions = {
     -- see https://ast-grep.github.io
     astgrep = {
       -- ast-grep executable to use, can be a different path if you need to configure
-      path = 'sg',
+      -- Note: as of this change in ast-grep: https://github.com/ast-grep/ast-grep/commit/15295de3f48aa39bee7c2af642fceb7742d9c156
+      -- `sg` is compiled as an alias to `ast-grep` so cannot be used in here. Always use the path to `ast-grep`.
+      path = 'ast-grep',
 
       -- extra args that you always want to pass
       -- like for example if you always want context lines around matches
@@ -103,7 +109,7 @@ M.defaultOptions = {
 
     ['astgrep-rules'] = {
       -- ast-grep executable to use, can be a different path if you need to configure
-      path = 'sg',
+      path = 'ast-grep',
 
       -- extra args that you always want to pass
       -- like for example if you always want context lines around matches
@@ -211,7 +217,14 @@ M.defaultOptions = {
 
   -- by default, in visual mode, the visual selection is used to prefill the search
   -- setting this option to true disables that behaviour
+  -- deprecated, please use visualSelectionUsage instead
   ignoreVisualSelection = false,
+
+  -- how to treat current visual selection when grug-far is invoked
+  -- prefill-search - use to prefill "search string"
+  -- operate-within-range - use as buffer range to operate within
+  -- ignore - ignore/discard visual selection
+  visualSelectionUsage = 'prefill-search',
 
   -- shortcuts for the actions you see at the top of the buffer
   -- set to '' or false to unset. Mappings with no normal mode value will be removed from the help header
@@ -241,6 +254,8 @@ M.defaultOptions = {
     swapReplacementInterpreter = { n = '<localleader>x' },
     applyNext = { n = '<localleader>j' },
     applyPrev = { n = '<localleader>k' },
+    nextInput = { n = '<tab>' },
+    prevInput = { n = '<s-tab>' },
   },
 
   -- separator between inputs and results, default depends on nerdfont
@@ -251,6 +266,48 @@ M.defaultOptions = {
 
   -- highlight the inputs with TreeSitter, if available
   inputsHighlight = true,
+
+  -- constructor for label shown on left side of match lines,
+  -- used to display line (and column) numbers
+  -- should return a list of `[text, highlight]` tuples
+  -- see LineNumberLabelType below for more type details
+  lineNumberLabel = function(params, options)
+    local width = math.max(params.max_line_number_length, 3)
+    local lineNumbersEllipsis = options.icons.enabled and options.icons.lineNumbersEllipsis or ' '
+    return {
+      {
+        params.line_number and ('%' .. width .. 's '):format(params.line_number)
+          or (
+            (' '):rep(width - vim.fn.strdisplaywidth(lineNumbersEllipsis)) -- to support multi-byte utf-8 chars
+            .. lineNumbersEllipsis
+            .. ' '
+          ),
+        params.is_current_line and 'GrugFarResultsCursorLineNo' or 'GrugFarResultsLineNr',
+      },
+    }
+  end,
+
+  -- long file paths can sometimes be annoying to work with if wrap is not on and they get cut off by the window.
+  -- this option allows you to function which will returns a 0-based range for the part of the file path
+  -- that will be concealed. If nil values are returned by the function, no concealing is done.
+  -- see FilePathConcealType below for more type details
+  -- If option is set to false, no concealing will happen
+  -- if option wrap=true, this option has no effect
+  filePathConceal = function(params)
+    local len = #params.file_path
+    local window_width = params.window_width - 8 -- note: that last bit accounts for sign column, conceal char, etc.
+    if len < params.window_width then
+      return
+    end
+
+    local first_part_len = math.floor(window_width / 3)
+    local delta = len - window_width
+
+    return first_part_len, first_part_len + delta
+  end,
+
+  -- character used as a replacement for the part of the file path that is concealed
+  filePathConcealChar = '…',
 
   -- spinner states, default depends on nerdfont, set to false to disable
   spinnerStates = {
@@ -301,6 +358,7 @@ M.defaultOptions = {
     resultsDiffSeparatorIndicator = '┊',
     historyTitle = '   ',
     helpTitle = ' 󰘥  ',
+    lineNumbersEllipsis = ' ',
 
     newline = ' ',
   },
@@ -434,6 +492,8 @@ M.defaultOptions = {
 ---@field swapReplacementInterpreter KeymapDef
 ---@field applyNext KeymapDef
 ---@field applyPrev KeymapDef
+---@field nextInput KeymapDef
+---@field prevInput KeymapDef
 
 ---@class KeymapsOverride
 ---@field replace? KeymapDef
@@ -458,6 +518,8 @@ M.defaultOptions = {
 ---@field swapReplacementInterpreter? KeymapDef
 ---@field applyNext? KeymapDef
 ---@field applyPrev? KeymapDef
+---@field nextInput? KeymapDef
+---@field prevInput? KeymapDef
 
 ---@class AutoSaveTable
 ---@field enabled boolean
@@ -501,6 +563,7 @@ M.defaultOptions = {
 ---@field resultsDiffSeparatorIndicator string
 ---@field historyTitle string
 ---@field helpTitle string
+---@field lineNumbersEllipsis string
 ---@field newline string
 
 ---@class IconsTableOverride
@@ -521,6 +584,7 @@ M.defaultOptions = {
 ---@field resultsDiffSeparatorIndicator? string
 ---@field historyTitle? string
 ---@field helpTitle? string
+---@field lineNumbersEllipsis? string
 ---@field newline? string
 
 ---@class PlaceholdersTable
@@ -629,11 +693,30 @@ M.defaultOptions = {
 ---@field exclude? (string | FilterWindowFn)[]
 ---@field preferredLocation? WinPreferredLocation
 
+---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
+
+---@class LineNumberLabelParams
+---@field line_number integer?
+---@field column_number integer?
+---@field max_line_number_length integer
+---@field max_column_number_length integer
+---@field is_context boolean?
+---@field is_current_line boolean?
+
+---@alias LineNumberLabelType fun(params: LineNumberLabelParams, options: GrugFarOptions): string[][] list of `[text, highlight]` tuples
+
+---@class FilePathConcealParams
+---@field file_path string
+---@field window_width integer
+
+---@alias FilePathConcealType fun(params: FilePathConcealParams): (start_col: integer?, end_col: integer?)
+
 ---@class GrugFarOptions
 ---@field debounceMs integer
 ---@field minSearchChars integer
 ---@field maxSearchMatches integer?
 ---@field maxLineLength integer
+---@field breakindentopt string
 ---@field searchOnInsertLeave boolean
 ---@field normalModeSearch boolean
 ---@field maxWorkers integer
@@ -648,11 +731,15 @@ M.defaultOptions = {
 ---@field wrap boolean
 ---@field transient boolean
 ---@field ignoreVisualSelection boolean
+---@field visualSelectionUsage VisualSelectionUsageType
 ---@field keymaps Keymaps
 ---@field resultsSeparatorLineChar string
 ---@field resultsHighlight boolean
 ---@field inputsHighlight boolean
+---@field lineNumberLabel LineNumberLabelType
+---@field filePathConceal FilePathConcealType
 ---@field spinnerStates string[] | false
+---@field filePathConcealChar string
 ---@field reportDuration boolean
 ---@field icons IconsTable
 ---@field prefills GrugFarPrefills
@@ -676,6 +763,7 @@ M.defaultOptions = {
 ---@field minSearchChars? integer
 ---@field maxSearchMatches? integer
 ---@field maxLineLength? integer
+---@field breakindentopt? string
 ---@field searchOnInsertLeave? boolean
 ---@field normalModeSearch? boolean
 ---@field maxWorkers? integer
@@ -690,11 +778,15 @@ M.defaultOptions = {
 ---@field wrap? boolean
 ---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
+---@field visualSelectionUsage? VisualSelectionUsageType
 ---@field keymaps? KeymapsOverride
 ---@field resultsSeparatorLineChar? string
 ---@field resultsHighlight? boolean
 ---@field inputsHighlight? boolean
+---@field lineNumberLabel? LineNumberLabelType
+---@field filePathConceal? FilePathConcealType
 ---@field spinnerStates? string[] | false
+---@field filePathConcealChar? string
 ---@field reportDuration? boolean
 ---@field icons? IconsTableOverride
 ---@field prefills? GrugFarPrefills
@@ -770,6 +862,20 @@ function M.with_defaults(options, defaults)
     newOptions.engines.ripgrep.extraArgs = options.extraRgArgs
   end
 
+  if options.ignoreVisualSelection ~= nil then
+    vim.deprecate(
+      'options.ignoreVisualSelection',
+      'options.visualSelectionUsage',
+      'soon',
+      'grug-far.nvim'
+    )
+    if options.ignoreVisualSelection == true then
+      newOptions.visualSelectionUsage = 'prefill-search'
+    elseif options.ignoreVisualSelection == false then
+      newOptions.visualSelectionUsage = 'ignore'
+    end
+  end
+
   return newOptions
 end
 
@@ -784,6 +890,27 @@ function M.getIcon(iconName, context)
   end
 
   return icons[iconName]
+end
+
+--- whether we should conceal
+---@param options GrugFarOptions
+function M.shouldConceal(options)
+  return (not options.wrap) and options.filePathConceal
+end
+
+---@type GrugFarOptionsOverride?
+local _globalOptionsOverride = nil
+
+--- sets global opts override
+---@param options GrugFarOptionsOverride?
+function M.setGlobalOptionsOverride(options)
+  _globalOptionsOverride = options
+end
+
+--- gets global opts
+---@return GrugFarOptions
+function M.getGlobalOptions()
+  return M.with_defaults(_globalOptionsOverride or vim.g.grug_far or {}, M.defaultOptions)
 end
 
 return M

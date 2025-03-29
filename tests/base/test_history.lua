@@ -79,7 +79,7 @@ T['auto-saves to history on replace'] = function()
   helpers.childWaitForUIVirtualText(child, 'replace completed!')
   helpers.childExpectScreenshot(child)
 
-  vim.uv.sleep(50) -- make sure history entry gets added
+  helpers.sleep(child, 50) -- make sure history entry gets added
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)
@@ -106,7 +106,7 @@ T['auto-saves to history on sync all'] = function()
   helpers.childWaitForUIVirtualText(child, 'sync completed!')
   helpers.childExpectScreenshot(child)
 
-  vim.uv.sleep(50) -- make sure history entry gets added
+  helpers.sleep(child, 50) -- make sure history entry gets added
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)
@@ -133,7 +133,7 @@ T['dedupes last history entry'] = function()
   child.type_keys('<esc>' .. keymaps.historyAdd.n)
   helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
 
-  vim.uv.sleep(50) -- make sure history entry gets added
+  helpers.sleep(child, 50) -- make sure history entry gets added
   child.type_keys('<esc>' .. keymaps.historyOpen.n)
   helpers.childWaitForScreenshotText(child, 'History')
   helpers.childExpectScreenshot(child)

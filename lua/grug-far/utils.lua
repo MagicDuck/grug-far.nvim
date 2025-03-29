@@ -280,20 +280,34 @@ function M.leaveVisualMode()
 end
 
 --- get text lines in visual selection
----@return string[]
+--- range row are 1-based, col are 0-based
+---@return string[] lines, integer start_row, integer start_col, integer end_row, integer end_col
 function M.getVisualSelectionLines()
   local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, '<'))
-  local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(0, '>'))
-  local lines = vim.fn.getline(start_row, end_row) --[[ @as string[] ]]
-  if #lines > 0 and start_col and end_col and end_col < string.len(lines[#lines]) then
-    if start_row == end_row then
-      lines[1] = lines[1]:sub(start_col + 1, end_col + 1)
-    else
-      lines[1] = lines[1]:sub(start_col + 1, -1)
-      lines[#lines] = lines[#lines]:sub(1, end_col + 1)
-    end
+  if not start_col then
+    start_col = 0
   end
-  return lines
+
+  local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(0, '>'))
+  if not end_col then
+    end_col = -1
+  end
+  if end_col > 0 then
+    end_col = end_col + 1 -- this is necessary due to end mark not being after the selection
+  end
+
+  local first_line = unpack(vim.api.nvim_buf_get_lines(0, start_row - 1, start_row, true))
+  if first_line and start_col > #first_line then
+    start_col = #first_line
+  end
+  local last_line = unpack(vim.api.nvim_buf_get_lines(0, end_row - 1, end_row, true))
+  if last_line and end_col > #last_line then
+    end_col = -1
+  end
+
+  local lines = vim.api.nvim_buf_get_text(0, start_row - 1, start_col, end_row - 1, end_col, {})
+
+  return lines, start_row, start_col, end_row, end_col
 end
 
 ---@param keymap KeymapDef
@@ -584,6 +598,132 @@ M.str_to_json_list = function(str)
   end
 
   return json_data
+end
+
+---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
+---@return VisualSelectionInfo?
+function M.get_current_visual_selection_info(strict)
+  local was_visual = M.leaveVisualMode()
+  if strict and not was_visual then
+    return
+  end
+  local lines, start_row, start_col, end_row, end_col = M.getVisualSelectionLines()
+
+  return {
+    file_name = vim.fn.expand('%:p:.'), -- relative path
+    lines = lines,
+    start_row = start_row,
+    start_col = start_col,
+    end_row = end_row,
+    end_col = end_col,
+  }
+end
+
+--- gets visual selection info as string
+---@param visual_selection_info VisualSelectionInfo
+function M.get_visual_selection_info_as_str(visual_selection_info)
+  return 'buffer-range='
+    .. visual_selection_info.file_name
+    .. ':'
+    .. visual_selection_info.start_row
+    .. ':'
+    .. visual_selection_info.start_col
+    .. '-'
+    .. visual_selection_info.end_row
+    .. ':'
+    .. visual_selection_info.end_col
+end
+
+--- gets buf range from string representation
+---@param str string
+---@return VisualSelectionInfo?, string? err
+function M.parse_buf_range_str(str)
+  local prefix = 'buffer-range='
+  if str:sub(1, #prefix) ~= prefix then
+    return nil
+  end
+
+  local file_name, start_row, start_col, end_row, end_col =
+    string.match(str, 'buffer%-range=(.+):(%d+):(%d+)-(%d+):(-?%d+)')
+
+  if not file_name then
+    return nil,
+      'Invalid buffer range provided! Format is "buffer-range=<file_path>:<start_row>:<start_col>-<end_row>:<end_col>"'
+  end
+
+  local buf = vim.fn.bufnr(file_name)
+  local num_lines = vim.api.nvim_buf_line_count(buf)
+
+  start_row = tonumber(start_row) --[[@as integer]]
+  if start_row < 1 then
+    start_row = 1
+  elseif start_row > num_lines then
+    start_row = num_lines
+  end
+
+  end_row = tonumber(end_row) --[[@as integer]]
+  if end_row < 1 then
+    end_row = 1
+  elseif end_row > num_lines then
+    end_row = num_lines
+  end
+  if end_row < start_row then
+    end_row = start_row
+  end
+
+  start_col = tonumber(start_col)
+  local first_line = unpack(vim.api.nvim_buf_get_lines(buf, start_row - 1, start_row, true))
+  if first_line and start_col > #first_line then
+    start_col = #first_line
+  end
+
+  end_col = tonumber(end_col)
+  local last_line = unpack(vim.api.nvim_buf_get_lines(buf, end_row - 1, end_row, true))
+  if last_line and end_col > #last_line then
+    end_col = -1
+  end
+
+  local bufrange = {
+    file_name = file_name,
+    lines = {},
+    start_col = start_col,
+    start_row = start_row,
+    end_col = end_col,
+    end_row = end_row,
+  }
+  bufrange.lines = M.readFromBufrange(bufrange)
+
+  return bufrange
+end
+
+--- reads lines from given buffer bufrange
+---@param bufrange VisualSelectionInfo
+---@return string[] lines
+function M.readFromBufrange(bufrange)
+  local buf = vim.fn.bufnr(bufrange.file_name)
+  return vim.api.nvim_buf_get_text(
+    buf,
+    bufrange.start_row - 1,
+    bufrange.start_col,
+    bufrange.end_row - 1,
+    bufrange.end_col,
+    {}
+  )
+end
+
+--- writes given lines into buffer bufrange
+---@param bufrange VisualSelectionInfo
+---@param lines string[]
+function M.writeInBufrange(bufrange, lines)
+  local buf = vim.fn.bufnr(bufrange.file_name)
+  vim.api.nvim_buf_set_text(
+    buf,
+    bufrange.start_row - 1,
+    bufrange.start_col,
+    bufrange.end_row - 1,
+    bufrange.end_col,
+    lines
+  )
 end
 
 return M

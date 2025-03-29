@@ -496,4 +496,72 @@ T['respects disabled maxLineLength'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search within full line range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug is confused!
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.txt')
+  child.type_keys(10, 'ggjVj')
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can search within partial line range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug is confused!
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.txt')
+  child.type_keys(10, 'ggjwwvj$')
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['will error out on bad buffer-range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug is confused!
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', paths = 'buffer-range=bad_one' },
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T

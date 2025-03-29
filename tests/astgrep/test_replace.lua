@@ -242,4 +242,37 @@ T['is prevented from replacing with blacklisted flags'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can replace within buffer range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file2.ts')
+  child.type_keys(10, 'ggjwwwwvj$')
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', replacement = 'bruv' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'bruv')
+  helpers.childWaitForScreenshotText(child, 'bruv.walks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T

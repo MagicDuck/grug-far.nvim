@@ -1,5 +1,6 @@
 local search = require('grug-far.engine.astgrep.search')
 local replace = require('grug-far.engine.astgrep.replace')
+local utils = require('grug-far.utils')
 
 ---@type GrugFarEngine
 local AstgrepEngine = {
@@ -65,9 +66,17 @@ local AstgrepEngine = {
     -- not supported
   end,
 
-  getInputPrefillsForVisualSelection = function(visual_selection, initialPrefills)
+  getInputPrefillsForVisualSelection = function(
+    visual_selection_info,
+    initialPrefills,
+    visualSelectionUsage
+  )
     local prefills = vim.deepcopy(initialPrefills)
-    prefills.search = table.concat(visual_selection, '\n')
+    if visualSelectionUsage == 'prefill-search' then
+      prefills.search = table.concat(visual_selection_info.lines, '\n')
+    elseif visualSelectionUsage == 'operate-within-range' then
+      prefills.paths = utils.get_visual_selection_info_as_str(visual_selection_info)
+    end
     return prefills
   end,
 

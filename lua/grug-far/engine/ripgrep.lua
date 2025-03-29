@@ -1,6 +1,7 @@
 local search = require('grug-far.engine.ripgrep.search')
 local replace = require('grug-far.engine.ripgrep.replace')
 local sync = require('grug-far.engine.ripgrep.sync')
+local utils = require('grug-far.utils')
 
 ---@type GrugFarEngine
 local RipgrepEngine = {
@@ -64,18 +65,26 @@ local RipgrepEngine = {
 
   sync = sync.sync,
 
-  getInputPrefillsForVisualSelection = function(visual_selection, initialPrefills)
+  getInputPrefillsForVisualSelection = function(
+    visual_selection_info,
+    initialPrefills,
+    visualSelectionUsage
+  )
     local prefills = vim.deepcopy(initialPrefills)
 
-    prefills.search = table.concat(visual_selection, '\n')
-    local flags = prefills.flags or ''
-    if not flags:find('%-%-fixed%-strings') then
-      flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+    if visualSelectionUsage == 'prefill-search' then
+      prefills.search = table.concat(visual_selection_info.lines, '\n')
+      local flags = prefills.flags or ''
+      if not flags:find('%-%-fixed%-strings') then
+        flags = (#flags > 0 and flags .. ' ' or flags) .. '--fixed-strings'
+      end
+      if #visual_selection_info.lines > 1 and not flags:find('%-%-multiline') then
+        flags = (#flags > 0 and flags .. ' ' or flags) .. '--multiline'
+      end
+      prefills.flags = flags
+    elseif visualSelectionUsage == 'operate-within-range' then
+      prefills.paths = utils.get_visual_selection_info_as_str(visual_selection_info)
     end
-    if #visual_selection > 1 and not flags:find('%-%-multiline') then
-      flags = (#flags > 0 and flags .. ' ' or flags) .. '--multiline'
-    end
-    prefills.flags = flags
 
     return prefills
   end,

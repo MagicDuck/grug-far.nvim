@@ -16,7 +16,7 @@ local dependencies = {
     optional = false,
   },
   {
-    name = 'sg',
+    name = 'ast-grep',
     url = '[ast-grep](https://ast-grep.github.io)',
     optional = true,
   },

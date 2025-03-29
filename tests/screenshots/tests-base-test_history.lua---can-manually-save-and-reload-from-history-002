@@ -1,53 +1,25 @@
---|
-01|
-02|
-03|Engine: ripgrep
-04|Search: talks
-05|Replace: 
-06|Files Filter: 
-07|Flags: -i
-08|Paths: 
-09|
-10|
-11|Engine: ripgrep
-12|Search: walks
-13|Replace: 
-14|Files Filter: 
-15|Flags: -i
-16|Paths: 
-17|
-18|
-19|Engine: ripgrep
-20|Search: grug
-21|Replace: 
-22|Files Filter: 
-23|Flags: -i
-24|Paths: 
-25|
-
---|-
-01| 
-02| 
-03| 
-04| 
-05| 
-06| 
-07| 
-08| 
-09| 
-10| 
-11| 
-12| 
-13| 
-14| 
-15| 
-16| 
-17| 
-18| 
-19| 
-20| 
-21| 
-22| 
-23| 
-24| 
-25| 
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...         
+02|                                                                                
+03|  Search:                                                                      
+04|grug                                                                            
+05|  Replace:                                                                     
+06|                                                                                
+07|  Files Filter:                                                                
+08|                                                                                
+09| 󰮚 Flags:                                                                       
+10|-i                                                                              
+11|  Paths:                                                                       
+12|                                                                                
+13|                                                                                
+14| STATUS_SUCCESS ⟪ ripgrep ⟫
+15| 4 matches in 2 files                                                           
+16|                                                                                
+17|file1.txt                                                                       
+18|  1  grug walks                                                              [1]
+19|                                                                                
+20|file2.doc                                                                       
+21|  2       grug talks and grug drinks                                         [2]
+22|  3       then grug thinks and talks                                         [3]
+23|Grug FAR - 1: grug                                                           2,1
+24|grug-far: added current search to history!                    24,1          90% 

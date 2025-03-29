@@ -75,7 +75,7 @@ rule:
   helpers.childExpectBufLines(child)
 end
 
-T['reports error from sg'] = function()
+T['reports error from ast-grep'] = function()
   helpers.writeTestFiles({
     {
       filename = 'file2.ts',
@@ -418,27 +418,6 @@ T['searches full line visual selection'] = function()
   helpers.cdTempTestDir(child)
   child.cmd(':e file2.ts')
   child.type_keys(10, 'j', '0v$', '<esc>:lua GrugFar.with_visual_selection()<CR>')
-
-  helpers.childWaitForFinishedStatus(child)
-
-  helpers.childExpectScreenshot(child)
-end
-
-T['searches first line of multiline visual selection'] = function()
-  helpers.writeTestFiles({
-    {
-      filename = 'file2.ts',
-      content = [[ 
-    if (grug || talks) {
-      grug.walks(talks)
-    }
-    ]],
-    },
-  })
-
-  helpers.cdTempTestDir(child)
-  child.cmd(':e file2.ts')
-  child.type_keys(10, 'j', 'wwwvj', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
 
   helpers.childWaitForFinishedStatus(child)
 

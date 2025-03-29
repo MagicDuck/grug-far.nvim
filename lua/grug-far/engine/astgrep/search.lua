@@ -4,22 +4,42 @@ local parseResults = require('grug-far.engine.astgrep.parseResults')
 local utils = require('grug-far.utils')
 local blacklistedSearchFlags = require('grug-far.engine.astgrep.blacklistedSearchFlags')
 local getAstgrepVersion = require('grug-far.engine.astgrep.getAstgrepVersion')
-local fetchFilteredFilesList = require('grug-far.engine.ripgrep.fetchFilteredFilesList')
-local runWithChunkedFiles = require('grug-far.engine.runWithChunkedFiles')
-local getRgVersion = require('grug-far.engine.ripgrep.getRgVersion')
 local argUtils = require('grug-far.engine.astgrep.argUtils')
+local uv = vim.uv
 
 local M = {}
 
 --- gets search args
 ---@param inputs GrugFarInputs
 ---@param options GrugFarOptions
+---@param extraArgs string[]?
 ---@return string[]?
-function M.getSearchArgs(inputs, options)
-  local extraArgs = {
-    '--json=stream',
-  }
-  return getArgs(inputs, options, extraArgs, blacklistedSearchFlags)
+function M.getSearchArgs(inputs, options, extraArgs)
+  local _extraArgs = vim.deepcopy(extraArgs or {})
+  table.insert(_extraArgs, '--json=stream')
+  return getArgs(inputs, options, _extraArgs, blacklistedSearchFlags)
+end
+
+--- gets astgrep language for given filename
+---@param file_name string
+---@return string
+function M.get_language(file_name)
+  local ext = string.match(file_name, '^.+%.(.+)$')
+  return ext
+end
+
+--- gets bufrange if we have one specified in paths
+---@param inputs GrugFarInputs
+---@return VisualSelectionInfo? bufrange,string? err
+function M.getBufrange(inputs)
+  if #inputs.paths > 0 then
+    local paths = utils.splitPaths(inputs.paths)
+    for _, path in ipairs(paths) do
+      return utils.parse_buf_range_str(path)
+    end
+  end
+
+  return nil, nil
 end
 
 --- is doing a search with replacement?
@@ -59,20 +79,24 @@ end
 
 --- runs search
 ---@param args string[]?
+---@param _bufrange? VisualSelectionInfo
 ---@param options GrugFarOptions
 ---@param eval_fn? fun(...): string
 ---@param on_fetch_chunk fun(data: ParsedResultsData)
 ---@param on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
 ---@return fun()? abort, string[]? effectiveArgs
-local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_finish)
+local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_chunk, on_finish)
   local isTextOutput = isSearchWithTextOutput(args)
+  local bufrange = _bufrange and vim.deepcopy(_bufrange) or nil
 
   local matches = {}
   local chunk_error = nil
+  local stdin = bufrange and uv.new_pipe() or nil
   local abort, effectiveArgs
   abort, effectiveArgs = fetchCommandOutput({
     cmd_path = options.engines.astgrep.path,
     args = args,
+    stdin = stdin,
     on_fetch_chunk = function(data)
       if chunk_error then
         return
@@ -82,6 +106,7 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
         on_fetch_chunk({
           lines = vim.iter(vim.split(data, '\n')):map(utils.getLineWithoutCarriageReturn):totable(),
           highlights = {},
+          marks = {},
           stats = { matches = 0, files = 0 },
         })
         return
@@ -99,7 +124,7 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
       -- at once. This helps with applying replacements
       local before, after = parseResults.split_last_file_matches(matches)
       matches = after
-      on_fetch_chunk(parseResults.parseResults(before))
+      on_fetch_chunk(parseResults.parseResults(before, bufrange))
     end,
     on_finish = function(status, errorMessage)
       if chunk_error then
@@ -108,7 +133,7 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
       end
       if status == 'success' and #matches > 0 then
         -- do the last few
-        on_fetch_chunk(parseResults.parseResults(matches))
+        on_fetch_chunk(parseResults.parseResults(matches, bufrange))
         matches = {}
       end
       vim.schedule(function()
@@ -116,6 +141,13 @@ local function run_astgrep_search(args, options, eval_fn, on_fetch_chunk, on_fin
       end)
     end,
   })
+
+  if stdin and bufrange then
+    local text = table.concat(bufrange.lines, '\n')
+    uv.write(stdin, text, function()
+      uv.shutdown(stdin)
+    end)
+  end
 
   return abort, effectiveArgs
 end
@@ -125,6 +157,8 @@ end
 ---@return fun()? abort, string[]? effectiveArgs
 function M.search(params)
   local on_finish = params.on_finish
+  local inputs = vim.deepcopy(params.inputs)
+
   local sg_version = getAstgrepVersion(params.options)
   if not sg_version then
     on_finish(
@@ -135,8 +169,8 @@ function M.search(params)
     )
     return
   end
-  local isRuleMode = params.inputs.rules ~= nil
-  local numSearchChars = isRuleMode and #params.inputs.rules or #params.inputs.search
+  local isRuleMode = inputs.rules ~= nil
+  local numSearchChars = isRuleMode and #inputs.rules or #inputs.search
   if numSearchChars > 0 and numSearchChars < (params.options.minSearchChars or 1) then
     params.on_finish(
       'success',
@@ -148,18 +182,18 @@ function M.search(params)
     return
   end
 
-  local rg_version = getRgVersion(params.options)
-  if not rg_version then
-    on_finish(
-      'error',
-      'ripgrep not found. Used command: '
-        .. params.options.engines.ripgrep.path
-        .. '\nripgrep needs to be installed, see https://github.com/BurntSushi/ripgrep'
-    )
+  local extraArgs = {}
+  local bufrange, bufrange_err = M.getBufrange(params.inputs)
+  if bufrange_err then
+    params.on_finish('error', bufrange_err)
     return
   end
+  if bufrange then
+    inputs.paths = ''
+    extraArgs = { '--stdin', '--lang=' .. M.get_language(bufrange.file_name) }
+  end
 
-  local args, blacklistedArgs = M.getSearchArgs(params.inputs, params.options)
+  local args, blacklistedArgs = M.getSearchArgs(inputs, params.options, extraArgs)
 
   if blacklistedArgs and #blacklistedArgs > 0 then
     on_finish(nil, nil, 'search cannot work with flags: ' .. table.concat(blacklistedArgs, ', '))
@@ -175,7 +209,7 @@ function M.search(params)
   if not isRuleMode and params.replacementInterpreter then
     local interpreterError
     eval_fn, interpreterError =
-      params.replacementInterpreter.get_eval_fn(params.inputs.replacement, { 'match', 'vars' })
+      params.replacementInterpreter.get_eval_fn(inputs.replacement, { 'match', 'vars' })
     if not eval_fn then
       on_finish('error', interpreterError)
       return
@@ -184,91 +218,20 @@ function M.search(params)
   end
 
   local hadOutput = false
-  local filesFilter = params.inputs.filesFilter
-  local version = getAstgrepVersion(params.options)
-  if filesFilter and #filesFilter > 0 and version and vim.version.gt(version, '0.28.0') then
-    -- note: astgrep added --glob support in v0.28.0
-    -- this if-branch uses rg to get the files and can be removed in the future once everybody uses new astgrep
-
-    local on_abort = nil
-    local function abort()
-      if on_abort then
-        on_abort()
-      end
+  return run_astgrep_search(args, bufrange, params.options, eval_fn, function(data)
+    if not hadOutput and #data.lines > 0 then
+      hadOutput = true
+    end
+    params.on_fetch_chunk(data)
+  end, function(status, errorMessage)
+    -- give the user more feedback when there are no matches
+    if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
+      status = 'error'
+      errorMessage = 'no matches'
     end
 
-    on_abort = fetchFilteredFilesList({
-      inputs = params.inputs,
-      options = params.options,
-      report_progress = function() end,
-      on_finish = function(status, errorMessage, files)
-        on_abort = nil
-        if not status then
-          on_finish(nil, nil, nil)
-          return
-        elseif status == 'error' then
-          on_finish(status, errorMessage)
-          return
-        end
-
-        on_abort = runWithChunkedFiles({
-          files = files,
-          chunk_size = 200,
-          options = params.options,
-          run_chunk = function(chunk, on_done)
-            local chunk_args = vim.deepcopy(args)
-            for _, file in ipairs(vim.split(chunk, '\n')) do
-              table.insert(chunk_args, file)
-            end
-
-            return run_astgrep_search(chunk_args, params.options, eval_fn, function(data)
-              if not hadOutput and #data.lines > 0 then
-                hadOutput = true
-              end
-              params.on_fetch_chunk(data)
-            end, function(_status, _errorMessage)
-              if _status == 'error' then
-                local err = (_errorMessage and #_errorMessage > 0) and _errorMessage
-                  or 'Unexpected Error!'
-                return on_done(err)
-              end
-              return on_done(nil)
-            end)
-          end,
-          on_finish = function(_status, _errorMessage)
-            -- give the user more feedback when there are no matches
-            if
-              _status == 'success'
-              and not (_errorMessage and #_errorMessage > 0)
-              and not hadOutput
-            then
-              _status = 'error'
-              _errorMessage = 'no matches'
-            end
-
-            on_finish(_status, _errorMessage)
-          end,
-        })
-      end,
-    })
-
-    return abort, args
-  else
-    return run_astgrep_search(args, params.options, eval_fn, function(data)
-      if not hadOutput and #data.lines > 0 then
-        hadOutput = true
-      end
-      params.on_fetch_chunk(data)
-    end, function(status, errorMessage)
-      -- give the user more feedback when there are no matches
-      if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
-        status = 'error'
-        errorMessage = 'no matches'
-      end
-
-      on_finish(status, errorMessage)
-    end)
-  end
+    on_finish(status, errorMessage)
+  end)
 end
 
 return M

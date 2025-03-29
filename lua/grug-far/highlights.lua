@@ -16,17 +16,21 @@ local highlights = {
   GrugFarResultsStats = { default = true, link = 'Comment' },
   GrugFarResultsActionMessage = { default = true, link = 'ModeMsg' },
 
-  GrugFarResultsMatch = { default = true, link = '@diff.delta' },
-  GrugFarResultsMatchAdded = { default = true, link = '@diff.plus' },
-  GrugFarResultsMatchRemoved = { default = true, link = '@diff.minus' },
-  GrugFarResultsPath = { default = true, link = '@string.special.path' },
-  GrugFarResultsLineNo = { default = true, link = 'Number' },
-  GrugFarResultsLineColumn = { default = true, link = 'Number' },
+  GrugFarResultsMatch = { default = true, link = 'DiffText' },
+  GrugFarResultsMatchAdded = { default = true, link = 'DiffAdd' },
+  GrugFarResultsMatchRemoved = { default = true, link = 'DiffDelete' },
+  GrugFarResultsPath = { default = true, link = 'Underlined' },
+
+  GrugFarResultsLineNr = { default = true, link = 'LineNr' },
+  GrugFarResultsCursorLineNo = { default = true, link = 'CursorLineNr' },
+  GrugFarResultsColumnNr = { default = true, link = 'GrugFarResultsLineNr' },
+  GrugFarResultsNumbersSeparator = { default = true, link = 'GrugFarResultsLineNr' },
+
   GrugFarResultsChangeIndicator = { default = true, bg = 'NONE', fg = '#d1242f' },
   GrugFarResultsRemoveIndicator = { default = true, bg = 'NONE', fg = '#d1242f' },
   GrugFarResultsAddIndicator = { default = true, bg = 'NONE', fg = '#055d20' },
   GrugFarResultsDiffSeparatorIndicator = { default = true, link = 'Normal' },
-  GrugFarResultsCmdHeader = { default = true, link = '@text.uri' },
+  GrugFarResultsCmdHeader = { default = true, link = 'Underlined' },
   GrugFarResultsNumberLabel = { default = true, link = 'Identifier' },
   GrugFarResultsLongLineStr = { default = true, link = 'Comment' },
 }

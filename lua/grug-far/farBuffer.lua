@@ -188,6 +188,22 @@ local function getActions(buf, context)
         swapReplacementInterpreter({ buf = buf, context = context })
       end,
     },
+    {
+      text = 'Next Input',
+      keymap = keymaps.nextInput,
+      description = 'Goto next input. Cycles back.',
+      action = function()
+        require('grug-far').goto_next_input()
+      end,
+    },
+    {
+      text = 'Prev Input',
+      keymap = keymaps.prevInput,
+      description = 'Goto prev input. Cycles back.',
+      action = function()
+        require('grug-far').goto_prev_input()
+      end,
+    },
   }
 end
 
@@ -378,11 +394,55 @@ function M.createBuffer(win, context)
       end
 
       -- launch a search in case there are prefills
-      -- TODO (sbadragan): can we now remove this one?
       render(buf, context)
       searchOnChange()
     end)
   end)
+
+  -- set up re-render of line number on cursor moved
+  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = function()
+      local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
+
+      local lastCursorLocation = context.state.lastCursorLocation
+      if lastCursorLocation then
+        if cursor_row == lastCursorLocation.row then
+          return -- nothing to do
+        end
+
+        local mark = vim.api.nvim_buf_get_extmark_by_id(
+          buf,
+          context.locationsNamespace,
+          lastCursorLocation.markId,
+          { details = true }
+        )
+        if mark then
+          local start_row, start_col, details = unpack(mark)
+          ---@cast start_row integer
+          if details and not details.invalid then
+            resultsList.rerenderLineNumber(
+              context,
+              buf,
+              lastCursorLocation.loc,
+              { lastCursorLocation.markId, start_row, start_col, details },
+              false
+            )
+            context.state.lastCursorLocation = nil
+          end
+        end
+      end
+
+      local loc, mark = resultsList.getResultLocation(cursor_row - 1, buf, context)
+      if loc and mark and loc.lnum then
+        resultsList.rerenderLineNumber(context, buf, loc, mark, true)
+        local markId = unpack(mark)
+        ---@cast markId integer
+        context.state.lastCursorLocation = { loc = loc, row = cursor_row, markId = markId }
+      end
+    end,
+  })
 
   return buf
 end

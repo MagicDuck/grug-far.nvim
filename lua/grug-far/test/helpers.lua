@@ -1,9 +1,10 @@
-local MiniTest = require('mini.test')
-local expect = MiniTest.expect
+-- local MiniTest = require('mini.test')
+-- local expect = MiniTest.expect
 local screenshot = require('grug-far.test.screenshot')
 local opts = require('grug-far.opts')
 
 local M = {}
+local test_screenshot_counter = 0
 
 --- get list of virtual text chunks associated with given namespace in given buffer
 ---@param buf integer
@@ -88,7 +89,7 @@ function M.childWaitForCondition(child, condition, timeout, interval)
     if condition() then
       return
     else
-      vim.uv.sleep(inc)
+      M.sleep(child, inc)
     end
   end
 
@@ -109,7 +110,7 @@ function M.getSetupOptions()
         placeholders = { enabled = false },
       },
       astgrep = {
-        path = vim.env.SG_PATH or 'sg',
+        path = vim.env.SG_PATH or 'ast-grep',
         rgPath = vim.env.RG_PATH or 'rg',
         placeholders = { enabled = false },
       },
@@ -162,6 +163,7 @@ end
 --- init the child neovim process
 ---@param child NeovimChild
 function M.initChildNeovim(child)
+  test_screenshot_counter = 0
   -- Restart child process with custom 'init.lua' script
   child.restart({ '-u', 'scripts/minimal_init.lua' })
 
@@ -171,6 +173,11 @@ function M.initChildNeovim(child)
     GrugFar.setup(...)
     Helpers = require('grug-far.test.helpers')
     vim.cmd('set showtabline=0')
+    -- vim.cmd('set statusline="%%f%%=%%l%%c"')
+    vim.cmd('set statusline=%f')
+    vim.cmd('set statusline+=%=')
+    vim.cmd('set statusline+=%l,%c')
+    vim.opt.fillchars = {  eob = ' ' }
   ]],
     {
       M.getSetupOptions(),
@@ -258,21 +265,29 @@ end
 --- expect child screenshot to match saved refeence screenshot
 ---@param child NeovimChild
 function M.childExpectScreenshot(child)
-  expect.reference_screenshot(
+  vim.api.nvim__redraw({ flush = true })
+  screenshot.reference_screenshot(
     child.get_screenshot(),
     nil,
-    { force = not not vim.env['update_screenshots'] }
+    { force = not not vim.env['update_screenshots'], count = test_screenshot_counter }
   )
+  test_screenshot_counter = test_screenshot_counter + 1
 end
 
 --- expect child buf lines to match saved refeence screenshot
 ---@param child NeovimChild
 function M.childExpectBufLines(child)
-  expect.reference_screenshot(
+  vim.api.nvim__redraw({ flush = true })
+  screenshot.reference_screenshot(
     screenshot.fromChildBufLines(child),
     nil,
-    { force = not not vim.env['update_screenshots'] }
+    { force = not not vim.env['update_screenshots'], count = test_screenshot_counter }
   )
+  test_screenshot_counter = test_screenshot_counter + 1
+end
+
+function M.sleep(child, ms)
+  child.cmd('sleep ' .. ms .. 'm')
 end
 
 -- NOTE: for testing uncomment the following line, then open a grug-far buffer and execute

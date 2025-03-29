@@ -16,20 +16,30 @@ grug-far adds search/replace inside a buffer to neovim.
 ==============================================================================
 2. SETUP                                             *grug-far-setup*
 
-Make sure to add to call the setup function with the proper configuration in
-your `init` file.
+Setup is way to override plugin options that apply to all instances of the
+plugin. It's entirely optional.
 
     require('grug-far').setup({ ... })
+
+You can also do it like so if you prefer not calling a setup() function:
+
+    vim.g.grug_far = { ... }
 
 ==============================================================================
 3. COMMANDS                                       *grug-far-commands*
 
 :GrugFar                                                *GrugFar*
 
-Opens up a grug-far buffer in a vertical split. Multiple such buffers can
+Opens up a grug-far buffer in a split. Multiple such buffers can
 be opened, each with their potentially different searches and they will
 show up in your buffers list. In visual mode, it will pre-fill search
 with the current visual selection.
+
+:GrugFarWithin                                          *GrugFarWithin*
+
+Same as :GrugFar, except that in visual mode, it will search and replace
+within the range.
+
 
 ==============================================================================
 4. API                                                 *grug-far-api*
@@ -76,6 +86,8 @@ require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selec
 
 require('grug-far').toggle_instance({config})       *grug-far.toggle_instance()*
         Toggles visibility of grug-far instance with the given config.instanceName.
+	If config.instanceName is nil, it operates on current buffer instance
+	if available.
 	The given config overrides the global plugin config that was passed to 
 	require('grug-far).setup(...). Currently supported configuration options are
 	the same as the global plugin config options linked above.
@@ -127,30 +139,34 @@ require('grug-far').is_instance_open({instanceName})           *grug-far.is_inst
 
 require('grug-far').open_instance({instanceName})           *grug-far.open_instance()*
         Opens grug-far instance with given name if window is closed.
+	Operates on current buffer instance if instaceName=nil.
 	Otherwise focuses the window.
 
         Parameters: ~
-            {instanceName}(string) 
+            {instanceName}(string?) 
 
 require('grug-far').close_instance({instanceName})           *grug-far.hide_instance()*
         Closes window of grug-far instance with given name if window is open.
+	Operates on current buffer instance if instaceName=nil.
 
         Parameters: ~
-            {instanceName}(string) 
+            {instanceName}(string?) 
 
 require('grug-far').kill_instance({instanceName})           *grug-far.close_instance()*
         Kills grug-far instance with given name.
+	Operates on current buffer instance if instaceName=nil.
 
         Parameters: ~
-            {instanceName}(string) 
+            {instanceName}(string?) 
 
 require('grug-far').update_instance_prefills({instanceName}, {prefills}, {clearOld})
                                                   *grug-far.update_instance_prefills()*
         Updates grug-far instance with given input prefill.
+	Operates on current buffer instance if instaceName=nil.
 	If clearOld=true is given, the old input values are ignored.
 
         Parameters: ~
-            {instanceName}(string) 
+            {instanceName}(string?) 
             {prefills}(PrefillsTableOverride) table 
 	       {search=, replacement=, filesFilter=, flags=, paths=}
             {clearOld}(boolean) if given, old input values are ignored
@@ -178,6 +194,48 @@ require('grug-far').get_current_visual_selection_lines({strict})
 
 	Return: ~
 	    {visual_selection}(string[])
+
+require('grug-far').get_current_visual_selection_as_range_str({strict})
+                                        *grug-far.get_current_visual_selection_as_range_str()*
+	Gets the current visual selection as a range string representation.
+	Useful when passing as a prefill for Paths: input in some situations
+	where you would like to search and replace within a range.
+
+        Parameters: ~
+            {strict}(boolean) If true, only return selection string if currently in
+	      visual mode
+
+	Return: ~
+	    {range_str}(string)
+
+require('grug-far').goto_input({inputName}, {instanceName})   *grug-far.goto_input()*
+        Moves cursor to input with given name.
+	Operates on given instance or current buffer instance if instaceName=nil.
+
+        Parameters: ~
+            {inputName}(string) 
+            {instanceName}(string?) 
+
+require('grug-far').goto_first_input({instanceName})   *grug-far.goto_first_input()*
+        Moves cursor to first input. 
+	Operates on given instance or current buffer instance if instaceName=nil.
+
+        Parameters: ~
+            {instanceName}(string?) 
+
+require('grug-far').goto_next_input({instanceName})   *grug-far.goto_next_input()*
+        Moves cursor to next input (based on current location). Cycles back.
+	Operates on given instance or current buffer instance if instaceName=nil.
+
+        Parameters: ~
+            {instanceName}(string?) 
+
+require('grug-far').goto_prev_input({instanceName})   *grug-far.goto_prev_input()*
+        Moves cursor to prev input (based on current location). Cycles back.
+	Operates on given instance or current buffer instance if instaceName=nil.
+
+        Parameters: ~
+            {instanceName}(string?) 
 
 ==============================================================================
 4. Highlights                                          *grug-far-highlights*

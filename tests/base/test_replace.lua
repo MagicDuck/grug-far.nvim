@@ -205,4 +205,36 @@ T['is prevented from replacing with blacklisted flags'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can replace with within buffer range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug is confused!
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.txt')
+  child.type_keys(10, 'ggjwwvj$')
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'curly' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'curly')
+  helpers.childWaitForScreenshotText(child, 'curly drinks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T

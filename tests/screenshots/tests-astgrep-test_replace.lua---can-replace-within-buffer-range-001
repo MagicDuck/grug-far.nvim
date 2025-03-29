@@ -1,0 +1,11 @@
+--|
+01|
+02|grug
+03|bruv
+04|
+05|
+06|buffer-range=file2.ts:2:13-3:-1
+07|
+08|file2.ts
+09|      grug.walks(talks)
+10|      bruv.walks(talks)

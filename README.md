@@ -18,14 +18,15 @@ Grug find! Grug replace! Grug happy!
 - Syntax highlighted search results
 - Search results folding
 - Multiline search & replace
+- Search/Replace within buffer range denoted by visual selection
 - "Preview" result source while "scrolling" through results 
 - Replace using lua interpreted replacement for each match
 
 #### Searching:
-<img width="1263" alt="image" src="https://github.com/user-attachments/assets/7851bc37-bd88-473d-a09a-1510088e074c" />
+<img width="1261" alt="image" src="https://github.com/user-attachments/assets/4d0dae67-1d2e-438a-b295-b4ae8081fa03" />
 
 #### Replacing:
-<img width="1260" alt="image" src="https://github.com/user-attachments/assets/c8edd521-9321-4e83-a4ce-e3d98ac1b346" />
+<img width="1260" alt="image" src="https://github.com/user-attachments/assets/f033fab7-b12d-4227-8d6e-44dd1ce177b5" />
 
 <details>
 <summary>More screenshots:</summary>
@@ -35,6 +36,9 @@ Grug find! Grug replace! Grug happy!
 
 #### Help:
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/5da63e72-f768-46e7-a807-b26c6f44c42c">
+
+#### Searching within buffer range
+<img width="2508" alt="image" src="https://github.com/user-attachments/assets/203128a4-a0b7-424b-94c8-38ac8753c2f7" />
 
 #### History:
 <img width="1252" alt="image" src="https://github.com/user-attachments/assets/ee96bea6-62bc-4c39-b924-e5d42e70196a">
@@ -74,7 +78,7 @@ Grug find! Grug replace! Grug happy!
 - Neovim >= **0.10.0**
 - [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) >= 14 recommended
 - a [Nerd Font](https://www.nerdfonts.com/) **_(optional)_**
-- [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine. Version >= `0.25.7` if you would like context lines flags to work. Version >= `0.28.0` recommended for better performance as it has builtin `--globs` support.
+- [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine. ersion >= `0.36` recommended.
 - either [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) or [mini.icons](https://github.com/echasnovski/mini.icons) for file icons support **_(optional)_**
 
 Run `:checkhealth grug-far` if you see unexpected issues.
@@ -86,6 +90,8 @@ Using [lazy.nvim][lazy]:
   {
     'MagicDuck/grug-far.nvim',
     config = function()
+      -- optional setup call to override plugin options
+      -- alternatively you can set options with vim.g.grug_far = { ... }
       require('grug-far').setup({
         -- options, see Configuration section below
         -- there are no required options atm
@@ -117,6 +123,8 @@ vim.g.maplocalleader = ','
 You can open a new *grug-far.nvim* vertical split buffer with the `:GrugFar` command.
 Note that command supports the typical `command-modifiers` like `botright`, `aboveleft`, etc. and visual ranges.
 In visual mode, the command will pre-fill the search string with the current visual selection.
+Note that if you would like to search and replace *within* the visual selection range, you should use `:GrugFarWithin` instead.
+
 Possibly best to map a keybind to it for easy triggering.
 Since it's *just a buffer*, you can edit in it as you see fit. The UI will try to guide
 you along and recover gracefully if you do things like `ggVGd` (delete all lines).
@@ -305,6 +313,34 @@ For more API, see [docs][docs]
 :<C-u>lua require('grug-far').with_visual_selection({ prefills = { paths = vim.fn.expand("%") } })
 ```
 
+#### Launch, limiting search to the current buffer visual selection range
+```lua
+:GrugFarWithin
+```
+or as a keymap if you want to go fully lua:
+```lua
+vim.keymap.set({ 'n', 'x' }, '<leader>si', function()
+  require('grug-far').open({ visualSelectionUsage = 'operate-within-range' })
+end, { desc = 'grug-far: Search within range' })
+```
+
+#### Launch, with @/ register value as the search query, falling back to visual selection
+Note that `@/` register holds your last `/` or `*`, etc search query.
+```lua
+vim.keymap.set({ 'n', 'x' }, '<leader>ss', function()
+  local search = vim.fn.getreg('/')
+  -- surround with \b if "word" search (such as when pressing `*`)
+  if search and vim.startswith(search, '\\<') and vim.endswith(search, '\\>') then
+    search = '\\b' .. search:sub(3, -3) .. '\\b'
+  end
+  require('grug-far').open({
+    prefills = {
+      search = search,
+    },
+  })
+end, { desc = 'grug-far: Search using @/ register value or visual selection' })
+```
+
 #### Toggle visibility of a particular instance and set title to a fixed string
 ```lua
 :lua require('grug-far').toggle_instance({ instanceName="far", staticTitle="Find and Replace" })
@@ -336,15 +372,15 @@ vim.api.nvim_create_autocmd('FileType', {
 ```
 (where `<localleader>o` and `<localleader>c` are the default keybindings for Open and Close actions. You will need to change them if you set them to something different)
 
-#### Create a buffer local keybinding to jump back to Search input
+#### Create a buffer local keybinding to jump back to first input
 ``` lua
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('grug-far-keymap', { clear = true }),
   pattern = { 'grug-far' },
   callback = function()
-    -- jump back to search input by hitting left arrow in normal mode:
+    -- jump back to first input by hitting left arrow in normal mode:
     vim.keymap.set('n', '<left>', function()
-      vim.api.nvim_win_set_cursor(vim.fn.bufwinid(0), { 2, 0 })
+      require('grug-far').goto_first_input()
     end, { buffer = true })
   end,
 })
