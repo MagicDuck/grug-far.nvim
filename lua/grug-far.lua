@@ -35,7 +35,7 @@ local function ensure_instance(instanceName, accept_nil)
   if not instanceName then
     instanceName = M.get_instance_name_by_buf(0)
     if not instanceName then
-      error('could not get grug-far instace for current buffer!')
+      error('could not get grug-far instance for current buffer!')
     end
   end
 
@@ -45,6 +45,21 @@ local function ensure_instance(instanceName, accept_nil)
   end
 
   return inst
+end
+
+---@param instanceName string?
+local function ensure_some_instance(instanceName)
+  if not instanceName then
+    for name, _ in pairs(namedInstances) do
+      return name
+    end
+  end
+
+  if not instanceName then
+    error('No grug-far instances found')
+  end
+
+  return instanceName
 end
 
 --- set up grug-far
@@ -557,6 +572,54 @@ function M.goto_prev_input(instanceName)
 
     return next_input_name
   end)
+end
+
+--- jumps to the next result in any open grug-far instance
+--- can be called from any buffer, not just the grug-far buffer
+--- @param instanceName? string optional instance name, if nil uses the first found instance
+function M.jump_next_result(instanceName)
+  -- If no instance name provided, find any instance
+  instanceName = ensure_some_instance(instanceName)
+
+  if not instanceName or not namedInstances[instanceName] then
+    vim.notify('grug-far: No active instances found', vim.log.levels.ERROR)
+    return
+  end
+
+  local inst = namedInstances[instanceName]
+  local openLocation = require('grug-far.actions.openLocation')
+
+  -- Call the openLocation function with increment=1 to go to next result
+  openLocation({
+    buf = inst.buf,
+    context = inst.context,
+    increment = 1,
+    includeUncounted = false,
+  })
+end
+
+--- jumps to the previous result in any open grug-far instance
+--- can be called from any buffer, not just the grug-far buffer
+--- @param instanceName? string optional instance name, if nil uses the first found instance
+function M.jump_prev_result(instanceName)
+  -- If no instance name provided, find any instance
+  instanceName = ensure_some_instance(instanceName)
+
+  if not instanceName or not namedInstances[instanceName] then
+    vim.notify('grug-far: No active instances found', vim.log.levels.ERROR)
+    return
+  end
+
+  local inst = namedInstances[instanceName]
+  local openLocation = require('grug-far.actions.openLocation')
+
+  -- Call the openLocation function with increment=-1 to go to previous result
+  openLocation({
+    buf = inst.buf,
+    context = inst.context,
+    increment = -1,
+    includeUncounted = false,
+  })
 end
 
 return M
