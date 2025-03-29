@@ -11,7 +11,7 @@ CONTENTS                                          *grug-far-contents*
 ==============================================================================
 1. INTRODUCTION                               *grug-far-introduction*
 
-grug-far adds search/replace inside a buffer to neovim. 
+grug-far adds search/replace inside a buffer to neovim.
 
 ==============================================================================
 2. SETUP                                             *grug-far-setup*
@@ -56,7 +56,7 @@ require('grug-far').setup({config})                  *grug-far.setup()*
 
 require('grug-far').open({config})                *grug-far.open()*
         Launches grug-far, where the given config overrides the global plugin
-	config that was passed to require('grug-far).setup(...). 
+	config that was passed to require('grug-far).setup(...).
         Currently supported configuration options are the same as the global
 	plugin config options linked above.
 	If the function is called while in visual mode, it will pre-fill
@@ -65,14 +65,14 @@ require('grug-far').open({config})                *grug-far.open()*
         Parameters: ~
             {config}(optional, table) Table of values; keys as described
                 above. Accept defaults by omitting the relevant key.
-	
+
 	Return: ~
-            {instanceName}(string) 
+            {instanceName}(string)
 
 require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selection()*
         Launches grug-far, pre-filling search with the current visual
 	selection. The given config overrides the global plugin
-	config that was passed to require('grug-far).setup(...). 
+	config that was passed to require('grug-far).setup(...).
 
         Currently supported configuration options are the same as the global
 	plugin config options linked above.
@@ -80,15 +80,15 @@ require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selec
         Parameters: ~
             {config}(optional, table) Table of values; keys as described
                 above. Accept defaults by omitting the relevant key.
-        
+
 	Return: ~
-            {instanceName}(string) 
+            {instanceName}(string)
 
 require('grug-far').toggle_instance({config})       *grug-far.toggle_instance()*
         Toggles visibility of grug-far instance with the given config.instanceName.
 	If config.instanceName is nil, it operates on current buffer instance
 	if available.
-	The given config overrides the global plugin config that was passed to 
+	The given config overrides the global plugin config that was passed to
 	require('grug-far).setup(...). Currently supported configuration options are
 	the same as the global plugin config options linked above.
 
@@ -97,9 +97,9 @@ require('grug-far').toggle_instance({config})       *grug-far.toggle_instance()*
                 above. Accept defaults by omitting the relevant key.
 
 require('grug-far').toggle_flags({flags})                *grug-far.toggle_flags()*
-        Toggles given list of flags in the current grug-far buffer. The 
+        Toggles given list of flags in the current grug-far buffer. The
 	flags get added to/removed from the Flags input line.
-	e.g. require('grug-far).toggle_flags({'--fixed-strings'}). 
+	e.g. require('grug-far).toggle_flags({'--fixed-strings'}).
 
         Parameters: ~
             {flags}(table) List of flag strings to toggle.
@@ -111,10 +111,10 @@ require('grug-far').has_instance({instanceName})               *grug-far.has_ins
         Checks if grug-far instance with given name exists
 
         Parameters: ~
-            {instanceName}(string) 
-	
+            {instanceName}(string)
+
 	Return: ~
-	    {exists}(boolean) 
+	    {exists}(boolean)
 
 require('grug-far').get_instance_name_by_buf({buf})   *grug-far.get_instance_name_by_buf()*
         Returns instance name associated with given buf number.
@@ -132,42 +132,42 @@ require('grug-far').is_instance_open({instanceName})           *grug-far.is_inst
         Checks if grug-far instance with given name is open.
 
         Parameters: ~
-            {instanceName}(string) 
-	
+            {instanceName}(string)
+
 	Return: ~
-	    {is_open}(boolean) 
+	    {is_open}(boolean)
 
 require('grug-far').open_instance({instanceName})           *grug-far.open_instance()*
         Opens grug-far instance with given name if window is closed.
-	Operates on current buffer instance if instaceName=nil.
+	Operates on current buffer instance if instanceName=nil.
 	Otherwise focuses the window.
 
         Parameters: ~
-            {instanceName}(string?) 
+            {instanceName}(string?)
 
 require('grug-far').close_instance({instanceName})           *grug-far.hide_instance()*
         Closes window of grug-far instance with given name if window is open.
-	Operates on current buffer instance if instaceName=nil.
+	Operates on current buffer instance if instanceName=nil.
 
         Parameters: ~
-            {instanceName}(string?) 
+            {instanceName}(string?)
 
 require('grug-far').kill_instance({instanceName})           *grug-far.close_instance()*
         Kills grug-far instance with given name.
-	Operates on current buffer instance if instaceName=nil.
+	Operates on current buffer instance if instanceName=nil.
 
         Parameters: ~
-            {instanceName}(string?) 
+            {instanceName}(string?)
 
 require('grug-far').update_instance_prefills({instanceName}, {prefills}, {clearOld})
                                                   *grug-far.update_instance_prefills()*
         Updates grug-far instance with given input prefill.
-	Operates on current buffer instance if instaceName=nil.
+	Operates on current buffer instance if instanceName=nil.
 	If clearOld=true is given, the old input values are ignored.
 
         Parameters: ~
-            {instanceName}(string?) 
-            {prefills}(PrefillsTableOverride) table 
+            {instanceName}(string?)
+            {prefills}(PrefillsTableOverride) table
 	       {search=, replacement=, filesFilter=, flags=, paths=}
             {clearOld}(boolean) if given, old input values are ignored
 
@@ -210,32 +210,45 @@ require('grug-far').get_current_visual_selection_as_range_str({strict})
 
 require('grug-far').goto_input({inputName}, {instanceName})   *grug-far.goto_input()*
         Moves cursor to input with given name.
-	Operates on given instance or current buffer instance if instaceName=nil.
+	Operates on given instance or current buffer instance if instanceName=nil.
 
         Parameters: ~
-            {inputName}(string) 
-            {instanceName}(string?) 
+            {inputName}(string)
+            {instanceName}(string?)
 
 require('grug-far').goto_first_input({instanceName})   *grug-far.goto_first_input()*
-        Moves cursor to first input. 
-	Operates on given instance or current buffer instance if instaceName=nil.
+        Moves cursor to first input.
+	Operates on given instance or current buffer instance if instanceName=nil.
 
         Parameters: ~
-            {instanceName}(string?) 
+            {instanceName}(string?)
 
 require('grug-far').goto_next_input({instanceName})   *grug-far.goto_next_input()*
         Moves cursor to next input (based on current location). Cycles back.
-	Operates on given instance or current buffer instance if instaceName=nil.
+	Operates on given instance or current buffer instance if instanceName=nil.
 
         Parameters: ~
-            {instanceName}(string?) 
+            {instanceName}(string?)
 
 require('grug-far').goto_prev_input({instanceName})   *grug-far.goto_prev_input()*
         Moves cursor to prev input (based on current location). Cycles back.
-	Operates on given instance or current buffer instance if instaceName=nil.
+	Operates on given instance or current buffer instance if instanceName=nil.
 
         Parameters: ~
-            {instanceName}(string?) 
+            {instanceName}(string?)
+
+require('grug-far').jump_next_result({instanceName})           *grug-far.jump_next_result()*
+        Goes to the next result location for the instance with the given name.
+
+        Parameters: ~
+            {instanceName}(string?)
+
+require('grug-far').jump_prev_result({instanceName})           *grug-far.jump_next_result()*
+        Goes to the previous result location for the instance with the given name.
+
+        Parameters: ~
+            {instanceName}(string?)
+
 
 ==============================================================================
 4. Highlights                                          *grug-far-highlights*

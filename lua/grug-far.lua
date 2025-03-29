@@ -35,7 +35,7 @@ local function ensure_instance(instanceName, accept_nil)
   if not instanceName then
     instanceName = M.get_instance_name_by_buf(0)
     if not instanceName then
-      error('could not get grug-far instace for current buffer!')
+      error('could not get grug-far instance for current buffer!')
     end
   end
 
@@ -45,6 +45,22 @@ local function ensure_instance(instanceName, accept_nil)
   end
 
   return inst
+end
+
+---@param instanceName string?
+---@param accept_nil boolean?
+local function ensure_some_instance(instanceName)
+  if not instanceName then
+    for name, _ in pairs(namedInstances) do
+      return name
+    end
+  end
+
+  if not instanceName then
+    error('No grug-far instances found')
+  end
+
+  return instanceName
 end
 
 --- set up grug-far
@@ -563,15 +579,8 @@ end
 --- can be called from any buffer, not just the grug-far buffer
 --- @param instanceName? string optional instance name, if nil uses the first found instance
 function M.jump_next_result(instanceName)
-  ensure_configured()
-
   -- If no instance name provided, find any instance
-  if not instanceName then
-    for name, _ in pairs(namedInstances) do
-      instanceName = name
-      break
-    end
-  end
+  instanceName = ensure_some_instance(instanceName)
 
   if not instanceName or not namedInstances[instanceName] then
     vim.notify('grug-far: No active instances found', vim.log.levels.ERROR)
@@ -586,7 +595,7 @@ function M.jump_next_result(instanceName)
     buf = inst.buf,
     context = inst.context,
     increment = 1,
-    includeUncounted = true,
+    includeUncounted = false,
   })
 end
 
@@ -594,15 +603,8 @@ end
 --- can be called from any buffer, not just the grug-far buffer
 --- @param instanceName? string optional instance name, if nil uses the first found instance
 function M.jump_prev_result(instanceName)
-  ensure_configured()
-
   -- If no instance name provided, find any instance
-  if not instanceName then
-    for name, _ in pairs(namedInstances) do
-      instanceName = name
-      break
-    end
-  end
+  instanceName = ensure_some_instance(instanceName)
 
   if not instanceName or not namedInstances[instanceName] then
     vim.notify('grug-far: No active instances found', vim.log.levels.ERROR)
@@ -617,7 +619,7 @@ function M.jump_prev_result(instanceName)
     buf = inst.buf,
     context = inst.context,
     increment = -1,
-    includeUncounted = true,
+    includeUncounted = false,
   })
 end
 
