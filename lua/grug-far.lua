@@ -48,7 +48,6 @@ local function ensure_instance(instanceName, accept_nil)
 end
 
 ---@param instanceName string?
----@param accept_nil boolean?
 local function ensure_some_instance(instanceName)
   if not instanceName then
     for name, _ in pairs(namedInstances) do
