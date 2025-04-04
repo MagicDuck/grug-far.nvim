@@ -367,6 +367,15 @@ function M.getResultLocation(row, buf, context)
   return nil
 end
 
+---@param buf integer
+---@param context GrugFarContext
+---@return ResultLocation?, vim.api.keyset.get_extmark_item?
+function M.getResultLocationAtCursor(buf, context)
+  local grugfar_win = vim.fn.bufwinid(buf)
+  local cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
+  return M.getResultLocation(cursor_row - 1, buf, context)
+end
+
 --- displays results error
 ---@param buf integer
 ---@param context GrugFarContext

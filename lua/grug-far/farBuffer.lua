@@ -77,7 +77,10 @@ local function getActions(buf, context)
       keymap = keymaps.gotoLocation,
       description = "When cursor is placed on a result file path, go to that file. When it's placed over a result line, go to the file/line/column of the match. If a <count> is entered beforehand, go to the location corresponding to <count> result line.",
       action = function()
-        get_inst():goto_location({ count = vim.v.count })
+        if vim.v.count then
+          get_inst():goto_match(vim.v.count)
+        end
+        get_inst():goto_location()
       end,
     },
     {
@@ -85,7 +88,10 @@ local function getActions(buf, context)
       keymap = keymaps.openLocation,
       description = "Same as 'Goto', but cursor stays in grug-far buffer. This can allow a quicker thumb-through result locations. Alternatively, you can use the '--context <num>' flag to see match contexts. If a <count> is entered beforehand, open the location corresponding to <count> result line.",
       action = function()
-        get_inst():open_location({ count = vim.v.count })
+        if vim.v.count then
+          get_inst():goto_match(vim.v.count)
+        end
+        get_inst():open_location()
       end,
     },
     {
@@ -93,7 +99,8 @@ local function getActions(buf, context)
       keymap = keymaps.openNextLocation,
       description = "Move cursor to next result line relative to current line and trigger 'Open' action",
       action = function()
-        get_inst():open_next_location()
+        get_inst():goto_next_match()
+        get_inst():open_location()
       end,
     },
     {
@@ -101,7 +108,8 @@ local function getActions(buf, context)
       keymap = keymaps.openPrevLocation,
       description = "Move cursor to previous result line relative to current line and trigger 'Open' action",
       action = function()
-        get_inst():open_prev_location()
+        get_inst():goto_prev_match()
+        get_inst():open_location()
       end,
     },
     {

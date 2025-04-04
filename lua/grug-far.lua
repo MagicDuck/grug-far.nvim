@@ -184,7 +184,7 @@ local function setupCleanup(buf, context)
 
     tasks.abortAndFinishAllTasks(context)
     context.state.bufClosed = true
-    local instanceName = M.get_instance_name_by_buf(buf)
+    local _, instanceName = instances.get_instance_by_buf(buf)
     if instanceName then
       instances.remove_instance(context.options.instanceName)
     end
