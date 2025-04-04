@@ -7,6 +7,8 @@ CONTENTS                                          *grug-far-contents*
     2. Setup ................................ |grug-far-setup|
     3. Commands ............................. |grug-far-commands|
     4. API .................................. |grug-far-api|
+    5. Instance API ......................... |grug-far-instance-api|
+    6. Highlights  .......................... |grug-far-highlights|
 
 ==============================================================================
 1. INTRODUCTION                               *grug-far-introduction*
@@ -84,92 +86,17 @@ require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selec
 	Return: ~
             {instanceName}(string) 
 
-require('grug-far').toggle_instance({config})       *grug-far.toggle_instance()*
-        Toggles visibility of grug-far instance with the given config.instanceName.
-	If config.instanceName is nil, it operates on current buffer instance
-	if available.
-	The given config overrides the global plugin config that was passed to 
-	require('grug-far).setup(...). Currently supported configuration options are
-	the same as the global plugin config options linked above.
+require('grug-far').get_current_visual_selection_lines({strict})
+                                        *grug-far.get_current_visual_selection_lines()*
+	Gets the current visual selection as a string array for each line.
+	This is provided as a utility for users so they don't have to rewrite.
 
         Parameters: ~
-            {config}(optional, table) Table of values; keys as described
-                above. Accept defaults by omitting the relevant key.
-
-require('grug-far').toggle_flags({flags})                *grug-far.toggle_flags()*
-        Toggles given list of flags in the current grug-far buffer. The 
-	flags get added to/removed from the Flags input line.
-	e.g. require('grug-far).toggle_flags({'--fixed-strings'}). 
-
-        Parameters: ~
-            {flags}(table) List of flag strings to toggle.
+            {strict}(boolean) If true, only return selection if currently in
+	      visual mode
 
 	Return: ~
-	    {flags_state}(table) List of boolean flag states
-
-require('grug-far').has_instance({instanceName})               *grug-far.has_instance()*
-        Checks if grug-far instance with given name exists
-
-        Parameters: ~
-            {instanceName}(string) 
-	
-	Return: ~
-	    {exists}(boolean) 
-
-require('grug-far').get_instance_name_by_buf({buf})   *grug-far.get_instance_name_by_buf()*
-        Returns instance name associated with given buf number.
-        if given buf number is 0, returns instance for current buffer.
-	Note that even grug far instances that are not specifically given an
-	instanceName, will have an automatically generated one.
-
-        Parameters: ~
-            {buf}(integer) buf number
-
-	Return: ~
-	    {instanceName}(string) name of the instance
-
-require('grug-far').is_instance_open({instanceName})           *grug-far.is_instance_open()*
-        Checks if grug-far instance with given name is open.
-
-        Parameters: ~
-            {instanceName}(string) 
-	
-	Return: ~
-	    {is_open}(boolean) 
-
-require('grug-far').open_instance({instanceName})           *grug-far.open_instance()*
-        Opens grug-far instance with given name if window is closed.
-	Operates on current buffer instance if instaceName=nil.
-	Otherwise focuses the window.
-
-        Parameters: ~
-            {instanceName}(string?) 
-
-require('grug-far').close_instance({instanceName})           *grug-far.hide_instance()*
-        Closes window of grug-far instance with given name if window is open.
-	Operates on current buffer instance if instaceName=nil.
-
-        Parameters: ~
-            {instanceName}(string?) 
-
-require('grug-far').kill_instance({instanceName})           *grug-far.close_instance()*
-        Kills grug-far instance with given name.
-	Operates on current buffer instance if instaceName=nil.
-
-        Parameters: ~
-            {instanceName}(string?) 
-
-require('grug-far').update_instance_prefills({instanceName}, {prefills}, {clearOld})
-                                                  *grug-far.update_instance_prefills()*
-        Updates grug-far instance with given input prefill.
-	Operates on current buffer instance if instaceName=nil.
-	If clearOld=true is given, the old input values are ignored.
-
-        Parameters: ~
-            {instanceName}(string?) 
-            {prefills}(PrefillsTableOverride) table 
-	       {search=, replacement=, filesFilter=, flags=, paths=}
-            {clearOld}(boolean) if given, old input values are ignored
+	    {visual_selection}(string[])
 
 require('grug-far').get_current_visual_selection({strict})
                                               *grug-far.get_current_visual_selection()*
@@ -182,18 +109,6 @@ require('grug-far').get_current_visual_selection({strict})
 
 	Return: ~
 	    {visual_selection}(string)
-
-require('grug-far').get_current_visual_selection_lines({strict})
-                                        *grug-far.get_current_visual_selection_lines()*
-	Gets the current visual selection as a string array for each line.
-	This is provided as a utility for users so they don't have to rewrite.
-
-        Parameters: ~
-            {strict}(boolean) If true, only return selection if currently in
-	      visual mode
-
-	Return: ~
-	    {visual_selection}(string[])
 
 require('grug-far').get_current_visual_selection_as_range_str({strict})
                                         *grug-far.get_current_visual_selection_as_range_str()*
@@ -208,38 +123,78 @@ require('grug-far').get_current_visual_selection_as_range_str({strict})
 	Return: ~
 	    {range_str}(string)
 
-require('grug-far').goto_input({inputName}, {instanceName})   *grug-far.goto_input()*
-        Moves cursor to input with given name.
-	Operates on given instance or current buffer instance if instaceName=nil.
+require('grug-far').get_instance({instQuery})       *grug-far.get_instance()*
+        gets grug-far instacnce as follow:
+        if instQuery is a string, gets instance with that name
+        if instQuery is a number, gets instance at that buffer (use 0 for current buffer)
+        if instQuery is nil, get any first instance we can get our hands on
+        if instQuery is non-nil, and no instance found, an error is emitted
 
         Parameters: ~
-            {inputName}(string) 
-            {instanceName}(string?) 
+            {instQuery}(optional, string or buf number)
 
-require('grug-far').goto_first_input({instanceName})   *grug-far.goto_first_input()*
-        Moves cursor to first input. 
-	Operates on given instance or current buffer instance if instaceName=nil.
-
-        Parameters: ~
-            {instanceName}(string?) 
-
-require('grug-far').goto_next_input({instanceName})   *grug-far.goto_next_input()*
-        Moves cursor to next input (based on current location). Cycles back.
-	Operates on given instance or current buffer instance if instaceName=nil.
+require('grug-far').toggle_instance({config})       *grug-far.toggle_instance()*
+        Toggles visibility of grug-far instance with the given config.instanceName.
+	If config.instanceName is nil, it operates on current buffer instance
+	if available.
+	The given config overrides the global plugin config that was passed to 
+	require('grug-far).setup(...). Currently supported configuration options are
+	the same as the global plugin config options linked above.
 
         Parameters: ~
-            {instanceName}(string?) 
+            {config}(optional, table) Table of values; keys as described
+                above. Accept defaults by omitting the relevant key.
 
-require('grug-far').goto_prev_input({instanceName})   *grug-far.goto_prev_input()*
-        Moves cursor to prev input (based on current location). Cycles back.
-	Operates on given instance or current buffer instance if instaceName=nil.
+require('grug-far').has_instance({instanceName})               *grug-far.has_instance()*
+        Checks if grug-far instance with given name exists
 
         Parameters: ~
-            {instanceName}(string?) 
+            {instanceName}(string) 
+	
+	Return: ~
+	    {exists}(boolean) 
+
+require('grug-far').is_instance_open({instQuery})           *grug-far.is_instance_open()*
+        Checks if grug-far instance is open.
+
+        Parameters: ~
+            {instQuery}(optional, string or number) 
+	
+	Return: ~
+	    {is_open}(boolean) 
+
+require('grug-far').kill_instance({instQuery})           *grug-far.close_instance()*
+        Kills grug-far instance.
+
+        Parameters: ~
+            {instQuery}(optional, string or number) 
+
+require('grug-far').hide_instance({instQuery})           *grug-far.hide_instance()*
+        Closes (hides) window of grug-far instance with given name if window is open.
+
+        Parameters: ~
+            {instQuery}(optional, string or number) 
 
 ==============================================================================
-4. Highlights                                          *grug-far-highlights*
+6. Instance API                                          *grug-far-instance-api*
 
+You can target either an instance with a particular instanceName (as provided
+when opening the instance) or an instance associated with a particular buffer
+to invoke function on. 
+
+example 1 (targeting instance with name 'my_precious'):
+require('grug-far').open({ instanceName = 'my_precious' })
+require('grug-far').get_instance('my_precious'):some_func()
+
+example 2 (targeting current buffer instance)
+require('grug-far').get_instance(0):some_func()
+
+The documentation for each particular instance API function is provided
+through the lua language server. There are just too many functions to
+duplicate documentation here.
+
+==============================================================================
+6. Highlights                                          *grug-far-highlights*
 
 Currently supported highlights are linked from the plugin's README page:
 https://github.com/MagicDuck/grug-far.nvim/tree/main?tab=readme-ov-file#%EF%B8%8F-configuration

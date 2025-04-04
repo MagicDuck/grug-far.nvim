@@ -1,21 +1,5 @@
 local render = require('grug-far.render')
 local search = require('grug-far.actions.search')
-local replace = require('grug-far.actions.replace')
-local qflist = require('grug-far.actions.qflist')
-local gotoLocation = require('grug-far.actions.gotoLocation')
-local openLocation = require('grug-far.actions.openLocation')
-local syncLocations = require('grug-far.actions.syncLocations')
-local syncLine = require('grug-far.actions.syncLine')
-local close = require('grug-far.actions.close')
-local help = require('grug-far.actions.help')
-local abort = require('grug-far.actions.abort')
-local historyOpen = require('grug-far.actions.historyOpen')
-local historyAdd = require('grug-far.actions.historyAdd')
-local toggleShowCommand = require('grug-far.actions.toggleShowCommand')
-local swapEngine = require('grug-far.actions.swapEngine')
-local previewLocation = require('grug-far.actions.previewLocation')
-local applyChange = require('grug-far.actions.applyChange')
-local swapReplacementInterpreter = require('grug-far.actions.swapReplacementInterpreter')
 local utils = require('grug-far.utils')
 local resultsList = require('grug-far.render.resultsList')
 local inputs = require('grug-far.inputs')
@@ -26,6 +10,10 @@ local M = {}
 ---@param buf integer
 ---@param context GrugFarContext
 local function getActions(buf, context)
+  local get_inst = function()
+    return require('grug-far').get_instance(buf)
+  end
+
   local keymaps = context.options.keymaps
   return {
     {
@@ -33,7 +21,7 @@ local function getActions(buf, context)
       keymap = keymaps.help,
       description = 'Open up help window.',
       action = function()
-        help({ buf = buf, context = context })
+        get_inst():help()
       end,
     },
     {
@@ -41,7 +29,7 @@ local function getActions(buf, context)
       keymap = keymaps.replace,
       description = "Perform replace. Note that compared to 'Sync All', replace can also handle multiline replacements.",
       action = function()
-        replace({ buf = buf, context = context })
+        get_inst():replace()
       end,
     },
     {
@@ -49,7 +37,7 @@ local function getActions(buf, context)
       keymap = keymaps.syncLocations,
       description = 'Sync all result lines text (potentially manually modified) back to their originating files. You can refine the effect by manually deleting lines to exclude them.',
       action = function()
-        syncLocations({ buf = buf, context = context })
+        get_inst():sync_all()
       end,
     },
     {
@@ -57,7 +45,7 @@ local function getActions(buf, context)
       keymap = keymaps.syncLine,
       description = 'Sync current result line text (potentially manually modified) back to its originating file.',
       action = function()
-        syncLine({ buf = buf, context = context })
+        get_inst():sync_line()
       end,
     },
     {
@@ -65,7 +53,7 @@ local function getActions(buf, context)
       keymap = keymaps.historyOpen,
       description = 'Open history window. The history window allows you to select and edit historical searches/replacements.',
       action = function()
-        historyOpen({ buf = buf, context = context })
+        get_inst():history_open()
       end,
     },
     {
@@ -73,7 +61,7 @@ local function getActions(buf, context)
       keymap = keymaps.historyAdd,
       description = 'Add current search/replace as a history entry.',
       action = function()
-        historyAdd({ buf = buf, context = context })
+        get_inst():history_add()
       end,
     },
     {
@@ -81,7 +69,7 @@ local function getActions(buf, context)
       keymap = keymaps.refresh,
       description = 'Re-trigger search. This can be useful in situations where files have been changed externally for example.',
       action = function()
-        search({ buf = buf, context = context })
+        get_inst():search()
       end,
     },
     {
@@ -89,7 +77,7 @@ local function getActions(buf, context)
       keymap = keymaps.gotoLocation,
       description = "When cursor is placed on a result file path, go to that file. When it's placed over a result line, go to the file/line/column of the match. If a <count> is entered beforehand, go to the location corresponding to <count> result line.",
       action = function()
-        gotoLocation({ buf = buf, context = context, count = vim.v.count })
+        get_inst():goto_location({ count = vim.v.count })
       end,
     },
     {
@@ -97,7 +85,7 @@ local function getActions(buf, context)
       keymap = keymaps.openLocation,
       description = "Same as 'Goto', but cursor stays in grug-far buffer. This can allow a quicker thumb-through result locations. Alternatively, you can use the '--context <num>' flag to see match contexts. If a <count> is entered beforehand, open the location corresponding to <count> result line.",
       action = function()
-        openLocation({ buf = buf, context = context, count = vim.v.count })
+        get_inst():open_location({ count = vim.v.count })
       end,
     },
     {
@@ -105,7 +93,7 @@ local function getActions(buf, context)
       keymap = keymaps.openNextLocation,
       description = "Move cursor to next result line relative to current line and trigger 'Open' action",
       action = function()
-        openLocation({ buf = buf, context = context, increment = 1 })
+        get_inst():open_next_location()
       end,
     },
     {
@@ -113,7 +101,7 @@ local function getActions(buf, context)
       keymap = keymaps.openPrevLocation,
       description = "Move cursor to previous result line relative to current line and trigger 'Open' action",
       action = function()
-        openLocation({ buf = buf, context = context, increment = -1 })
+        get_inst():open_prev_location()
       end,
     },
     {
@@ -121,7 +109,7 @@ local function getActions(buf, context)
       keymap = keymaps.applyNext,
       description = 'Apply change at current line, remove it from buffer and move cursor to / open next change',
       action = function()
-        applyChange({ buf = buf, context = context, increment = 1 })
+        get_inst():apply_next_change()
       end,
     },
     {
@@ -129,7 +117,7 @@ local function getActions(buf, context)
       keymap = keymaps.applyPrev,
       description = 'Apply change at current line, remove it from buffer and move cursor to / open prev change',
       action = function()
-        applyChange({ buf = buf, context = context, increment = -1 })
+        get_inst():apply_prev_change()
       end,
     },
     {
@@ -137,7 +125,7 @@ local function getActions(buf, context)
       keymap = keymaps.qflist,
       description = 'Send result lines to the quickfix list. Deleting result lines will cause them not to be included. ',
       action = function()
-        qflist({ buf = buf, context = context })
+        get_inst():open_quickfix()
       end,
     },
     {
@@ -145,7 +133,7 @@ local function getActions(buf, context)
       keymap = keymaps.abort,
       description = "Abort current operation. Can be useful if you've ended up doing too large of a search or if you've changed your mind about a replacement midway.",
       action = function()
-        abort({ buf = buf, context = context })
+        get_inst():abort()
       end,
     },
     {
@@ -153,7 +141,7 @@ local function getActions(buf, context)
       keymap = keymaps.close,
       description = 'Close grug-far buffer/window. This is the same as `:bd` except that it will also ask you to confirm if there is a replace/sync in progress, as those would be aborted.',
       action = function()
-        close({ buf = buf, context = context })
+        get_inst():close()
       end,
     },
     {
@@ -161,7 +149,7 @@ local function getActions(buf, context)
       keymap = keymaps.swapEngine,
       description = 'Swap search engine with the next one.',
       action = function()
-        swapEngine({ buf = buf, context = context })
+        get_inst():swap_engine()
       end,
     },
     {
@@ -169,7 +157,7 @@ local function getActions(buf, context)
       keymap = keymaps.toggleShowCommand,
       description = 'Toggle showing search command. Can be useful for debugging purposes.',
       action = function()
-        toggleShowCommand({ buf = buf, context = context })
+        get_inst():toggle_show_search_command()
       end,
     },
     {
@@ -177,7 +165,7 @@ local function getActions(buf, context)
       keymap = keymaps.previewLocation,
       description = 'Preview location in floating window.',
       action = function()
-        previewLocation({ buf = buf, context = context })
+        get_inst():preview_location()
       end,
     },
     {
@@ -185,7 +173,7 @@ local function getActions(buf, context)
       keymap = keymaps.swapReplacementInterpreter,
       description = 'Swap replacement interpreter with the next one. For example, with the "lua" interpreter, you can use lua to generate your replacement for each match.',
       action = function()
-        swapReplacementInterpreter({ buf = buf, context = context })
+        get_inst():swap_replacement_interpreter()
       end,
     },
     {
@@ -193,7 +181,7 @@ local function getActions(buf, context)
       keymap = keymaps.nextInput,
       description = 'Goto next input. Cycles back.',
       action = function()
-        require('grug-far').goto_next_input()
+        get_inst():goto_next_input()
       end,
     },
     {
@@ -201,7 +189,7 @@ local function getActions(buf, context)
       keymap = keymaps.prevInput,
       description = 'Goto prev input. Cycles back.',
       action = function()
-        require('grug-far').goto_prev_input()
+        get_inst():goto_prev_input()
       end,
     },
   }

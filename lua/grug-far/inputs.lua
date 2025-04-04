@@ -340,4 +340,114 @@ function M.bindInputSaavyKeys(context, buf)
   })
 end
 
+---@param context GrugFarContext
+---@param buf number
+---@param getInputName fun(win: integer): GrugFarInputName
+local function _gotoInputInternal(context, buf, getInputName)
+  local win = vim.fn.bufwinid(buf)
+  local inputName = getInputName(win)
+  local startRow, _, input = M.getInputPos(context, buf, inputName)
+  if not (startRow and input) then
+    error('could not get row of input with given name: ' .. inputName)
+  end
+  pcall(vim.api.nvim_win_set_cursor, win, { startRow + 1, 0 })
+end
+
+--- moves cursor to the input with the given name
+---@param context GrugFarContext
+---@param buf number
+---@param inputName GrugFarInputName
+function M.goto_input(context, buf, inputName)
+  return _gotoInputInternal(context, buf, function()
+    return inputName
+  end)
+end
+
+--- moves cursor to the first input
+---@param context GrugFarContext
+---@param buf number
+function M.goto_first_input(context, buf)
+  return _gotoInputInternal(context, buf, function()
+    return context.engine.inputs[1].name
+  end)
+end
+
+--- moves cursor to the next input
+---@param context GrugFarContext
+---@param buf number
+function M.goto_next_input(context, buf)
+  return _gotoInputInternal(context, buf, function(win)
+    local engineInputs = context.engine.inputs
+    local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
+    local current_input = M.getInputAtRow(context, buf, cursor_row - 1)
+
+    local next_input_name = engineInputs[1].name
+    if current_input then
+      for i, input in ipairs(engineInputs) do
+        if input.name == current_input.name then
+          local next_input = engineInputs[i + 1] or engineInputs[1]
+          next_input_name = next_input.name
+        end
+      end
+    end
+
+    return next_input_name
+  end)
+end
+
+--- moves cursor to the next input
+---@param context GrugFarContext
+---@param buf number
+function M.goto_prev_input(context, buf)
+  return _gotoInputInternal(context, buf, function(win)
+    local engineInputs = context.engine.inputs
+    local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
+    local current_input = M.getInputAtRow(context, buf, cursor_row - 1)
+
+    local next_input_name = engineInputs[#engineInputs].name
+    if current_input then
+      for i, input in ipairs(engineInputs) do
+        if input.name == current_input.name then
+          local next_input = engineInputs[i - 1] or engineInputs[#engineInputs]
+          next_input_name = next_input.name
+        end
+      end
+    end
+
+    return next_input_name
+  end)
+end
+
+--- toggles given list of flags
+---@param context GrugFarContext
+---@param buf number
+---@param flags string[]
+---@return boolean[] states
+function M.toggle_flags(context, buf, flags)
+  if #flags == 0 then
+    return {}
+  end
+
+  local flags_value = M.getInputValue(context, buf, 'flags')
+  local states = {}
+  for _, flag in ipairs(flags) do
+    local i, j = flags_value:find(' ' .. flag, 1, true)
+    if not i then
+      i, j = flags_value:find(flag, 1, true)
+    end
+
+    if i then
+      flags_value = flags_value:sub(1, i - 1) .. flags_value:sub(j + 1, -1)
+      table.insert(states, false)
+    else
+      flags_value = flags_value .. ' ' .. flag
+      table.insert(states, true)
+    end
+  end
+
+  M.fill(context, buf, { flags = flags_value }, false)
+
+  return states
+end
+
 return M
