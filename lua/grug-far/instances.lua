@@ -177,41 +177,45 @@ function M:search()
   require('grug-far.actions.search')(self._params)
 end
 
---- goto source location (file, line, column) associated with current line
----@param params? { count?: number }
-function M:goto_location(params)
+--- move cursor to <count>th match
+---@param count number
+function M:goto_match(count)
   self:ensure_open()
-  require('grug-far.actions.gotoLocation')(vim.tbl_extend('keep', self._params, params or {}))
+  require('grug-far.actions.gotoMatch')(vim.tbl_extend('keep', self._params, { count = count }))
 end
 
--- TODO (sbadragan): Move API???
---- open source location (file, line, column) associated with current line (stays in grug-far buffer)
----@param params? { count?: number }
-function M:open_location(params)
-  self:ensure_open()
-  require('grug-far.actions.openLocation')(vim.tbl_extend('keep', self._params, params or {}))
-end
-
---- moves to next match and opens source location (file, line, column) associated with it
+--- move cursor to next match
 --- if includeUncounted = true, it will move through lines that do not have a match count
 --- (which can happen for multiline searches)
 ---@param params? { includeUncounted?: boolean }
-function M:open_next_location(params)
+function M:goto_next_match(params)
   self:ensure_open()
-  require('grug-far.actions.openLocation')(
+  require('grug-far.actions.gotoMatch')(
     vim.tbl_extend('keep', self._params, { increment = 1 }, params or {})
   )
 end
 
---- moves to prev match and opens source location (file, line, column) associated with it
+--- move cursor to prev match
 --- if includeUncounted = true, it will move through lines that do not have a match count
 --- (which can happen for multiline searches)
 ---@param params? { includeUncounted?: boolean }
-function M:open_prev_location(params)
+function M:goto_prev_match(params)
   self:ensure_open()
-  require('grug-far.actions.openLocation')(
+  require('grug-far.actions.gotoMatch')(
     vim.tbl_extend('keep', self._params, { increment = -1 }, params or {})
   )
+end
+
+--- goto source location (file, line, column) associated with current line
+function M:goto_location()
+  self:ensure_open()
+  require('grug-far.actions.gotoLocation')(self._params)
+end
+
+--- open source location (file, line, column) associated with current line (stays in grug-far buffer)
+function M:open_location()
+  self:ensure_open()
+  require('grug-far.actions.openLocation')(self._params)
 end
 
 --- apply change at current line, remove it from buffer and move cursor to / open next change

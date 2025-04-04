@@ -1,6 +1,7 @@
 local sync = require('grug-far.actions.sync')
 local openLocation = require('grug-far.actions.openLocation')
 local resultsList = require('grug-far.render.resultsList')
+local gotoMatch = require('grug-far.actions.gotoMatch')
 
 --- gets adjacent location
 ---@param buf integer
@@ -105,8 +106,9 @@ local function getDeleteRange(
   return startRow, endRow
 end
 
---- apply change at current line, remove it from buffer and open location of next/prev change
----@param params { buf: integer, context: GrugFarContext, increment: -1 | 1 }
+--- apply change at current line, optionally remove it from buffer and open location of next/prev change
+---@param params { buf: integer, context: GrugFarContext, increment: -1 | 1, open: boolean, remove_synced: boolean }
+-- TODO (sbadragan): fixup
 local function applyChange(params)
   local buf = params.buf
   local context = params.context
@@ -120,7 +122,8 @@ local function applyChange(params)
     return
   end
 
-  openLocation({ buf = buf, context = context, increment = increment, includeUncounted = true })
+  gotoMatch({ buf = buf, context = context, increment = increment, includeUncounted = true })
+  openLocation({ buf = buf, context = context })
   local new_cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
   local syncStartRow, syncEndRow = getSyncRange(buf, context, initial_cursor_row, start_location)
 
