@@ -1,5 +1,4 @@
 local resultsList = require('grug-far.render.resultsList')
-local utils = require('grug-far.utils')
 
 --- gets result location that we should move to and row in buffer where it is referenced
 ---@param buf integer

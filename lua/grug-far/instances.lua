@@ -76,7 +76,7 @@ function M.ensure_instance(instQuery)
   local msg
   if type(instQuery) == 'string' then
     msg = 'name="' .. instQuery .. '"'
-  elseif type(instQuery == 'number') then
+  elseif type(instQuery) == 'number' then
     msg = 'buf=' .. instQuery
   end
   if msg then
@@ -232,7 +232,7 @@ end
 function M:apply_next_change(params)
   self:ensure_open()
   require('grug-far.actions.applyChange')(
-    vim.tbl_extend('keep', self._params, { increment = 1 }, params)
+    vim.tbl_extend('keep', self._params, { increment = 1 }, params or {})
   )
 end
 
@@ -244,7 +244,7 @@ end
 function M:apply_prev_change(params)
   self:ensure_open()
   require('grug-far.actions.applyChange')(
-    vim.tbl_extend('keep', self._params, { increment = -1 }, params)
+    vim.tbl_extend('keep', self._params, { increment = -1 }, params or {})
   )
 end
 

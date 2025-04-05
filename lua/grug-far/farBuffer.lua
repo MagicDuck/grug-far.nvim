@@ -49,6 +49,30 @@ local function getActions(buf, context)
       end,
     },
     {
+      text = 'Sync Next',
+      keymap = keymaps.syncNext,
+      description = 'Sync change at current line and move cursor to next match',
+      action = function()
+        get_inst():apply_next_change({ open_location = false, remove_synced = false, notify = true })
+      end,
+    },
+    {
+      text = 'Sync Prev',
+      keymap = keymaps.syncPrev,
+      description = 'Sync change at current line and move cursor to prev match',
+      action = function()
+        get_inst():apply_prev_change({ open_location = false, remove_synced = false, notify = true })
+      end,
+    },
+    {
+      text = 'Sync File',
+      keymap = keymaps.syncFile,
+      description = 'Sync changes within current file',
+      action = function()
+        get_inst():sync_file()
+      end,
+    },
+    {
       text = 'History Open',
       keymap = keymaps.historyOpen,
       description = 'Open history window. The history window allows you to select and edit historical searches/replacements.',
@@ -126,30 +150,6 @@ local function getActions(buf, context)
       description = 'Apply change at current line, remove it from buffer and move cursor to / open prev change',
       action = function()
         get_inst():apply_prev_change()
-      end,
-    },
-    {
-      text = 'Sync Next',
-      keymap = keymaps.syncNext,
-      description = 'Sync change at current line and move cursor to next match',
-      action = function()
-        get_inst():apply_next_change({ open_location = false, remove_synced = false, notify = true })
-      end,
-    },
-    {
-      text = 'Sync Prev',
-      keymap = keymaps.syncPrev,
-      description = 'Sync change at current line and move cursor to prev match',
-      action = function()
-        get_inst():apply_prev_change({ open_location = false, remove_synced = false, notify = true })
-      end,
-    },
-    {
-      text = 'Sync File',
-      keymap = keymaps.syncFile,
-      description = 'Sync changes within current file',
-      action = function()
-        get_inst():sync_file()
       end,
     },
     {
