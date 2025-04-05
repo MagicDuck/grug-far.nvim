@@ -159,6 +159,12 @@ function M:sync_line()
   require('grug-far.actions.syncLine')(self._params)
 end
 
+--- perform sync file (for file around current line)
+function M:sync_file()
+  self:ensure_open()
+  require('grug-far.actions.syncFile')(self._params)
+end
+
 --- open history window
 function M:history_open()
   self:ensure_open()
