@@ -129,6 +129,22 @@ local function getActions(buf, context)
       end,
     },
     {
+      text = 'Sync Next',
+      keymap = keymaps.syncNext,
+      description = 'Sync change at current line and move cursor to next match',
+      action = function()
+        get_inst():apply_next_change({ open_location = false, remove_synced = false, notify = true })
+      end,
+    },
+    {
+      text = 'Sync Prev',
+      keymap = keymaps.syncPrev,
+      description = 'Sync change at current line and move cursor to prev match',
+      action = function()
+        get_inst():apply_prev_change({ open_location = false, remove_synced = false, notify = true })
+      end,
+    },
+    {
       text = 'Quickfix',
       keymap = keymaps.qflist,
       description = 'Send result lines to the quickfix list. Deleting result lines will cause them not to be included. ',

@@ -218,16 +218,28 @@ function M:open_location()
   require('grug-far.actions.openLocation')(self._params)
 end
 
---- apply change at current line, remove it from buffer and move cursor to / open next change
-function M:apply_next_change()
+--- 1. apply change at current line (and notify if notify=true)
+--- 2. optionally remove it from buffer (if remove_synced = true, defaults to true)
+--- 3. move cursor to next match
+--- 4.open source location (if open_location = true, defaults to true)
+---@param params? { open_location?: boolean, remove_synced?: boolean, notify?: boolean }
+function M:apply_next_change(params)
   self:ensure_open()
-  require('grug-far.actions.applyChange')(vim.tbl_extend('keep', self._params, { increment = 1 }))
+  require('grug-far.actions.applyChange')(
+    vim.tbl_extend('keep', self._params, { increment = 1 }, params)
+  )
 end
 
---- apply change at current line, remove it from buffer and move cursor to / open prev change
-function M:apply_prev_change()
+--- 1. apply change at current line (and notify if notify=true)
+--- 2. optionally remove it from buffer (if remove_synced = true, defaults to true)
+--- 3. move cursor to prev match
+--- 4.open source location (if open_location = true, defaults to true)
+---@param params? { open_location?: boolean, remove_synced?: boolean, notify?: boolean }
+function M:apply_prev_change(params)
   self:ensure_open()
-  require('grug-far.actions.applyChange')(vim.tbl_extend('keep', self._params, { increment = -1 }))
+  require('grug-far.actions.applyChange')(
+    vim.tbl_extend('keep', self._params, { increment = -1 }, params)
+  )
 end
 
 --- send result lines to the quickfix list. Deleting result lines will cause them not to be included.

@@ -107,8 +107,7 @@ local function getDeleteRange(
 end
 
 --- apply change at current line, optionally remove it from buffer and open location of next/prev change
----@param params { buf: integer, context: GrugFarContext, increment: -1 | 1, open: boolean, remove_synced: boolean }
--- TODO (sbadragan): fixup
+---@param params { buf: integer, context: GrugFarContext, increment: -1 | 1, open_location?: boolean, remove_synced?: boolean, notify?: boolean }
 local function applyChange(params)
   local buf = params.buf
   local context = params.context
@@ -123,7 +122,9 @@ local function applyChange(params)
   end
 
   gotoMatch({ buf = buf, context = context, increment = increment, includeUncounted = true })
-  openLocation({ buf = buf, context = context })
+  if params.open_location ~= false then
+    openLocation({ buf = buf, context = context })
+  end
   local new_cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
   local syncStartRow, syncEndRow = getSyncRange(buf, context, initial_cursor_row, start_location)
 
@@ -132,11 +133,13 @@ local function applyChange(params)
     context = context,
     startRow = syncStartRow - 1,
     endRow = syncEndRow - 1,
-    shouldNotifyOnComplete = false,
+    shouldNotifyOnComplete = params.notify,
     on_success = function()
-      local delStartRow, delEndRow =
-        getDeleteRange(buf, context, start_location, syncStartRow, syncEndRow, new_cursor_row)
-      vim.api.nvim_buf_set_lines(buf, delStartRow - 1, delEndRow, true, {})
+      if params.remove_synced ~= false then
+        local delStartRow, delEndRow =
+          getDeleteRange(buf, context, start_location, syncStartRow, syncEndRow, new_cursor_row)
+        vim.api.nvim_buf_set_lines(buf, delStartRow - 1, delEndRow, true, {})
+      end
     end,
   })
 end
