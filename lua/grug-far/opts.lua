@@ -248,12 +248,14 @@ M.defaultOptions = {
     pickHistoryEntry = { n = '<enter>' },
     abort = { n = '<localleader>b' },
     help = { n = 'g?' },
-    toggleShowCommand = { n = '<localleader>p' },
+    toggleShowCommand = { n = '<localleader>w' },
     swapEngine = { n = '<localleader>e' },
     previewLocation = { n = '<localleader>i' },
     swapReplacementInterpreter = { n = '<localleader>x' },
     applyNext = { n = '<localleader>j' },
     applyPrev = { n = '<localleader>k' },
+    syncNext = { n = '<localleader>n' },
+    syncPrev = { n = '<localleader>p' },
     nextInput = { n = '<tab>' },
     prevInput = { n = '<s-tab>' },
   },
@@ -492,6 +494,8 @@ M.defaultOptions = {
 ---@field swapReplacementInterpreter KeymapDef
 ---@field applyNext KeymapDef
 ---@field applyPrev KeymapDef
+---@field syncNext KeymapDef
+---@field syncPrev KeymapDef
 ---@field nextInput KeymapDef
 ---@field prevInput KeymapDef
 
@@ -518,6 +522,8 @@ M.defaultOptions = {
 ---@field swapReplacementInterpreter? KeymapDef
 ---@field applyNext? KeymapDef
 ---@field applyPrev? KeymapDef
+---@field syncNext? KeymapDef
+---@field syncPrev? KeymapDef
 ---@field nextInput? KeymapDef
 ---@field prevInput? KeymapDef
 
