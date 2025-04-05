@@ -353,7 +353,7 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'grug-far' },
   callback = function()
     vim.keymap.set('n', '<localleader>w', function()
-      local state = unpack(require('grug-far').toggle_flags({ '--fixed-strings' }))
+      local state = unpack(require('grug-far').get_instance(0):toggle_flags({ '--fixed-strings' }))
       vim.notify('grug-far: toggled --fixed-strings ' .. (state and 'ON' or 'OFF'))
     end, { buffer = true })
   end,
@@ -366,11 +366,13 @@ vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('grug-far-keybindings', { clear = true }),
   pattern = { 'grug-far' },
   callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'n', '<C-enter>', '<localleader>o<localleader>c', {})
+    vim.keymap.set('n', '<C-enter>', function()
+      require('grug-far').get_instance(0):open_location()
+      require('grug-far').get_instance(0):close()
+    end, { buffer = true })
   end,
 })
 ```
-(where `<localleader>o` and `<localleader>c` are the default keybindings for Open and Close actions. You will need to change them if you set them to something different)
 
 #### Create a buffer local keybinding to jump back to first input
 ``` lua
@@ -380,7 +382,7 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = function()
     -- jump back to first input by hitting left arrow in normal mode:
     vim.keymap.set('n', '<left>', function()
-      require('grug-far').goto_first_input()
+      require('grug-far').get_instance(0):goto_first_input()
     end, { buffer = true })
   end,
 })

@@ -133,7 +133,7 @@ local function applyChange(params)
     context = context,
     startRow = syncStartRow - 1,
     endRow = syncEndRow - 1,
-    shouldNotifyOnComplete = params.notify,
+    shouldNotifyOnComplete = params.notify == true,
     on_success = function()
       if params.remove_synced ~= false then
         local delStartRow, delEndRow =
