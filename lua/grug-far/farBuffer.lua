@@ -145,6 +145,14 @@ local function getActions(buf, context)
       end,
     },
     {
+      text = 'Sync File',
+      keymap = keymaps.syncFile,
+      description = 'Sync changes within current file',
+      action = function()
+        get_inst():sync_file()
+      end,
+    },
+    {
       text = 'Quickfix',
       keymap = keymaps.qflist,
       description = 'Send result lines to the quickfix list. Deleting result lines will cause them not to be included. ',

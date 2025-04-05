@@ -185,4 +185,33 @@ T['can sync all within buffer range'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can sync file around line'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'curly' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.cmd('set number')
+  child.type_keys('<esc>10G0')
+  child.type_keys(10, '<esc>' .. keymaps.syncFile.n)
+
+  helpers.childWaitForScreenshotText(child, 'sync completed!')
+  child.cmd('vsp | e file1.txt')
+  helpers.childExpectScreenshot(child)
+end
+
 return T

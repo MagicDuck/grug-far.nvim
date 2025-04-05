@@ -256,6 +256,7 @@ M.defaultOptions = {
     applyPrev = { n = '<localleader>k' },
     syncNext = { n = '<localleader>n' },
     syncPrev = { n = '<localleader>p' },
+    syncFile = { n = '<localleader>v' },
     nextInput = { n = '<tab>' },
     prevInput = { n = '<s-tab>' },
   },
@@ -496,6 +497,7 @@ M.defaultOptions = {
 ---@field applyPrev KeymapDef
 ---@field syncNext KeymapDef
 ---@field syncPrev KeymapDef
+---@field syncFile KeymapDef
 ---@field nextInput KeymapDef
 ---@field prevInput KeymapDef
 
@@ -524,6 +526,7 @@ M.defaultOptions = {
 ---@field applyPrev? KeymapDef
 ---@field syncNext? KeymapDef
 ---@field syncPrev? KeymapDef
+---@field syncFile? KeymapDef
 ---@field nextInput? KeymapDef
 ---@field prevInput? KeymapDef
 
