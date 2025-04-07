@@ -132,6 +132,7 @@ function M:ensure_open()
     -- toggle it on
     local win = require('grug-far')._createWindow(self._context)
     vim.api.nvim_win_set_buf(win, self._buf)
+    require('grug-far')._setupWindow(self._context, win, self._buf)
   end
 end
 

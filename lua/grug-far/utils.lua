@@ -187,6 +187,21 @@ function M.readFileAsync(path, callback)
   end)
 end
 
+--- reads file lines synchronously
+---@param path string file path
+---@return string[] | nil
+function M.readFileLinesSync(path)
+  local fd = uv.fs_open(path, 'r', 0)
+  if not fd then
+    return
+  end
+  local stat = assert(uv.fs_fstat(fd))
+  local data = assert(uv.fs_read(fd, stat.size, 0)) --[[@as string]]
+  assert(uv.fs_close(fd))
+
+  return vim.iter(vim.split(data, '\n')):map(M.getLineWithoutCarriageReturn):totable()
+end
+
 --- async overwrites file with given content
 ---@param path string
 ---@param data string
@@ -430,7 +445,7 @@ function M.getOpenTargetWin(context, buf)
       end
 
       local buftype = vim.api.nvim_get_option_value('buftype', { buf = b })
-      if not buftype or buftype ~= '' then
+      if not vim.b[b].__grug_far_scratch_buf and (not buftype or buftype ~= '') then
         return false
       end
 
@@ -525,9 +540,6 @@ function M.getOpenTargetWin(context, buf)
     win = grugfar_win,
     split = preferredLocation,
   })
-  for opt_name, opt_value in pairs(context.winDefaultOpts) do
-    vim.api.nvim_set_option_value(opt_name, opt_value, { win = new_win })
-  end
 
   return new_win, true
 end
