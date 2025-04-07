@@ -13,22 +13,34 @@ local function openLocation(params)
   end
 
   local targetWin = utils.getOpenTargetWin(context, buf)
+  -- TODO (sbadragan): when loading another buffer in grug-far window, the window opts are not reset
 
   local targetBuf = vim.fn.bufnr(location.filename)
   if targetBuf == -1 then
-    vim.fn.win_execute(
-      targetWin,
-      'keepjumps silent! e! ' .. utils.escape_path_for_cmd(location.filename),
-      true
-    )
-    targetBuf = vim.api.nvim_win_get_buf(targetWin)
-  else
-    vim.api.nvim_win_set_buf(targetWin, targetBuf)
-  end
+    targetBuf = vim.api.nvim_create_buf(true, false)
+    -- load lines into target buf and highlight them manually (to prevent LSP kickoff)
+    vim.api.nvim_buf_set_name(targetBuf, location.filename)
+    if context.options.openTargetWindow.useScratchBuffer then
+      vim.bo[targetBuf].buftype = 'nofile'
+      vim.b[targetBuf].__grug_far_scratch_buf = true
+      local lines = utils.readFileLinesSync(location.filename)
+      if lines then
+        vim.api.nvim_buf_set_lines(targetBuf, 0, -1, false, lines)
+        local ft = utils.getFileType(location.filename)
+        if ft then
+          local lang = vim.treesitter.language.get_lang(ft)
+          if not pcall(vim.treesitter.start, targetBuf, lang) then
+            vim.bo[buf].syntax = ft
+          end
+        end
+      end
+    else
+      vim.api.nvim_buf_call(targetBuf, function()
+        vim.cmd('keepjumps silent! edit!')
+      end)
+    end
 
-  vim.api.nvim_set_option_value('buflisted', true, { buf = targetBuf })
-
-  if not vim.b[targetBuf].__grug_far_was_visited then
+    -- TODO (sbadragan): check the buffer existence thing
     local bufHiddenAutocmdId, bufEnterAutocmdId
     bufHiddenAutocmdId = vim.api.nvim_create_autocmd({ 'BufHidden' }, {
       buffer = targetBuf,
@@ -36,6 +48,7 @@ local function openLocation(params)
         vim.api.nvim_del_autocmd(bufHiddenAutocmdId)
         vim.api.nvim_del_autocmd(bufEnterAutocmdId)
         vim.api.nvim_set_option_value('buflisted', false, { buf = targetBuf })
+        vim.b[targetBuf].__grug_far_scratch_buf = nil
         vim.schedule(function()
           -- note: using bdelete! instead of nvim_buf_delete or bwipeout!
           -- due to an issue in nvim similar to this issue described in oil:
@@ -48,13 +61,23 @@ local function openLocation(params)
     bufEnterAutocmdId = vim.api.nvim_create_autocmd({ 'WinEnter' }, {
       buffer = targetBuf,
       callback = function()
-        vim.b[targetBuf].__grug_far_was_visited = true
         vim.api.nvim_del_autocmd(bufHiddenAutocmdId)
         vim.api.nvim_del_autocmd(bufEnterAutocmdId)
+
+        if context.options.openTargetWindow.useScratchBuffer then
+          vim.schedule(function()
+            vim.bo[targetBuf].buftype = ''
+            vim.api.nvim_buf_set_name(targetBuf, location.filename)
+            vim.api.nvim_buf_call(targetBuf, function()
+              vim.cmd('keepjumps silent! edit!')
+            end)
+          end)
+        end
       end,
     })
   end
 
+  vim.api.nvim_win_set_buf(targetWin, targetBuf)
   pcall(
     vim.api.nvim_win_set_cursor,
     targetWin,

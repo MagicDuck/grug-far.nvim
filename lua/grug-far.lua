@@ -83,7 +83,6 @@ end
 ---@field engine GrugFarEngine
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field fileIconsProvider? FileIconsProvider
----@field winDefaultOpts table<string, any>
 
 ---@class VisualSelectionInfo
 ---@field file_name string
@@ -130,19 +129,7 @@ local function createContext(options)
       searchDisabled = false,
       previousInputValues = {},
     },
-    winDefaultOpts = {},
   }
-end
-
---- sets window option, storing previous "default" value in winDefaultOpts
---- those are used when we split off new windows and don't want to inherit those opts
----@param context GrugFarContext
----@param win integer
----@param name string
----@param value any
-local function setWinOption(context, win, name, value)
-  context.winDefaultOpts[name] = vim.api.nvim_get_option_value(name, { win = win })
-  vim.api.nvim_set_option_value(name, value, { win = win })
 end
 
 ---@param context GrugFarContext
@@ -156,21 +143,26 @@ function M._createWindow(context)
   vim.cmd(context.options.windowCreationCommand)
   local win = vim.api.nvim_get_current_win()
 
-  if context.options.disableBufferLineNumbers then
-    setWinOption(context, win, 'number', false)
-    setWinOption(context, win, 'relativenumber', false)
-  end
-
-  setWinOption(context, win, 'wrap', context.options.wrap)
-  setWinOption(context, win, 'breakindent', true)
-  setWinOption(context, win, 'breakindentopt', context.options.breakindentopt)
-  if opts.shouldConceal(context.options) then
-    setWinOption(context, win, 'conceallevel', 1)
-  end
-
-  fold.setup(context, win, setWinOption)
-
   return win
+end
+
+---@param context GrugFarContext
+---@param win integer
+---@param buf integer
+function M._setupWindow(context, win, buf)
+  if context.options.disableBufferLineNumbers then
+    vim.wo[win][buf].number = false
+    vim.wo[win][buf].relativenumber = false
+  end
+
+  vim.wo[win][buf].wrap = context.options.wrap
+  vim.wo[win][buf].breakindent = true
+  vim.wo[win][buf].breakindentopt = context.options.breakindentopt
+  if opts.shouldConceal(context.options) then
+    vim.wo[win][buf].conceallevel = 1
+  end
+
+  fold.setup(context, win, buf)
 end
 
 ---@param buf integer
@@ -210,6 +202,15 @@ local function setupCleanup(buf, context)
     buffer = buf,
     callback = onBufUnload,
   })
+
+  -- TODO (sbadragan): add for BufWinEnter?
+  -- vim.api.nvim_create_autocmd({ 'BufWinLeave' }, {
+  --   group = context.augroup,
+  --   buffer = buf,
+  --   callback = function ()
+  --     vim.api.nvim_list_wins
+  --   end,
+  -- })
 end
 
 --- launch grug-far with the given overrides
@@ -248,6 +249,7 @@ function M._open_internal(options, params)
 
   local win = M._createWindow(context)
   local buf = farBuffer.createBuffer(win, context)
+  M._setupWindow(context, win, buf)
   setupCleanup(buf, context)
   instances.add_instance(options.instanceName, instances.new(context, buf))
 
@@ -324,6 +326,7 @@ function M.toggle_instance(options)
   if win == -1 then
     -- toggle it on
     win = M._createWindow(inst._context)
+    M._setupWindow(inst._context, win, inst._buf)
     vim.api.nvim_win_set_buf(win, inst._buf)
   else
     -- toggle it off

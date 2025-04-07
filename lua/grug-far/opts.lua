@@ -456,6 +456,11 @@ M.defaultOptions = {
     -- otherwise a new window will be created in that direction.
     -- available options: "prev" | "left" | "right" | "above" | "below"
     preferredLocation = 'left',
+
+    -- use a temporary scratch buffer, in order to prevent language servers starting up and
+    -- consuming resources as you are moving through the results. The buffer is converted to
+    -- a real buffer once you navigate to it explicitly
+    useScratchBuffer = true,
   },
 
   -- options for help window, history window and preview windows
@@ -697,10 +702,12 @@ M.defaultOptions = {
 ---@class OpenTargetWindowTable
 ---@field exclude (string | FilterWindowFn)[]
 ---@field preferredLocation WinPreferredLocation
+---@field useScratchBuffer boolean
 
 ---@class OpenTargetWindowTableOverride
 ---@field exclude? (string | FilterWindowFn)[]
 ---@field preferredLocation? WinPreferredLocation
+---@field useScratchBuffer? boolean
 
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
 
