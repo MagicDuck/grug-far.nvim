@@ -2,6 +2,7 @@ local sync = require('grug-far.actions.sync')
 local openLocation = require('grug-far.actions.openLocation')
 local resultsList = require('grug-far.render.resultsList')
 local gotoMatch = require('grug-far.actions.gotoMatch')
+local utils = require('grug-far.utils')
 
 --- gets adjacent location
 ---@param buf integer
@@ -121,9 +122,11 @@ local function applyChange(params)
     return
   end
 
+  utils.convertAnyScratchBufToRealBuf()
+
   gotoMatch({ buf = buf, context = context, increment = increment, includeUncounted = true })
   if params.open_location ~= false then
-    openLocation({ buf = buf, context = context })
+    openLocation({ buf = buf, context = context, useScratchBuffer = false })
   end
   local new_cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
   local syncStartRow, syncEndRow = getSyncRange(buf, context, initial_cursor_row, start_location)

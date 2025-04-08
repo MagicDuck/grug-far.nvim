@@ -2,10 +2,11 @@ local utils = require('grug-far.utils')
 local resultsList = require('grug-far.render.resultsList')
 
 --- opens location at current cursor line (if there is one) in target window
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: GrugFarContext, useScratchBuffer?: boolean }
 local function openLocation(params)
   local buf = params.buf
   local context = params.context
+  local useScratchBuffer = params.useScratchBuffer
 
   local location = resultsList.getResultLocationAtCursor(buf, context)
   if not location then
@@ -13,14 +14,13 @@ local function openLocation(params)
   end
 
   local targetWin = utils.getOpenTargetWin(context, buf)
-  -- TODO (sbadragan): when loading another buffer in grug-far window, the window opts are not reset
 
   local targetBuf = vim.fn.bufnr(location.filename)
   if targetBuf == -1 then
     targetBuf = vim.api.nvim_create_buf(true, false)
     -- load lines into target buf and highlight them manually (to prevent LSP kickoff)
     vim.api.nvim_buf_set_name(targetBuf, location.filename)
-    if context.options.openTargetWindow.useScratchBuffer then
+    if useScratchBuffer then
       vim.bo[targetBuf].buftype = 'nofile'
       vim.b[targetBuf].__grug_far_scratch_buf = true
       local lines = utils.readFileLinesSync(location.filename)
@@ -40,7 +40,6 @@ local function openLocation(params)
       end)
     end
 
-    -- TODO (sbadragan): check the buffer existence thing
     local bufHiddenAutocmdId, bufEnterAutocmdId
     bufHiddenAutocmdId = vim.api.nvim_create_autocmd({ 'BufHidden' }, {
       buffer = targetBuf,
@@ -64,13 +63,9 @@ local function openLocation(params)
         vim.api.nvim_del_autocmd(bufHiddenAutocmdId)
         vim.api.nvim_del_autocmd(bufEnterAutocmdId)
 
-        if context.options.openTargetWindow.useScratchBuffer then
+        if useScratchBuffer then
           vim.schedule(function()
-            vim.bo[targetBuf].buftype = ''
-            vim.api.nvim_buf_set_name(targetBuf, location.filename)
-            vim.api.nvim_buf_call(targetBuf, function()
-              vim.cmd('keepjumps silent! edit!')
-            end)
+            utils.convertScratchBufToRealBuf(targetBuf)
           end)
         end
       end,

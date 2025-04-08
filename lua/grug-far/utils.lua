@@ -738,4 +738,25 @@ function M.writeInBufrange(bufrange, lines)
   )
 end
 
+--- converts a scratch buffer to a real buffer
+---@param buf integer
+function M.convertScratchBufToRealBuf(buf)
+  if vim.b[buf].__grug_far_scratch_buf then
+    vim.b[buf].__grug_far_scratch_buf = nil
+    vim.bo[buf].buftype = ''
+    vim.api.nvim_buf_call(buf, function()
+      vim.cmd('keepjumps silent! edit!')
+    end)
+  end
+end
+
+--- converts any existing scratch buffer to a real buffer
+function M.convertAnyScratchBufToRealBuf()
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.b[b].__grug_far_scratch_buf then
+      M.convertScratchBufToRealBuf(b)
+    end
+  end
+end
+
 return M
