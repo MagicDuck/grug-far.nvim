@@ -29,9 +29,9 @@ M._getFoldLevelFns = {}
 function M.setup(context, win, buf)
   local folding = context.options.folding
   if folding.enabled then
-    vim.wo[win][buf].foldlevel = folding.foldlevel
-    vim.wo[win][buf].foldcolumn = folding.foldcolumn
-    vim.wo[win][buf].foldmethod = 'expr'
+    vim.wo[win][0].foldlevel = folding.foldlevel
+    vim.wo[win][0].foldcolumn = folding.foldcolumn
+    vim.wo[win][0].foldmethod = 'expr'
 
     M._getFoldLevelFns[context.options.instanceName] = function()
       -- ignore stuff in the inputs area
@@ -50,10 +50,10 @@ function M.setup(context, win, buf)
       return 0
     end
 
-    vim.wo[win][buf].foldexpr = 'v:lua.require("grug-far.fold")._getFoldLevelFns["'
+    vim.wo[win][0].foldexpr = 'v:lua.require("grug-far.fold")._getFoldLevelFns["'
       .. context.options.instanceName
       .. '"]()'
-    vim.wo[win][buf].foldtext = 'v:lua.require("grug-far.fold").getFoldText()'
+    vim.wo[win][0].foldtext = 'v:lua.require("grug-far.fold").getFoldText()'
   end
 end
 
