@@ -16,8 +16,6 @@ local function gotoLocation(params)
   local bufnr = vim.fn.bufnr(location.filename)
   local targetWin = utils.getOpenTargetWin(context, buf)
 
-  vim.api.nvim_command([[execute "normal! m` "]])
-
   if bufnr == -1 then
     vim.fn.win_execute(
       targetWin,
