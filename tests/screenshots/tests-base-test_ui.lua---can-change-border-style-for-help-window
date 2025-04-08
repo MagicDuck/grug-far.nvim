@@ -2,14 +2,14 @@
 01|   Actions:                                                                    
 02|     - Actions / Help g?                 Open up help window.                   
 03|    - Replace ,r                        Perform replace. Note that compared to 
-04|           'Sync All', replace can also handle multiline replacements.          
+04|  'Sync All', replace can also handle multiline replacements.                   
 05|    - Sync All ,s                       Sync all result lines text (potentially
-06|            manually modified) back to their originating files. You can refine t
-07|          he effect by manually deleting lines to exclude them.                
+06|   manually modified) back to their originating files. You can refine the effect
+07|  by manually deleting lines to exclude them.                                  
 08|     - Sync Line ,l                      Sync current result line text (potentia
-09| 󰮚         lly manually modified) back to its originating file.                 
+09| 󰮚lly manually modified) back to its originating file.                          
 10|     - Sync Next ,n                      Sync change at current line and move cu
-11|          rsor to next match                                                   
+11| rsor to next match                                                            
 12|                                                                                
 13|                                                                                
 14| STATUS_READY ⟪ ripgrep ⟫
