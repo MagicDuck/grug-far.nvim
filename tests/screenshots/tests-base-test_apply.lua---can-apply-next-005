@@ -1,19 +1,19 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │   Actions / Help g? ...              
-02|      curly talks and curly drinks      │                                       
-03|      then curly thinks                 │  Search:                             
-04|                                        │  grug                                 
-05|                                        │  Replace:                            
-06|                                        │  curly                                
-07|                                        │  Files Filter:                       
+01|                                        │                                       
+02|      curly talks and curly drinks      │  Paths:                              
+03|      then curly thinks                 │                                       
+04|                                        │                                       
+05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+06|                                        │ 5 matches in 2 files   sync completed
+07|                                        │                                       
 08|                                        │                                       
-09|                                        │ 󰮚 Flags:                              
+09|                                        │                                       
 10|                                        │                                       
-11|                                        │  Paths:                              
+11|                                        │                                       
 12|                                        │                                       
 13|                                        │                                       
-14|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-15|                                        │ 5 matches in 2 files   sync completed
+14|                                        │                                       
+15|                                        │                                       
 16|                                        │                                       
 17|                                        │                                       
 18|                                        │                                       

@@ -1,25 +1,25 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │   Actions / Help g? ...              
-02|      curly walks                       │                                       
-03|      grug winks                        │  Search:                             
-04|                                        │  grug                                 
-05|                                        │  Replace:                            
-06|                                        │  curly                                
-07|                                        │  Files Filter:                       
-08|                                        │                                       
-09|                                        │ 󰮚 Flags:                              
-10|                                        │                                       
-11|                                        │  Paths:                              
-12|                                        │                                       
-13|                                        │                                       
-14|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-15|                                        │ 5 matches in 2 files   sync completed
-16|                                        │                                       
-17|                                        │  file1.txt                            
-18|                                        │▒   3       grug winks              [2]
-19|                                        │▒   3       curly winks                
+01|                                        │                                       
+02|      curly walks                       │  Paths:                              
+03|      grug winks                        │                                       
+04|                                        │                                       
+05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+06|                                        │ 5 matches in 2 files   sync completed
+07|                                        │                                       
+08|                                        │  file1.txt                            
+09|                                        │▒   3       grug winks              [2]
+10|                                        │▒   3       curly winks                
+11|                                        │                                       
+12|                                        │  file2.doc                            
+13|                                        │▒   2       grug talks and grug dri [3]
+14|                                        │▒   2       curly talks and curly drink
+15|                                        │              s                        
+16|                                        │▒   3       then grug thinks        [4]
+17|                                        │▒   3       then curly thinks          
+18|                                        │                                       
+19|                                        │                                       
 20|                                        │                                       
-21|                                        │  file2.doc                            
-22|                                        │▒   2       grug talks and grug dri [3]
-23|file1.txt                            3,7 Grug FAR - 1: grug                  9,2
+21|                                        │                                       
+22|                                        │                                       
+23|file1.txt                            3,7 Grug FAR - 1: grug                  9,1
 24|                                                                                

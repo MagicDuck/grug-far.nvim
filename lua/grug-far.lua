@@ -202,15 +202,6 @@ local function setupCleanup(buf, context)
     buffer = buf,
     callback = onBufUnload,
   })
-
-  -- TODO (sbadragan): add for BufWinEnter?
-  -- vim.api.nvim_create_autocmd({ 'BufWinLeave' }, {
-  --   group = context.augroup,
-  --   buffer = buf,
-  --   callback = function ()
-  --     vim.api.nvim_list_wins
-  --   end,
-  -- })
 end
 
 --- launch grug-far with the given overrides
@@ -300,7 +291,6 @@ function M.get_current_visual_selection_as_range_str(strict)
   return utils.get_visual_selection_info_as_str(visual_selection_info)
 end
 
--- TODO (sbadragan): update docs and README
 --- returns grug-far instance.
 --- if instQuery is a string, gets instance with that name
 --- if instQuery is a number, gets instance at that buffer (use 0 for current buffer)

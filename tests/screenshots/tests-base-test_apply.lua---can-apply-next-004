@@ -1,25 +1,25 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │   Actions / Help g? ...              
-02|      curly talks and curly drinks      │                                       
-03|      then grug thinks                  │  Search:                             
-04|                                        │  grug                                 
-05|                                        │  Replace:                            
-06|                                        │  curly                                
-07|                                        │  Files Filter:                       
-08|                                        │                                       
-09|                                        │ 󰮚 Flags:                              
-10|                                        │                                       
-11|                                        │  Paths:                              
+01|                                        │                                       
+02|      curly talks and curly drinks      │  Paths:                              
+03|      then grug thinks                  │                                       
+04|                                        │                                       
+05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+06|                                        │ 5 matches in 2 files   sync completed
+07|                                        │                                       
+08|                                        │  file2.doc                            
+09|                                        │▒   3       then grug thinks        [4]
+10|                                        │▒   3       then curly thinks          
+11|                                        │                                       
 12|                                        │                                       
 13|                                        │                                       
-14|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-15|                                        │ 5 matches in 2 files   sync completed
+14|                                        │                                       
+15|                                        │                                       
 16|                                        │                                       
-17|                                        │  file2.doc                            
-18|                                        │▒   3       then grug thinks        [4]
-19|                                        │▒   3       then curly thinks          
+17|                                        │                                       
+18|                                        │                                       
+19|                                        │                                       
 20|                                        │                                       
 21|                                        │                                       
 22|                                        │                                       
-23|file2.doc                           3,12 Grug FAR - 1: grug                  9,2
+23|file2.doc                           3,12 Grug FAR - 1: grug                  9,1
 24|                                                                                

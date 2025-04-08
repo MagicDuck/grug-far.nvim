@@ -1,6 +1,5 @@
 local sync = require('grug-far.actions.sync')
 local resultsList = require('grug-far.render.resultsList')
--- TODO (sbadragan): add tests
 
 --- gets boundary location (cursor_row is 1-based)
 ---@param buf integer

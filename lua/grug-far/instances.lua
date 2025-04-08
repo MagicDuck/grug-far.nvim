@@ -222,7 +222,13 @@ end
 --- open source location (file, line, column) associated with current line (stays in grug-far buffer)
 function M:open_location()
   self:ensure_open()
-  require('grug-far.actions.openLocation')(self._params)
+  require('grug-far.actions.openLocation')(
+    vim.tbl_extend(
+      'keep',
+      self._params,
+      { useScratchBuffer = self._context.options.openTargetWindow.useScratchBuffer }
+    )
+  )
 end
 
 --- 1. apply change at current line (and notify if notify=true)

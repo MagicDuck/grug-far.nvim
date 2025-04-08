@@ -181,6 +181,7 @@ function M.initChildNeovim(child)
     vim.cmd('set statusline+=%=')
     vim.cmd('set statusline+=%l,%c')
     vim.opt.fillchars = {  eob = ' ' }
+    vim.cmd('set autoread')
   ]],
     {
       M.getSetupOptions(),
