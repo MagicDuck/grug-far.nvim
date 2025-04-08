@@ -151,15 +151,15 @@ end
 ---@param buf integer
 function M._setupWindow(context, win, buf)
   if context.options.disableBufferLineNumbers then
-    vim.wo[win][buf].number = false
-    vim.wo[win][buf].relativenumber = false
+    vim.wo[win][0].number = false
+    vim.wo[win][0].relativenumber = false
   end
 
-  vim.wo[win][buf].wrap = context.options.wrap
-  vim.wo[win][buf].breakindent = true
-  vim.wo[win][buf].breakindentopt = context.options.breakindentopt
+  vim.wo[win][0].wrap = context.options.wrap
+  vim.wo[win][0].breakindent = true
+  vim.wo[win][0].breakindentopt = context.options.breakindentopt
   if opts.shouldConceal(context.options) then
-    vim.wo[win][buf].conceallevel = 1
+    vim.wo[win][0].conceallevel = 1
   end
 
   fold.setup(context, win, buf)
