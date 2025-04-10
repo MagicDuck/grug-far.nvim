@@ -603,16 +603,21 @@ function M.highlight(buf, context)
       local lang = vim.treesitter.language.get_lang(results.ft) or results.ft or 'lua'
       regions[lang] = regions[lang] or {}
       local last_line ---@type number?
+      local last_node
       for _, line in ipairs(results.lines) do
         local row = headerRow + line.row
-        local node = { row, line.col, row, line.end_col }
+
         -- put consecutive lines in the same region
-        if line.lnum - 1 ~= last_line then
-          table.insert(regions[lang], {})
-        end
+        local is_consecutive = line.lnum - 1 == last_line
         last_line = line.lnum
-        local last = regions[lang][#regions[lang]]
-        table.insert(last, node)
+
+        if is_consecutive then
+          last_node[3] = row
+          last_node[4] = line.end_col
+        else
+          last_node = { row, line.col, row, line.end_col }
+          table.insert(regions[lang], { last_node })
+        end
       end
     end
   end
