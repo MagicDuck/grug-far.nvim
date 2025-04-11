@@ -29,9 +29,15 @@ jobs:
           version: ${{ matrix.neovim_version }}
       - name: Install ripgrep
         run: |
-          mkdir ripgrep
-          cd ripgrep
+          mkdir -p deps/ripgrep
+          cd deps/ripgrep
           wget -O - https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz | tar zxf - --strip-component=1
+      - name: Install astgrep
+        run: |
+          mkdir -p deps/astgrep
+          cd deps/astgrep
+          wget https://github.com/ast-grep/ast-grep/releases/download/0.35.0/app-x86_64-unknown-linux-gnu.zip
+          unzip app-x86_64-unknown-linux-gnu.zip
       - name: Run tests
         run: | 
           make prepare
@@ -55,19 +61,19 @@ jobs:
           version: ${{ matrix.neovim_version }}
       - name: Install ripgrep
         run: |
-          mkdir ripgrep
-          cd ripgrep
+          mkdir -p deps/ripgrep
+          cd deps/ripgrep
           wget -O - https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz | tar zxf - --strip-component=1
       - name: Install astgrep
         run: |
-          mkdir astgrep
-          cd astgrep
+          mkdir -p deps/astgrep
+          cd deps/astgrep
           wget https://github.com/ast-grep/ast-grep/releases/download/0.35.0/app-x86_64-unknown-linux-gnu.zip
           unzip app-x86_64-unknown-linux-gnu.zip
       - name: Run tests
         run: | 
           make prepare
-         make test dir=astgrep
+          make test dir=astgrep
   test-astgrep-rules:
     name: Run astgrep-rules tests
     timeout-minutes: 10
@@ -87,13 +93,13 @@ jobs:
           version: ${{ matrix.neovim_version }}
       - name: Install ripgrep
         run: |
-          mkdir ripgrep
-          cd ripgrep
+          mkdir -p deps/ripgrep
+          cd deps/ripgrep
           wget -O - https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz | tar zxf - --strip-component=1
       - name: Install astgrep
         run: |
-          mkdir astgrep
-          cd astgrep
+          mkdir -p deps/astgrep
+          cd deps/astgrep
           wget https://github.com/ast-grep/ast-grep/releases/download/0.35.0/app-x86_64-unknown-linux-gnu.zip
           unzip app-x86_64-unknown-linux-gnu.zip
       - name: Run tests
