@@ -29,7 +29,7 @@ prepare:
 	@mkdir -p temp_history_dir
 # clean up
 clean:
-	rm -rf deps
+	rm -rf deps/mini.nvim
 	rm -rf temp_test_dir
 	rm -rf temp_history_dir
 # lint
