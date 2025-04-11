@@ -538,6 +538,7 @@ function M.getOpenTargetWin(context, buf)
 
   local new_win = vim.api.nvim_open_win(buf, false, {
     win = grugfar_win,
+    ---@diagnostic disable-next-line: assign-type-mismatch
     split = preferredLocation,
   })
 

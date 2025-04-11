@@ -1,9 +1,4 @@
 local instances = require('grug-far.instances')
-if vim.fn.has('nvim-0.10.0') == 0 then
-  vim.api.nvim_err_writeln('grug-far needs nvim >= 0.10.0')
-  return
-end
-
 local opts = require('grug-far.opts')
 local highlights = require('grug-far.highlights')
 local farBuffer = require('grug-far.farBuffer')

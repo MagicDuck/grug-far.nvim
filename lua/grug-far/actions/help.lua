@@ -21,13 +21,12 @@ local function add_highlighted_lines(helpBuf, context, lines, indent)
       local hlGroup = hlText[2]
       local textLen = #hlText[1]
       if hlGroup and textLen > 0 then
-        vim.api.nvim_buf_add_highlight(
+        vim.hl.range(
           helpBuf,
           context.helpHlNamespace,
           hlGroup,
-          i - 1,
-          pos,
-          pos + textLen
+          { i - 1, pos },
+          { i - 1, pos + textLen }
         )
       end
       pos = pos + textLen

@@ -154,13 +154,12 @@ local function addResultChunkHighlights(buf, context, data, startLine)
         end
       end
 
-      vim.api.nvim_buf_add_highlight(
+      vim.hl.range(
         buf,
         context.namespace,
         highlight.hl_group,
-        lineNr,
-        start_col,
-        end_col
+        { lineNr, start_col },
+        { lineNr, end_col }
       )
     end
   end
@@ -172,13 +171,12 @@ local function addResultChunkHighlights(buf, context, data, startLine)
       if #line > maxLineLength then
         local lineNr = startLine + i - 1
         local start_col = #line - trimmedLineMsgLen
-        vim.api.nvim_buf_add_highlight(
+        vim.hl.range(
           buf,
           context.namespace,
           'GrugFarResultsLongLineStr',
-          lineNr,
-          start_col,
-          -1
+          { lineNr, start_col },
+          { lineNr, -1 }
         )
       end
     end
@@ -390,7 +388,7 @@ function M.setError(buf, context, error)
   setBufLines(buf, startLine, startLine, false, err_lines)
 
   for i = startLine, startLine + #err_lines do
-    vim.api.nvim_buf_add_highlight(buf, context.namespace, 'DiagnosticError', i, 0, -1)
+    vim.hl.range(buf, context.namespace, 'DiagnosticError', { i, 0 }, { i, -1 })
   end
 end
 
@@ -408,7 +406,7 @@ function M.appendWarning(buf, context, warning)
   setBufLines(buf, lastline, lastline, false, warn_lines)
 
   for i = lastline, lastline + #warn_lines - 1 do
-    vim.api.nvim_buf_add_highlight(buf, context.namespace, 'DiagnosticWarn', i, 0, -1)
+    vim.hl.range(buf, context.namespace, 'DiagnosticWarn', { i, 0 }, { i, -1 })
   end
 end
 
@@ -562,13 +560,12 @@ function M.appendSearchCommand(buf, context, rgArgs)
   table.insert(lines, '')
 
   setBufLines(buf, lastline, lastline, false, lines)
-  vim.api.nvim_buf_add_highlight(
+  vim.hl.range(
     buf,
     context.helpHlNamespace,
     'GrugFarResultsCmdHeader',
-    lastline,
-    0,
-    #header
+    { lastline, 0 },
+    { lastline, #header }
   )
 end
 

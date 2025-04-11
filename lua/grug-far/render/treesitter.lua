@@ -102,7 +102,7 @@ function M._attach_lang(buf, lang, regions, regionsId)
 
   if not entry then
     local ok, parser = pcall(vim.treesitter.get_parser, buf, lang)
-    if not ok then
+    if not ok or not parser then
       return
     end
     ---@diagnostic disable-next-line: invisible
