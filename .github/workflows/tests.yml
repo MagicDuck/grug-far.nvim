@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        neovim_version: ['v0.10.1']
+        neovim_version: ['v0.11.0']
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -43,7 +43,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        neovim_version: ['v0.10.1']
+        neovim_version: ['v0.11.0']
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -75,7 +75,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        neovim_version: ['v0.10.1']
+        neovim_version: ['v0.11.0']
     runs-on: ${{ matrix.os }}
 
     steps:

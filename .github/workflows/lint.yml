@@ -38,7 +38,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        neovim_version: ["v0.10.1"]
+        neovim_version: ["v0.11.0"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout sources
@@ -49,4 +49,4 @@ jobs:
           configpath: .github/workflows/.luarc.json
           path: lua
           level: Warning
-          nvim-version: v0.10.1
+          nvim-version: v0.11.0
