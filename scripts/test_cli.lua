@@ -1,3 +1,11 @@
+-- Add current directory to 'runtimepath' to be able to use 'lua' files
+vim.cmd([[let &rtp.=','.getcwd()]])
+
+local dependencies = require('grug-far.test.dependencies')
+dependencies.checkDependencies()
+
+vim.cmd('set rtp+=deps/mini.nvim')
+require('mini.test').setup()
 local MiniTest = require('mini.test')
 local file = vim.env.file
 local line = vim.env.line
