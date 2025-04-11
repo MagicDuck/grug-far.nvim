@@ -23,6 +23,7 @@ To run all tests just execute
 ```bash
 $ make test
 ```
+Please follow instructions to get right version of dependencies such as ripgrep and astgrep.
 
 To run specific test:
 ```bash

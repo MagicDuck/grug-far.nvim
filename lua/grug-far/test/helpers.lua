@@ -104,14 +104,14 @@ function M.getSetupOptions()
   return {
     engines = {
       ripgrep = {
-        path = vim.env.RG_PATH or 'rg',
+        path = vim.fs.abspath('deps/ripgrep/rg'),
         -- sort by path so that we get things in the same order
         extraArgs = '--sort=path',
         placeholders = { enabled = false },
       },
       astgrep = {
-        path = vim.env.SG_PATH or 'ast-grep',
-        rgPath = vim.env.RG_PATH or 'rg',
+        path = vim.fs.abspath('deps/astgrep/ast-grep'),
+        rgPath = vim.fs.abspath('deps/ripgrep/rg'),
         placeholders = { enabled = false },
       },
     },

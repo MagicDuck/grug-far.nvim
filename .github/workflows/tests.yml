@@ -35,7 +35,7 @@ jobs:
       - name: Run tests
         run: | 
           make prepare
-          env RG_PATH=$(realpath ./ripgrep/rg) make test dir=base
+          make test dir=base
   test-astgrep:
     name: Run astgrep tests
     timeout-minutes: 10
@@ -67,7 +67,7 @@ jobs:
       - name: Run tests
         run: | 
           make prepare
-          env RG_PATH=$(realpath ./ripgrep/rg) SG_PATH=$(realpath ./astgrep/ast-grep) make test dir=astgrep
+         make test dir=astgrep
   test-astgrep-rules:
     name: Run astgrep-rules tests
     timeout-minutes: 10
@@ -99,4 +99,4 @@ jobs:
       - name: Run tests
         run: | 
           make prepare
-          env RG_PATH=$(realpath ./ripgrep/rg) SG_PATH=$(realpath ./astgrep/ast-grep) make test dir=astgrep-rules
+          make test dir=astgrep-rules

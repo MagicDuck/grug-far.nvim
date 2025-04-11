@@ -3,13 +3,17 @@
 # use with dir=... to test a particular dir under tests/
 # use with file=... to test a particular file
 # use with line=... to target a test at that line in the file 
+# use with nvim_path=... to set a neovim executable to use when running the tests 
+
+nvim_path ?= nvim
+
 test:
-	nvim --headless --noplugin -u ./scripts/minimal_init.lua -l ./scripts/test_cli.lua
+	$(nvim_path) --headless --noplugin -u ./scripts/minimal_init.lua -l ./scripts/test_cli.lua
 
 # launches test version of nvim that has the same plugin configuration as what the tests get
 # this is useful sometiemes to check what is going on when child neovim processes just hang without any output
 launch-test-nvim:
-	nvim --noplugin -u ./scripts/test_plugin_config.lua -c GrugFar
+	$(nvim_path) --noplugin -u ./scripts/test_plugin_config.lua -c GrugFar
 
 # clean / update all screenshots
 update-screenshots:
