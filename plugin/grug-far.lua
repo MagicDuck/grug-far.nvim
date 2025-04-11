@@ -1,3 +1,8 @@
+if vim.fn.has('nvim-0.10.0') == 0 then
+  vim.notify('grug-far needs nvim >= 0.10.0', vim.log.levels.ERROR)
+  return
+end
+
 -- note: unfortunately has to be global so it can be passed to command complete= opt
 -- selene: allow(unused_variable)
 function GrugFarCompleteEngine()

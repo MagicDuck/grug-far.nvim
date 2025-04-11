@@ -106,13 +106,13 @@ local function highlightHistoryBuffer(historyBuf, context, start_row, end_row)
       if not highlightedLine then
         local col_start, col_end = string.find(line, inputKey)
         if col_start == 1 and col_end then
-          vim.api.nvim_buf_add_highlight(
+          local l = start_row + i - 1
+          vim.hl.range(
             historyBuf,
             context.historyHlNamespace,
             'GrugFarInputLabel',
-            start_row + i - 1,
-            col_start - 1,
-            col_end - 1
+            { l, col_start - 1 },
+            { l, col_end - 1 }
           )
           highlightedLine = true
         end
