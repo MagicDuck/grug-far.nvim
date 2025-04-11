@@ -9,8 +9,7 @@ local highlights = {
   GrugFarHelpWinActionKey = { default = true, link = 'Identifier' },
   GrugFarHelpWinActionDescription = { default = true, link = 'NormalFloat' },
 
-  -- TODO (sbadragan): make this better?
-  GrugFarInputLabel = { default = true, link = 'Identifier' },
+  GrugFarInputLabel = { default = true, link = 'Title' },
   GrugFarInputPlaceholder = { default = true, link = 'Comment' },
 
   GrugFarResultsHeader = { default = true, link = 'Comment' },
