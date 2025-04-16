@@ -40,6 +40,9 @@ end
 local function setBufLines(buf, start, ending, strict_indexing, replacement)
   local isModifiable = vim.api.nvim_get_option_value('modifiable', { buf = buf })
   vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
+
+  -- note: undojoin will fail immediately after an undo
+  pcall(vim.cmd.undojoin)
   vim.api.nvim_buf_set_lines(buf, start, ending, strict_indexing, replacement)
   vim.api.nvim_set_option_value('modifiable', isModifiable, { buf = buf })
 end
