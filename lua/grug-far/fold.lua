@@ -15,14 +15,7 @@ M.updateFolds = function(buf)
   end
 end
 
---- gets fold text
----@return string
-M.getFoldText = function()
-  local linecount = vim.v.foldend - vim.v.foldstart + 1
-  return linecount .. ' matching lines: ' .. vim.fn.getline(vim.v.foldstart)
-end
-
-M._getFoldLevelFns = {}
+M._fold_funcs = {}
 ---@param context GrugFarContext
 ---@param win integer
 ---@param buf integer
@@ -33,33 +26,53 @@ function M.setup(context, win, buf)
     vim.wo[win][0].foldcolumn = folding.foldcolumn
     vim.wo[win][0].foldmethod = 'expr'
 
-    M._getFoldLevelFns[context.options.instanceName] = function()
-      -- ignore stuff in the inputs area
-      if not vim.api.nvim_win_is_valid(win) then
-        return
-      end
-      if vim.v.lnum <= resultsList.getHeaderRow(context, buf) then
+    M._fold_funcs[context.options.instanceName] = {
+      foldexpr = function()
+        -- ignore stuff in the inputs area
+        if not vim.api.nvim_win_is_valid(win) then
+          return
+        end
+        if vim.v.lnum <= resultsList.getHeaderRow(context, buf) then
+          return 0
+        end
+
+        local line = vim.fn.getline(vim.v.lnum)
+        local loc = resultsList.getResultLocation(vim.v.lnum - 1, buf, context)
+        if
+          line == engine.DiffSeparatorChars or (loc and (folding.include_file_path or loc.lnum))
+        then
+          return 1
+        end
         return 0
-      end
+      end,
+      foldtext = function()
+        local loc = resultsList.getResultLocation(vim.v.foldstart - 1, buf, context)
+        if loc and loc.filename and not loc.lnum then
+          local res = ''
+          if context.fileIconsProvider then
+            local icon = context.fileIconsProvider:get_icon(loc.filename)
+            res = res .. icon .. '  '
+          end
+          return res .. loc.filename
+        end
 
-      local line = vim.fn.getline(vim.v.lnum)
-      local loc = resultsList.getResultLocation(vim.v.lnum - 1, buf, context)
-      if line == engine.DiffSeparatorChars or (loc and loc.lnum) then
-        return 1
-      end
-      return 0
-    end
+        local linecount = vim.v.foldend - vim.v.foldstart + 1
+        return linecount .. ' matching lines: ' .. vim.fn.getline(vim.v.foldstart)
+      end,
+    }
 
-    vim.wo[win][0].foldexpr = 'v:lua.require("grug-far.fold")._getFoldLevelFns["'
+    vim.wo[win][0].foldexpr = 'v:lua.require("grug-far.fold")._fold_funcs["'
       .. context.options.instanceName
-      .. '"]()'
-    vim.wo[win][0].foldtext = 'v:lua.require("grug-far.fold").getFoldText()'
+      .. '"].foldexpr()'
+    vim.wo[win][0].foldtext = 'v:lua.require("grug-far.fold")._fold_funcs["'
+      .. context.options.instanceName
+      .. '"].foldtext()'
   end
 end
 
 ---@param context GrugFarContext
 function M.cleanup(context)
-  M._getFoldLevelFns[context.options.instanceName] = nil
+  M._fold_funcs[context.options.instanceName] = nil
 end
 
 return M
