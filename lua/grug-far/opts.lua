@@ -426,6 +426,9 @@ M.defaultOptions = {
     -- visual indicator of folds, see :h foldcolumn
     -- set to '0' to disable
     foldcolumn = '1',
+
+    -- whether to include file path in the fold, by default, only lines under the file path are included
+    include_file_path = false,
   },
 
   -- options related to locations in results list
@@ -625,11 +628,13 @@ M.defaultOptions = {
 ---@field enabled boolean
 ---@field foldlevel integer
 ---@field foldcolumn string
+---@field include_file_path boolean
 
 ---@class FoldingTableOverride
 ---@field enabled? boolean
 ---@field foldlevel? integer
 ---@field foldcolumn? string | integer
+---@field include_file_path? boolean
 
 ---@class RipgrepEngineTable
 ---@field path string

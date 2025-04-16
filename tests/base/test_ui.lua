@@ -314,4 +314,31 @@ T['can conceal long lines'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can fold at filename'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.lua',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = {
+      search = 'grug',
+    },
+    folding = {
+      enabled = true,
+      include_file_path = true,
+    },
+  })
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childWaitForScreenshotText(child, '4 matches in 2 files')
+  child.type_keys(10, '<esc>:11<cr>', 'zc')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
