@@ -1,5 +1,8 @@
 if vim.fn.has('nvim-0.11.0') == 0 then
-  vim.notify('grug-far needs nvim >= 0.11.0', vim.log.levels.ERROR)
+  vim.notify(
+    'grug-far needs nvim >= 0.11.0, please use version 1.6.3 if you would like to continue with nvim 0.10',
+    vim.log.levels.ERROR
+  )
   return
 end
 

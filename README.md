@@ -75,7 +75,7 @@ Grug find! Grug replace! Grug happy!
 
 ## ⚡️ Requirements
 
-- Neovim >= **0.11.0** (should work with lower, but not tested)
+- Neovim >= **0.11.0** (please use tag 1.6.3 for nvim 0.10)
 - [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) >= 14 recommended
 - a [Nerd Font](https://www.nerdfonts.com/) **_(optional)_**
 - [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine. ersion >= `0.36` recommended.
