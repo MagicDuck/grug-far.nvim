@@ -78,7 +78,7 @@ Grug find! Grug replace! Grug happy!
 - Neovim >= **0.11.0** (please use tag 1.6.3 for nvim 0.10)
 - [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) >= 14 recommended
 - a [Nerd Font](https://www.nerdfonts.com/) **_(optional)_**
-- [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine. ersion >= `0.36` recommended.
+- [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine. Version >= `0.36` recommended.
 - either [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) or [mini.icons](https://github.com/echasnovski/mini.icons) for file icons support **_(optional)_**
 
 Run `:checkhealth grug-far` if you see unexpected issues.
@@ -109,7 +109,7 @@ Using [lazy.nvim][lazy]:
 - [default options][opts] 
 - [highlights][highlights]
 
-**Note on the key mappings**: By default, grug-far, will use `<localleader>` for it's keymaps as that is the vim
+**Note on the key mappings**: By default, grug-far, will use `<localleader>` for its keymaps as that is the vim
 recommended way for plugins. See https://learnvimscriptthehardway.stevelosh.com/chapters/11.html#local-leader
 
 So to use that, make sure you have `<localleader>` configured. For example, to use `,` as the local leader:
@@ -149,7 +149,7 @@ would like to see the actual replacement in the results area, add `--replace=` t
 Some situations require the power of arbitrary code executed for each search to determine the proper replacements.
 In those cases, you can use the `Swap Replacement Interpreter` action to switch to a desired replacement interpreter,
 such as `lua` or `vimscript`.
-For example with the `lua` interpreter, this will allow you to write multi-line lua code, essentially the body of a lua function,
+For example, with the `lua` interpreter, this will allow you to write multi-line lua code, essentially the body of a lua function,
 in the `Replace:` input.
 
 You can use `match` to refer to each match and need to `return` the value you want to be the replacement.
