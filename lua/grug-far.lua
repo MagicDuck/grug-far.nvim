@@ -1,26 +1,14 @@
-local instances = require('grug-far.instances')
-local opts = require('grug-far.opts')
-local highlights = require('grug-far.highlights')
-local farBuffer = require('grug-far.farBuffer')
-local history = require('grug-far.history')
-local utils = require('grug-far.utils')
-local tasks = require('grug-far.tasks')
-local engine = require('grug-far.engine')
-local replacementInterpreter = require('grug-far.replacementInterpreter')
-local fold = require('grug-far.fold')
-local fileIconsProvider = require('grug-far.fileIconsProvider')
-
 local M = {}
 
 local contextCount = 0
 
-highlights.setup()
+require('grug-far.highlights').setup()
 
 --- set up grug-far
 --- sets global options, which can also be configured through vim.g.grug_far
 ---@param options? GrugFarOptionsOverride
 function M.setup(options)
-  opts.setGlobalOptionsOverride(options)
+  require('grug-far.opts').setGlobalOptionsOverride(options)
 end
 
 ---@alias GrugFarStatus nil | "success" | "error" | "progress"
@@ -95,8 +83,8 @@ local function createContext(options)
   return {
     count = contextCount,
     options = options,
-    engine = engine.getEngine(options.engine),
-    replacementInterpreter = replacementInterpreter.getReplacementInterpreter(
+    engine = require('grug-far.engine').getEngine(options.engine),
+    replacementInterpreter = require('grug-far.replacementInterpreter').getReplacementInterpreter(
       options.replacementInterpreter
     ),
     namespace = vim.api.nvim_create_namespace('grug-far-namespace'),
@@ -107,9 +95,9 @@ local function createContext(options)
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
     extmarkIds = {},
     actions = {},
-    fileIconsProvider = options.icons.enabled and fileIconsProvider.getProvider(
-      options.icons.fileIconsProvider
-    ) or nil,
+    fileIconsProvider = options.icons.enabled
+        and require('grug-far.fileIconsProvider').getProvider(options.icons.fileIconsProvider)
+      or nil,
     state = {
       inputs = {},
       resultLocationByExtmarkId = {},
@@ -153,23 +141,25 @@ function M._setupWindow(context, win, buf)
   vim.wo[win][0].wrap = context.options.wrap
   vim.wo[win][0].breakindent = true
   vim.wo[win][0].breakindentopt = context.options.breakindentopt
-  if opts.shouldConceal(context.options) then
+  if require('grug-far.opts').shouldConceal(context.options) then
     vim.wo[win][0].conceallevel = 1
   end
 
-  fold.setup(context, win, buf)
+  require('grug-far.fold').setup(context, win, buf)
 end
 
 ---@param buf integer
 ---@param context GrugFarContext
 local function setupCleanup(buf, context)
+  local instances = require('grug-far.instances')
+
   local function cleanup()
     local autoSave = context.options.history.autoSave
     if autoSave.enabled and autoSave.onBufDelete then
-      history.addHistoryEntry(context, buf)
+      require('grug-far.history').addHistoryEntry(context, buf)
     end
 
-    tasks.abortAndFinishAllTasks(context)
+    require('grug-far.tasks').abortAndFinishAllTasks(context)
     context.state.bufClosed = true
     local _, instanceName = instances.get_instance_by_buf(buf)
     if instanceName then
@@ -182,7 +172,7 @@ local function setupCleanup(buf, context)
     vim.api.nvim_buf_clear_namespace(buf, context.helpHlNamespace, 0, -1)
     vim.api.nvim_del_augroup_by_id(context.augroup)
     require('grug-far.render.treesitter').clear(buf)
-    fold.cleanup(context)
+    require('grug-far.fold').cleanup(context)
   end
 
   local function onBufUnload()
@@ -203,10 +193,11 @@ end
 ---@param options? GrugFarOptionsOverride
 ---@return string instanceName
 function M.open(options)
+  local opts = require('grug-far.opts')
   local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
   local visual_selection_info
   if resolvedOpts.visualSelectionUsage ~= 'ignore' then
-    visual_selection_info = utils.get_current_visual_selection_info(true)
+    visual_selection_info = require('grug-far.utils').get_current_visual_selection_info(true)
   end
 
   return M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
@@ -217,6 +208,7 @@ end
 ---@param params { visual_selection_info: VisualSelectionInfo? }
 ---@return string instanceName
 function M._open_internal(options, params)
+  local instances = require('grug-far.instances')
   if options.instanceName and instances.has_instance(options.instanceName) then
     error('A grug-far instance with instanceName="' .. options.instanceName .. '" already exists!')
   end
@@ -234,7 +226,7 @@ function M._open_internal(options, params)
   end
 
   local win = M._createWindow(context)
-  local buf = farBuffer.createBuffer(win, context)
+  local buf = require('grug-far.farBuffer').createBuffer(win, context)
   M._setupWindow(context, win, buf)
   setupCleanup(buf, context)
   instances.add_instance(options.instanceName, instances.new(context, buf))
@@ -246,8 +238,9 @@ end
 --- search with current visual selection.
 ---@param options? GrugFarOptionsOverride
 function M.with_visual_selection(options)
+  local opts = require('grug-far.opts')
   local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
-  local visual_selection_info = utils.get_current_visual_selection_info()
+  local visual_selection_info = require('grug-far.utils').get_current_visual_selection_info()
   return M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
 end
 
@@ -256,11 +249,11 @@ end
 ---@param strict? boolean Whether to require visual mode to be active, defaults to False
 ---@return string[]?
 function M.get_current_visual_selection_lines(strict)
-  local was_visual = utils.leaveVisualMode()
+  local was_visual = require('grug-far.utils').leaveVisualMode()
   if strict and not was_visual then
     return
   end
-  local lines = utils.getVisualSelectionLines()
+  local lines = require('grug-far.utils').getVisualSelectionLines()
   return lines
 end
 
@@ -278,12 +271,12 @@ end
 ---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
 ---@return string?
 function M.get_current_visual_selection_as_range_str(strict)
-  local visual_selection_info = utils.get_current_visual_selection_info(strict)
+  local visual_selection_info = require('grug-far.utils').get_current_visual_selection_info(strict)
   if not visual_selection_info then
     return
   end
 
-  return utils.get_visual_selection_info_as_str(visual_selection_info)
+  return require('grug-far.utils').get_visual_selection_info_as_str(visual_selection_info)
 end
 
 --- returns grug-far instance.
@@ -294,14 +287,14 @@ end
 ---@param instQuery GrugFarInstanceQuery
 ---@return GrugFarInstance instance, string instanceName
 function M.get_instance(instQuery)
-  return instances.ensure_instance(instQuery)
+  return require('grug-far.instances').ensure_instance(instQuery)
 end
 
 --- toggles visibility of grug-far instance with given instance name or current buffer instance
 --- options.instanceName can be used to identify a specific grug-far instance to toggle
 ---@param options GrugFarOptionsOverride
 function M.toggle_instance(options)
-  local inst = instances.get_instance(options.instanceName or 0)
+  local inst = require('grug-far.instances').get_instance(options.instanceName or 0)
   if not inst then
     M.open(options)
     return
@@ -323,21 +316,21 @@ end
 ---@param instanceName string
 ---@return boolean
 function M.has_instance(instanceName)
-  return instances.has_instance(instanceName)
+  return require('grug-far.instances').has_instance(instanceName)
 end
 
 --- checks if grug-far instance is open
 ---@param instQuery GrugFarInstanceQuery
 ---@return boolean
 function M.is_instance_open(instQuery)
-  local inst = instances.get_instance(instQuery)
+  local inst = require('grug-far.instances').get_instance(instQuery)
   return inst ~= nil and inst:is_open()
 end
 
 --- closes grug-far instance
 ---@param instQuery GrugFarInstanceQuery
 function M.kill_instance(instQuery)
-  local inst = instances.get_instance(instQuery)
+  local inst = require('grug-far.instances').get_instance(instQuery)
   if inst then
     inst:close()
   end
@@ -346,7 +339,7 @@ end
 --- hides grug-far instance
 ---@param instQuery GrugFarInstanceQuery
 function M.hide_instance(instQuery)
-  local inst = instances.get_instance(instQuery)
+  local inst = require('grug-far.instances').get_instance(instQuery)
   if inst then
     inst:hide()
   end
