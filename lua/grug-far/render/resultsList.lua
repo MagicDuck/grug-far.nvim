@@ -625,7 +625,7 @@ function M.highlight(buf, context)
 
   -- Attach the regions to the buffer
   if not vim.tbl_isempty(regions) then
-    treesitter.attach(buf, regions)
+    pcall(treesitter.attach, buf, regions)
   end
 end
 
