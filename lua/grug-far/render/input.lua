@@ -98,7 +98,7 @@ local function renderInput(params, context)
     local start_col = prev_line and #prev_line or 0
     local last_line = input_lines[#input_lines]
     local end_col = last_line and #last_line or 0
-    treesitter.attach(buf, {
+    pcall(treesitter.attach, buf, {
       [params.highlightLang] = {
         { { currentStartRow - 1, start_col, currentEndRow, end_col } },
       },
