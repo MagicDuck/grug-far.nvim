@@ -20,19 +20,23 @@ update-screenshots:
 	rm -rf tests/screenshots/* 
 	make test
 
-# Download 'mini.nvim' to use its 'mini.test' testing module
-prepare:
-	make clean
+# Download 'mini.nvim' to use mini.test and mini.doc
+deps/mini.nvim:
 	@mkdir -p deps
 	git clone --depth=1 --branch=v0.15.0 https://github.com/echasnovski/mini.nvim deps/mini.nvim
+
+prepare: | deps.mini.nvim
 	@mkdir -p temp_test_dir
 	@mkdir -p temp_history_dir
-# clean up
+
 clean:
-	rm -rf deps/mini.nvim
+	rm -rf deps
 	rm -rf temp_test_dir
 	rm -rf temp_history_dir
-# lint
+
 lint:
 	selene lua tests
 	stylua --check lua tests
+
+documentation: | deps/mini.nvim
+	$(nvim_path) --headless --noplugin -u ./scripts/minidoc.lua -c "qa!"

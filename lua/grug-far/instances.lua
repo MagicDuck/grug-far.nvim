@@ -6,8 +6,6 @@ local M = {}
 
 M.__index = M
 
----@alias GrugFarInstanceQuery string | number | nil
-
 ---@type table<string, GrugFarInstance>
 local instances = {}
 
@@ -34,7 +32,8 @@ end
 --- returns instance name associated with given buf number
 --- if given buf number is 0, returns instance for current buffer
 ---@param buf integer (same argument as for bufnr())
----@return GrugFarInstance? inst, string? instanceName
+---@return GrugFarInstance? inst
+---@return string? instanceName
 function M.get_instance_by_buf(buf)
   local bufnr = vim.fn.bufnr(buf)
   for instanceName, inst in pairs(instances) do
@@ -46,7 +45,8 @@ end
 
 --- gets instance for given query
 ---@param instQuery GrugFarInstanceQuery
----@return GrugFarInstance? inst, string? instanceName
+---@return GrugFarInstance? inst
+---@return string? instanceName
 function M.get_instance(instQuery)
   if type(instQuery) == 'string' then
     return instances[instQuery], instQuery
@@ -66,7 +66,8 @@ end
 
 --- gets instance for given query, erroring out if not available
 ---@param instQuery GrugFarInstanceQuery
----@return GrugFarInstance inst, string instanceName
+---@return GrugFarInstance? inst
+---@return string? instanceName
 function M.ensure_instance(instQuery)
   local inst, instName = M.get_instance(instQuery)
   if inst and instName then
@@ -109,6 +110,7 @@ function M:is_valid()
   return M.get_instance_by_buf(self._buf) == self
 end
 
+---@private
 --- ensure instance is valid or error out
 function M:_ensure_valid()
   if not self:is_valid() then
@@ -234,7 +236,7 @@ end
 --- 1. apply change at current line (and notify if notify=true)
 --- 2. optionally remove it from buffer (if remove_synced = true, defaults to true)
 --- 3. move cursor to next match
---- 4.open source location (if open_location = true, defaults to true)
+--- 4. open source location (if open_location = true, defaults to true)
 ---@param params? { open_location?: boolean, remove_synced?: boolean, notify?: boolean }
 function M:apply_next_change(params)
   self:ensure_open()
@@ -246,7 +248,7 @@ end
 --- 1. apply change at current line (and notify if notify=true)
 --- 2. optionally remove it from buffer (if remove_synced = true, defaults to true)
 --- 3. move cursor to prev match
---- 4.open source location (if open_location = true, defaults to true)
+--- 4. open source location (if open_location = true, defaults to true)
 ---@param params? { open_location?: boolean, remove_synced?: boolean, notify?: boolean }
 function M:apply_prev_change(params)
   self:ensure_open()
