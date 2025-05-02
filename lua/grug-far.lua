@@ -11,69 +11,7 @@ function M.setup(options)
   require('grug-far.opts').setGlobalOptionsOverride(options)
 end
 
----@alias GrugFarStatus nil | "success" | "error" | "progress"
-
----@class ResultLocation: SourceLocation
----@field count? integer
----@field max_line_number_length? integer
----@field max_column_number_length? integer
----@field is_context? boolean
-
----@alias GrugFarInputName "search" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
-
----@class GrugFarInputs
----@field [GrugFarInputName] string?
-
----@class GrugFarState
----@field lastInputs? GrugFarInputs
----@field status? GrugFarStatus
----@field progressCount? integer
----@field stats? { matches: integer, files: integer }
----@field actionMessage? string
----@field resultLocationByExtmarkId { [integer]: ResultLocation }
----@field resultMatchLineCount integer
----@field lastCursorLocation { loc:  ResultLocation, row: integer, markId: integer }
----@field tasks GrugFarTask[]
----@field showSearchCommand boolean
----@field bufClosed boolean
----@field highlightResults FileResults
----@field highlightRegions LangRegions
----@field normalModeSearch boolean
----@field searchDisabled boolean
----@field previousInputValues { [string]: string }
-
----@class GrugFarAction
----@field text string
----@field keymap KeymapDef
----@field description? string
----@field action? fun()
-
----@class GrugFarContext
----@field count integer
----@field options GrugFarOptions
----@field namespace integer
----@field locationsNamespace integer
----@field resultListNamespace integer
----@field historyHlNamespace integer
----@field helpHlNamespace integer
----@field augroup integer
----@field extmarkIds {[string]: integer}
----@field state GrugFarState
----@field prevWin? integer
----@field prevBufName? string
----@field prevBufFiletype? string
----@field actions GrugFarAction[]
----@field engine GrugFarEngine
----@field replacementInterpreter? GrugFarReplacementInterpreter
----@field fileIconsProvider? FileIconsProvider
-
----@class VisualSelectionInfo
----@field file_name string
----@field lines string[]
----@field start_col integer
----@field start_row integer
----@field end_col integer
----@field end_row integer
+---@alias GrugFarInstanceQuery string | number | nil
 
 --- generate instance specific context
 ---@param options GrugFarOptions
@@ -115,6 +53,7 @@ local function createContext(options)
   }
 end
 
+---@private
 ---@param context GrugFarContext
 ---@return integer windowId
 function M._createWindow(context)
@@ -129,6 +68,7 @@ function M._createWindow(context)
   return win
 end
 
+---@private
 ---@param context GrugFarContext
 ---@param win integer
 ---@param buf integer
@@ -203,6 +143,7 @@ function M.open(options)
   return M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
 end
 
+---@private
 --- launch grug-far with the given options and params
 ---@param options GrugFarOptions
 ---@param params { visual_selection_info: VisualSelectionInfo? }
@@ -279,13 +220,14 @@ function M.get_current_visual_selection_as_range_str(strict)
   return require('grug-far.utils').get_visual_selection_info_as_str(visual_selection_info)
 end
 
---- returns grug-far instance.
+--- gets grug-far instance
 --- if instQuery is a string, gets instance with that name
 --- if instQuery is a number, gets instance at that buffer (use 0 for current buffer)
 --- if instQuery is nil, get any first instance we can get our hands on
 --- if instQuery is non-nil, and no instance found, an error is emitted
 ---@param instQuery GrugFarInstanceQuery
----@return GrugFarInstance instance, string instanceName
+---@return GrugFarInstance instance|nil
+---@return string instanceName
 function M.get_instance(instQuery)
   return require('grug-far.instances').ensure_instance(instQuery)
 end
@@ -345,7 +287,7 @@ function M.hide_instance(instQuery)
   end
 end
 
---- deprecated API -----------------------------------------------------------------------------
+-- deprecated API -----------------------------------------------------------------------------
 
 ---@deprecated
 --- toggles given list of flags in the current grug-far buffer
