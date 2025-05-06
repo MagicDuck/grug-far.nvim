@@ -1,5 +1,8 @@
+--- *grug-far-highlights*
+
 local M = {}
 
+---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 local highlights = {
   GrugFarHelpHeader = { default = true, link = 'ModeMsg' },
   GrugFarHelpHeaderKey = { default = true, link = 'Identifier' },
@@ -35,6 +38,7 @@ local highlights = {
   GrugFarResultsLongLineStr = { default = true, link = 'Comment' },
 }
 
+---@private
 function M.setup()
   for k, v in pairs(highlights) do
     vim.api.nvim_set_hl(0, k, v)

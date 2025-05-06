@@ -25,7 +25,7 @@ deps/mini.nvim:
 	@mkdir -p deps
 	git clone --depth=1 --branch=v0.15.0 https://github.com/echasnovski/mini.nvim deps/mini.nvim
 
-prepare: | deps.mini.nvim
+prepare: | deps/mini.nvim
 	@mkdir -p temp_test_dir
 	@mkdir -p temp_history_dir
 
