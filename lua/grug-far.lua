@@ -1,4 +1,22 @@
-local M = {}
+--- *grug-far-api*
+
+-- TODO (sbadragan): convert type names to grug.far.name or namespace to GrugFarWhatever
+-- TODO (sbadragan): add auto-github action to generate the docs
+
+local grug_far = {}
+
+---@alias GrugFarInstanceQuery string | number | nil
+
+---@alias GrugFarInputName "search" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
+
+---@alias GrugFarPrefills {
+---   search?: string,
+---   rules?: string,
+---   replacement?: string,
+---   filesFilter?: string,
+---   flags?: string,
+---   paths?: string,
+--- }
 
 local contextCount = 0
 
@@ -6,16 +24,16 @@ require('grug-far.highlights').setup()
 
 --- set up grug-far
 --- sets global options, which can also be configured through vim.g.grug_far
----@param options? GrugFarOptionsOverride
-function M.setup(options)
+---@param options? GrugFarOptionsOverride partial override of |grug_far.defaultOptions|
+---@seealso Option types: |GrugFarOptions|
+function grug_far.setup(options)
   require('grug-far.opts').setGlobalOptionsOverride(options)
 end
-
----@alias GrugFarInstanceQuery string | number | nil
 
 --- generate instance specific context
 ---@param options GrugFarOptions
 ---@return GrugFarContext
+---@private
 local function createContext(options)
   contextCount = contextCount + 1
   return {
@@ -53,10 +71,10 @@ local function createContext(options)
   }
 end
 
----@private
 ---@param context GrugFarContext
 ---@return integer windowId
-function M._createWindow(context)
+---@private
+function grug_far._createWindow(context)
   context.prevWin = vim.api.nvim_get_current_win()
   local prevBuf = vim.api.nvim_win_get_buf(context.prevWin)
   context.prevBufName = vim.api.nvim_buf_get_name(prevBuf)
@@ -68,11 +86,11 @@ function M._createWindow(context)
   return win
 end
 
----@private
 ---@param context GrugFarContext
 ---@param win integer
 ---@param buf integer
-function M._setupWindow(context, win, buf)
+---@private
+function grug_far._setupWindow(context, win, buf)
   if context.options.disableBufferLineNumbers then
     vim.wo[win][0].number = false
     vim.wo[win][0].relativenumber = false
@@ -90,6 +108,7 @@ end
 
 ---@param buf integer
 ---@param context GrugFarContext
+---@private
 local function setupCleanup(buf, context)
   local instances = require('grug-far.instances')
 
@@ -130,9 +149,10 @@ local function setupCleanup(buf, context)
 end
 
 --- launch grug-far with the given overrides
----@param options? GrugFarOptionsOverride
+---@param options? GrugFarOptionsOverride partial override of |grug_far.defaultOptions|
 ---@return string instanceName
-function M.open(options)
+---@seealso Option types: |GrugFarOptions|
+function grug_far.open(options)
   local opts = require('grug-far.opts')
   local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
   local visual_selection_info
@@ -140,15 +160,15 @@ function M.open(options)
     visual_selection_info = require('grug-far.utils').get_current_visual_selection_info(true)
   end
 
-  return M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
+  return grug_far._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
 end
 
----@private
 --- launch grug-far with the given options and params
 ---@param options GrugFarOptions
 ---@param params { visual_selection_info: VisualSelectionInfo? }
 ---@return string instanceName
-function M._open_internal(options, params)
+---@private
+function grug_far._open_internal(options, params)
   local instances = require('grug-far.instances')
   if options.instanceName and instances.has_instance(options.instanceName) then
     error('A grug-far instance with instanceName="' .. options.instanceName .. '" already exists!')
@@ -166,9 +186,9 @@ function M._open_internal(options, params)
     )
   end
 
-  local win = M._createWindow(context)
+  local win = grug_far._createWindow(context)
   local buf = require('grug-far.farBuffer').createBuffer(win, context)
-  M._setupWindow(context, win, buf)
+  grug_far._setupWindow(context, win, buf)
   setupCleanup(buf, context)
   instances.add_instance(options.instanceName, instances.new(context, buf))
 
@@ -177,19 +197,20 @@ end
 
 --- launch grug-far with the given overrides, pre-filling
 --- search with current visual selection.
----@param options? GrugFarOptionsOverride
-function M.with_visual_selection(options)
+---@param options? GrugFarOptionsOverride partial override of |grug_far.defaultOptions|
+---@seealso Option types: |GrugFarOptions|
+function grug_far.with_visual_selection(options)
   local opts = require('grug-far.opts')
   local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
   local visual_selection_info = require('grug-far.utils').get_current_visual_selection_info()
-  return M._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
+  return grug_far._open_internal(resolvedOpts, { visual_selection_info = visual_selection_info })
 end
 
 --- gets the current visual selection as a string array of lines
 --- This is provided as a utility for users so they don't have to rewrite
 ---@param strict? boolean Whether to require visual mode to be active, defaults to False
 ---@return string[]?
-function M.get_current_visual_selection_lines(strict)
+function grug_far.get_current_visual_selection_lines(strict)
   local was_visual = require('grug-far.utils').leaveVisualMode()
   if strict and not was_visual then
     return
@@ -202,8 +223,8 @@ end
 --- This is provided as a utility for users so they don't have to rewrite
 ---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
 ---@return string?
-function M.get_current_visual_selection(strict)
-  local selection_lines = M.get_current_visual_selection_lines(strict)
+function grug_far.get_current_visual_selection(strict)
+  local selection_lines = grug_far.get_current_visual_selection_lines(strict)
   return selection_lines and table.concat(selection_lines, '\n')
 end
 
@@ -211,7 +232,7 @@ end
 --- useful for passing as a prefill when searching within a buffer
 ---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
 ---@return string?
-function M.get_current_visual_selection_as_range_str(strict)
+function grug_far.get_current_visual_selection_as_range_str(strict)
   local visual_selection_info = require('grug-far.utils').get_current_visual_selection_info(strict)
   if not visual_selection_info then
     return
@@ -226,27 +247,29 @@ end
 --- if instQuery is nil, get any first instance we can get our hands on
 --- if instQuery is non-nil, and no instance found, an error is emitted
 ---@param instQuery GrugFarInstanceQuery
----@return GrugFarInstance instance|nil
----@return string instanceName
-function M.get_instance(instQuery)
+---@return GrugFarInstance? instance, string? instanceName
+---
+--- See |grug-far-instance-api|
+function grug_far.get_instance(instQuery)
   return require('grug-far.instances').ensure_instance(instQuery)
 end
 
 --- toggles visibility of grug-far instance with given instance name or current buffer instance
 --- options.instanceName can be used to identify a specific grug-far instance to toggle
----@param options GrugFarOptionsOverride
-function M.toggle_instance(options)
+---@param options GrugFarOptionsOverride partial override of |grug_far.defaultOptions|
+---@seealso Option types: |GrugFarOptions|
+function grug_far.toggle_instance(options)
   local inst = require('grug-far.instances').get_instance(options.instanceName or 0)
   if not inst then
-    M.open(options)
+    grug_far.open(options)
     return
   end
 
   local win = vim.fn.bufwinid(inst._buf)
   if win == -1 then
     -- toggle it on
-    win = M._createWindow(inst._context)
-    M._setupWindow(inst._context, win, inst._buf)
+    win = grug_far._createWindow(inst._context)
+    grug_far._setupWindow(inst._context, win, inst._buf)
     vim.api.nvim_win_set_buf(win, inst._buf)
   else
     -- toggle it off
@@ -257,21 +280,21 @@ end
 --- checks if grug-far instance with given name exists
 ---@param instanceName string
 ---@return boolean
-function M.has_instance(instanceName)
+function grug_far.has_instance(instanceName)
   return require('grug-far.instances').has_instance(instanceName)
 end
 
 --- checks if grug-far instance is open
 ---@param instQuery GrugFarInstanceQuery
 ---@return boolean
-function M.is_instance_open(instQuery)
+function grug_far.is_instance_open(instQuery)
   local inst = require('grug-far.instances').get_instance(instQuery)
   return inst ~= nil and inst:is_open()
 end
 
 --- closes grug-far instance
 ---@param instQuery GrugFarInstanceQuery
-function M.kill_instance(instQuery)
+function grug_far.kill_instance(instQuery)
   local inst = require('grug-far.instances').get_instance(instQuery)
   if inst then
     inst:close()
@@ -280,7 +303,7 @@ end
 
 --- hides grug-far instance
 ---@param instQuery GrugFarInstanceQuery
-function M.hide_instance(instQuery)
+function grug_far.hide_instance(instQuery)
   local inst = require('grug-far.instances').get_instance(instQuery)
   if inst then
     inst:hide()
@@ -290,98 +313,114 @@ end
 -- deprecated API -----------------------------------------------------------------------------
 
 ---@deprecated
+--- Note: Deprecated! Use: grug_far.get_instance(...):toggle_flags()
+---
 --- toggles given list of flags in the current grug-far buffer
 ---@param flags string[]
 ---@return boolean[] states
-function M.toggle_flags(flags)
+function grug_far.toggle_flags(flags)
   vim.deprecate('toggle_flags(...)', 'get_instance(...):toggle_flags()', 'soon', 'grug-far.nvim')
-  return M.get_instance(0):toggle_flags(flags)
+  return grug_far.get_instance(0):toggle_flags(flags)
 end
 
 ---@deprecated
+--- Note: Deprecated! Use: grug_far.hide_instance(...)
+---
 --- hides grug-far instance
 ---@param instQuery GrugFarInstanceQuery
-function M.close_instance(instQuery)
+function grug_far.close_instance(instQuery)
   vim.deprecate('close_instance(...)', 'hide_instance(...)', 'soon', 'grug-far.nvim')
-  return M.hide_instance(instQuery)
+  return grug_far.hide_instance(instQuery)
 end
 
 ---@deprecated
+--- Note: Deprecated! Use: grug_far.get_instance(...):open()
+---
 --- opens grug-far instance with given name (or current buffer instance) if window closed
 --- otherwise focuses the window
 ---@param instQuery GrugFarInstanceQuery
-function M.open_instance(instQuery)
+function grug_far.open_instance(instQuery)
   vim.deprecate('open_instance(...)', 'get_instance(...):open()', 'soon', 'grug-far.nvim')
-  return M.get_instance(instQuery or 0):open()
+  return grug_far.get_instance(instQuery or 0):open()
 end
 
 ---@deprecated
+--- Note: Deprecated! Use: grug_far.get_instance(...):update_input_values()
+---
 --- updates grug-far instance with given input prefills
 --- operates on grug-far instance with given instance name or current buffer instance (if nil)
 --- if clearOld=true is given, the old input values are ignored
 ---@param instQuery string?
 ---@param prefills GrugFarPrefills
 ---@param clearOld boolean
-function M.update_instance_prefills(instQuery, prefills, clearOld)
+function grug_far.update_instance_prefills(instQuery, prefills, clearOld)
   vim.deprecate(
     'update_instance_prefills(...)',
     'get_instance(...):update_input_values()',
     'soon',
     'grug-far.nvim'
   )
-  M.get_instance(instQuery):update_input_values(prefills, clearOld)
+  grug_far.get_instance(instQuery):update_input_values(prefills, clearOld)
 end
 
 ---@deprecated
+--- Note: Deprecated! Use: grug_far.get_instance(...):goto_input()
+---
 --- moves cursor to the input with the given name
 --- operates on grug-far instance with given instance name or current buffer instance
 ---@param inputName GrugFarInputName
 ---@param instQuery GrugFarInstanceQuery
-function M.goto_input(inputName, instQuery)
+function grug_far.goto_input(inputName, instQuery)
   vim.deprecate('goto_input(...)', 'get_instance(...):goto_input()', 'soon', 'grug-far.nvim')
-  return M.get_instance(instQuery or 0):goto_input(inputName)
+  return grug_far.get_instance(instQuery or 0):goto_input(inputName)
 end
 
 ---@deprecated
+--- Note: Deprecated! Use: grug_far.get_instance(...):goto_first_input()
+---
 --- moves cursor to the first input
 --- operates on grug-far instance with given instance name or current buffer instance
 ---@param instQuery GrugFarInstanceQuery
-function M.goto_first_input(instQuery)
+function grug_far.goto_first_input(instQuery)
   vim.deprecate(
     'goto_first_input(...)',
     'get_instance(...):goto_first_input()',
     'soon',
     'grug-far.nvim'
   )
-  return M.get_instance(instQuery or 0):goto_first_input()
+  return grug_far.get_instance(instQuery or 0):goto_first_input()
 end
 
 ---@deprecated
+--- Note: Deprecated! Use: grug_far.get_instance(...):goto_next_input()
+---
 --- moves cursor to the next input
 --- operates on grug-far instance with given instance name or current buffer instance
 ---@param instQuery GrugFarInstanceQuery
-function M.goto_next_input(instQuery)
+function grug_far.goto_next_input(instQuery)
   vim.deprecate(
     'goto_next_input(...)',
     'get_instance(...):goto_next_input()',
     'soon',
     'grug-far.nvim'
   )
-  return M.get_instance(instQuery or 0):goto_next_input()
+  return grug_far.get_instance(instQuery or 0):goto_next_input()
 end
 
 ---@deprecated
+--- Note: Deprecated! Use: grug_far.get_instance(...):goto_prev_input()
+---
 --- moves cursor to the next input
 --- operates on grug-far instance with given instance name or current buffer instance
 ---@param instQuery GrugFarInstanceQuery
-function M.goto_prev_input(instQuery)
+function grug_far.goto_prev_input(instQuery)
   vim.deprecate(
     'goto_prev_input(...)',
     'get_instance(...):goto_prev_input()',
     'soon',
     'grug-far.nvim'
   )
-  return M.get_instance(instQuery or 0):goto_prev_input()
+  return grug_far.get_instance(instQuery or 0):goto_prev_input()
 end
 
-return M
+return grug_far

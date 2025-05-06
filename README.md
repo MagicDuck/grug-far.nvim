@@ -83,7 +83,7 @@ Grug find! Grug replace! Grug happy!
 
 Run `:checkhealth grug-far` if you see unexpected issues.
 
-## 📦 Installation
+## 📦 Installation & Configuration
 
 Using [lazy.nvim][lazy]:
 ```lua
@@ -97,27 +97,14 @@ Using [lazy.nvim][lazy]:
       require('grug-far').setup({
         -- options, see Configuration section below
         -- there are no required options atm
-        -- engine = 'ripgrep' is default, but 'astgrep' or 'astgrep-rules' can
-        -- be specified
       });
     end
   },
-
 ```
 
-## ⚙️ Configuration
+For configuration, see more details in [:h grug-far][docs] 
 
-**grug-far.nvim** comes with the following:
-- [default options][opts] 
-- [highlights][highlights]
-
-**Note on the key mappings**: By default, grug-far, will use `<localleader>` for its keymaps as that is the vim
-recommended way for plugins. See https://learnvimscriptthehardway.stevelosh.com/chapters/11.html#local-leader
-
-So to use that, make sure you have `<localleader>` configured. For example, to use `,` as the local leader:
-```
-vim.g.maplocalleader = ','
-```
+**Important Note:** Make sure you have `<localleader>` configured. By default, grug-far, will use `<localleader>` for its buffer local keymaps.
 
 ## 🚀 Usage
 
@@ -262,32 +249,6 @@ When you are done, it is recommended to close the buffer with the configured key
 (see Configuration section above) or just `:bd` in order to save on resources as some search results
 can be quite beefy in size. The advantage of using the `Close` action as opposed to just `:bd` is that it
 will ask you to confirm if there is a replace/sync in progress, as those would be aborted.
-
-### Filetype
-Note that *grug-far.nvim* buffers will have `filetype=grug-far`, history buffers will have `filetype=grug-far-history` and help will have `filetype=grug-far-help` if you need filter/exclude them in any situations.
-Excluding seems to be necessary with copilot at the time of writing this.
-
-### ⚒️  Lua API
-
-For more control, you can programmatically open a grug-far buffer like so:
-```sh
-require('grug-far').open(opts)
-```
-If the above is called while in visual mode, it will pre-fill current visual selection as search text.
-(note, this will also set `--fixed-strings` flag as selection can contain special characters)
-
-Note that if you want to pre-fill current visual selection from command mode, you would have to use: 
-```
-:lua require('grug-far').with_visual_selection(opts)
-```
-(command mode is the only case where this is necessary in order to force using the visual selection)
-
-where `opts` will be merged with and override the global plugin options configured at setup time.
-
-See here for all the available [options][opts] 
-
-For more API, see [docs][docs]
-
 ### 🥪 Cookbook
 
 #### Launch with the current word under the cursor as the search string
@@ -569,7 +530,6 @@ filetypes = {
 - [lazy.nvim][lazy]: used their beautiful `README.md` as a template
 - [plugin-template.nvim][neovim-plugin-template]: super handy template, this plugin is based on it! 
 
-[opts]: lua/grug-far/opts.lua
 [docs]: doc/grug-far.txt
 [highlights]: lua/grug-far/highlights.lua
 [lazy]: https://github.com/folke/lazy.nvim

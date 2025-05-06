@@ -7,8 +7,6 @@
 ---@field max_column_number_length? integer
 ---@field is_context? boolean
 
----@alias GrugFarInputName "search" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
-
 ---@class GrugFarInputs
 ---@field [GrugFarInputName] string?
 

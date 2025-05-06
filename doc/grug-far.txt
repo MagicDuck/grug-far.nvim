@@ -1,203 +1,144 @@
-*grug-far.txt*  simple to use find and replace plugin
+*grug-far*  simple to use find and replace plugin
 
 ==============================================================================
-CONTENTS                                          *grug-far-contents*
+CONTENTS                                                     *grug-far-contents*
 
     1. Introduction ......................... |grug-far-introduction|
     2. Setup ................................ |grug-far-setup|
     3. Commands ............................. |grug-far-commands|
-    4. API .................................. |grug-far-api|
-    5. Instance API ......................... |grug-far-instance-api|
-    6. Highlights  .......................... |grug-far-highlights|
+    4. Options .............................. |grug-far-opts|
+    5. API Overview ......................... |grug-far-api-overview|
+    6. Instance API Overview ................ |grug-far-instance-api-overview|
+    7. Filetype  ............................ |grug-far-filetype|
+    8. Highlights  .......................... |grug-far-highlights|
 
 ==============================================================================
-1. INTRODUCTION                               *grug-far-introduction*
+INTRODUCTION                                             *grug-far-introduction*
 
 grug-far adds search/replace inside a buffer to neovim. 
 
 ==============================================================================
-2. SETUP                                             *grug-far-setup*
+SETUP                                                           *grug-far-setup*
 
-Setup is way to override plugin options that apply to all instances of the
-plugin. It's entirely optional.
-
+Setup is way to override default plugin options that apply to all instances of
+the plugin. It's entirely optional.
+>lua
     require('grug-far').setup({ ... })
-
+<
 You can also do it like so if you prefer not calling a setup() function:
-
+>lua
     vim.g.grug_far = { ... }
+<
+
+See Also: ~
+|grug_far.setup()|
+
+Note (keymaps): ~
+By default, grug-far, will use `<localleader>` for its buffer local keymaps
+as that is the vim recommended way for plugins. 
+See https://learnvimscriptthehardway.stevelosh.com/chapters/11.html#local-leader
+
+So make sure you have `<localleader>` configured. For example, to use `,` as the
+local leader you will need to have the following in your nvim configuration:
+>lua
+    vim.g.maplocalleader = ','
+<
 
 ==============================================================================
-3. COMMANDS                                       *grug-far-commands*
+COMMANDS                                                     *grug-far-commands*
 
-:GrugFar                                                *GrugFar*
+:GrugFar                                                               *GrugFar*
 
 Opens up a grug-far buffer in a split. Multiple such buffers can
 be opened, each with their potentially different searches and they will
 show up in your buffers list. In visual mode, it will pre-fill search
 with the current visual selection.
 
-:GrugFarWithin                                          *GrugFarWithin*
+:GrugFarWithin                                                   *GrugFarWithin*
 
 Same as :GrugFar, except that in visual mode, it will search and replace
 within the range.
 
+==============================================================================
+API OVERVIEW                                             *grug-far-api-overview*
+
+In addition to the commands, grug-far offers a lua API that can give you more
+control over options, etc.
+For example, you can programmatically open a grug-far buffer like so:
+>lua
+    require('grug-far').open(option_overrides)
+<
+
+See Also: ~
+|grug_far.open()|
+
+Note: If the above is called while in visual mode, it will pre-fill current
+visual selection as search text. It will also set `--fixed-strings` flag as 
+selection can contain special characters.
+
+Note: In the rare case that if you want to pre-fill current visual selection
+from command mode (not recommended, this is only the case when creating a 
+keymapping where the right hand side is a string instead of a lua function), 
+you would have to use: 
+>lua
+  :lua require('grug-far').with_visual_selection(option_overrides)
+<
+
+See Also: ~
+|grug_far.with_visual_selection()|
+
+The documentation for each particular  API function is provided through the
+lua language server and available here: |grug-far-api|.
 
 ==============================================================================
-4. API                                                 *grug-far-api*
+INSTANCE API OVERVIEW                           *grug-far-instance-api-overview*
 
+It is possible to operate on a particular grug-far instance. In order to 
+accomplish that, you first need to get hold of the instance, which you can
+acquire either by {instanceName} (as provided when opening the instance) or by
+providing the buffer number associated with the instance. You can also get any
+random first instance, which is useful in situations where you only have one
+active grug-far instance. See: |grug_far.get_instance()|
 
-require('grug-far').setup({config})                  *grug-far.setup()*
-        Configures this plugin. Currently supported configuration options
-        are linked from the plugin's README page:
-        https://github.com/MagicDuck/grug-far.nvim/tree/main?tab=readme-ov-file#%EF%B8%8F-configuration
+example 1 (targeting instance with name 'my_precious'): ~
+>lua
+    require('grug-far').open({ instanceName = 'my_precious' })
+    require('grug-far').get_instance('my_precious'):some_func()
+<
 
-        Parameters: ~
-            {config}(optional, table) Table of values; keys as described
-                above. Accept defaults by omitting the relevant key.
+example 2 (targeting current buffer instance): ~
+>lua
+    require('grug-far').get_instance(0):some_func()
+<
 
-require('grug-far').open({config})                *grug-far.open()*
-        Launches grug-far, where the given config overrides the global plugin
-	config that was passed to require('grug-far).setup(...). 
-        Currently supported configuration options are the same as the global
-	plugin config options linked above.
-	If the function is called while in visual mode, it will pre-fill
-	search with the current visual selection.
-
-        Parameters: ~
-            {config}(optional, table) Table of values; keys as described
-                above. Accept defaults by omitting the relevant key.
-	
-	Return: ~
-            {instanceName}(string) 
-
-require('grug-far').with_visual_selection({config})  *grug-far.with_visual_selection()*
-        Launches grug-far, pre-filling search with the current visual
-	selection. The given config overrides the global plugin
-	config that was passed to require('grug-far).setup(...). 
-
-        Currently supported configuration options are the same as the global
-	plugin config options linked above.
-
-        Parameters: ~
-            {config}(optional, table) Table of values; keys as described
-                above. Accept defaults by omitting the relevant key.
-        
-	Return: ~
-            {instanceName}(string) 
-
-require('grug-far').get_current_visual_selection_lines({strict})
-                                        *grug-far.get_current_visual_selection_lines()*
-	Gets the current visual selection as a string array for each line.
-	This is provided as a utility for users so they don't have to rewrite.
-
-        Parameters: ~
-            {strict}(boolean) If true, only return selection if currently in
-	      visual mode
-
-	Return: ~
-	    {visual_selection}(string[])
-
-require('grug-far').get_current_visual_selection({strict})
-                                              *grug-far.get_current_visual_selection()*
-	Gets the current visual selection as a string.
-	This is provided as a utility for users so they don't have to rewrite.
-
-        Parameters: ~
-            {strict}(boolean) If true, only return selection if currently in
-	      visual mode
-
-	Return: ~
-	    {visual_selection}(string)
-
-require('grug-far').get_current_visual_selection_as_range_str({strict})
-                                        *grug-far.get_current_visual_selection_as_range_str()*
-	Gets the current visual selection as a range string representation.
-	Useful when passing as a prefill for Paths: input in some situations
-	where you would like to search and replace within a range.
-
-        Parameters: ~
-            {strict}(boolean) If true, only return selection string if currently in
-	      visual mode
-
-	Return: ~
-	    {range_str}(string)
-
-require('grug-far').get_instance({instQuery})       *grug-far.get_instance()*
-        gets grug-far instacnce as follow:
-        if instQuery is a string, gets instance with that name
-        if instQuery is a number, gets instance at that buffer (use 0 for current buffer)
-        if instQuery is nil, get any first instance we can get our hands on
-        if instQuery is non-nil, and no instance found, an error is emitted
-
-        Parameters: ~
-            {instQuery}(optional, string or buf number)
-
-require('grug-far').toggle_instance({config})       *grug-far.toggle_instance()*
-        Toggles visibility of grug-far instance with the given config.instanceName.
-	If config.instanceName is nil, it operates on current buffer instance
-	if available.
-	The given config overrides the global plugin config that was passed to 
-	require('grug-far).setup(...). Currently supported configuration options are
-	the same as the global plugin config options linked above.
-
-        Parameters: ~
-            {config}(optional, table) Table of values; keys as described
-                above. Accept defaults by omitting the relevant key.
-
-require('grug-far').has_instance({instanceName})               *grug-far.has_instance()*
-        Checks if grug-far instance with given name exists
-
-        Parameters: ~
-            {instanceName}(string) 
-	
-	Return: ~
-	    {exists}(boolean) 
-
-require('grug-far').is_instance_open({instQuery})           *grug-far.is_instance_open()*
-        Checks if grug-far instance is open.
-
-        Parameters: ~
-            {instQuery}(optional, string or number) 
-	
-	Return: ~
-	    {is_open}(boolean) 
-
-require('grug-far').kill_instance({instQuery})           *grug-far.close_instance()*
-        Kills grug-far instance.
-
-        Parameters: ~
-            {instQuery}(optional, string or number) 
-
-require('grug-far').hide_instance({instQuery})           *grug-far.hide_instance()*
-        Closes (hides) window of grug-far instance with given name if window is open.
-
-        Parameters: ~
-            {instQuery}(optional, string or number) 
-
-==============================================================================
-6. Instance API                                          *grug-far-instance-api*
-
-You can target either an instance with a particular instanceName (as provided
-when opening the instance) or an instance associated with a particular buffer
-to invoke function on. 
-
-example 1 (targeting instance with name 'my_precious'):
-require('grug-far').open({ instanceName = 'my_precious' })
-require('grug-far').get_instance('my_precious'):some_func()
-
-example 2 (targeting current buffer instance)
-require('grug-far').get_instance(0):some_func()
+A typical usage for the instance API is to create custom buffer local keybinds
+for the grug-far buffer. Here is an example that opens a result location and 
+immediately closes grug-far on `<C-enter>`:
+>lua
+    vim.api.nvim_create_autocmd('FileType', {
+	group = vim.api.nvim_create_augroup('grug-far-keybindings', { clear = true }),
+	pattern = { 'grug-far' },
+	callback = function()
+	    vim.keymap.set('n', '<C-enter>', function()
+	        local inst = require('grug-far').get_instance(0)
+		inst:open_location()
+		inst:close()
+	    end, { buffer = true })
+	end,
+    })
+<
 
 The documentation for each particular instance API function is provided
-through the lua language server. There are just too many functions to
-duplicate documentation here.
+through the lua language server and available here: |grug-far-instance-api|.
 
 ==============================================================================
-6. Highlights                                          *grug-far-highlights*
+FILETYPE                                                     *grug-far-filetype*
 
-Currently supported highlights are linked from the plugin's README page:
-https://github.com/MagicDuck/grug-far.nvim/tree/main?tab=readme-ov-file#%EF%B8%8F-configuration
+grug-far main buffers will have `filetype=grug-far`.
+grug-far history buffers will have `filetype=grug-far-history`
+grug-far help buffers will have `filetype=grug-far-help` 
 
-==============================================================================
-vim:tw=78:ts=8:ft=help:norl:noet:fen:noet:
+This information is useful if you need filter/exclude them in any situations.
+Excluding seems to be necessary with copilot at the time of writing this.
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

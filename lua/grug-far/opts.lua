@@ -1,7 +1,11 @@
-local M = {}
+--- *grug-far-opts*
 
+local grug_far = {}
+
+---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 ---@type GrugFarOptions
-M.defaultOptions = {
+---@seealso |GrugFarOptions|
+grug_far.defaultOptions = {
   -- debounce milliseconds for issuing search while user is typing
   -- prevents excessive searching
   debounceMs = 500,
@@ -475,11 +479,11 @@ M.defaultOptions = {
   previewWindow = {},
 }
 
+---@alias KeymapDef KeymapTable | string | boolean
+
 ---@class KeymapTable
 ---@field n? string
 ---@field i? string
-
----@alias KeymapDef KeymapTable | string | boolean
 
 ---@class Keymaps
 ---@field replace KeymapDef
@@ -537,6 +541,7 @@ M.defaultOptions = {
 ---@field syncFile? KeymapDef
 ---@field nextInput? KeymapDef
 ---@field prevInput? KeymapDef
+---@private
 
 ---@class AutoSaveTable
 ---@field enabled boolean
@@ -549,6 +554,7 @@ M.defaultOptions = {
 ---@field onReplace? boolean
 ---@field onSyncAll? boolean
 ---@field onBufDelete? boolean
+---@private
 
 ---@class HistoryTable
 ---@field maxHistoryLines integer
@@ -559,6 +565,7 @@ M.defaultOptions = {
 ---@field maxHistoryLines? integer
 ---@field historyDir? string
 ---@field autoSave? AutoSaveTable
+---@private
 
 ---@alias FileIconsProviderType "first_available" | "mini.icons" |  "nvim-web-devicons" | false
 
@@ -603,6 +610,7 @@ M.defaultOptions = {
 ---@field helpTitle? string
 ---@field lineNumbersEllipsis? string
 ---@field newline? string
+---@private
 
 ---@class PlaceholdersTable
 ---@field enabled? boolean
@@ -616,14 +624,6 @@ M.defaultOptions = {
 
 ---@alias LanguageGlobsTable table<string, string[]>
 
----@class GrugFarPrefills
----@field search? string
----@field rules? string
----@field replacement? string
----@field filesFilter? string
----@field flags? string
----@field paths? string
-
 ---@class FoldingTable
 ---@field enabled boolean
 ---@field foldlevel integer
@@ -635,6 +635,7 @@ M.defaultOptions = {
 ---@field foldlevel? integer
 ---@field foldcolumn? string | integer
 ---@field include_file_path? boolean
+---@private
 
 ---@class RipgrepEngineTable
 ---@field path string
@@ -647,6 +648,7 @@ M.defaultOptions = {
 ---@field extraArgs? string
 ---@field showReplaceDiff? boolean
 ---@field placeholders? PlaceholdersTable
+---@private
 
 ---@class AstgrepEngineTable
 ---@field path string
@@ -663,22 +665,26 @@ M.defaultOptions = {
 ---@field path? string
 ---@field extraArgs? string
 ---@field placeholders? PlaceholdersTable
+---@private
 
 ---@class AstgrepRulesEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
 ---@field placeholders? PlaceholdersTable
 ---@field languageGlobs? LanguageGlobsTable
+---@private
 
 ---@class EnginesTable
 ---@field ripgrep RipgrepEngineTable
 ---@field astgrep AstgrepEngineTable
 ---@field astgrep-rules AstgrepRulesEngineTable
+---@private
 
 ---@class EnginesTableOverride
 ---@field ripgrep? RipgrepEngineTableOverride
 ---@field astgrep? AstgrepEngineTableOverride
 ---@field astgrep-rules? AstgrepRulesEngineTableOverride
+---@private
 
 ---@alias GrugFarEngineType "ripgrep" | "astgrep" | "astgrep-rules"
 ---@alias GrugFarReplacementInterpreterType "lua" | "vimscript" | "default"
@@ -694,12 +700,14 @@ M.defaultOptions = {
 ---@field showNumberLabel? boolean
 ---@field numberLabelPosition? NumberLabelPosition
 ---@field numberLabelFormat? string
+---@private
 
 ---@class HelpLineTable
 ---@field enabled boolean
 
 ---@class HelpLineTableOverride
 ---@field enabled? boolean
+---@private
 
 ---@alias FilterWindowFn fun(winid: number): boolean
 ---@alias WinPreferredLocation "prev" | "left" | "right" | "above" | "below"
@@ -713,26 +721,27 @@ M.defaultOptions = {
 ---@field exclude? (string | FilterWindowFn)[]
 ---@field preferredLocation? WinPreferredLocation
 ---@field useScratchBuffer? boolean
+---@private
 
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
 
----@class LineNumberLabelParams
----@field line_number integer?
----@field column_number integer?
----@field max_line_number_length integer
----@field max_column_number_length integer
----@field is_context boolean?
----@field is_current_line boolean?
+---@alias LineNumberLabelType fun(params: {
+---   line_number: integer?,
+---   column_number: integer?,
+---   max_line_number_length: integer,
+---   max_column_number_length: integer,
+---   is_context: boolean?,
+---   is_current_line: boolean?,
+--- }, options: GrugFarOptions): string[][] list of `[text, highlight]` tuples
 
----@alias LineNumberLabelType fun(params: LineNumberLabelParams, options: GrugFarOptions): string[][] list of `[text, highlight]` tuples
-
----@class FilePathConcealParams
----@field file_path string
----@field window_width integer
-
----@alias FilePathConcealType fun(params: FilePathConcealParams): (start_col: integer?, end_col: integer?)
+---@alias FilePathConcealType fun(params: {
+---   file_path: string,
+---   window_width: integer,
+--- }): (start_col: integer?, end_col: integer?)
 
 ---@class GrugFarOptions
+---@tag GrugFarOptions
+---@toc_entry options type definitions
 ---@field debounceMs integer
 ---@field minSearchChars integer
 ---@field maxSearchMatches integer?
@@ -824,12 +833,14 @@ M.defaultOptions = {
 ---@field helpWindow? vim.api.keyset.win_config
 ---@field historyWindow? vim.api.keyset.win_config
 ---@field previewWindow? vim.api.keyset.win_config
+---@private
 
 --- generates merged options
 ---@param options GrugFarOptionsOverride | GrugFarOptions
 ---@param defaults GrugFarOptions
 ---@return GrugFarOptions
-function M.with_defaults(options, defaults)
+---@private
+function grug_far.with_defaults(options, defaults)
   local newOptions = vim.tbl_deep_extend('force', vim.deepcopy(defaults), options)
 
   -- normalize keymaps opts
@@ -904,7 +915,8 @@ end
 ---@param iconName string
 ---@param context GrugFarContext
 ---@return string|nil
-function M.getIcon(iconName, context)
+---@private
+function grug_far.getIcon(iconName, context)
   local icons = context.options.icons
   if not icons.enabled then
     return nil
@@ -915,23 +927,30 @@ end
 
 --- whether we should conceal
 ---@param options GrugFarOptions
-function M.shouldConceal(options)
+---@private
+function grug_far.shouldConceal(options)
   return (not options.wrap) and options.filePathConceal
 end
 
 ---@type GrugFarOptionsOverride?
+---@private
 local _globalOptionsOverride = nil
 
 --- sets global opts override
 ---@param options GrugFarOptionsOverride?
-function M.setGlobalOptionsOverride(options)
+---@private
+function grug_far.setGlobalOptionsOverride(options)
   _globalOptionsOverride = options
 end
 
 --- gets global opts
 ---@return GrugFarOptions
-function M.getGlobalOptions()
-  return M.with_defaults(_globalOptionsOverride or vim.g.grug_far or {}, M.defaultOptions)
+---@private
+function grug_far.getGlobalOptions()
+  return grug_far.with_defaults(
+    _globalOptionsOverride or vim.g.grug_far or {},
+    grug_far.defaultOptions
+  )
 end
 
-return M
+return grug_far
