@@ -45,13 +45,13 @@ local function getHelpVirtLines(virt_lines, actions, context)
   return virt_lines
 end
 
----@class HelpRenderParams
+---@class grug.far.HelpRenderParams
 ---@field buf integer
 ---@field extmarkName string
 ---@field actions GrugFarAction[]
 ---@field top_virt_lines? VirtText[][]
 
----@param params HelpRenderParams
+---@param params grug.far.HelpRenderParams
 ---@param context GrugFarContext
 local function renderHelp(params, context)
   local buf = params.buf

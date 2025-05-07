@@ -2,7 +2,7 @@ local M = {}
 
 ---@alias GrugFarTaskType 'search' | 'sync' | 'replace'
 
----@class GrugFarTask
+---@class grug.far.GrugFarTask
 ---@field id number
 ---@field type GrugFarTaskType
 ---@field abort? fun()
@@ -19,7 +19,7 @@ end
 ---@param context GrugFarContext
 ---@param type GrugFarTaskType
 ---@param abort? fun()
----@return GrugFarTask
+---@return grug.far.GrugFarTask
 function M.createTask(context, type, abort)
   local task = {
     id = get_next_task_id(),
@@ -36,7 +36,7 @@ end
 --- gets tasks by type
 ---@param context GrugFarContext
 ---@param type GrugFarTaskType
----@return GrugFarTask[]
+---@return grug.far.GrugFarTask[]
 function M.getTasksByType(context, type)
   return vim
     .iter(context.state.tasks)
@@ -49,7 +49,7 @@ end
 --- gets active tasks by type
 ---@param context GrugFarContext
 ---@param type GrugFarTaskType
----@return GrugFarTask[]
+---@return grug.far.GrugFarTask[]
 function M.getActiveTasksByType(context, type)
   return vim
     .iter(context.state.tasks)
@@ -82,7 +82,7 @@ function M.abortAndFinishAllTasks(context)
 end
 
 --- aborts given tasks
----@param task GrugFarTask
+---@param task grug.far.GrugFarTask
 function M.abortTask(task)
   if task.isAborted then
     return false
@@ -98,7 +98,7 @@ end
 
 --- finishes given task and removes it from the task list
 ---@param context GrugFarContext
----@param task GrugFarTask
+---@param task grug.far.GrugFarTask
 function M.finishTask(context, task)
   task.isFinished = true
   task.isAborted = false

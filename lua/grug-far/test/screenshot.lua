@@ -5,10 +5,10 @@ local MiniTest = require('mini.test')
 --- copied over from mini.test, to remove the stuff we don't care about
 ---------------------------------------------------------------------------------------------
 
----@class MiniTestScreenshot
+---@class grug.far.MiniTestScreenshot
 
 ---@param t { text: string[], attr: string[] }
----@return MiniTestScreenshot
+---@return grug.far.MiniTestScreenshot
 local function screenshot_new(t)
   local process_screen = function(arr_2d)
     local n_lines, n_cols = #arr_2d, #arr_2d[1]
@@ -48,7 +48,7 @@ end
 
 --- gets a screenshot from given text lines and attrs
 ---@param text_lines string[]
----@return MiniTestScreenshot
+---@return grug.far.MiniTestScreenshot
 function M.from_lines(text_lines)
   local f = function(x)
     return string_to_chars(x)

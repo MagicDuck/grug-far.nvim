@@ -19,7 +19,7 @@
 ---@field resultLocationByExtmarkId { [integer]: grug.far.ResultLocation }
 ---@field resultMatchLineCount integer
 ---@field lastCursorLocation { loc:  grug.far.ResultLocation, row: integer, markId: integer }
----@field tasks GrugFarTask[]
+---@field tasks grug.far.GrugFarTask[]
 ---@field showSearchCommand boolean
 ---@field bufClosed boolean
 ---@field highlightResults FileResults
@@ -51,7 +51,7 @@
 ---@field actions GrugFarAction[]
 ---@field engine GrugFarEngine
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
----@field fileIconsProvider? FileIconsProvider
+---@field fileIconsProvider? grug.far.FileIconsProvider
 
 ---@class grug.far.VisualSelectionInfo
 ---@field file_name string

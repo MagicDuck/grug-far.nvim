@@ -133,7 +133,7 @@ local function getFirstValueStartingWith(entryLines, pattern)
   return value
 end
 
----@class HistoryEntry
+---@class grug.far.HistoryEntry
 ---@field engine string
 ---@field replacementInterpreter? string
 ---@field search string
@@ -144,7 +144,7 @@ end
 
 --- gets history entry from list of lines
 ---@param lines string[]
----@return HistoryEntry
+---@return grug.far.HistoryEntry
 function M.getHistoryEntryFromLines(lines)
   local engine_val = getFirstValueStartingWith(lines, 'Engine:[ ]?')
   local engineType, _replacementInterpreter = unpack(vim.split(engine_val, engine_field_sep))
@@ -165,7 +165,7 @@ end
 --- fills inputs based on a history entry
 ---@param context GrugFarContext
 ---@param buf integer
----@param entry HistoryEntry
+---@param entry grug.far.HistoryEntry
 ---@param callback? fun()
 function M.fillInputsFromEntry(context, buf, entry, callback)
   context.state.searchDisabled = true

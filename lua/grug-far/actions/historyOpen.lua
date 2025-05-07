@@ -7,7 +7,7 @@ local opts = require('grug-far.opts')
 --- gets history entry at given 0-based buffer row
 ---@param historyBuf integer
 ---@param row integer
----@return HistoryEntry | nil
+---@return grug.far.HistoryEntry | nil
 local function getHistoryEntryAtRow(historyBuf, row)
   local firstEntryRow = nil
   for i = row, 0, -1 do
