@@ -1,16 +1,15 @@
 local utils = require('grug-far.utils')
 local uv = vim.uv
 
----@class grug.far.FetchCommandOutputParams
----@field cmd_path string
----@field args string[]?
----@field on_fetch_chunk fun(data: string)
----@field on_finish fun(status: grug.far.Status, errorMessage: string?)
----@field stdin? uv_pipe_t
----@field fixChunkLineTruncation? boolean
-
 --- fetch with ripgrep
----@param params grug.far.FetchCommandOutputParams
+---@param params {
+--- cmd_path: string,
+--- args: string[]?,
+--- on_fetch_chunk: fun(data: string),
+--- on_finish: fun(status: grug.far.Status, errorMessage: string?),
+--- stdin?: uv_pipe_t,
+--- fixChunkLineTruncation?: boolean,
+--- }
 ---@return fun()? abort, string[]? effectiveArgs
 local function fetchCommandOutput(params)
   local args = params.args

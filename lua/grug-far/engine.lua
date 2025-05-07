@@ -133,8 +133,12 @@ M.DiffSeparatorChars = ' '
 ---@field search fun(params: grug.far.EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?) performs search
 ---@field replace fun(params: grug.far.EngineReplaceParams): (abort: fun()?) performs replace
 ---@field isSyncSupported fun(): boolean whether sync operation is supported
----@field sync fun(params: grug.far.EngineSyncParams): (abort: fun()?) syncs given changes to their originating files
----@field getInputPrefillsForVisualSelection fun(visual_selection_info: grug.far.VisualSelectionInfo, initialPrefills: grug.far.Prefills, visualSelectionUsage: VisualSelectionUsageType): grug.far.Prefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
+---@field sync fun(params: grug.far.EngineSyncParams):
+--- (abort: fun()?) syncs given changes to their originating files
+---@field getInputPrefillsForVisualSelection fun(
+---  visual_selection_info: grug.far.VisualSelectionInfo,
+---  initialPrefills: grug.far.Prefills,
+---  visualSelectionUsage: VisualSelectionUsageType): grug.far.Prefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
 ---@field getSearchDescription fun(inputs: grug.far.Inputs): string a string describing the current search to be used as buffer title for example
 ---@field isEmptySearch fun(inputs: grug.far.Inputs, options: grug.far.Options): boolean whether search query is empty
 

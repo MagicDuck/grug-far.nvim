@@ -63,16 +63,15 @@ local function getChangedFiles(buf, context, startRow, endRow, _inputs)
   return changedFiles
 end
 
----@class grug.far.SyncParams
----@field buf integer
----@field context grug.far.Context
----@field startRow integer
----@field endRow integer
----@field on_success? fun()
----@field shouldNotifyOnComplete? boolean defaults to true
-
 --- performs sync of lines in results area with corresponding original file locations
----@param params grug.far.SyncParams
+---@param params {
+--- buf: integer,
+--- context: grug.far.Context,
+--- startRow: integer,
+--- endRow: integer,
+--- on_success?: fun(),
+--- shouldNotifyOnComplete?: boolean, -- defaults to true
+--- }
 local function sync(params)
   local buf = params.buf
   local context = params.context

@@ -41,14 +41,13 @@ local function writeChangedFile(params)
   end)
 end
 
----@class grug.far.SyncChangedFilesParams
----@field options grug.far.Options
----@field changedFiles grug.far.ChangedFile[]
----@field report_progress fun(count: integer)
----@field on_finish fun(status: grug.far.Status, errorMessage: string | nil)
-
 --- sync given changed files
----@param params grug.far.SyncChangedFilesParams
+---@param params {
+--- options: grug.far.Options,
+--- changedFiles: grug.far.ChangedFile[],
+--- report_progress: fun(count: integer),
+--- on_finish: fun(status: grug.far.Status, errorMessage: string | nil),
+---}
 ---@return fun() abort
 local function syncChangedFiles(params)
   local changedFiles = vim.deepcopy(params.changedFiles)
