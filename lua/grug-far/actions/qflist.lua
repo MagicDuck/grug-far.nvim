@@ -3,7 +3,7 @@ local inputs = require('grug-far.inputs')
 
 --- opens quickfix list
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param resultsLocations grug.far.ResultLocation[]
 local function openQuickfixList(buf, context, resultsLocations)
   vim.fn.setqflist(resultsLocations, ' ')
@@ -29,7 +29,7 @@ end
 
 --- gets the result locations for the quickfix list, ignoring ones for deleted
 --- lines in results are and such
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return grug.far.ResultLocation[]
 local function getResultsLocations(context)
   local extmarks = vim.api.nvim_buf_get_extmarks(
@@ -55,7 +55,7 @@ local function getResultsLocations(context)
 end
 
 --- opens all locations in the results area in a quickfix list
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function qflist(params)
   local buf = params.buf
   local context = params.context

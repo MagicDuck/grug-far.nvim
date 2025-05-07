@@ -7,8 +7,8 @@ local rewriteFlags = {
 }
 
 --- get args for astgrep or nil if params invalid / insufficient
----@param inputs GrugFarInputs
----@param options GrugFarOptions
+---@param inputs grug.far.Inputs
+---@param options grug.far.Options
 ---@param extraArgs string[]
 ---@param blacklistedFlags? string[]
 ---@param forceReplace? boolean

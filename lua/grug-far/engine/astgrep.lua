@@ -2,7 +2,7 @@ local search = require('grug-far.engine.astgrep.search')
 local replace = require('grug-far.engine.astgrep.replace')
 local utils = require('grug-far.utils')
 
----@type GrugFarEngine
+---@type grug.far.Engine
 local AstgrepEngine = {
   type = 'astgrep',
 

@@ -1,5 +1,5 @@
 --- closes the buffer, thus freeing resources
----@param params { context: GrugFarContext, buf: integer }
+---@param params { context: grug.far.Context, buf: integer }
 local function close(params)
   local context = params.context
   local buf = params.buf

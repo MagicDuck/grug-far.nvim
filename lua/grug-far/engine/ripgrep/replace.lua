@@ -30,8 +30,8 @@ local function isEmptyStringReplace(args)
 end
 
 ---@class grug.far.replaceInRipgrepBufrangeParams
----@field inputs GrugFarInputs
----@field options GrugFarOptions
+---@field inputs grug.far.Inputs
+---@field options grug.far.Options
 ---@field replacement_eval_fn? fun(...): (string?, string?)
 ---@field bufrange grug.far.VisualSelectionInfo
 ---@field report_progress fun(count: integer)

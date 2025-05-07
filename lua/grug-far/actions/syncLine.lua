@@ -2,7 +2,7 @@ local sync = require('grug-far.actions.sync')
 local resultsList = require('grug-far.render.resultsList')
 
 --- syncs current result line with original file location
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function syncLine(params)
   local context = params.context
   local buf = params.buf

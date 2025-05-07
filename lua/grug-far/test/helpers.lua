@@ -99,7 +99,7 @@ function M.childWaitForCondition(child, condition, timeout, interval)
 end
 
 --- gets setup opts
----@return GrugFarOptionsOverride
+---@return grug.far.OptionsOverride
 function M.getSetupOptions()
   return {
     engines = {
@@ -235,7 +235,7 @@ end
 
 --- run open(options) in child
 ---@param child NeovimChild
----@param options GrugFarOptionsOverride
+---@param options grug.far.OptionsOverride
 ---@return string instanceName
 function M.childRunGrugFar(child, options)
   vim.fn.delete('./temp_history_dir', 'rf')

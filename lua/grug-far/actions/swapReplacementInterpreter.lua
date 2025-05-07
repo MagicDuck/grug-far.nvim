@@ -2,7 +2,7 @@ local search = require('grug-far.actions.search')
 local replacementInterpreter = require('grug-far.replacementInterpreter')
 
 --- swaps replacement interpreter with the next one
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function swapReplacementInterpreter(params)
   local context = params.context
   local buf = params.buf

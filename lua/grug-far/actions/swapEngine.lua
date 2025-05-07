@@ -3,7 +3,7 @@ local history = require('grug-far.history')
 local inputs = require('grug-far.inputs')
 
 --- swaps engine with the next one
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function swapEngine(params)
   local context = params.context
   local buf = params.buf

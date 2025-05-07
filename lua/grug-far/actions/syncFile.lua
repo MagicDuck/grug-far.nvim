@@ -3,7 +3,7 @@ local resultsList = require('grug-far.render.resultsList')
 
 --- gets boundary location (cursor_row is 1-based)
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param cursor_row integer
 ---@param increment -1 | 1
 ---@param filename string?
@@ -30,7 +30,7 @@ end
 
 --- gets 1-based range of lines to sync
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param cursor_row integer
 ---@return integer, integer
 local function getSyncRange(buf, context, cursor_row)
@@ -54,7 +54,7 @@ local function getSyncRange(buf, context, cursor_row)
 end
 
 --- syncs current result line with original file location
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function syncFile(params)
   local context = params.context
   local buf = params.buf

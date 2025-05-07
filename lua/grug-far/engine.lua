@@ -88,16 +88,16 @@ M.DiffSeparatorChars = ' '
 ---@field stats grug.far.ParsedResultsStats
 
 ---@class grug.far.EngineSearchParams
----@field inputs GrugFarInputs
----@field options GrugFarOptions
----@field replacementInterpreter? GrugFarReplacementInterpreter
+---@field inputs grug.far.Inputs
+---@field options grug.far.Options
+---@field replacementInterpreter? grug.far.ReplacementInterpreter
 ---@field on_fetch_chunk fun(data: grug.far.ParsedResultsData)
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 
 ---@class grug.far.EngineReplaceParams
----@field inputs GrugFarInputs
----@field options GrugFarOptions
----@field replacementInterpreter? GrugFarReplacementInterpreter
+---@field inputs grug.far.Inputs
+---@field options grug.far.Options
+---@field replacementInterpreter? grug.far.ReplacementInterpreter
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer } | {type: "message", message: string})
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 
@@ -110,37 +110,37 @@ M.DiffSeparatorChars = ' '
 ---@field changedLines grug.far.ChangedLine[]
 
 ---@class grug.far.EngineSyncParams
----@field inputs GrugFarInputs
----@field options GrugFarOptions
+---@field inputs grug.far.Inputs
+---@field options grug.far.Options
 ---@field changedFiles grug.far.ChangedFile[]
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 
----@class GrugFarEngineInput
+---@class grug.far.EngineInput
 ---@field name string
 ---@field label string
 ---@field iconName string
 ---@field highlightLang? string
 ---@field trim boolean
 ---@field replacementInterpreterEnabled? boolean
----@field getDefaultValue? fun(context: GrugFarContext): string
+---@field getDefaultValue? fun(context: grug.far.Context): string
 
----@class GrugFarEngine
----@field type GrugFarEngineType
----@field inputs GrugFarEngineInput[]
----@field isSearchWithReplacement fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean is this a search with replacement
----@field showsReplaceDiff fun(options: GrugFarOptions): boolean whether we show a diff when replacing
+---@class grug.far.Engine
+---@field type grug.far.EngineType
+---@field inputs grug.far.EngineInput[]
+---@field isSearchWithReplacement fun(inputs: grug.far.Inputs, options: grug.far.Options): boolean is this a search with replacement
+---@field showsReplaceDiff fun(options: grug.far.Options): boolean whether we show a diff when replacing
 ---@field search fun(params: grug.far.EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?) performs search
 ---@field replace fun(params: grug.far.EngineReplaceParams): (abort: fun()?) performs replace
 ---@field isSyncSupported fun(): boolean whether sync operation is supported
 ---@field sync fun(params: grug.far.EngineSyncParams): (abort: fun()?) syncs given changes to their originating files
----@field getInputPrefillsForVisualSelection fun(visual_selection_info: grug.far.VisualSelectionInfo, initialPrefills: GrugFarPrefills, visualSelectionUsage: VisualSelectionUsageType): GrugFarPrefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
----@field getSearchDescription fun(inputs: GrugFarInputs): string a string describing the current search to be used as buffer title for example
----@field isEmptySearch fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean whether search query is empty
+---@field getInputPrefillsForVisualSelection fun(visual_selection_info: grug.far.VisualSelectionInfo, initialPrefills: grug.far.Prefills, visualSelectionUsage: VisualSelectionUsageType): grug.far.Prefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
+---@field getSearchDescription fun(inputs: grug.far.Inputs): string a string describing the current search to be used as buffer title for example
+---@field isEmptySearch fun(inputs: grug.far.Inputs, options: grug.far.Options): boolean whether search query is empty
 
 --- returns engine given type
----@param type GrugFarEngineType
----@return GrugFarEngine
+---@param type grug.far.EngineType
+---@return grug.far.Engine
 function M.getEngine(type)
   if type == 'astgrep' then
     return require('grug-far.engine.astgrep')

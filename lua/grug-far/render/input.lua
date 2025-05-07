@@ -13,7 +13,7 @@ local treesitter = require('grug-far.render.treesitter')
 ---@field highlightLang? string
 
 ---@param params grug.far.InputRenderParams
----@param context GrugFarContext
+---@param context grug.far.Context
 local function renderInput(params, context)
   local buf = params.buf
   local minLineNr = params.lineNr

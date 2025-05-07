@@ -10,8 +10,8 @@ local uv = vim.uv
 local M = {}
 
 --- gets search args
----@param inputs GrugFarInputs
----@param options GrugFarOptions
+---@param inputs grug.far.Inputs
+---@param options grug.far.Options
 ---@param extraArgs string[]?
 ---@return string[]?
 function M.getSearchArgs(inputs, options, extraArgs)
@@ -29,7 +29,7 @@ function M.get_language(file_name)
 end
 
 --- gets bufrange if we have one specified in paths
----@param inputs GrugFarInputs
+---@param inputs grug.far.Inputs
 ---@return grug.far.VisualSelectionInfo? bufrange,string? err
 function M.getBufrange(inputs)
   if #inputs.paths > 0 then
@@ -80,7 +80,7 @@ end
 --- runs search
 ---@param args string[]?
 ---@param _bufrange? grug.far.VisualSelectionInfo
----@param options GrugFarOptions
+---@param options grug.far.Options
 ---@param eval_fn? fun(...): string
 ---@param on_fetch_chunk fun(data: grug.far.ParsedResultsData)
 ---@param on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)

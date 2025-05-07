@@ -2,7 +2,7 @@ local opts = require('grug-far.opts')
 local resultsList = require('grug-far.render.resultsList')
 
 --- gets status text
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return string | nil
 local function getStatusText(context)
   local status = context.state.status
@@ -24,7 +24,7 @@ local function getStatusText(context)
 end
 
 --- gets separator line
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return string
 local function getSeparator(context)
   -- note: use a large number to ensure it's always > window width
@@ -43,7 +43,7 @@ end
 
 --- render stats information line
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param headerRow integer
 local function renderInfoLine(buf, context, headerRow)
   local virt_texts = {}
@@ -80,7 +80,7 @@ local function renderInfoLine(buf, context, headerRow)
 end
 
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param row? integer 0-based row, defaults to headerRow
 local function renderResultsHeader(buf, context, row)
   local headerRow = row or resultsList.getHeaderRow(context, buf)

@@ -16,7 +16,7 @@ M.updateFolds = function(buf)
 end
 
 M._fold_funcs = {}
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param win integer
 ---@param buf integer
 function M.setup(context, win, buf)
@@ -70,7 +70,7 @@ function M.setup(context, win, buf)
   end
 end
 
----@param context GrugFarContext
+---@param context grug.far.Context
 function M.cleanup(context)
   M._fold_funcs[context.options.instanceName] = nil
 end

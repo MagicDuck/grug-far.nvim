@@ -2,14 +2,14 @@ local treesitter = require('grug-far.render.treesitter')
 local resultsList = require('grug-far.render.resultsList')
 local M = {}
 
----@class GrugFarReplacementInterpreter
----@field type GrugFarReplacementInterpreterType
+---@class grug.far.ReplacementInterpreter
+---@field type grug.far.ReplacementInterpreterType
 ---@field language string
 ---@field get_eval_fn fun(script: string, arg_names: string[]): (fn: (fun(...): (result: string?, err: string?))?, error: string?)
 
 --- returns engine given type
----@param type GrugFarReplacementInterpreterType
----@return GrugFarReplacementInterpreter?
+---@param type grug.far.ReplacementInterpreterType
+---@return grug.far.ReplacementInterpreter?
 function M.getReplacementInterpreter(type)
   if type == 'lua' then
     return require('grug-far.replacementInterpreter.luascript')
@@ -21,9 +21,9 @@ function M.getReplacementInterpreter(type)
 end
 
 --- sets replacement interpreter
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
----@param type GrugFarReplacementInterpreterType
+---@param type grug.far.ReplacementInterpreterType
 function M.setReplacementInterpreter(buf, context, type)
   local currentType = context.replacementInterpreter and context.replacementInterpreter.type
     or 'default'

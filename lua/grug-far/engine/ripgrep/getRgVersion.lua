@@ -3,7 +3,7 @@ local rg_version = nil
 
 --- gets the rg version in use.
 ---Only first call does an actual check rest are from cache
----@param options GrugFarOptions
+---@param options grug.far.Options
 ---@return string? version
 local function getRgVersion(options)
   if not rg_version then

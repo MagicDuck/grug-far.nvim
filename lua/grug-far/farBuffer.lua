@@ -8,7 +8,7 @@ local M = {}
 
 --- set up all key maps
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function getActions(buf, context)
   local get_inst = function()
     return require('grug-far').get_instance(buf)
@@ -249,7 +249,7 @@ local function getNextUniqueBufName(buf, prefix, initialIncludesCount)
 end
 
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function updateBufName(buf, context)
   local staticTitle = context.options.staticTitle
   local title
@@ -269,7 +269,7 @@ local function updateBufName(buf, context)
 end
 
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function setupGlobalOptOverrides(buf, context)
   local originalBackspaceOpt
   local function apply_overrides()
@@ -297,7 +297,7 @@ local function setupGlobalOptOverrides(buf, context)
 end
 
 ---@param win integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return integer bufId
 function M.createBuffer(win, context)
   local buf = vim.api.nvim_create_buf(not context.options.transient, true)

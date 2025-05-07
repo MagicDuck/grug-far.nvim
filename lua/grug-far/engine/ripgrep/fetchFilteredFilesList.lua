@@ -2,8 +2,8 @@ local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 
 ---@class grug.far.FetchFilteredFilesListParams
----@field inputs GrugFarInputs
----@field options GrugFarOptions
+---@field inputs grug.far.Inputs
+---@field options grug.far.Options
 ---@field report_progress fun(count: integer)
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string?, files: string[])
 

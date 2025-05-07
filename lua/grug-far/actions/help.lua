@@ -5,7 +5,7 @@ local opts = require('grug-far.opts')
 
 --- adds given highlighted lines to help buffer
 ---@param helpBuf integer
----@paratem context GrugFarContext
+---@paratem context grug.far.Context
 ---@param lines HlText[][]
 ---@param indent integer
 local function add_highlighted_lines(helpBuf, context, lines, indent)
@@ -36,7 +36,7 @@ end
 
 --- renders contents of history buffer
 ---@param helpBuf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function renderHelpBuffer(helpBuf, context)
   local lines = {
     { { 'Actions:', 'GrugFarHelpWinHeader' } },
@@ -67,7 +67,7 @@ local function renderHelpBuffer(helpBuf, context)
 end
 
 --- creates help window
----@param context GrugFarContext
+---@param context grug.far.Context
 local function createHelpWindow(context)
   local helpBuf = vim.api.nvim_create_buf(false, true)
   local width = vim.api.nvim_win_get_width(0) - 2
@@ -119,7 +119,7 @@ local function createHelpWindow(context)
 end
 
 --- shows help
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function help(params)
   local context = params.context
 

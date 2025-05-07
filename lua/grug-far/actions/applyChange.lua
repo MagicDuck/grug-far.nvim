@@ -6,7 +6,7 @@ local utils = require('grug-far.utils')
 
 --- gets adjacent location
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param cursor_row integer
 ---@param increment -1 | 1
 ---@return grug.far.ResultLocation?, integer?
@@ -24,7 +24,7 @@ end
 
 --- gets 1-based range of lines that we have to sync
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param cursor_row integer
 ---@param start_location grug.far.ResultLocation
 ---@return integer, integer
@@ -46,7 +46,7 @@ end
 
 --- gets 1-based range of lines that we have to delete
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param start_location grug.far.ResultLocation
 ---@param syncStartRow integer
 ---@param syncEndRow integer
@@ -108,7 +108,7 @@ local function getDeleteRange(
 end
 
 --- apply change at current line, optionally remove it from buffer and open location of next/prev change
----@param params { buf: integer, context: GrugFarContext, increment: -1 | 1, open_location?: boolean, remove_synced?: boolean, notify?: boolean }
+---@param params { buf: integer, context: grug.far.Context, increment: -1 | 1, open_location?: boolean, remove_synced?: boolean, notify?: boolean }
 local function applyChange(params)
   local buf = params.buf
   local context = params.context

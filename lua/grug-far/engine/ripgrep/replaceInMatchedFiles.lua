@@ -6,8 +6,8 @@ local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local parseResults = require('grug-far.engine.ripgrep.parseResults')
 
 ---@class grug.far.replaceInFileParams
----@field inputs GrugFarInputs
----@field options GrugFarOptions
+---@field inputs grug.far.Inputs
+---@field options grug.far.Options
 ---@field replacement_eval_fn fun(...): (string?, string?)
 ---@field file string
 ---@field on_done fun(errorMessage: string?)
@@ -125,8 +125,8 @@ local function replaceInFileWithEval(params)
 end
 
 ---@class grug.far.replaceInMatchedFilesParams
----@field inputs GrugFarInputs
----@field options GrugFarOptions
+---@field inputs grug.far.Inputs
+---@field options grug.far.Options
 ---@field replacement_eval_fn fun(...): (string?, string?)
 ---@field files string[]
 ---@field report_progress fun(count: integer)

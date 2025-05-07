@@ -9,7 +9,7 @@ local inputs = require('grug-far.inputs')
 local M = {}
 
 --- gets 0-based row of results header
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@return integer
 M.getHeaderRow = function(context, buf)
@@ -49,7 +49,7 @@ end
 
 --- adds location mark
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param namespace integer
 ---@param startLine integer
 ---@param mark grug.far.ResultMark
@@ -75,7 +75,7 @@ end
 
 --- adds highlight result. line is relative to headerRow
 --- in order to support inputs fields with growing number of lines
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param line integer
 ---@param end_col integer
 ---@param loc grug.far.SourceLocation
@@ -103,7 +103,7 @@ end
 
 --- adds result text to buffer
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param data grug.far.ParsedResultsData
 ---@return integer lastline number before adding the text
 local function addResultChunkLines(buf, context, data)
@@ -127,7 +127,7 @@ end
 
 --- adds result highlights to buffer
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param data grug.far.ParsedResultsData
 ---@param startLine integer
 local function addResultChunkHighlights(buf, context, data, startLine)
@@ -188,7 +188,7 @@ end
 
 --- adds result marks to buffer
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param data grug.far.ParsedResultsData
 ---@param startLine integer
 local function addResultChunkMarks(buf, context, data, startLine)
@@ -333,7 +333,7 @@ end
 
 --- append a bunch of result lines to the buffer
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param data grug.far.ParsedResultsData
 function M.appendResultsChunk(buf, context, data)
   local lastline = addResultChunkLines(buf, context, data)
@@ -347,7 +347,7 @@ end
 --- before this line are deleted, those will be marked as invalid
 ---@param row integer
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return grug.far.ResultLocation?, vim.api.keyset.get_extmark_item?
 function M.getResultLocation(row, buf, context)
   local marks = vim.api.nvim_buf_get_extmarks(
@@ -369,7 +369,7 @@ function M.getResultLocation(row, buf, context)
 end
 
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return grug.far.ResultLocation?, vim.api.keyset.get_extmark_item?
 function M.getResultLocationAtCursor(buf, context)
   local grugfar_win = vim.fn.bufwinid(buf)
@@ -379,7 +379,7 @@ end
 
 --- displays results error
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param error string | nil
 function M.setError(buf, context, error)
   M.clear(buf, context)
@@ -397,7 +397,7 @@ end
 
 --- displays results warning
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param warning string | nil
 function M.appendWarning(buf, context, warning)
   if not (warning and #warning > 0) then
@@ -416,7 +416,7 @@ end
 --- iterates over each location in the results list that has text which
 --- has been changed by the user
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param startRow integer
 ---@param endRow integer
 ---@param callback fun(location: grug.far.ResultLocation, newLine: string, bufline: string, markId: integer, row: integer, details: vim.api.keyset.extmark_details)
@@ -449,7 +449,7 @@ end
 
 --- marks un-synced lines
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param startRow? integer
 ---@param endRow? integer
 ---@param sync? boolean whether to sync with current line contents, this removes indicators
@@ -523,7 +523,7 @@ end
 
 --- clears results area
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 function M.clear(buf, context)
   context.state.resultLocationByExtmarkId = {}
   context.state.resultMatchLineCount = 0
@@ -542,7 +542,7 @@ end
 
 --- appends search command to results list
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param rgArgs string[]
 function M.appendSearchCommand(buf, context, rgArgs)
   local cmd_path = context.options.engines[context.engine.type].path
@@ -577,7 +577,7 @@ end
 --- note that only the "top" range of lines is redrawn, including a bunch of lines
 --- after headerRow so that we immediately get error messages to show up
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 function M.forceRedrawBuffer(buf, context)
   ---@diagnostic disable-next-line
   if vim.api.nvim__redraw then
@@ -588,7 +588,7 @@ function M.forceRedrawBuffer(buf, context)
 end
 
 ---@param buf number
----@param context GrugFarContext
+---@param context grug.far.Context
 function M.highlight(buf, context)
   if not context.options.resultsHighlight then
     return
@@ -630,7 +630,7 @@ function M.highlight(buf, context)
 end
 
 --- re-renders line number at given location
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param loc grug.far.ResultLocation
 ---@param mark vim.api.keyset.get_extmark_item

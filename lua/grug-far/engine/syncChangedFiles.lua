@@ -42,7 +42,7 @@ local function writeChangedFile(params)
 end
 
 ---@class grug.far.SyncChangedFilesParams
----@field options GrugFarOptions
+---@field options grug.far.Options
 ---@field changedFiles grug.far.ChangedFile[]
 ---@field report_progress fun(count: integer)
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string | nil)

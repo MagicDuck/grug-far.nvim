@@ -1,10 +1,10 @@
 local M = {}
 
 --- gets position of input within buffer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param name string
----@return integer? startRow, integer? endRow, GrugFarEngineInput? input
+---@return integer? startRow, integer? endRow, grug.far.EngineInput? input
 function M.getInputPos(context, buf, name)
   local nextExtmarkName = nil
   local theInput = nil
@@ -35,10 +35,10 @@ function M.getInputPos(context, buf, name)
 end
 
 --- gets input lines for given input name
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param name string
----@return string[], GrugFarEngineInput?
+---@return string[], grug.far.EngineInput?
 local function getInputLines(context, buf, name)
   local startRow, endRow, theInput = M.getInputPos(context, buf, name)
 
@@ -50,7 +50,7 @@ local function getInputLines(context, buf, name)
 end
 
 --- gets input value for given input name
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param name string
 ---@return string
@@ -65,9 +65,9 @@ function M.getInputValue(context, buf, name)
 end
 
 --- gets input values
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
----@return GrugFarInputs
+---@return grug.far.Inputs
 function M.getValues(context, buf)
   local values = {}
   for _, input in ipairs(context.engine.inputs) do
@@ -78,7 +78,7 @@ function M.getValues(context, buf)
 end
 
 --- fills in given input
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param name string
 ---@param value string?
@@ -106,9 +106,9 @@ end
 
 --- fills in inputs with given values
 --- if clearOld is true, clear old values even if new value not given
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
----@param values GrugFarPrefills
+---@param values grug.far.Prefills
 ---@param clearOld boolean
 function M.fill(context, buf, values, clearOld)
   -- filling in reverse order as it's more reliable with the left gravity extmarks
@@ -132,7 +132,7 @@ end
 ---@field value string
 
 --- gets input mark at given row if there is one there
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param row integer
 ---@return grug.far.InputDetails?
@@ -182,7 +182,7 @@ end
 --- special logic for paste below if in the context of an input
 --- if input is empty, prevents extra newline
 --- if on last line of input, temporarily adds a newline in order to prevent breaking out of it
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param is_visual? boolean
 local function pasteBelow(context, buf, is_visual)
@@ -232,7 +232,7 @@ end
 --- special logic for paste above if in the context of an input
 --- if input is empty, prevents extra newline
 --- if on last line of input in visual mode, temporarily adds a newline in order to prevent breaking out of it
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param is_visual? boolean
 local function pasteAbove(context, buf, is_visual)
@@ -284,7 +284,7 @@ end
 
 --- special logic for open below in the context of an input
 --- if cursor is on last line of input, prevent breaking into next input
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 local function openBelow(context, buf)
   local win = vim.fn.bufwinid(buf)
@@ -300,7 +300,7 @@ local function openBelow(context, buf)
 end
 
 --- some key rebinds that improve quality of life in the inputs area
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 function M.bindInputSaavyKeys(context, buf)
   vim.api.nvim_buf_set_keymap(buf, 'n', 'p', '', {
@@ -340,9 +340,9 @@ function M.bindInputSaavyKeys(context, buf)
   })
 end
 
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf number
----@param getInputName fun(win: integer): GrugFarInputName
+---@param getInputName fun(win: integer): grug.far.InputName
 local function _gotoInputInternal(context, buf, getInputName)
   local win = vim.fn.bufwinid(buf)
   local inputName = getInputName(win)
@@ -354,9 +354,9 @@ local function _gotoInputInternal(context, buf, getInputName)
 end
 
 --- moves cursor to the input with the given name
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf number
----@param inputName GrugFarInputName
+---@param inputName grug.far.InputName
 function M.goto_input(context, buf, inputName)
   return _gotoInputInternal(context, buf, function()
     return inputName
@@ -364,7 +364,7 @@ function M.goto_input(context, buf, inputName)
 end
 
 --- moves cursor to the first input
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf number
 function M.goto_first_input(context, buf)
   return _gotoInputInternal(context, buf, function()
@@ -373,7 +373,7 @@ function M.goto_first_input(context, buf)
 end
 
 --- moves cursor to the next input
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf number
 function M.goto_next_input(context, buf)
   return _gotoInputInternal(context, buf, function(win)
@@ -396,7 +396,7 @@ function M.goto_next_input(context, buf)
 end
 
 --- moves cursor to the next input
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf number
 function M.goto_prev_input(context, buf)
   return _gotoInputInternal(context, buf, function(win)
@@ -419,7 +419,7 @@ function M.goto_prev_input(context, buf)
 end
 
 --- toggles given list of flags
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf number
 ---@param flags string[]
 ---@return boolean[] states

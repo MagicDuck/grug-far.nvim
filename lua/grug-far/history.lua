@@ -9,7 +9,7 @@ local M = {}
 local continuation_prefix = '| '
 local engine_field_sep = '|'
 
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return string
 function M.getHistoryFilename(context)
   local historyDir = context.options.history.historyDir
@@ -38,7 +38,7 @@ local function formatInputValue(value)
 end
 
 --- adds entry to history
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param notify? boolean
 function M.addHistoryEntry(context, buf, notify)
@@ -163,7 +163,7 @@ function M.getHistoryEntryFromLines(lines)
 end
 
 --- fills inputs based on a history entry
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@param entry grug.far.HistoryEntry
 ---@param callback? fun()
@@ -183,7 +183,7 @@ function M.fillInputsFromEntry(context, buf, entry, callback)
   context.extmarkIds = {}
 
   vim.schedule(function()
-    inputs.fill(context, buf, entry --[[@as GrugFarPrefills]], true)
+    inputs.fill(context, buf, entry --[[@as grug.far.Prefills]], true)
     if entry.replacementInterpreter then
       replacementInterpreter.setReplacementInterpreter(buf, context, entry.replacementInterpreter)
     end

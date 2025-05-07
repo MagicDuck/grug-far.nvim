@@ -30,7 +30,7 @@ local function getActionMessage(err, count, total, time, reportDuration)
 end
 
 --- performs replace
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function replace(params)
   local buf = params.buf
   local context = params.context
