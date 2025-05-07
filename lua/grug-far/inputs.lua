@@ -124,7 +124,7 @@ function M.fill(context, buf, values, clearOld)
   end)
 end
 
----@class InputDetails
+---@class grug.far.InputDetails
 ---@field start_row integer
 ---@field start_col integer
 ---@field end_row integer
@@ -135,7 +135,7 @@ end
 ---@param context GrugFarContext
 ---@param buf integer
 ---@param row integer
----@return InputDetails?
+---@return grug.far.InputDetails?
 function M.getInputAtRow(context, buf, row)
   local names = vim
     .iter(context.engine.inputs)

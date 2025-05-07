@@ -2,14 +2,14 @@ local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local blacklistedReplaceFlags = require('grug-far.engine.ripgrep.blacklistedReplaceFlags')
 local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 
----@class FetchWithMatchesParams
+---@class grug.far.FetchWithMatchesParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field report_progress fun(count: integer)
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?, filesWithMatches: string[], blacklistedArgs: string[]?)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?, filesWithMatches: string[], blacklistedArgs: string[]?)
 
 --- fetch list of files that match search
----@param params FetchWithMatchesParams
+---@param params grug.far.FetchWithMatchesParams
 ---@return fun()? abort
 local function fetchFilesWithMatches(params)
   local filesWithMatches = {}

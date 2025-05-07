@@ -52,7 +52,7 @@ end
 ---@param context GrugFarContext
 ---@param namespace integer
 ---@param startLine integer
----@param mark ResultMark
+---@param mark grug.far.ResultMark
 ---@return integer markId
 local function addMark(buf, context, namespace, startLine, mark)
   local sign_text = nil
@@ -78,7 +78,7 @@ end
 ---@param context GrugFarContext
 ---@param line integer
 ---@param end_col integer
----@param loc SourceLocation
+---@param loc grug.far.SourceLocation
 local function addHighlightResult(context, line, end_col, loc)
   local results = context.state.highlightResults[loc.filename]
   if not results then
@@ -104,7 +104,7 @@ end
 --- adds result text to buffer
 ---@param buf integer
 ---@param context GrugFarContext
----@param data ParsedResultsData
+---@param data grug.far.ParsedResultsData
 ---@return integer lastline number before adding the text
 local function addResultChunkLines(buf, context, data)
   -- trim long lines
@@ -128,7 +128,7 @@ end
 --- adds result highlights to buffer
 ---@param buf integer
 ---@param context GrugFarContext
----@param data ParsedResultsData
+---@param data grug.far.ParsedResultsData
 ---@param startLine integer
 local function addResultChunkHighlights(buf, context, data, startLine)
   local maxLineLength = context.options.maxLineLength
@@ -189,7 +189,7 @@ end
 --- adds result marks to buffer
 ---@param buf integer
 ---@param context GrugFarContext
----@param data ParsedResultsData
+---@param data grug.far.ParsedResultsData
 ---@param startLine integer
 local function addResultChunkMarks(buf, context, data, startLine)
   local resultLocationByExtmarkId = context.state.resultLocationByExtmarkId
@@ -252,7 +252,7 @@ local function addResultChunkMarks(buf, context, data, startLine)
           is_context = mark.is_context,
         }, context.options)
         local loc = mark.location
-        ---@cast loc ResultLocation
+        ---@cast loc grug.far.ResultLocation
         loc.max_line_number_length = max_line_number_length
         loc.max_column_number_length = max_column_number_length
         loc.is_context = mark.is_context
@@ -267,7 +267,7 @@ local function addResultChunkMarks(buf, context, data, startLine)
         max_column_number_length = max_column_number_length,
       }, context.options)
       local loc = mark.location
-      ---@cast loc ResultLocation
+      ---@cast loc grug.far.ResultLocation
       loc.max_line_number_length = max_line_number_length
       loc.max_column_number_length = max_column_number_length
 
@@ -276,7 +276,7 @@ local function addResultChunkMarks(buf, context, data, startLine)
 
     local markId = addMark(buf, context, namespace, startLine, mark)
     if mark.type == ResultMarkType.SourceLocation then
-      local loc = mark.location --[[@as ResultLocation]]
+      local loc = mark.location --[[@as grug.far.ResultLocation]]
 
       if mark.location.is_counted then
         context.state.resultMatchLineCount = context.state.resultMatchLineCount + 1
@@ -334,7 +334,7 @@ end
 --- append a bunch of result lines to the buffer
 ---@param buf integer
 ---@param context GrugFarContext
----@param data ParsedResultsData
+---@param data grug.far.ParsedResultsData
 function M.appendResultsChunk(buf, context, data)
   local lastline = addResultChunkLines(buf, context, data)
   addResultChunkHighlights(buf, context, data, lastline)
@@ -348,7 +348,7 @@ end
 ---@param row integer
 ---@param buf integer
 ---@param context GrugFarContext
----@return ResultLocation?, vim.api.keyset.get_extmark_item?
+---@return grug.far.ResultLocation?, vim.api.keyset.get_extmark_item?
 function M.getResultLocation(row, buf, context)
   local marks = vim.api.nvim_buf_get_extmarks(
     buf,
@@ -370,7 +370,7 @@ end
 
 ---@param buf integer
 ---@param context GrugFarContext
----@return ResultLocation?, vim.api.keyset.get_extmark_item?
+---@return grug.far.ResultLocation?, vim.api.keyset.get_extmark_item?
 function M.getResultLocationAtCursor(buf, context)
   local grugfar_win = vim.fn.bufwinid(buf)
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
@@ -419,7 +419,7 @@ end
 ---@param context GrugFarContext
 ---@param startRow integer
 ---@param endRow integer
----@param callback fun(location: ResultLocation, newLine: string, bufline: string, markId: integer, row: integer, details: vim.api.keyset.extmark_details)
+---@param callback fun(location: grug.far.ResultLocation, newLine: string, bufline: string, markId: integer, row: integer, details: vim.api.keyset.extmark_details)
 ---@param forceChanged? boolean
 function M.forEachChangedLocation(buf, context, startRow, endRow, callback, forceChanged)
   local extmarks = vim.api.nvim_buf_get_extmarks(
@@ -632,7 +632,7 @@ end
 --- re-renders line number at given location
 ---@param context GrugFarContext
 ---@param buf integer
----@param loc ResultLocation
+---@param loc grug.far.ResultLocation
 ---@param mark vim.api.keyset.get_extmark_item
 ---@param is_current_line boolean
 function M.rerenderLineNumber(context, buf, loc, mark, is_current_line)

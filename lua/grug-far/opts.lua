@@ -479,13 +479,13 @@ grug_far.defaultOptions = {
   previewWindow = {},
 }
 
----@alias KeymapDef KeymapTable | string | boolean
+---@alias KeymapDef grug.far.KeymapTable | string | boolean
 
----@class KeymapTable
+---@class grug.far.KeymapTable
 ---@field n? string
 ---@field i? string
 
----@class Keymaps
+---@class grug.far.Keymaps
 ---@field replace KeymapDef
 ---@field qflist KeymapDef
 ---@field syncLocations KeymapDef
@@ -513,7 +513,7 @@ grug_far.defaultOptions = {
 ---@field nextInput KeymapDef
 ---@field prevInput KeymapDef
 
----@class KeymapsOverride
+---@class grug.far.KeymapsOverride
 ---@field replace? KeymapDef
 ---@field qflist? KeymapDef
 ---@field syncLocations? KeymapDef
@@ -543,33 +543,33 @@ grug_far.defaultOptions = {
 ---@field prevInput? KeymapDef
 ---@private
 
----@class AutoSaveTable
+---@class grug.far.AutoSaveTable
 ---@field enabled boolean
 ---@field onReplace boolean
 ---@field onSyncAll boolean
 ---@field onBufDelete boolean
 
----@class AutoSaveTableOverride
+---@class grug.far.AutoSaveTableOverride
 ---@field enabled? boolean
 ---@field onReplace? boolean
 ---@field onSyncAll? boolean
 ---@field onBufDelete? boolean
 ---@private
 
----@class HistoryTable
+---@class grug.far.HistoryTable
 ---@field maxHistoryLines integer
 ---@field historyDir string
----@field autoSave AutoSaveTable
+---@field autoSave grug.far.AutoSaveTable
 
----@class HistoryTableOverride
+---@class grug.far.HistoryTableOverride
 ---@field maxHistoryLines? integer
 ---@field historyDir? string
----@field autoSave? AutoSaveTable
+---@field autoSave? grug.far.AutoSaveTable
 ---@private
 
 ---@alias FileIconsProviderType "first_available" | "mini.icons" |  "nvim-web-devicons" | false
 
----@class IconsTable
+---@class grug.far.IconsTable
 ---@field enabled boolean
 ---@field fileIconsProvider FileIconsProviderType
 ---@field searchInput string
@@ -590,7 +590,7 @@ grug_far.defaultOptions = {
 ---@field lineNumbersEllipsis string
 ---@field newline string
 
----@class IconsTableOverride
+---@class grug.far.IconsTableOverride
 ---@field enabled? boolean
 ---@field fileIconsProvider? FileIconsProviderType
 ---@field searchInput? string
@@ -612,7 +612,7 @@ grug_far.defaultOptions = {
 ---@field newline? string
 ---@private
 
----@class PlaceholdersTable
+---@class grug.far.PlaceholdersTable
 ---@field enabled? boolean
 ---@field search? string
 ---@field rules? string
@@ -622,68 +622,68 @@ grug_far.defaultOptions = {
 ---@field flags? string
 ---@field paths? string
 
----@alias LanguageGlobsTable table<string, string[]>
+---@alias grug.far.LanguageGlobsTable table<string, string[]>
 
----@class FoldingTable
+---@class grug.far.FoldingTable
 ---@field enabled boolean
 ---@field foldlevel integer
 ---@field foldcolumn string
 ---@field include_file_path boolean
 
----@class FoldingTableOverride
+---@class grug.far.FoldingTableOverride
 ---@field enabled? boolean
 ---@field foldlevel? integer
 ---@field foldcolumn? string | integer
 ---@field include_file_path? boolean
 ---@private
 
----@class RipgrepEngineTable
+---@class grug.far.RipgrepEngineTable
 ---@field path string
 ---@field extraArgs string
 ---@field showReplaceDiff boolean
----@field placeholders PlaceholdersTable
+---@field placeholders grug.far.PlaceholdersTable
 
----@class RipgrepEngineTableOverride
+---@class grug.far.RipgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
 ---@field showReplaceDiff? boolean
----@field placeholders? PlaceholdersTable
+---@field placeholders? grug.far.PlaceholdersTable
 ---@private
 
----@class AstgrepEngineTable
+---@class grug.far.AstgrepEngineTable
 ---@field path string
 ---@field extraArgs string
----@field placeholders PlaceholdersTable
+---@field placeholders grug.far.PlaceholdersTable
 
----@class AstgrepRulesEngineTable
+---@class grug.far.AstgrepRulesEngineTable
 ---@field path string
 ---@field extraArgs string
----@field placeholders PlaceholdersTable
----@field languageGlobs LanguageGlobsTable
+---@field placeholders grug.far.PlaceholdersTable
+---@field languageGlobs grug.far.LanguageGlobsTable
 
----@class AstgrepEngineTableOverride
+---@class grug.far.AstgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
----@field placeholders? PlaceholdersTable
+---@field placeholders? grug.far.PlaceholdersTable
 ---@private
 
----@class AstgrepRulesEngineTableOverride
+---@class grug.far.AstgrepRulesEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
----@field placeholders? PlaceholdersTable
----@field languageGlobs? LanguageGlobsTable
+---@field placeholders? grug.far.PlaceholdersTable
+---@field languageGlobs? grug.far.LanguageGlobsTable
 ---@private
 
----@class EnginesTable
----@field ripgrep RipgrepEngineTable
----@field astgrep AstgrepEngineTable
----@field astgrep-rules AstgrepRulesEngineTable
+---@class grug.far.EnginesTable
+---@field ripgrep grug.far.RipgrepEngineTable
+---@field astgrep grug.far.AstgrepEngineTable
+---@field astgrep-rules grug.far.AstgrepRulesEngineTable
 ---@private
 
----@class EnginesTableOverride
----@field ripgrep? RipgrepEngineTableOverride
----@field astgrep? AstgrepEngineTableOverride
----@field astgrep-rules? AstgrepRulesEngineTableOverride
+---@class grug.far.EnginesTableOverride
+---@field ripgrep? grug.far.RipgrepEngineTableOverride
+---@field astgrep? grug.far.AstgrepEngineTableOverride
+---@field astgrep-rules? grug.far.AstgrepRulesEngineTableOverride
 ---@private
 
 ---@alias GrugFarEngineType "ripgrep" | "astgrep" | "astgrep-rules"
@@ -691,33 +691,33 @@ grug_far.defaultOptions = {
 
 ---@alias NumberLabelPosition "right_align" | "eol" | "inline"
 
----@class ResultLocationTable
+---@class grug.far.ResultLocationTable
 ---@field showNumberLabel boolean
 ---@field numberLabelPosition NumberLabelPosition
 ---@field numberLabelFormat string
 
----@class ResultLocationTableOverride
+---@class grug.far.ResultLocationTableOverride
 ---@field showNumberLabel? boolean
 ---@field numberLabelPosition? NumberLabelPosition
 ---@field numberLabelFormat? string
 ---@private
 
----@class HelpLineTable
+---@class grug.far.HelpLineTable
 ---@field enabled boolean
 
----@class HelpLineTableOverride
+---@class grug.far.HelpLineTableOverride
 ---@field enabled? boolean
 ---@private
 
 ---@alias FilterWindowFn fun(winid: number): boolean
 ---@alias WinPreferredLocation "prev" | "left" | "right" | "above" | "below"
 
----@class OpenTargetWindowTable
+---@class grug.far.OpenTargetWindowTable
 ---@field exclude (string | FilterWindowFn)[]
 ---@field preferredLocation WinPreferredLocation
 ---@field useScratchBuffer boolean
 
----@class OpenTargetWindowTableOverride
+---@class grug.far.OpenTargetWindowTableOverride
 ---@field exclude? (string | FilterWindowFn)[]
 ---@field preferredLocation? WinPreferredLocation
 ---@field useScratchBuffer? boolean
@@ -762,7 +762,7 @@ grug_far.defaultOptions = {
 ---@field transient boolean
 ---@field ignoreVisualSelection boolean
 ---@field visualSelectionUsage VisualSelectionUsageType
----@field keymaps Keymaps
+---@field keymaps grug.far.Keymaps
 ---@field resultsSeparatorLineChar string
 ---@field resultsHighlight boolean
 ---@field inputsHighlight boolean
@@ -771,19 +771,19 @@ grug_far.defaultOptions = {
 ---@field spinnerStates string[] | false
 ---@field filePathConcealChar string
 ---@field reportDuration boolean
----@field icons IconsTable
+---@field icons grug.far.IconsTable
 ---@field prefills GrugFarPrefills
----@field history HistoryTable
+---@field history grug.far.HistoryTable
 ---@field instanceName? string
----@field folding FoldingTable
----@field engines EnginesTable
+---@field folding grug.far.FoldingTable
+---@field engines grug.far.EnginesTable
 ---@field enabledEngines string[]
 ---@field engine GrugFarEngineType
 ---@field replacementInterpreter GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]
----@field resultLocation ResultLocationTable
----@field openTargetWindow OpenTargetWindowTable
----@field helpLine HelpLineTable
+---@field resultLocation grug.far.ResultLocationTable
+---@field openTargetWindow grug.far.OpenTargetWindowTable
+---@field helpLine grug.far.HelpLineTable
 ---@field helpWindow vim.api.keyset.win_config
 ---@field historyWindow vim.api.keyset.win_config
 ---@field previewWindow vim.api.keyset.win_config
@@ -809,7 +809,7 @@ grug_far.defaultOptions = {
 ---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
 ---@field visualSelectionUsage? VisualSelectionUsageType
----@field keymaps? KeymapsOverride
+---@field keymaps? grug.far.KeymapsOverride
 ---@field resultsSeparatorLineChar? string
 ---@field resultsHighlight? boolean
 ---@field inputsHighlight? boolean
@@ -818,18 +818,18 @@ grug_far.defaultOptions = {
 ---@field spinnerStates? string[] | false
 ---@field filePathConcealChar? string
 ---@field reportDuration? boolean
----@field icons? IconsTableOverride
+---@field icons? grug.far.IconsTableOverride
 ---@field prefills? GrugFarPrefills
----@field history? HistoryTableOverride
+---@field history? grug.far.HistoryTableOverride
 ---@field instanceName? string
----@field folding? FoldingTableOverride
----@field engines? EnginesTableOverride
+---@field folding? grug.far.FoldingTableOverride
+---@field engines? grug.far.EnginesTableOverride
 ---@field engine? GrugFarEngineType
 ---@field replacementInterpreter? GrugFarReplacementInterpreterType
 ---@field enabledReplacementInterpreters? GrugFarReplacementInterpreterType[]
----@field resultLocation? ResultLocationTableOverride
----@field openTargetWindow? OpenTargetWindowTableOverride
----@field helpLine? HelpLineTableOverride
+---@field resultLocation? grug.far.ResultLocationTableOverride
+---@field openTargetWindow? grug.far.OpenTargetWindowTableOverride
+---@field helpLine? grug.far.HelpLineTableOverride
 ---@field helpWindow? vim.api.keyset.win_config
 ---@field historyWindow? vim.api.keyset.win_config
 ---@field previewWindow? vim.api.keyset.win_config

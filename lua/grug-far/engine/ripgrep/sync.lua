@@ -21,7 +21,7 @@ local function isMultilineSearchReplace(args)
 end
 
 --- does sync
----@param params EngineSyncParams
+---@param params grug.far.EngineSyncParams
 ---@return fun()? abort
 M.sync = function(params)
   local on_finish = params.on_finish

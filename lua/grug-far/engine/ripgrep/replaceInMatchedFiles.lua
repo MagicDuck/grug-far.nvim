@@ -5,7 +5,7 @@ local argUtils = require('grug-far.engine.ripgrep.argUtils')
 local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local parseResults = require('grug-far.engine.ripgrep.parseResults')
 
----@class replaceInFileParams
+---@class grug.far.replaceInFileParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field replacement_eval_fn fun(...): (string?, string?)
@@ -13,7 +13,7 @@ local parseResults = require('grug-far.engine.ripgrep.parseResults')
 ---@field on_done fun(errorMessage: string?)
 
 --- performs replacement in given file
----@param params replaceInFileParams
+---@param params grug.far.replaceInFileParams
 ---@return fun()? abort
 local function replaceInFile(params)
   local file = params.file
@@ -47,7 +47,7 @@ local function replaceInFile(params)
 end
 
 --- performs replacement in given file with eval
----@param params replaceInFileParams
+---@param params grug.far.replaceInFileParams
 ---@return fun()? abort
 local function replaceInFileWithEval(params)
   local file = params.file
@@ -124,16 +124,16 @@ local function replaceInFileWithEval(params)
   return abort
 end
 
----@class replaceInMatchedFilesParams
+---@class grug.far.replaceInMatchedFilesParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field replacement_eval_fn fun(...): (string?, string?)
 ---@field files string[]
 ---@field report_progress fun(count: integer)
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?)
 
 --- performs replacement in given matched file
----@param params replaceInMatchedFilesParams
+---@param params grug.far.replaceInMatchedFilesParams
 local function replaceInMatchedFiles(params)
   local files = vim.deepcopy(params.files)
   local report_progress = params.report_progress

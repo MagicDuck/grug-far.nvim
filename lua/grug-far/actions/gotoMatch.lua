@@ -7,7 +7,7 @@ local resultsList = require('grug-far.render.resultsList')
 ---@param increment -1 | 1 | nil
 ---@param count integer?
 ---@param includeUncounted boolean?
----@return ResultLocation?, integer?
+---@return grug.far.ResultLocation?, integer?
 local function getLocation(buf, context, cursor_row, increment, count, includeUncounted)
   if increment then
     local start_location = resultsList.getResultLocation(cursor_row - 1, buf, context)
@@ -56,7 +56,7 @@ end
 --- if count > 0 given, it will use the result location with that number instead
 --- if increment is given, it will use the first location that is at least <increment> away from the current line
 ---@param params { buf: integer, context: GrugFarContext, increment: -1 | 1 | nil, count: number?, includeUncounted: boolean? }
----@return ResultLocation?, integer?
+---@return grug.far.ResultLocation?, integer?
 local function gotoMatch(params)
   local buf = params.buf
   local context = params.context

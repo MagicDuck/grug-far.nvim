@@ -9,7 +9,7 @@ local utils = require('grug-far.utils')
 ---@param context GrugFarContext
 ---@param cursor_row integer
 ---@param increment -1 | 1
----@return ResultLocation?, integer?
+---@return grug.far.ResultLocation?, integer?
 local function getAdjacentLocation(buf, context, cursor_row, increment)
   local num_lines = vim.api.nvim_buf_line_count(buf)
   for i = cursor_row + increment, increment > 0 and num_lines or 1, increment do
@@ -26,7 +26,7 @@ end
 ---@param buf integer
 ---@param context GrugFarContext
 ---@param cursor_row integer
----@param start_location ResultLocation
+---@param start_location grug.far.ResultLocation
 ---@return integer, integer
 local function getSyncRange(buf, context, cursor_row, start_location)
   local startRow = cursor_row
@@ -47,7 +47,7 @@ end
 --- gets 1-based range of lines that we have to delete
 ---@param buf integer
 ---@param context GrugFarContext
----@param start_location ResultLocation
+---@param start_location grug.far.ResultLocation
 ---@param syncStartRow integer
 ---@param syncEndRow integer
 ---@param newLocationRow integer
@@ -63,7 +63,7 @@ local function getDeleteRange(
   local startRow = syncStartRow
   local endRow = syncEndRow
 
-  local newLocation = resultsList.getResultLocation(newLocationRow - 1, buf, context) --[[ @as ResultLocation ]]
+  local newLocation = resultsList.getResultLocation(newLocationRow - 1, buf, context) --[[ @as grug.far.ResultLocation ]]
   local aboveLocation, aboveLocationRow = getAdjacentLocation(buf, context, startRow, -1)
   local belowLocation = getAdjacentLocation(buf, context, endRow, 1)
 

@@ -614,7 +614,7 @@ M.str_to_json_list = function(str)
 end
 
 ---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
----@return VisualSelectionInfo?
+---@return grug.far.VisualSelectionInfo?
 function M.get_current_visual_selection_info(strict)
   local was_visual = M.leaveVisualMode()
   if strict and not was_visual then
@@ -633,7 +633,7 @@ function M.get_current_visual_selection_info(strict)
 end
 
 --- gets visual selection info as string
----@param visual_selection_info VisualSelectionInfo
+---@param visual_selection_info grug.far.VisualSelectionInfo
 function M.get_visual_selection_info_as_str(visual_selection_info)
   return 'buffer-range='
     .. visual_selection_info.file_name
@@ -649,7 +649,7 @@ end
 
 --- gets buf range from string representation
 ---@param str string
----@return VisualSelectionInfo?, string? err
+---@return grug.far.VisualSelectionInfo?, string? err
 function M.parse_buf_range_str(str)
   local prefix = 'buffer-range='
   if str:sub(1, #prefix) ~= prefix then
@@ -710,7 +710,7 @@ function M.parse_buf_range_str(str)
 end
 
 --- reads lines from given buffer bufrange
----@param bufrange VisualSelectionInfo
+---@param bufrange grug.far.VisualSelectionInfo
 ---@return string[] lines
 function M.readFromBufrange(bufrange)
   local buf = vim.fn.bufnr(bufrange.file_name)
@@ -725,7 +725,7 @@ function M.readFromBufrange(bufrange)
 end
 
 --- writes given lines into buffer bufrange
----@param bufrange VisualSelectionInfo
+---@param bufrange grug.far.VisualSelectionInfo
 ---@param lines string[]
 function M.writeInBufrange(bufrange, lines)
   local buf = vim.fn.bufnr(bufrange.file_name)

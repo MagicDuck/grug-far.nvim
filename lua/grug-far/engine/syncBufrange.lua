@@ -1,7 +1,7 @@
 local utils = require('grug-far.utils')
 
 --- performs sync for given bufrange
----@param params { bufrange: VisualSelectionInfo, changes: ChangedFile, on_done: fun(errorMessage: string?) }
+---@param params { bufrange: grug.far.VisualSelectionInfo, changes: grug.far.ChangedFile, on_done: fun(errorMessage: string?) }
 local function syncBufrange(params)
   local changes = params.changes
   local on_done = params.on_done

@@ -7,51 +7,51 @@ local ResultHighlightByType = engine.ResultHighlightByType
 
 local M = {}
 
----@class RipgrepJsonSubmatch
+---@class grug.far.RipgrepJsonSubmatch
 ---@field match {text: string}
 ---@field replacement {text: string}
 ---@field start integer
 ---@field end integer
 
----@class RipgrepJsonMatchData
+---@class grug.far.RipgrepJsonMatchData
 ---@field lines { text: string}
 ---@field line_number integer
 ---@field absolute_offset integer
----@field submatches RipgrepJsonSubmatch[]
+---@field submatches grug.far.RipgrepJsonSubmatch[]
 
----@class RipgrepJsonMatch
+---@class grug.far.RipgrepJsonMatch
 ---@field type "match"
----@field data RipgrepJsonMatchData
+---@field data grug.far.RipgrepJsonMatchData
 
----@class RipgrepJsonMatchContext
+---@class grug.far.RipgrepJsonMatchContext
 ---@field type "context"
----@field data RipgrepJsonMatchData
+---@field data grug.far.RipgrepJsonMatchData
 
----@class RipgrepJsonMatchBegin
+---@class grug.far.RipgrepJsonMatchBegin
 ---@field type "begin"
 ---@field data { path: { text: string } }
 
----@class RipgrepJsonMatchEnd
+---@class grug.far.RipgrepJsonMatchEnd
 ---@field type "end"
 ---@field data { path: { text: string } }
 -- note: this one has more stats things, but we don't care about them, atm.
 
----@class RipgrepJsonMatchSummary
+---@class grug.far.RipgrepJsonMatchSummary
 ---@field type "summary"
 -- note: this one has more stats things, but we don't care about them, atm.
 
----@alias RipgrepJson RipgrepJsonMatchSummary | RipgrepJsonMatchBegin | RipgrepJsonMatchEnd | RipgrepJsonMatch | RipgrepJsonMatchContext
+---@alias RipgrepJson grug.far.RipgrepJsonMatchSummary | grug.far.RipgrepJsonMatchBegin | grug.far.RipgrepJsonMatchEnd | grug.far.RipgrepJsonMatch | grug.far.RipgrepJsonMatchContext
 
 --- adds result lines
 ---@param file_name string? associated file
 ---@param resultLines string[] lines to add
 ---@param ranges { start: { column: integer?, line: integer}, end: {column: integer?, line: integer}}[]
 ---@param lines string[] lines table to add to
----@param highlights ResultHighlight[] highlights table to add to
----@param marks ResultMark[] marks to add to
----@param sign? ResultHighlightSign
+---@param highlights grug.far.ResultHighlight[] highlights table to add to
+---@param marks grug.far.ResultMark[] marks to add to
+---@param sign? grug.far.ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
----@param bufrange? VisualSelectionInfo
+---@param bufrange? grug.far.VisualSelectionInfo
 ---@param mark_opts? any
 local function addResultLines(
   file_name,
@@ -122,16 +122,16 @@ end
 ---@param matches RipgrepJson[]
 ---@param isSearchWithReplace boolean
 ---@param showDiff boolean
----@param bufrange? VisualSelectionInfo
----@return ParsedResultsData
+---@param bufrange? grug.far.VisualSelectionInfo
+---@return grug.far.ParsedResultsData
 function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
-  ---@type ParsedResultsStats
+  ---@type grug.far.ParsedResultsStats
   local stats = { files = 0, matches = 0 }
   ---@type string[]
   local lines = {}
-  ---@type ResultHighlight[]
+  ---@type grug.far.ResultHighlight[]
   local highlights = {}
-  ---@type ResultMark[]
+  ---@type grug.far.ResultMark[]
   local marks = {}
 
   local last_line_number = nil
