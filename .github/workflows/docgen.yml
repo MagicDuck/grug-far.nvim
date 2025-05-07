@@ -1,6 +1,9 @@
 name: docgen
 
 on:
+  push:
+    branches-ignore:
+      - main
   pull_request_target:
     branches:
       - main
