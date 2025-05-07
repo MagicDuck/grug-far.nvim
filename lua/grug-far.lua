@@ -310,6 +310,15 @@ function grug_far.hide_instance(instQuery)
   end
 end
 
+--- dummy grug-far instance
+---@param instQuery grug.far.InstanceQuery
+function grug_far.dummy(instQuery)
+  local inst = require('grug-far.instances').get_instance(instQuery)
+  if inst then
+    inst:hide()
+  end
+end
+
 -- deprecated API -----------------------------------------------------------------------------
 
 ---@deprecated
