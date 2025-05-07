@@ -46,5 +46,4 @@ jobs:
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           git add doc/
           # Only commit and push if we have changes yes
-          # git diff --quiet && git diff --staged --quiet || (git commit -C HEAD --amend; git push -f origin ${BRANCH_NAME})
           git diff --quiet && git diff --staged --quiet || (git commit -m "${COMMIT_MSG}"; git push origin HEAD:${GITHUB_REF})
