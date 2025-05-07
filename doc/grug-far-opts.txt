@@ -480,51 +480,51 @@
 
 <
 Type ~
-GrugFarOptions
+grug.far.Options
 See also ~
-|GrugFarOptions|
+|grug.far.Options|
 
 ------------------------------------------------------------------------------
 Class ~
-{KeymapTable}
+{grug.far.KeymapTable}
 Fields ~
 {n} `(optional)` `(string)`
 {i} `(optional)` `(string)`
 
 ------------------------------------------------------------------------------
 Class ~
-{Keymaps}
+{grug.far.Keymaps}
 Fields ~
-{replace} KeymapTable | `(string)` | boolean
-{qflist} KeymapTable | `(string)` | boolean
-{syncLocations} KeymapTable | `(string)` | boolean
-{historyAdd} KeymapTable | `(string)` | boolean
-{historyOpen} KeymapTable | `(string)` | boolean
-{refresh} KeymapTable | `(string)` | boolean
-{syncLine} KeymapTable | `(string)` | boolean
-{close} KeymapTable | `(string)` | boolean
-{gotoLocation} KeymapTable | `(string)` | boolean
-{openLocation} KeymapTable | `(string)` | boolean
-{openNextLocation} KeymapTable | `(string)` | boolean
-{openPrevLocation} KeymapTable | `(string)` | boolean
-{pickHistoryEntry} KeymapTable | `(string)` | boolean
-{toggleShowCommand} KeymapTable | `(string)` | boolean
-{abort} KeymapTable | `(string)` | boolean
-{help} KeymapTable | `(string)` | boolean
-{swapEngine} KeymapTable | `(string)` | boolean
-{previewLocation} KeymapTable | `(string)` | boolean
-{swapReplacementInterpreter} KeymapTable | `(string)` | boolean
-{applyNext} KeymapTable | `(string)` | boolean
-{applyPrev} KeymapTable | `(string)` | boolean
-{syncNext} KeymapTable | `(string)` | boolean
-{syncPrev} KeymapTable | `(string)` | boolean
-{syncFile} KeymapTable | `(string)` | boolean
-{nextInput} KeymapTable | `(string)` | boolean
-{prevInput} KeymapTable | `(string)` | boolean
+{replace} grug.far.KeymapTable | `(string)` | boolean
+{qflist} grug.far.KeymapTable | `(string)` | boolean
+{syncLocations} grug.far.KeymapTable | `(string)` | boolean
+{historyAdd} grug.far.KeymapTable | `(string)` | boolean
+{historyOpen} grug.far.KeymapTable | `(string)` | boolean
+{refresh} grug.far.KeymapTable | `(string)` | boolean
+{syncLine} grug.far.KeymapTable | `(string)` | boolean
+{close} grug.far.KeymapTable | `(string)` | boolean
+{gotoLocation} grug.far.KeymapTable | `(string)` | boolean
+{openLocation} grug.far.KeymapTable | `(string)` | boolean
+{openNextLocation} grug.far.KeymapTable | `(string)` | boolean
+{openPrevLocation} grug.far.KeymapTable | `(string)` | boolean
+{pickHistoryEntry} grug.far.KeymapTable | `(string)` | boolean
+{toggleShowCommand} grug.far.KeymapTable | `(string)` | boolean
+{abort} grug.far.KeymapTable | `(string)` | boolean
+{help} grug.far.KeymapTable | `(string)` | boolean
+{swapEngine} grug.far.KeymapTable | `(string)` | boolean
+{previewLocation} grug.far.KeymapTable | `(string)` | boolean
+{swapReplacementInterpreter} grug.far.KeymapTable | `(string)` | boolean
+{applyNext} grug.far.KeymapTable | `(string)` | boolean
+{applyPrev} grug.far.KeymapTable | `(string)` | boolean
+{syncNext} grug.far.KeymapTable | `(string)` | boolean
+{syncPrev} grug.far.KeymapTable | `(string)` | boolean
+{syncFile} grug.far.KeymapTable | `(string)` | boolean
+{nextInput} grug.far.KeymapTable | `(string)` | boolean
+{prevInput} grug.far.KeymapTable | `(string)` | boolean
 
 ------------------------------------------------------------------------------
 Class ~
-{AutoSaveTable}
+{grug.far.AutoSaveTable}
 Fields ~
 {enabled} `(boolean)`
 {onReplace} `(boolean)`
@@ -533,15 +533,15 @@ Fields ~
 
 ------------------------------------------------------------------------------
 Class ~
-{HistoryTable}
+{grug.far.HistoryTable}
 Fields ~
 {maxHistoryLines} `(integer)`
 {historyDir} `(string)`
-{autoSave} AutoSaveTable
+{autoSave} grug.far.AutoSaveTable
 
 ------------------------------------------------------------------------------
 Class ~
-{IconsTable}
+{grug.far.IconsTable}
 Fields ~
 {enabled} `(boolean)`
 {fileIconsProvider} "first_available" | "mini.icons" |  "nvim-web-devicons" | false
@@ -565,7 +565,7 @@ Fields ~
 
 ------------------------------------------------------------------------------
 Class ~
-{PlaceholdersTable}
+{grug.far.PlaceholdersTable}
 Fields ~
 {enabled} `(optional)` `(boolean)`
 {search} `(optional)` `(string)`
@@ -578,7 +578,7 @@ Fields ~
 
 ------------------------------------------------------------------------------
 Class ~
-{FoldingTable}
+{grug.far.FoldingTable}
 Fields ~
 {enabled} `(boolean)`
 {foldlevel} `(integer)`
@@ -587,33 +587,33 @@ Fields ~
 
 ------------------------------------------------------------------------------
 Class ~
-{RipgrepEngineTable}
+{grug.far.RipgrepEngineTable}
 Fields ~
 {path} `(string)`
 {extraArgs} `(string)`
 {showReplaceDiff} `(boolean)`
-{placeholders} PlaceholdersTable
+{placeholders} grug.far.PlaceholdersTable
 
 ------------------------------------------------------------------------------
 Class ~
-{AstgrepEngineTable}
+{grug.far.AstgrepEngineTable}
 Fields ~
 {path} `(string)`
 {extraArgs} `(string)`
-{placeholders} PlaceholdersTable
+{placeholders} grug.far.PlaceholdersTable
 
 ------------------------------------------------------------------------------
 Class ~
-{AstgrepRulesEngineTable}
+{grug.far.AstgrepRulesEngineTable}
 Fields ~
 {path} `(string)`
 {extraArgs} `(string)`
-{placeholders} PlaceholdersTable
+{placeholders} grug.far.PlaceholdersTable
 {languageGlobs} `(table<string, string[]>)`
 
 ------------------------------------------------------------------------------
 Class ~
-{ResultLocationTable}
+{grug.far.ResultLocationTable}
 Fields ~
 {showNumberLabel} `(boolean)`
 {numberLabelPosition} "right_align" | "eol" | "inline"
@@ -621,22 +621,22 @@ Fields ~
 
 ------------------------------------------------------------------------------
 Class ~
-{HelpLineTable}
+{grug.far.HelpLineTable}
 Fields ~
 {enabled} `(boolean)`
 
 ------------------------------------------------------------------------------
 Class ~
-{OpenTargetWindowTable}
+{grug.far.OpenTargetWindowTable}
 Fields ~
 {exclude} `((string)` | fun(winid: number): boolean)[]
 {preferredLocation} "prev" | "left" | "right" | "above" | "below"
 {useScratchBuffer} `(boolean)`
 
 ------------------------------------------------------------------------------
-                                                                *GrugFarOptions*
+                                                              *grug.far.Options*
 Class ~
-{GrugFarOptions}
+{grug.far.Options}
 options type definitions
 Fields ~
 {debounceMs} `(integer)`
@@ -659,7 +659,7 @@ Fields ~
 {transient} `(boolean)`
 {ignoreVisualSelection} `(boolean)`
 {visualSelectionUsage} 'prefill-search' | 'operate-within-range' | 'ignore'
-{keymaps} Keymaps
+{keymaps} grug.far.Keymaps
 {resultsSeparatorLineChar} `(string)`
 {resultsHighlight} `(boolean)`
 {inputsHighlight} `(boolean)`
@@ -670,7 +670,7 @@ Fields ~
   max_column_number_length: integer,
   is_context: boolean?,
   is_current_line: boolean?,
-}, options: GrugFarOptions): string[][])` list of `[text, highlight]` tuples
+}, options: grug.far.Options): string[][])` list of `[text, highlight]` tuples
 {filePathConceal} `(fun(params: {
   file_path: string,
   window_width: integer,
@@ -678,19 +678,19 @@ Fields ~
 {spinnerStates} `(string[])` | false
 {filePathConcealChar} `(string)`
 {reportDuration} `(boolean)`
-{icons} IconsTable
-{prefills} GrugFarPrefills
-{history} HistoryTable
+{icons} grug.far.IconsTable
+{prefills} grug.far.Prefills
+{history} grug.far.HistoryTable
 {instanceName} `(optional)` `(string)`
-{folding} FoldingTable
-{engines} EnginesTable
+{folding} grug.far.FoldingTable
+{engines} grug.far.EnginesTable
 {enabledEngines} `(string[])`
 {engine} "ripgrep" | "astgrep" | "astgrep-rules"
 {replacementInterpreter} "lua" | "vimscript" | "default"
 {enabledReplacementInterpreters} "lua" | "vimscript" | "default"[]
-{resultLocation} ResultLocationTable
-{openTargetWindow} OpenTargetWindowTable
-{helpLine} HelpLineTable
+{resultLocation} grug.far.ResultLocationTable
+{openTargetWindow} grug.far.OpenTargetWindowTable
+{helpLine} grug.far.HelpLineTable
 {helpWindow} vim.api.keyset.win_config
 {historyWindow} vim.api.keyset.win_config
 {previewWindow} vim.api.keyset.win_config

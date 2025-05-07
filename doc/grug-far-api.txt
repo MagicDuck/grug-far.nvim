@@ -6,20 +6,20 @@
 set up grug-far
 sets global options, which can also be configured through vim.g.grug_far
 Parameters ~
-{options} `(optional)` GrugFarOptionsOverride partial override of |grug_far.defaultOptions|
+{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
 See also ~
-Option types: |GrugFarOptions|
+Option types: |grug.far.Options|
 
 ------------------------------------------------------------------------------
                                                                *grug_far.open()*
                            `grug_far.open`({options})
 launch grug-far with the given overrides
 Parameters ~
-{options} `(optional)` GrugFarOptionsOverride partial override of |grug_far.defaultOptions|
+{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
 Return ~
 `(string)` instanceName
 See also ~
-Option types: |GrugFarOptions|
+Option types: |grug.far.Options|
 
 ------------------------------------------------------------------------------
                                               *grug_far.with_visual_selection()*
@@ -27,9 +27,9 @@ Option types: |GrugFarOptions|
 launch grug-far with the given overrides, pre-filling
 search with current visual selection.
 Parameters ~
-{options} `(optional)` GrugFarOptionsOverride partial override of |grug_far.defaultOptions|
+{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
 See also ~
-Option types: |GrugFarOptions|
+Option types: |grug.far.Options|
 
 ------------------------------------------------------------------------------
                                  *grug_far.get_current_visual_selection_lines()*
@@ -72,7 +72,7 @@ if instQuery is non-nil, and no instance found, an error is emitted
 Parameters ~
 {instQuery} `(string)` | number | nil
 Return ~
-GrugFarInstance `(optional)` instance, `(string?)` instanceName
+grug.far.Instance `(optional)` instance, `(string?)` instanceName
 
 See |grug-far-instance-api|
 
@@ -82,9 +82,9 @@ See |grug-far-instance-api|
 toggles visibility of grug-far instance with given instance name or current buffer instance
 options.instanceName can be used to identify a specific grug-far instance to toggle
 Parameters ~
-{options} GrugFarOptionsOverride partial override of |grug_far.defaultOptions|
+{options} grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
 See also ~
-Option types: |GrugFarOptions|
+Option types: |grug.far.Options|
 
 ------------------------------------------------------------------------------
                                                        *grug_far.has_instance()*
