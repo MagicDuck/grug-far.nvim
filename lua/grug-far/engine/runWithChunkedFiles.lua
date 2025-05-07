@@ -1,12 +1,12 @@
----@class runWithChunkedFilesParams
+---@class grug.far.runWithChunkedFilesParams
 ---@field files string[]
 ---@field chunk_size integer
 ---@field options GrugFarOptions
 ---@field run_chunk fun(chunk: string, on_done: fun(errorMessage: string?)): (abort: fun()?)
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?)
 
 --- performs replacement in given matched file
----@param params runWithChunkedFilesParams
+---@param params grug.far.runWithChunkedFilesParams
 local function runWithChunkedFiles(params)
   local chunks = {}
   local current_chunk = nil

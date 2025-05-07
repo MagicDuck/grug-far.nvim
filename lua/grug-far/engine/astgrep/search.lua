@@ -30,7 +30,7 @@ end
 
 --- gets bufrange if we have one specified in paths
 ---@param inputs GrugFarInputs
----@return VisualSelectionInfo? bufrange,string? err
+---@return grug.far.VisualSelectionInfo? bufrange,string? err
 function M.getBufrange(inputs)
   if #inputs.paths > 0 then
     local paths = utils.splitPaths(inputs.paths)
@@ -79,11 +79,11 @@ end
 
 --- runs search
 ---@param args string[]?
----@param _bufrange? VisualSelectionInfo
+---@param _bufrange? grug.far.VisualSelectionInfo
 ---@param options GrugFarOptions
 ---@param eval_fn? fun(...): string
----@param on_fetch_chunk fun(data: ParsedResultsData)
----@param on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
+---@param on_fetch_chunk fun(data: grug.far.ParsedResultsData)
+---@param on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_chunk, on_finish)
   local isTextOutput = isSearchWithTextOutput(args)
@@ -153,7 +153,7 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
 end
 
 --- does search
----@param params EngineSearchParams
+---@param params grug.far.EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 function M.search(params)
   local on_finish = params.on_finish

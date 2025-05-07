@@ -165,7 +165,7 @@ end
 
 --- launch grug-far with the given options and params
 ---@param options GrugFarOptions
----@param params { visual_selection_info: VisualSelectionInfo? }
+---@param params { visual_selection_info: grug.far.VisualSelectionInfo? }
 ---@return string instanceName
 ---@private
 function grug_far._open_internal(options, params)

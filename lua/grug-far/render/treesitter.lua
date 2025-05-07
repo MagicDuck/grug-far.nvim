@@ -1,8 +1,8 @@
 ---@alias Region (Range4|Range6|TSNode)[]
 ---@alias LangRegions table<string, Region[]>
----@alias FileResults table<string, {ft: string?, lines: ResultLine[]}>
+---@alias FileResults table<string, {ft: string?, lines: grug.far.ResultLine[]}>
 
----@class ResultLine
+---@class grug.far.ResultLine
 ---@field row number row in the result buffer for this line
 ---@field col number col in the result buffer for this line
 ---@field end_col number end col in the result buffer for this line

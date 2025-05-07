@@ -1,7 +1,7 @@
 ---@meta
----@alias GrugFarStatus nil | "success" | "error" | "progress"
+---@alias grug.far.Status nil | "success" | "error" | "progress"
 
----@class ResultLocation: SourceLocation
+---@class grug.far.ResultLocation: grug.far.SourceLocation
 ---@field count? integer
 ---@field max_line_number_length? integer
 ---@field max_column_number_length? integer
@@ -12,13 +12,13 @@
 
 ---@class GrugFarState
 ---@field lastInputs? GrugFarInputs
----@field status? GrugFarStatus
+---@field status? grug.far.Status
 ---@field progressCount? integer
 ---@field stats? { matches: integer, files: integer }
 ---@field actionMessage? string
----@field resultLocationByExtmarkId { [integer]: ResultLocation }
+---@field resultLocationByExtmarkId { [integer]: grug.far.ResultLocation }
 ---@field resultMatchLineCount integer
----@field lastCursorLocation { loc:  ResultLocation, row: integer, markId: integer }
+---@field lastCursorLocation { loc:  grug.far.ResultLocation, row: integer, markId: integer }
 ---@field tasks GrugFarTask[]
 ---@field showSearchCommand boolean
 ---@field bufClosed boolean
@@ -53,7 +53,7 @@
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field fileIconsProvider? FileIconsProvider
 
----@class VisualSelectionInfo
+---@class grug.far.VisualSelectionInfo
 ---@field file_name string
 ---@field lines string[]
 ---@field start_col integer

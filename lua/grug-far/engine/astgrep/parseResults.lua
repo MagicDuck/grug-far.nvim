@@ -7,41 +7,41 @@ local ResultHighlightByType = engine.ResultHighlightByType
 
 local M = {}
 
----@class AstgrepMatchPos
+---@class grug.far.AstgrepMatchPos
 ---@field line integer
 ---@field column integer
 
----@class AstgrepMatchByteOffset
+---@class grug.far.AstgrepMatchByteOffset
 ---@field start integer
 ---@field end integer
 
----@class AstgrepMatchRange
----@field start AstgrepMatchPos
----@field end AstgrepMatchPos
----@field byteOffset AstgrepMatchByteOffset
+---@class grug.far.AstgrepMatchRange
+---@field start grug.far.AstgrepMatchPos
+---@field end grug.far.AstgrepMatchPos
+---@field byteOffset grug.far.AstgrepMatchByteOffset
 
----@class AstgrepMatchCharCount
+---@class grug.far.AstgrepMatchCharCount
 ---@field leading integer
 ---@field trailing integer
 
----@class AstgrepMatch
+---@class grug.far.AstgrepMatch
 ---@field file string
 ---@field lines string
 ---@field text string
 ---@field replacement string
----@field range AstgrepMatchRange
----@field charCount? AstgrepMatchCharCount
+---@field range grug.far.AstgrepMatchRange
+---@field charCount? grug.far.AstgrepMatchCharCount
 
 --- adds result lines
 ---@param file_name string? associated file
 ---@param resultLines string[] lines to add
----@param range AstgrepMatchRange
+---@param range grug.far.AstgrepMatchRange
 ---@param lines string[] lines table to add to
----@param highlights ResultHighlight[] highlights table to add to
----@param marks ResultMark[] marks to add to
----@param sign? ResultHighlightSign
+---@param highlights grug.far.ResultHighlight[] highlights table to add to
+---@param marks grug.far.ResultMark[] marks to add to
+---@param sign? grug.far.ResultHighlightSign
 ---@param matchHighlightType? ResultHighlightType
----@param bufrange? VisualSelectionInfo
+---@param bufrange? grug.far.VisualSelectionInfo
 ---@param mark_opts? any
 local function addResultLines(
   file_name,
@@ -122,17 +122,17 @@ function M.splitMatchLines(lines, leading, trailing)
 end
 
 --- parse results data and get info
----@param matches AstgrepMatch[]
----@param bufrange VisualSelectionInfo?
----@return ParsedResultsData
+---@param matches grug.far.AstgrepMatch[]
+---@param bufrange grug.far.VisualSelectionInfo?
+---@return grug.far.ParsedResultsData
 function M.parseResults(matches, bufrange)
-  ---@type ParsedResultsStats
+  ---@type grug.far.ParsedResultsStats
   local stats = { files = 0, matches = 0 }
   ---@type string[]
   local lines = {}
-  ---@type ResultHighlight[]
+  ---@type grug.far.ResultHighlight[]
   local highlights = {}
-  ---@type ResultMark[]
+  ---@type grug.far.ResultMark[]
   local marks = {}
 
   local file_name = nil
@@ -282,7 +282,7 @@ function M.parseResults(matches, bufrange)
 end
 
 --- decodes streamed json matches, appending to given table
----@param matches AstgrepMatch[]
+---@param matches grug.far.AstgrepMatch[]
 ---@param data string
 ---@param eval_fn? fun(...): (string?, string?)
 ---@return string? err
@@ -322,8 +322,8 @@ function M.json_decode_matches(matches, data, eval_fn)
 end
 
 --- splits off matches corresponding to the last file
----@param matches AstgrepMatch[]
----@return AstgrepMatch[] before, AstgrepMatch[] after
+---@param matches grug.far.AstgrepMatch[]
+---@return AstgrepMatch[] before, grug.far.AstgrepMatch[] after
 function M.split_last_file_matches(matches)
   local end_index = 0
   for i = #matches - 1, 1, -1 do
@@ -346,8 +346,8 @@ function M.split_last_file_matches(matches)
 end
 
 --- splits off matches corresponding to each file
----@param matches AstgrepMatch[]
----@return AstgrepMatch[][] matches_per_file
+---@param matches grug.far.AstgrepMatch[]
+---@return grug.far.AstgrepMatch[][] matches_per_file
 function M.split_matches_per_file(matches)
   if #matches == 0 then
     return {}
@@ -367,7 +367,7 @@ end
 
 --- constructs new file content, given old file content and matches with replacements
 ---@param contents string
----@param matches AstgrepMatch[]
+---@param matches grug.far.AstgrepMatch[]
 ---@return string new_contents
 function M.getReplacedContents(contents, matches)
   local new_contents = ''

@@ -1,10 +1,10 @@
 local M = {}
 
----@class ParsedResultsStats
+---@class grug.far.ParsedResultsStats
 ---@field files integer
 ---@field matches integer
 
----@class ResultHighlightSign
+---@class grug.far.ResultHighlightSign
 ---@field hl string
 ---@field icon? string
 ---@field text? string
@@ -42,7 +42,7 @@ M.ResultHighlightByType = {
   [M.ResultHighlightType.NumbersSeparator] = 'GrugFarResultsNumbersSeparator',
 }
 
----@type { [string]: ResultHighlightSign }
+---@type { [string]: grug.far.ResultHighlightSign }
 M.ResultSigns = {
   Changed = { icon = 'resultsChangeIndicator', hl = 'GrugFarResultsChangeIndicator' },
   Removed = { icon = 'resultsRemovedIndicator', hl = 'GrugFarResultsRemoveIndicator' },
@@ -55,66 +55,66 @@ M.ResultSigns = {
 
 M.DiffSeparatorChars = ' '
 
----@class SourceLocation
+---@class grug.far.SourceLocation
 ---@field filename string
 ---@field lnum? integer
 ---@field col? integer
 ---@field text? string
 ---@field is_counted? boolean
 
----@class ResultHighlight
+---@class grug.far.ResultHighlight
 ---@field hl_group string
 ---@field start_line integer
 ---@field start_col integer
 ---@field end_line integer
 ---@field end_col integer
 
----@class ResultMark
+---@class grug.far.ResultMark
 ---@field type ResultMarkType
 ---@field start_line integer
 ---@field start_col integer
 ---@field end_line integer
 ---@field end_col integer
----@field location? SourceLocation
----@field sign? ResultHighlightSign
+---@field location? grug.far.SourceLocation
+---@field sign? grug.far.ResultHighlightSign
 ---@field virt_text? string[][]
 ---@field virt_text_pos? string
 ---@field is_context? boolean
 
----@class ParsedResultsData
+---@class grug.far.ParsedResultsData
 ---@field lines string[]
----@field marks ResultMark[]
----@field highlights ResultHighlight[]
----@field stats ParsedResultsStats
+---@field marks grug.far.ResultMark[]
+---@field highlights grug.far.ResultHighlight[]
+---@field stats grug.far.ParsedResultsStats
 
----@class EngineSearchParams
+---@class grug.far.EngineSearchParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
----@field on_fetch_chunk fun(data: ParsedResultsData)
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
+---@field on_fetch_chunk fun(data: grug.far.ParsedResultsData)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 
----@class EngineReplaceParams
+---@class grug.far.EngineReplaceParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field replacementInterpreter? GrugFarReplacementInterpreter
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer } | {type: "message", message: string})
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 
----@class ChangedLine
+---@class grug.far.ChangedLine
 ---@field lnum integer
 ---@field newLine string
 
----@class ChangedFile
+---@class grug.far.ChangedFile
 ---@field filename string
----@field changedLines ChangedLine[]
+---@field changedLines grug.far.ChangedLine[]
 
----@class EngineSyncParams
+---@class grug.far.EngineSyncParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
----@field changedFiles ChangedFile[]
+---@field changedFiles grug.far.ChangedFile[]
 ---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 
 ---@class GrugFarEngineInput
 ---@field name string
@@ -130,11 +130,11 @@ M.DiffSeparatorChars = ' '
 ---@field inputs GrugFarEngineInput[]
 ---@field isSearchWithReplacement fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean is this a search with replacement
 ---@field showsReplaceDiff fun(options: GrugFarOptions): boolean whether we show a diff when replacing
----@field search fun(params: EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?) performs search
----@field replace fun(params: EngineReplaceParams): (abort: fun()?) performs replace
+---@field search fun(params: grug.far.EngineSearchParams): (abort: fun()?, effectiveArgs: string[]?) performs search
+---@field replace fun(params: grug.far.EngineReplaceParams): (abort: fun()?) performs replace
 ---@field isSyncSupported fun(): boolean whether sync operation is supported
----@field sync fun(params: EngineSyncParams): (abort: fun()?) syncs given changes to their originating files
----@field getInputPrefillsForVisualSelection fun(visual_selection_info: VisualSelectionInfo, initialPrefills: GrugFarPrefills, visualSelectionUsage: VisualSelectionUsageType): GrugFarPrefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
+---@field sync fun(params: grug.far.EngineSyncParams): (abort: fun()?) syncs given changes to their originating files
+---@field getInputPrefillsForVisualSelection fun(visual_selection_info: grug.far.VisualSelectionInfo, initialPrefills: GrugFarPrefills, visualSelectionUsage: VisualSelectionUsageType): GrugFarPrefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
 ---@field getSearchDescription fun(inputs: GrugFarInputs): string a string describing the current search to be used as buffer title for example
 ---@field isEmptySearch fun(inputs: GrugFarInputs, options: GrugFarOptions): boolean whether search query is empty
 

@@ -34,7 +34,7 @@ end
 ---@param startRow integer
 ---@param endRow integer
 ---@param _inputs GrugFarInputs
----@return ChangedFile[]
+---@return grug.far.ChangedFile[]
 local function getChangedFiles(buf, context, startRow, endRow, _inputs)
   local isReplacing = context.engine.isSearchWithReplacement(_inputs, context.options)
 
@@ -63,7 +63,7 @@ local function getChangedFiles(buf, context, startRow, endRow, _inputs)
   return changedFiles
 end
 
----@class SyncParams
+---@class grug.far.SyncParams
 ---@field buf integer
 ---@field context GrugFarContext
 ---@field startRow integer
@@ -72,7 +72,7 @@ end
 ---@field shouldNotifyOnComplete? boolean defaults to true
 
 --- performs sync of lines in results area with corresponding original file locations
----@param params SyncParams
+---@param params grug.far.SyncParams
 local function sync(params)
   local buf = params.buf
   local context = params.context

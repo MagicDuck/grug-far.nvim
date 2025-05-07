@@ -1,14 +1,14 @@
 local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 
----@class FetchFilteredFilesListParams
+---@class grug.far.FetchFilteredFilesListParams
 ---@field inputs GrugFarInputs
 ---@field options GrugFarOptions
 ---@field report_progress fun(count: integer)
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?, files: string[])
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?, files: string[])
 
 --- fetch list of files that match filter and paths
----@param params FetchFilteredFilesListParams
+---@param params grug.far.FetchFilteredFilesListParams
 ---@return fun()? abort
 local function fetchFilesList(params)
   local files = {}

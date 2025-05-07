@@ -37,7 +37,7 @@ end
 
 --- gets bufrange if we have one specified in paths
 ---@param inputs GrugFarInputs
----@return VisualSelectionInfo? bufrange,string? err
+---@return grug.far.VisualSelectionInfo? bufrange,string? err
 function M.getBufrange(inputs)
   if #inputs.paths > 0 then
     local paths = utils.splitPaths(inputs.paths)
@@ -49,15 +49,15 @@ function M.getBufrange(inputs)
   return nil, nil
 end
 
----@class ResultsWithReplaceDiffParams
+---@class grug.far.ResultsWithReplaceDiffParams
 ---@field json_data RipgrepJson[]
 ---@field options GrugFarOptions
 ---@field inputs GrugFarInputs
----@field bufrange VisualSelectionInfo
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?, results: ParsedResultsData?)
+---@field bufrange grug.far.VisualSelectionInfo
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?, results: grug.far.ParsedResultsData?)
 
 --- adds results of doing a replace to results of doing a search
----@param params ResultsWithReplaceDiffParams
+---@param params grug.far.ResultsWithReplaceDiffParams
 ---@return fun()? abort
 local function getResultsWithReplaceDiff(params)
   local json_data = params.json_data
@@ -134,17 +134,17 @@ local function getResultsWithReplaceDiff(params)
   return abort
 end
 
----@class RipgrepEngineSearchParams
+---@class grug.far.RipgrepEngineSearchParams
 ---@field stdin uv_pipe_t?
 ---@field args string[]?
 ---@field options GrugFarOptions
 ---@field inputs GrugFarInputs
----@field bufrange? VisualSelectionInfo
----@field on_fetch_chunk fun(data: ParsedResultsData)
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?, customActionMessage: string?)
+---@field bufrange? grug.far.VisualSelectionInfo
+---@field on_fetch_chunk fun(data: grug.far.ParsedResultsData)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 
 --- runs search
----@param params RipgrepEngineSearchParams
+---@param params grug.far.RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search(params)
   local bufrange = vim.deepcopy(params.bufrange)
@@ -192,7 +192,7 @@ local function run_search(params)
 end
 
 --- runs search with replace diff
----@param params RipgrepEngineSearchParams
+---@param params grug.far.RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search_with_replace(params)
   local abortSearch = nil
@@ -296,7 +296,7 @@ end
 
 --- runs search with replacement interpreter
 ---@param replacementInterpreter GrugFarReplacementInterpreter
----@param params RipgrepEngineSearchParams
+---@param params grug.far.RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search_with_replace_interpreter(replacementInterpreter, params)
   local eval_fn, interpreterError =
@@ -379,7 +379,7 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
 end
 
 --- does search
----@param params EngineSearchParams
+---@param params grug.far.EngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 function M.search(params)
   local options = params.options

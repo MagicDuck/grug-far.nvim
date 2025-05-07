@@ -7,7 +7,7 @@ local resultsList = require('grug-far.render.resultsList')
 ---@param cursor_row integer
 ---@param increment -1 | 1
 ---@param filename string?
----@return ResultLocation?, integer?
+---@return grug.far.ResultLocation?, integer?
 local function getFileBoundaryLocation(buf, context, cursor_row, increment, filename)
   local num_lines = vim.api.nvim_buf_line_count(buf)
   local _filename = filename

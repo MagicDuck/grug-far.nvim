@@ -1,7 +1,7 @@
 local utils = require('grug-far.utils')
 
 --- performs sync for given changed file
----@param params { changedFile: ChangedFile, on_done: fun(errorMessage: string?) }
+---@param params { changedFile: grug.far.ChangedFile, on_done: fun(errorMessage: string?) }
 local function writeChangedFile(params)
   local changedFile = params.changedFile
   local on_done = params.on_done
@@ -41,14 +41,14 @@ local function writeChangedFile(params)
   end)
 end
 
----@class SyncChangedFilesParams
+---@class grug.far.SyncChangedFilesParams
 ---@field options GrugFarOptions
----@field changedFiles ChangedFile[]
+---@field changedFiles grug.far.ChangedFile[]
 ---@field report_progress fun(count: integer)
----@field on_finish fun(status: GrugFarStatus, errorMessage: string | nil)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string | nil)
 
 --- sync given changed files
----@param params SyncChangedFilesParams
+---@param params grug.far.SyncChangedFilesParams
 ---@return fun() abort
 local function syncChangedFiles(params)
   local changedFiles = vim.deepcopy(params.changedFiles)

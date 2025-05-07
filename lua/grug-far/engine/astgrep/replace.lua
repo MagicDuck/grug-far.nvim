@@ -10,7 +10,7 @@ local uv = vim.uv
 
 local M = {}
 
----@params params EngineReplaceParams
+---@params params grug.far.EngineReplaceParams
 ---@params args string[]
 ---@params eval_fn fun(...): (string?, string?)
 ---@return fun()? abort
@@ -110,8 +110,8 @@ end
 ---@field options GrugFarOptions
 ---@field args string[]
 ---@field replacement_eval_fn? fun(...): (string?, string?)
----@field bufrange VisualSelectionInfo
----@field on_finish fun(status: GrugFarStatus, errorMessage: string?)
+---@field bufrange grug.far.VisualSelectionInfo
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?)
 
 --- replaces in bufrange
 ---@param params replaceInAstgrepBufrangeParams
@@ -170,7 +170,7 @@ local function replaceInBufrange(params)
 end
 
 --- does replace
----@param params EngineReplaceParams
+---@param params grug.far.EngineReplaceParams
 ---@return fun()? abort
 function M.replace(params)
   local report_progress = params.report_progress
