@@ -1,0 +1,213 @@
+*grug-far-instance-api*
+
+------------------------------------------------------------------------------
+                                                                *inst:get_buf()*
+                                `inst:get_buf`()
+gets buffer associated with instance
+Return ~
+`(integer)` buf
+
+------------------------------------------------------------------------------
+                                                               *inst:is_valid()*
+                               `inst:is_valid`()
+checks if this instance is still valid (maybe has been closed in between)
+Return ~
+`(boolean)` is_valid
+
+------------------------------------------------------------------------------
+                                                                *inst:is_open()*
+                                `inst:is_open`()
+is instance window open
+Return ~
+`(boolean)` is_open
+
+------------------------------------------------------------------------------
+                                                            *inst:ensure_open()*
+                              `inst:ensure_open`()
+ensure instance window is open
+
+------------------------------------------------------------------------------
+                                                                   *inst:help()*
+                                 `inst:help`()
+show help
+
+------------------------------------------------------------------------------
+                                                                *inst:replace()*
+                                `inst:replace`()
+perform replace
+
+------------------------------------------------------------------------------
+                                                               *inst:sync_all()*
+                               `inst:sync_all`()
+perform sync all
+
+------------------------------------------------------------------------------
+                                                              *inst:sync_line()*
+                               `inst:sync_line`()
+perform sync line (for current line)
+
+------------------------------------------------------------------------------
+                                                              *inst:sync_file()*
+                               `inst:sync_file`()
+perform sync file (for file around current line)
+
+------------------------------------------------------------------------------
+                                                           *inst:history_open()*
+                             `inst:history_open`()
+open history window
+
+------------------------------------------------------------------------------
+                                                            *inst:history_add()*
+                              `inst:history_add`()
+add current input values as a new history entry
+
+------------------------------------------------------------------------------
+                                                                 *inst:search()*
+                                `inst:search`()
+perform search
+
+------------------------------------------------------------------------------
+                                                             *inst:goto_match()*
+                           `inst:goto_match`({count})
+move cursor to <count>th match
+Parameters ~
+{count} `(number)`
+
+------------------------------------------------------------------------------
+                                                        *inst:goto_next_match()*
+                        `inst:goto_next_match`({params})
+move cursor to next match
+if includeUncounted = true, it will move through lines that do not have a match count
+(which can happen for multiline searches)
+Parameters ~
+{params} `(optional)` { includeUncounted?: `(boolean)` }
+
+------------------------------------------------------------------------------
+                                                        *inst:goto_prev_match()*
+                        `inst:goto_prev_match`({params})
+move cursor to prev match
+if includeUncounted = true, it will move through lines that do not have a match count
+(which can happen for multiline searches)
+Parameters ~
+{params} `(optional)` { includeUncounted?: `(boolean)` }
+
+------------------------------------------------------------------------------
+                                                          *inst:goto_location()*
+                             `inst:goto_location`()
+goto source location (file, line, column) associated with current line
+
+------------------------------------------------------------------------------
+                                                          *inst:open_location()*
+                             `inst:open_location`()
+open source location (file, line, column) associated with current line (stays in grug-far buffer)
+
+------------------------------------------------------------------------------
+                                                      *inst:apply_next_change()*
+                       `inst:apply_next_change`({params})
+1. apply change at current line (and notify if notify=true)
+2. optionally remove it from buffer (if remove_synced = true, defaults to true)
+3. move cursor to next match
+4. open source location (if open_location = true, defaults to true)
+Parameters ~
+{params} `(optional)` { open_location?: `(boolean,)` remove_synced?: boolean, notify?: boolean }
+
+------------------------------------------------------------------------------
+                                                      *inst:apply_prev_change()*
+                       `inst:apply_prev_change`({params})
+1. apply change at current line (and notify if notify=true)
+2. optionally remove it from buffer (if remove_synced = true, defaults to true)
+3. move cursor to prev match
+4. open source location (if open_location = true, defaults to true)
+Parameters ~
+{params} `(optional)` { open_location?: `(boolean,)` remove_synced?: boolean, notify?: boolean }
+
+------------------------------------------------------------------------------
+                                                          *inst:open_quickfix()*
+                             `inst:open_quickfix`()
+send result lines to the quickfix list. Deleting result lines will cause them not to be included.
+
+------------------------------------------------------------------------------
+                                                                  *inst:abort()*
+                                 `inst:abort`()
+abort current operation. Can be useful if you've ended up doing too large of a search or
+if you've changed your mind about a replacement midway.
+
+------------------------------------------------------------------------------
+                                                                  *inst:close()*
+                                 `inst:close`()
+Close grug-far buffer/window. This is the same as `:bd` except that it will also ask you
+to confirm if there is a replace/sync in progress, as those would be aborted.
+
+------------------------------------------------------------------------------
+                                                                   *inst:hide()*
+                                 `inst:hide`()
+hides grug-far window (but instance is still valid)
+
+------------------------------------------------------------------------------
+                                                                   *inst:open()*
+                                 `inst:open`()
+opens/focuses grug-far window
+
+------------------------------------------------------------------------------
+                                                            *inst:swap_engine()*
+                              `inst:swap_engine`()
+swaps search engine with the next one as configured through options.enabledEngines
+
+------------------------------------------------------------------------------
+                                             *inst:toggle_show_search_command()*
+                      `inst:toggle_show_search_command`()
+toggle showing search command. Can be useful for debugging purposes.
+
+------------------------------------------------------------------------------
+                                                       *inst:preview_location()*
+                           `inst:preview_location`()
+preview source location associated with current line in a floating window
+
+------------------------------------------------------------------------------
+                                           *inst:swap_replacement_interpreter()*
+                     `inst:swap_replacement_interpreter`()
+swaps replacement interperter with the next one as configured through
+options.enabledReplacementInterpreters
+
+------------------------------------------------------------------------------
+                                                             *inst:goto_input()*
+                         `inst:goto_input`({inputName})
+move cursor to input with given name
+Parameters ~
+{inputName} grug.far.InputName
+
+------------------------------------------------------------------------------
+                                                       *inst:goto_first_input()*
+                           `inst:goto_first_input`()
+move cursor to first input
+
+------------------------------------------------------------------------------
+                                                        *inst:goto_next_input()*
+                            `inst:goto_next_input`()
+move cursor to next input
+
+------------------------------------------------------------------------------
+                                                        *inst:goto_prev_input()*
+                            `inst:goto_prev_input`()
+move cursor to prev input
+
+------------------------------------------------------------------------------
+                                                    *inst:update_input_values()*
+                `inst:update_input_values`({values}, {clearOld})
+update input values to new ones
+if clearOld=true is given, the old input values are ignored
+Parameters ~
+{values} grug.far.Prefills
+{clearOld} `(boolean)`
+
+------------------------------------------------------------------------------
+                                                           *inst:toggle_flags()*
+                          `inst:toggle_flags`({flags})
+toggles given list of flags
+Parameters ~
+{flags} `(string[])`
+Return ~
+`(boolean[])` states
+
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

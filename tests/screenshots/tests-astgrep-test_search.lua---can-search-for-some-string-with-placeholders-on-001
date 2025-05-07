@@ -1,0 +1,11 @@
+--|
+01|
+02|grug
+03|
+04|
+05|
+06|
+07|
+08|file2.ts
+09|    if (grug || talks) {
+10|      grug.walks(talks)

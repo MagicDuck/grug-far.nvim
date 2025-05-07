@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...         
+02|                                                                                
+03|  Rules:                                                                       
+04|id: grug_test                                                                   
+05|language: typescript                                                            
+06|rule:                                                                           
+07|  pattern: grug                                                                 
+08|                                                                                
+09|  Files Filter:                                                                
+10|e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters vi ...  
+11| 󰮚 Flags:                                                                       
+12|--strictness                                                                    
+13|  Paths:                                                                       
+14|e.g. /foo/bar   ../   ./hello\ world/   ./src/foo.lua   ~/.config               
+15|                                                                                
+16| STATUS_ERROR ⟪ astgrep-rules ⟫
+17|                                                                                
+18|error: unexpected argument '--strictness' found                                 
+19|                                                                                
+20|  tip: a similar argument exists: '--stdin'                                     
+21|                                                                                
+22|Usage: ast-grep scan <PATHS|--follow|--no-ignore <FILE_TYPE>|--stdin|--globs @@@
+23|Grug FAR - 1: id: grug_test^@language: typesc...                            2,14
+24|-- INSERT --                                                                    

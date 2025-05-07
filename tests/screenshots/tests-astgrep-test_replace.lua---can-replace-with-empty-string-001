@@ -1,0 +1,14 @@
+--|
+01|
+02|grug
+03|
+04|
+05|--rewrite=
+06|
+07|
+08|file2.ts
+09|    if (grug || talks) {
+10|    if ( || talks) {
+11| 
+12|      grug.walks(talks)
+13|      .walks(talks)

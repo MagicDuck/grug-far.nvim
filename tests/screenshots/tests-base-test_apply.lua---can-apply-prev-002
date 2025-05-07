@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|                                        │ 5 matches in 2 files   sync completed
+02|      grug talks and grug drinks        │                                       
+03|      then curly thinks                 │  file1.txt                            
+04|                                        │▒   2       grug walks              [1]
+05|                                        │▒   2       curly walks                
+06|                                        │▒   3       grug winks              [2]
+07|                                        │▒   3       curly winks                
+08|                                        │                                       
+09|                                        │  file2.doc                            
+10|                                        │▒   2       grug talks and grug dri [3]
+11|                                        │▒   2       curly talks and curly drink
+12|                                        │              s                        
+13|                                        │                                       
+14|                                        │                                       
+15|                                        │                                       
+16|                                        │                                       
+17|                                        │                                       
+18|                                        │                                       
+19|                                        │                                       
+20|                                        │                                       
+21|                                        │                                       
+22|                                        │                                       
+23|file2.doc                            2,7 Grug FAR - 1: grug                 16,1
+24|                                                                                

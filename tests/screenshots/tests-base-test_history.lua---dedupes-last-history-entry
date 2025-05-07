@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|╭──────────────────────────────────────────────────────────────────────────────╮
+02|│(edit and save as usual if you need to, make sure to preserve format)         │
+03|│ Pick Entry <enter>                                                          │
+04|│                                                                              │
+05|│                                                                              │
+06|│Engine: ripgrep                                                               │
+07|│Search: grug                                                                  │
+08|│Replace: curly                                                                │
+09|│Files Filter:                                                                 │
+10|│Flags: -i                                                                     │
+11|│Paths:                                                                        │
+12|│                                                                              │
+13|│                                                                              │
+14|│                                                                              │
+15|│                                                                              │
+16|╰──────────────────   History (press <:q> or <:bd> to close)──────────────────╯
+17|  file1.txt                                                                     
+18|▒   1  grug walks                                                            [1]
+19|▒   1  curly walks                                                              
+20|                                                                                
+21|  file2.doc                                                                     
+22|▒   2       grug talks and grug drinks                                       [2]
+23|Grug FAR - 1: grug                                                           2,4
+24|grug-far: added current search to history!                    3,1           All 

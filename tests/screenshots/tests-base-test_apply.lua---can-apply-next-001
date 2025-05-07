@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|                                        │                                       
+02|      grug walks                        │ 󰮚 Flags:                              
+03|      grug winks                        │                                       
+04|                                        │  Paths:                              
+05|                                        │                                       
+06|                                        │                                       
+07|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+08|                                        │ 5 matches in 2 files                  
+09|                                        │                                       
+10|                                        │  file1.txt                            
+11|                                        │▒   2       grug walks              [1]
+12|                                        │▒   2       curly walks                
+13|                                        │▒   3       grug winks              [2]
+14|                                        │▒   3       curly winks                
+15|                                        │                                       
+16|                                        │  file2.doc                            
+17|                                        │▒   2       grug talks and grug dri [3]
+18|                                        │▒   2       curly talks and curly drink
+19|                                        │              s                        
+20|                                        │▒   3       then grug thinks        [4]
+21|                                        │▒   3       then curly thinks          
+22|                                        │                                       
+23|file1.txt                            2,7 Grug FAR - 1: grug                  8,5
+24|                                                                                

@@ -1,0 +1,17 @@
+--|
+01|
+02|
+03|Engine: ripgrep
+04|Search: walks
+05|Replace: return "bob"
+06|Files Filter: 
+07|Flags: 
+08|Paths: 
+09|
+10|
+11|Engine: ripgrep|lua
+12|Search: grug
+13|Replace: return "bob"
+14|Files Filter: 
+15|Flags: 
+16|Paths: 
