@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|                                                                                
+02| STATUS_SUCCESS ⟪ ripgrep ⟫
+03| 5 matches in 2 files                                                           
+04|                                                                                
+05|file1.txt                                                                       
+06|  2        grug walks                                                        [1]
+07|  3        then grug swims                                                   [2]
+08|                                                                                
+09|file2.doc                                                                       
+10|  2       grug talks and grug drinks                                         [3]
+11|Grug FAR - 1: grug                                                          13,1
+12|                                                                                
+13|      grug talks and grug drinks                                                
+14|      then grug thinks                                                          
+15|                                                                                
+16|                                                                                
+17|                                                                                
+18|                                                                                
+19|                                                                                
+20|                                                                                
+21|                                                                                
+22|                                                                                
+23|file2.doc                                                                    2,7
+24|                                                                                

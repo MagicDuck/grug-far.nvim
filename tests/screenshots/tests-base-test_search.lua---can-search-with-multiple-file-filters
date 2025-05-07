@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...         
+02|                                                                                
+03|  Search:                                                                      
+04|grug                                                                            
+05|  Replace:                                                                     
+06|                                                                                
+07|  Files Filter:                                                                
+08|*.txt                                                                           
+09|*.md                                                                            
+10| 󰮚 Flags:                                                                       
+11|                                                                                
+12|  Paths:                                                                       
+13|                                                                                
+14|                                                                                
+15| STATUS_SUCCESS ⟪ ripgrep ⟫
+16| 2 matches in 2 files                                                           
+17|                                                                                
+18|file1.md                                                                        
+19|  1  grug jumps                                                              [1]
+20|                                                                                
+21|file1.txt                                                                       
+22|  1  grug walks                                                              [2]
+23|Grug FAR - 1: grug                                                           2,5
+24|-- INSERT --                                                                    

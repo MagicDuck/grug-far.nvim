@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|                                        │ 󰮚 Flags:                              
+02|       grug walks                       │                                       
+03|       then grug swims                  │  Paths:                              
+04|                                        │                                       
+05|                                        │                                       
+06|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+07|                                        │ 5 matches in 2 files                  
+08|                                        │                                       
+09|                                        │file1.txt                              
+10|                                        │  2        grug walks               [1]
+11|                                        │  3        then grug swims          [2]
+12|                                        │                                       
+13|                                        │file2.doc                              
+14|                                        │  2       grug talks and grug drink [3]
+15|                                        │  3       then grug thinks          [4]
+16|                                        │                                       
+17|                                        │                                       
+18|                                        │                                       
+19|                                        │                                       
+20|                                        │                                       
+21|                                        │                                       
+22|                                        │                                       
+23|file1.txt                           3,13 Grug FAR - 1: grug                 10,1
+24|                                                                                

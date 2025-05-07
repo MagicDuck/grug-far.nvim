@@ -1,0 +1,52 @@
+name: lint
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint with selene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Run selene
+        uses: NTBBloodbath/selene-action@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --display-style=quiet .
+
+  style-lint:
+    name: Stylua check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Lint with stylua
+        uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check .
+
+  typecheck:
+    name: Typecheck sources
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        neovim_version: ["v0.11.0"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - name: Type Check Code Base
+        uses: stevearc/nvim-typecheck-action@v2
+        with:
+          configpath: .github/workflows/.luarc.json
+          path: lua
+          level: Warning
+          nvim-version: v0.11.0

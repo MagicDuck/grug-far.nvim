@@ -1,0 +1,20 @@
+--|
+01|
+02|
+03|Engine: ripgrep
+04|Search: grug
+05|Replace: 
+06|Files Filter: 
+07|Flags: 
+08|Paths: 
+09|
+10|
+11|Engine: astgrep-rules
+12|Rules: id: grug_test
+13|| language: typescript
+14|| rule:
+15||   pattern: grug.$A
+16||     
+17|Files Filter: 
+18|Flags: 
+19|Paths: 
