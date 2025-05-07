@@ -1,7 +1,7 @@
 local search = require('grug-far.actions.search')
 
 --- toggles displaying search command
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function toggleShowCommand(params)
   local context = params.context
   local buf = params.buf

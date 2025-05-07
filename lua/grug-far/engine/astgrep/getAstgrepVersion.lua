@@ -3,7 +3,7 @@ local sg_version = nil
 
 --- gets the ast-grep version in use.
 ---Only first call does an actual check rest are from cache
----@param options GrugFarOptions
+---@param options grug.far.Options
 ---@return string? version
 local function getAstgrepVersion(options)
   if not sg_version then

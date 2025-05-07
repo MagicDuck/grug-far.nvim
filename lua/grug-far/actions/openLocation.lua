@@ -2,7 +2,7 @@ local utils = require('grug-far.utils')
 local resultsList = require('grug-far.render.resultsList')
 
 --- opens location at current cursor line (if there is one) in target window
----@param params { buf: integer, context: GrugFarContext, useScratchBuffer?: boolean }
+---@param params { buf: integer, context: grug.far.Context, useScratchBuffer?: boolean }
 local function openLocation(params)
   local buf = params.buf
   local context = params.context

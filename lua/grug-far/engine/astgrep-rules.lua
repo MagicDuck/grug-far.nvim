@@ -24,7 +24,7 @@ local function get_language_by_glob(filename, languageGlobs)
   end
 end
 
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return string | nil
 local function get_default_astgrep_language(context)
   local lang = nil
@@ -49,7 +49,7 @@ local function get_default_astgrep_language(context)
   return lang
 end
 
----@type GrugFarEngine
+---@type grug.far.Engine
 local AstgrepRulesEngine = {
   type = 'astgrep-rules',
 

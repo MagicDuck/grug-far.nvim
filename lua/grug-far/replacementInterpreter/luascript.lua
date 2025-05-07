@@ -1,4 +1,4 @@
----@type GrugFarReplacementInterpreter
+---@type grug.far.ReplacementInterpreter
 local LuaInterpreter = {
   type = 'lua',
 

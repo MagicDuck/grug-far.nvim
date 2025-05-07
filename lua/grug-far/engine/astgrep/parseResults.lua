@@ -323,7 +323,7 @@ end
 
 --- splits off matches corresponding to the last file
 ---@param matches grug.far.AstgrepMatch[]
----@return AstgrepMatch[] before, grug.far.AstgrepMatch[] after
+---@return grug.far.AstgrepMatch[] before, grug.far.AstgrepMatch[] after
 function M.split_last_file_matches(matches)
   local end_index = 0
   for i = #matches - 1, 1, -1 do

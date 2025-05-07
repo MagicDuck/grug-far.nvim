@@ -48,7 +48,7 @@ end
 ---@param historyWin integer
 ---@param historyBuf integer
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function pickHistoryEntry(historyWin, historyBuf, buf, context)
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0)) - 1
   local entry = getHistoryEntryAtRow(historyBuf, cursor_row)
@@ -65,7 +65,7 @@ end
 ---@param historyWin integer
 ---@param historyBuf integer
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function setupKeymap(historyWin, historyBuf, buf, context)
   local keymaps = context.options.keymaps
   utils.setBufKeymap(historyBuf, 'Pick history entry', keymaps.pickHistoryEntry, function()
@@ -74,7 +74,7 @@ local function setupKeymap(historyWin, historyBuf, buf, context)
 end
 
 ---@param historyBuf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function renderHistoryBuffer(historyBuf, context)
   local keymaps = context.options.keymaps
 
@@ -123,7 +123,7 @@ end
 
 --- creates history window
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function createHistoryWindow(buf, context)
   local historyBuf = vim.api.nvim_create_buf(false, true)
   local width = vim.api.nvim_win_get_width(0) - 2
@@ -184,7 +184,7 @@ local function createHistoryWindow(buf, context)
 end
 
 --- opens history floating window
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function historyOpen(params)
   local buf = params.buf
   local context = params.context

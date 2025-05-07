@@ -3,8 +3,8 @@
 local grug_far = {}
 
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
----@type GrugFarOptions
----@seealso |GrugFarOptions|
+---@type grug.far.Options
+---@seealso |grug.far.Options|
 grug_far.defaultOptions = {
   -- debounce milliseconds for issuing search while user is typing
   -- prevents excessive searching
@@ -686,8 +686,8 @@ grug_far.defaultOptions = {
 ---@field astgrep-rules? grug.far.AstgrepRulesEngineTableOverride
 ---@private
 
----@alias GrugFarEngineType "ripgrep" | "astgrep" | "astgrep-rules"
----@alias GrugFarReplacementInterpreterType "lua" | "vimscript" | "default"
+---@alias grug.far.EngineType "ripgrep" | "astgrep" | "astgrep-rules"
+---@alias grug.far.ReplacementInterpreterType "lua" | "vimscript" | "default"
 
 ---@alias NumberLabelPosition "right_align" | "eol" | "inline"
 
@@ -732,15 +732,15 @@ grug_far.defaultOptions = {
 ---   max_column_number_length: integer,
 ---   is_context: boolean?,
 ---   is_current_line: boolean?,
---- }, options: GrugFarOptions): string[][] list of `[text, highlight]` tuples
+--- }, options: grug.far.Options): string[][] list of `[text, highlight]` tuples
 
 ---@alias FilePathConcealType fun(params: {
 ---   file_path: string,
 ---   window_width: integer,
 --- }): (start_col: integer?, end_col: integer?)
 
----@class GrugFarOptions
----@tag GrugFarOptions
+---@class grug.far.Options
+---@tag grug.far.Options
 ---@toc_entry options type definitions
 ---@field debounceMs integer
 ---@field minSearchChars integer
@@ -772,15 +772,15 @@ grug_far.defaultOptions = {
 ---@field filePathConcealChar string
 ---@field reportDuration boolean
 ---@field icons grug.far.IconsTable
----@field prefills GrugFarPrefills
+---@field prefills grug.far.Prefills
 ---@field history grug.far.HistoryTable
 ---@field instanceName? string
 ---@field folding grug.far.FoldingTable
 ---@field engines grug.far.EnginesTable
 ---@field enabledEngines string[]
----@field engine GrugFarEngineType
----@field replacementInterpreter GrugFarReplacementInterpreterType
----@field enabledReplacementInterpreters GrugFarReplacementInterpreterType[]
+---@field engine grug.far.EngineType
+---@field replacementInterpreter grug.far.ReplacementInterpreterType
+---@field enabledReplacementInterpreters grug.far.ReplacementInterpreterType[]
 ---@field resultLocation grug.far.ResultLocationTable
 ---@field openTargetWindow grug.far.OpenTargetWindowTable
 ---@field helpLine grug.far.HelpLineTable
@@ -788,7 +788,7 @@ grug_far.defaultOptions = {
 ---@field historyWindow vim.api.keyset.win_config
 ---@field previewWindow vim.api.keyset.win_config
 
----@class GrugFarOptionsOverride
+---@class grug.far.OptionsOverride
 ---@field debounceMs? integer
 ---@field minSearchChars? integer
 ---@field maxSearchMatches? integer
@@ -819,14 +819,14 @@ grug_far.defaultOptions = {
 ---@field filePathConcealChar? string
 ---@field reportDuration? boolean
 ---@field icons? grug.far.IconsTableOverride
----@field prefills? GrugFarPrefills
+---@field prefills? grug.far.Prefills
 ---@field history? grug.far.HistoryTableOverride
 ---@field instanceName? string
 ---@field folding? grug.far.FoldingTableOverride
 ---@field engines? grug.far.EnginesTableOverride
----@field engine? GrugFarEngineType
----@field replacementInterpreter? GrugFarReplacementInterpreterType
----@field enabledReplacementInterpreters? GrugFarReplacementInterpreterType[]
+---@field engine? grug.far.EngineType
+---@field replacementInterpreter? grug.far.ReplacementInterpreterType
+---@field enabledReplacementInterpreters? grug.far.ReplacementInterpreterType[]
 ---@field resultLocation? grug.far.ResultLocationTableOverride
 ---@field openTargetWindow? grug.far.OpenTargetWindowTableOverride
 ---@field helpLine? grug.far.HelpLineTableOverride
@@ -836,9 +836,9 @@ grug_far.defaultOptions = {
 ---@private
 
 --- generates merged options
----@param options GrugFarOptionsOverride | GrugFarOptions
----@param defaults GrugFarOptions
----@return GrugFarOptions
+---@param options grug.far.OptionsOverride | grug.far.Options
+---@param defaults grug.far.Options
+---@return grug.far.Options
 ---@private
 function grug_far.with_defaults(options, defaults)
   local newOptions = vim.tbl_deep_extend('force', vim.deepcopy(defaults), options)
@@ -913,7 +913,7 @@ end
 
 --- gets icon with given name if icons enabled
 ---@param iconName string
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@return string|nil
 ---@private
 function grug_far.getIcon(iconName, context)
@@ -926,25 +926,25 @@ function grug_far.getIcon(iconName, context)
 end
 
 --- whether we should conceal
----@param options GrugFarOptions
+---@param options grug.far.Options
 ---@private
 function grug_far.shouldConceal(options)
   return (not options.wrap) and options.filePathConceal
 end
 
----@type GrugFarOptionsOverride?
+---@type grug.far.OptionsOverride?
 ---@private
 local _globalOptionsOverride = nil
 
 --- sets global opts override
----@param options GrugFarOptionsOverride?
+---@param options grug.far.OptionsOverride?
 ---@private
 function grug_far.setGlobalOptionsOverride(options)
   _globalOptionsOverride = options
 end
 
 --- gets global opts
----@return GrugFarOptions
+---@return grug.far.Options
 ---@private
 function grug_far.getGlobalOptions()
   return grug_far.with_defaults(

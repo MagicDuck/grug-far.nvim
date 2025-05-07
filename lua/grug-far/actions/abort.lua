@@ -1,7 +1,7 @@
 local tasks = require('grug-far.tasks')
 
 --- aborts all currently running tasks
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function abort(params)
   local context = params.context
 

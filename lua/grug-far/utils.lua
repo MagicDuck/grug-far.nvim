@@ -423,7 +423,7 @@ function M.getLineWithoutCarriageReturn(line)
 end
 
 --- gets companion window in which open files
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param buf integer
 ---@return integer window, boolean isNew
 function M.getOpenTargetWin(context, buf)

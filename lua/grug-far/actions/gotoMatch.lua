@@ -2,7 +2,7 @@ local resultsList = require('grug-far.render.resultsList')
 
 --- gets result location that we should move to and row in buffer where it is referenced
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param cursor_row integer
 ---@param increment -1 | 1 | nil
 ---@param count integer?
@@ -55,7 +55,7 @@ end
 --- moves to location at current cursor line (if there is one)
 --- if count > 0 given, it will use the result location with that number instead
 --- if increment is given, it will use the first location that is at least <increment> away from the current line
----@param params { buf: integer, context: GrugFarContext, increment: -1 | 1 | nil, count: number?, includeUncounted: boolean? }
+---@param params { buf: integer, context: grug.far.Context, increment: -1 | 1 | nil, count: number?, includeUncounted: boolean? }
 ---@return grug.far.ResultLocation?, integer?
 local function gotoMatch(params)
   local buf = params.buf

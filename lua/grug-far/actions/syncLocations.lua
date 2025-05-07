@@ -2,7 +2,7 @@ local sync = require('grug-far.actions.sync')
 local history = require('grug-far.history')
 
 --- syncs all result lines with original file locations
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function syncLocations(params)
   local buf = params.buf
   local context = params.context

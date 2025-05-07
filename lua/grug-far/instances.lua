@@ -5,19 +5,19 @@ local inst
 ---exclude static class api from from documentation
 ---@private
 do
-  ---@class GrugFarInstance
-  ---@field _context GrugFarContext
+  ---@class grug.far.Instance
+  ---@field _context grug.far.Context
   ---@field _buf integer
-  ---@field _params { context: GrugFarContext, buf: integer }
+  ---@field _params { context: grug.far.Context, buf: integer }
   inst = {}
   inst.__index = inst
 
-  ---@type table<string, GrugFarInstance>
+  ---@type table<string, grug.far.Instance>
   local instances = {}
 
   --- add instance with given name
   ---@param instanceName string
-  ---@param instance GrugFarInstance
+  ---@param instance grug.far.Instance
   function inst.add_instance(instanceName, instance)
     instances[instanceName] = instance
   end
@@ -38,7 +38,7 @@ do
   --- returns instance name associated with given buf number
   --- if given buf number is 0, returns instance for current buffer
   ---@param buf integer (same argument as for bufnr())
-  ---@return GrugFarInstance? inst
+  ---@return grug.far.Instance? inst
   ---@return string? instanceName
   function inst.get_instance_by_buf(buf)
     local bufnr = vim.fn.bufnr(buf)
@@ -50,8 +50,8 @@ do
   end
 
   --- gets instance for given query
-  ---@param instQuery GrugFarInstanceQuery
-  ---@return GrugFarInstance? inst
+  ---@param instQuery grug.far.InstanceQuery
+  ---@return grug.far.Instance? inst
   ---@return string? instanceName
   function inst.get_instance(instQuery)
     if type(instQuery) == 'string' then
@@ -71,8 +71,8 @@ do
   end
 
   --- gets instance for given query, erroring out if not available
-  ---@param instQuery GrugFarInstanceQuery
-  ---@return GrugFarInstance? inst
+  ---@param instQuery grug.far.InstanceQuery
+  ---@return grug.far.Instance? inst
   ---@return string? instanceName
   function inst.ensure_instance(instQuery)
     local instance, instName = inst.get_instance(instQuery)
@@ -94,7 +94,7 @@ do
   end
 
   --- Returns an object representing an instance of grug-far
-  ---@param context GrugFarContext
+  ---@param context grug.far.Context
   ---@param buf integer
   function inst.new(context, buf)
     local self = setmetatable({}, inst)
@@ -328,7 +328,7 @@ function inst:swap_replacement_interpreter()
 end
 
 --- move cursor to input with given name
----@param inputName GrugFarInputName
+---@param inputName grug.far.InputName
 function inst:goto_input(inputName)
   self:ensure_open()
   require('grug-far.inputs').goto_input(self._context, self._buf, inputName)
@@ -354,7 +354,7 @@ end
 
 --- update input values to new ones
 --- if clearOld=true is given, the old input values are ignored
----@param values GrugFarPrefills
+---@param values grug.far.Prefills
 ---@param clearOld boolean
 function inst:update_input_values(values, clearOld)
   self:ensure_open()

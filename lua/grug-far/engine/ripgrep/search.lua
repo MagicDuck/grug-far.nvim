@@ -10,8 +10,8 @@ local uv = vim.uv
 local M = {}
 
 --- get search args
----@param inputs GrugFarInputs
----@param options GrugFarOptions
+---@param inputs grug.far.Inputs
+---@param options grug.far.Options
 ---@return string[]?
 function M.getSearchArgs(inputs, options)
   local extraArgs = { '--json' }
@@ -36,7 +36,7 @@ function M.isSearchWithReplacement(args)
 end
 
 --- gets bufrange if we have one specified in paths
----@param inputs GrugFarInputs
+---@param inputs grug.far.Inputs
 ---@return grug.far.VisualSelectionInfo? bufrange,string? err
 function M.getBufrange(inputs)
   if #inputs.paths > 0 then
@@ -51,8 +51,8 @@ end
 
 ---@class grug.far.ResultsWithReplaceDiffParams
 ---@field json_data RipgrepJson[]
----@field options GrugFarOptions
----@field inputs GrugFarInputs
+---@field options grug.far.Options
+---@field inputs grug.far.Inputs
 ---@field bufrange grug.far.VisualSelectionInfo
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string?, results: grug.far.ParsedResultsData?)
 
@@ -137,8 +137,8 @@ end
 ---@class grug.far.RipgrepEngineSearchParams
 ---@field stdin uv_pipe_t?
 ---@field args string[]?
----@field options GrugFarOptions
----@field inputs GrugFarInputs
+---@field options grug.far.Options
+---@field inputs grug.far.Inputs
 ---@field bufrange? grug.far.VisualSelectionInfo
 ---@field on_fetch_chunk fun(data: grug.far.ParsedResultsData)
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
@@ -295,7 +295,7 @@ local function run_search_with_replace(params)
 end
 
 --- runs search with replacement interpreter
----@param replacementInterpreter GrugFarReplacementInterpreter
+---@param replacementInterpreter grug.far.ReplacementInterpreter
 ---@param params grug.far.RipgrepEngineSearchParams
 ---@return fun()? abort, string[]? effectiveArgs
 local function run_search_with_replace_interpreter(replacementInterpreter, params)

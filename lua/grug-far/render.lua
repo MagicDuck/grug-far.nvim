@@ -6,7 +6,7 @@ local utils = require('grug-far.utils')
 local TOP_EMPTY_LINES = 1
 
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 local function render(buf, context)
   local placeholders = context.options.engines[context.engine.type].placeholders
   local inputsHighlight = context.options.inputsHighlight

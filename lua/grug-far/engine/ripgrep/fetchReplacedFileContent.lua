@@ -3,14 +3,14 @@ local utils = require('grug-far.utils')
 local blacklistedReplaceFlags = require('grug-far.engine.ripgrep.blacklistedReplaceFlags')
 local uv = vim.uv
 
----@class grug.far.grug.far.FetchReplacedFileContentParams
----@field inputs GrugFarInputs
----@field options GrugFarOptions
+---@class grug.far.FetchReplacedFileContentParams
+---@field inputs grug.far.Inputs
+---@field options grug.far.Options
 ---@field file string
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string | nil, content: string?)
 
 --- fetch file content with matches replaced
----@param params grug.far.grug.far.FetchReplacedFileContentParams
+---@param params grug.far.FetchReplacedFileContentParams
 ---@return nil | fun() abort
 local function fetchReplacedFileContent(params)
   local extraFlags = {

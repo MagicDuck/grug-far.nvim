@@ -107,7 +107,7 @@ local function replace_with_eval(params, args, eval_fn)
 end
 
 ---@class grug.far.replaceInAstgrepBufrangeParams
----@field options GrugFarOptions
+---@field options grug.far.Options
 ---@field args string[]
 ---@field replacement_eval_fn? fun(...): (string?, string?)
 ---@field bufrange grug.far.VisualSelectionInfo

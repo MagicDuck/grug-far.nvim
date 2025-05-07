@@ -12,7 +12,7 @@ local SearchUpdateType = {
 }
 
 --- performs search
----@param params { buf: integer, context: GrugFarContext }
+---@param params { buf: integer, context: grug.far.Context }
 local function search(params)
   local buf = params.buf
   local context = params.context

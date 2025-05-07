@@ -5,8 +5,8 @@ local utils = require('grug-far.utils')
 
 --- gets help virtual text lines
 ---@param virt_lines VirtText[][]
----@param actions GrugFarAction[]
----@param context GrugFarContext
+---@param actions grug.far.Action[]
+---@param context grug.far.Context
 ---@return VirtText[][]
 local function getHelpVirtLines(virt_lines, actions, context)
   local entries = vim.tbl_map(function(action)
@@ -48,11 +48,11 @@ end
 ---@class grug.far.HelpRenderParams
 ---@field buf integer
 ---@field extmarkName string
----@field actions GrugFarAction[]
+---@field actions grug.far.Action[]
 ---@field top_virt_lines? VirtText[][]
 
 ---@param params grug.far.HelpRenderParams
----@param context GrugFarContext
+---@param context grug.far.Context
 local function renderHelp(params, context)
   local buf = params.buf
   local actions = params.actions

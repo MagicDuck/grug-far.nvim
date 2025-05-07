@@ -30,10 +30,10 @@ end
 --- figure out which files changed and how
 --- note startRow / endRow are zero-based
 ---@param buf integer
----@param context GrugFarContext
+---@param context grug.far.Context
 ---@param startRow integer
 ---@param endRow integer
----@param _inputs GrugFarInputs
+---@param _inputs grug.far.Inputs
 ---@return grug.far.ChangedFile[]
 local function getChangedFiles(buf, context, startRow, endRow, _inputs)
   local isReplacing = context.engine.isSearchWithReplacement(_inputs, context.options)
@@ -65,7 +65,7 @@ end
 
 ---@class grug.far.SyncParams
 ---@field buf integer
----@field context GrugFarContext
+---@field context grug.far.Context
 ---@field startRow integer
 ---@field endRow integer
 ---@field on_success? fun()
