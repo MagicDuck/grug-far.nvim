@@ -1,5 +1,4 @@
 GrugFar	grug-far.txt	/*GrugFar*
-GrugFarOptions	grug-far-opts.txt	/*GrugFarOptions*
 GrugFarWithin	grug-far.txt	/*GrugFarWithin*
 grug-far	grug-far.txt	/*grug-far*
 grug-far-api	grug-far-api.txt	/*grug-far-api*
@@ -13,6 +12,7 @@ grug-far-instance-api-overview	grug-far.txt	/*grug-far-instance-api-overview*
 grug-far-introduction	grug-far.txt	/*grug-far-introduction*
 grug-far-opts	grug-far-opts.txt	/*grug-far-opts*
 grug-far-setup	grug-far.txt	/*grug-far-setup*
+grug.far.Options	grug-far-opts.txt	/*grug.far.Options*
 grug_far.close_instance()	grug-far-api.txt	/*grug_far.close_instance()*
 grug_far.defaultOptions	grug-far-opts.txt	/*grug_far.defaultOptions*
 grug_far.get_current_visual_selection()	grug-far-api.txt	/*grug_far.get_current_visual_selection()*

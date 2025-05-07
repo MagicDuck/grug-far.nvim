@@ -174,7 +174,7 @@ options.enabledReplacementInterpreters
                          `inst:goto_input`({inputName})
 move cursor to input with given name
 Parameters ~
-{inputName} GrugFarInputName
+{inputName} grug.far.InputName
 
 ------------------------------------------------------------------------------
                                                        *inst:goto_first_input()*
@@ -197,7 +197,7 @@ move cursor to prev input
 update input values to new ones
 if clearOld=true is given, the old input values are ignored
 Parameters ~
-{values} GrugFarPrefills
+{values} grug.far.Prefills
 {clearOld} `(boolean)`
 
 ------------------------------------------------------------------------------
