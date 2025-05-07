@@ -1,8 +1,5 @@
 --- *grug-far-api*
 
--- TODO (sbadragan): convert type names to grug.far.name or namespace to GrugFarWhatever
--- TODO (sbadragan): add auto-github action to generate the docs
-
 local grug_far = {}
 
 ---@alias grug.far.InstanceQuery string | number | nil
@@ -304,15 +301,6 @@ end
 --- hides grug-far instance
 ---@param instQuery grug.far.InstanceQuery
 function grug_far.hide_instance(instQuery)
-  local inst = require('grug-far.instances').get_instance(instQuery)
-  if inst then
-    inst:hide()
-  end
-end
-
---- dummy grug-far instance
----@param instQuery grug.far.InstanceQuery
-function grug_far.dummy(instQuery)
   local inst = require('grug-far.instances').get_instance(instQuery)
   if inst then
     inst:hide()
