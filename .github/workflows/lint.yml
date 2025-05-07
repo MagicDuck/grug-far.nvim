@@ -1,9 +1,5 @@
 name: lint
 
-# on:
-#   pull_request:
-#     branches:
-#       - main
 on:
   push:
     branches-ignore:
