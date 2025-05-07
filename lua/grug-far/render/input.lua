@@ -1,18 +1,17 @@
 local opts = require('grug-far.opts')
 local treesitter = require('grug-far.render.treesitter')
 
----@class grug.far.InputRenderParams
----@field buf integer
----@field lineNr integer
----@field extmarkName string
----@field prevExtmarkName? string
----@field nextExtmarkName? string
----@field label string
----@field placeholder? string | false
----@field icon? string
----@field highlightLang? string
-
----@param params grug.far.InputRenderParams
+---@param params {
+--- buf: integer,
+--- lineNr: integer,
+--- extmarkName: string,
+--- prevExtmarkName?: string,
+--- nextExtmarkName?: string,
+--- label: string,
+--- placeholder?: string | false,
+--- icon?: string,
+--- highlightLang?: string,
+--- }
 ---@param context grug.far.Context
 local function renderInput(params, context)
   local buf = params.buf

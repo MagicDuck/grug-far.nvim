@@ -10,9 +10,9 @@ local uv = vim.uv
 
 local M = {}
 
----@params params grug.far.EngineReplaceParams
----@params args string[]
----@params eval_fn fun(...): (string?, string?)
+---@param params grug.far.EngineReplaceParams
+---@param args string[]
+---@param eval_fn fun(...): (string?, string?)
 ---@return fun()? abort
 local function replace_with_eval(params, args, eval_fn)
   local on_finish = vim.schedule_wrap(params.on_finish)
@@ -106,15 +106,14 @@ local function replace_with_eval(params, args, eval_fn)
   return abort
 end
 
----@class grug.far.replaceInAstgrepBufrangeParams
----@field options grug.far.Options
----@field args string[]
----@field replacement_eval_fn? fun(...): (string?, string?)
----@field bufrange grug.far.VisualSelectionInfo
----@field on_finish fun(status: grug.far.Status, errorMessage: string?)
-
 --- replaces in bufrange
----@param params grug.far.replaceInAstgrepBufrangeParams
+---@param params {
+--- options: grug.far.Options,
+--- args: string[],
+--- replacement_eval_fn?: fun(...): (string?, string?),
+--- bufrange: grug.far.VisualSelectionInfo,
+--- on_finish: fun(status: grug.far.Status, errorMessage: string?),
+--- }
 local function replaceInBufrange(params)
   local on_finish = params.on_finish
   local replacement_eval_fn = params.replacement_eval_fn

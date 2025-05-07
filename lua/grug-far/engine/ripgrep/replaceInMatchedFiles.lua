@@ -124,16 +124,15 @@ local function replaceInFileWithEval(params)
   return abort
 end
 
----@class grug.far.replaceInMatchedFilesParams
----@field inputs grug.far.Inputs
----@field options grug.far.Options
----@field replacement_eval_fn fun(...): (string?, string?)
----@field files string[]
----@field report_progress fun(count: integer)
----@field on_finish fun(status: grug.far.Status, errorMessage: string?)
-
 --- performs replacement in given matched file
----@param params grug.far.replaceInMatchedFilesParams
+---@param params {
+--- inputs: grug.far.Inputs,
+--- options: grug.far.Options,
+--- replacement_eval_fn: fun(...): (string?, string?),
+--- files: string[],
+--- report_progress: fun(count: integer),
+--- on_finish: fun(status: grug.far.Status, errorMessage: string?),
+--- }
 local function replaceInMatchedFiles(params)
   local files = vim.deepcopy(params.files)
   local report_progress = params.report_progress

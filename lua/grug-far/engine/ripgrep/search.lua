@@ -49,15 +49,14 @@ function M.getBufrange(inputs)
   return nil, nil
 end
 
----@class grug.far.ResultsWithReplaceDiffParams
----@field json_data RipgrepJson[]
----@field options grug.far.Options
----@field inputs grug.far.Inputs
----@field bufrange grug.far.VisualSelectionInfo
----@field on_finish fun(status: grug.far.Status, errorMessage: string?, results: grug.far.ParsedResultsData?)
-
 --- adds results of doing a replace to results of doing a search
----@param params grug.far.ResultsWithReplaceDiffParams
+---@param params {
+--- json_data: RipgrepJson[],
+--- options: grug.far.Options,
+--- inputs: grug.far.Inputs,
+--- bufrange: grug.far.VisualSelectionInfo,
+--- on_finish: fun(status: grug.far.Status, errorMessage: string?, results: grug.far.ParsedResultsData?),
+--- }
 ---@return fun()? abort
 local function getResultsWithReplaceDiff(params)
   local json_data = params.json_data
