@@ -12,6 +12,9 @@ hooks.write_pre = function(lines)
   table.remove(lines, 1)
   return lines
 end
+hooks.write_post = function()
+  -- don't generate tags
+end
 
 minidoc.generate({ 'lua/grug-far.lua' }, 'doc/grug-far-api.txt', { hooks = hooks })
 minidoc.generate({ 'lua/grug-far/opts.lua' }, 'doc/grug-far-opts.txt', { hooks = hooks })
