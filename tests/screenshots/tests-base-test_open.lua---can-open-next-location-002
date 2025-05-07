@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|                                        │                                       
+02|      grug talks and grug drinks        │                                       
+03|      then grug thinks                  │ STATUS_SUCCESS ⟪ ripgrep ⟫
+04|                                        │ 5 matches in 2 files                  
+05|                                        │                                       
+06|                                        │file1.txt                              
+07|                                        │  2        grug walks               [1]
+08|                                        │  3        then grug swims          [2]
+09|                                        │                                       
+10|                                        │file2.doc                              
+11|                                        │  2       grug talks and grug drink [3]
+12|                                        │  3       then grug thinks          [4]
+13|                                        │                                       
+14|                                        │                                       
+15|                                        │                                       
+16|                                        │                                       
+17|                                        │                                       
+18|                                        │                                       
+19|                                        │                                       
+20|                                        │                                       
+21|                                        │                                       
+22|                                        │                                       
+23|file2.doc                            2,7 Grug FAR - 1: grug                 13,1
+24|                                                                                

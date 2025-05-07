@@ -1,0 +1,62 @@
+---@meta
+---@alias grug.far.Status nil | "success" | "error" | "progress"
+
+---@class grug.far.ResultLocation: grug.far.SourceLocation
+---@field count? integer
+---@field max_line_number_length? integer
+---@field max_column_number_length? integer
+---@field is_context? boolean
+
+---@class grug.far.Inputs
+---@field [grug.far.InputName] string?
+
+---@class grug.far.State
+---@field lastInputs? grug.far.Inputs
+---@field status? grug.far.Status
+---@field progressCount? integer
+---@field stats? { matches: integer, files: integer }
+---@field actionMessage? string
+---@field resultLocationByExtmarkId { [integer]: grug.far.ResultLocation }
+---@field resultMatchLineCount integer
+---@field lastCursorLocation { loc:  grug.far.ResultLocation, row: integer, markId: integer }
+---@field tasks grug.far.Task[]
+---@field showSearchCommand boolean
+---@field bufClosed boolean
+---@field highlightResults FileResults
+---@field highlightRegions LangRegions
+---@field normalModeSearch boolean
+---@field searchDisabled boolean
+---@field previousInputValues { [string]: string }
+
+---@class grug.far.Action
+---@field text string
+---@field keymap KeymapDef
+---@field description? string
+---@field action? fun()
+
+---@class grug.far.Context
+---@field count integer
+---@field options grug.far.Options
+---@field namespace integer
+---@field locationsNamespace integer
+---@field resultListNamespace integer
+---@field historyHlNamespace integer
+---@field helpHlNamespace integer
+---@field augroup integer
+---@field extmarkIds {[string]: integer}
+---@field state grug.far.State
+---@field prevWin? integer
+---@field prevBufName? string
+---@field prevBufFiletype? string
+---@field actions grug.far.Action[]
+---@field engine grug.far.Engine
+---@field replacementInterpreter? grug.far.ReplacementInterpreter
+---@field fileIconsProvider? grug.far.FileIconsProvider
+
+---@class grug.far.VisualSelectionInfo
+---@field file_name string
+---@field lines string[]
+---@field start_col integer
+---@field start_row integer
+---@field end_col integer
+---@field end_row integer

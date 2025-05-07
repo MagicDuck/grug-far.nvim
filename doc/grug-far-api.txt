@@ -1,0 +1,228 @@
+*grug-far-api*
+
+------------------------------------------------------------------------------
+                                                              *grug_far.setup()*
+                          `grug_far.setup`({options})
+set up grug-far
+sets global options, which can also be configured through vim.g.grug_far
+Parameters ~
+{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+See also ~
+Option types: |grug.far.Options|
+
+------------------------------------------------------------------------------
+                                                               *grug_far.open()*
+                           `grug_far.open`({options})
+launch grug-far with the given overrides
+Parameters ~
+{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+Return ~
+`(string)` instanceName
+See also ~
+Option types: |grug.far.Options|
+
+------------------------------------------------------------------------------
+                                              *grug_far.with_visual_selection()*
+                  `grug_far.with_visual_selection`({options})
+launch grug-far with the given overrides, pre-filling
+search with current visual selection.
+Parameters ~
+{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+See also ~
+Option types: |grug.far.Options|
+
+------------------------------------------------------------------------------
+                                 *grug_far.get_current_visual_selection_lines()*
+            `grug_far.get_current_visual_selection_lines`({strict})
+gets the current visual selection as a string array of lines
+This is provided as a utility for users so they don't have to rewrite
+Parameters ~
+{strict} `(optional)` `(boolean)` Whether to require visual mode to be active, defaults to False
+Return ~
+`(string[])` `(optional)`
+
+------------------------------------------------------------------------------
+                                       *grug_far.get_current_visual_selection()*
+               `grug_far.get_current_visual_selection`({strict})
+gets the current visual selection as a single string
+This is provided as a utility for users so they don't have to rewrite
+Parameters ~
+{strict} `(optional)` `(boolean)` Whether to require visual mode to be active to return, defaults to False
+Return ~
+`(string)` `(optional)`
+
+------------------------------------------------------------------------------
+                          *grug_far.get_current_visual_selection_as_range_str()*
+         `grug_far.get_current_visual_selection_as_range_str`({strict})
+gets the current visual selection as a range string
+useful for passing as a prefill when searching within a buffer
+Parameters ~
+{strict} `(optional)` `(boolean)` Whether to require visual mode to be active to return, defaults to False
+Return ~
+`(string)` `(optional)`
+
+------------------------------------------------------------------------------
+                                                       *grug_far.get_instance()*
+                      `grug_far.get_instance`({instQuery})
+gets grug-far instance
+if instQuery is a string, gets instance with that name
+if instQuery is a number, gets instance at that buffer (use 0 for current buffer)
+if instQuery is nil, get any first instance we can get our hands on
+if instQuery is non-nil, and no instance found, an error is emitted
+Parameters ~
+{instQuery} `(string)` | number | nil
+Return ~
+grug.far.Instance `(optional)` instance, `(string?)` instanceName
+
+See |grug-far-instance-api|
+
+------------------------------------------------------------------------------
+                                                    *grug_far.toggle_instance()*
+                     `grug_far.toggle_instance`({options})
+toggles visibility of grug-far instance with given instance name or current buffer instance
+options.instanceName can be used to identify a specific grug-far instance to toggle
+Parameters ~
+{options} grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+See also ~
+Option types: |grug.far.Options|
+
+------------------------------------------------------------------------------
+                                                       *grug_far.has_instance()*
+                    `grug_far.has_instance`({instanceName})
+checks if grug-far instance with given name exists
+Parameters ~
+{instanceName} `(string)`
+Return ~
+`(boolean)`
+
+------------------------------------------------------------------------------
+                                                   *grug_far.is_instance_open()*
+                    `grug_far.is_instance_open`({instQuery})
+checks if grug-far instance is open
+Parameters ~
+{instQuery} `(string)` | number | nil
+Return ~
+`(boolean)`
+
+------------------------------------------------------------------------------
+                                                      *grug_far.kill_instance()*
+                     `grug_far.kill_instance`({instQuery})
+closes grug-far instance
+Parameters ~
+{instQuery} `(string)` | number | nil
+
+------------------------------------------------------------------------------
+                                                      *grug_far.hide_instance()*
+                     `grug_far.hide_instance`({instQuery})
+hides grug-far instance
+Parameters ~
+{instQuery} `(string)` | number | nil
+
+------------------------------------------------------------------------------
+                                                              *grug_far.dummy()*
+                         `grug_far.dummy`({instQuery})
+dummy grug-far instance
+Parameters ~
+{instQuery} `(string)` | number | nil
+
+------------------------------------------------------------------------------
+                                                       *grug_far.toggle_flags()*
+                        `grug_far.toggle_flags`({flags})
+
+Note: Deprecated! Use: grug_far.get_instance(...):toggle_flags()
+
+toggles given list of flags in the current grug-far buffer
+Parameters ~
+{flags} `(string[])`
+Return ~
+`(boolean[])` states
+
+------------------------------------------------------------------------------
+                                                     *grug_far.close_instance()*
+                     `grug_far.close_instance`({instQuery})
+
+Note: Deprecated! Use: grug_far.hide_instance(...)
+
+hides grug-far instance
+Parameters ~
+{instQuery} `(string)` | number | nil
+
+------------------------------------------------------------------------------
+                                                      *grug_far.open_instance()*
+                     `grug_far.open_instance`({instQuery})
+
+Note: Deprecated! Use: grug_far.get_instance(...):open()
+
+opens grug-far instance with given name (or current buffer instance) if window closed
+otherwise focuses the window
+Parameters ~
+{instQuery} `(string)` | number | nil
+
+------------------------------------------------------------------------------
+                                           *grug_far.update_instance_prefills()*
+    `grug_far.update_instance_prefills`({instQuery}, {prefills}, {clearOld})
+
+Note: Deprecated! Use: grug_far.get_instance(...):update_input_values()
+
+updates grug-far instance with given input prefills
+operates on grug-far instance with given instance name or current buffer instance (if nil)
+if clearOld=true is given, the old input values are ignored
+Parameters ~
+{instQuery} `(string?)`
+{prefills} {
+  search?: `(string,)`
+  rules?: string,
+  replacement?: string,
+  filesFilter?: string,
+  flags?: string,
+  paths?: string,
+}
+{clearOld} `(boolean)`
+
+------------------------------------------------------------------------------
+                                                         *grug_far.goto_input()*
+                `grug_far.goto_input`({inputName}, {instQuery})
+
+Note: Deprecated! Use: grug_far.get_instance(...):goto_input()
+
+moves cursor to the input with the given name
+operates on grug-far instance with given instance name or current buffer instance
+Parameters ~
+{inputName} "search" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
+{instQuery} `(string)` | number | nil
+
+------------------------------------------------------------------------------
+                                                   *grug_far.goto_first_input()*
+                    `grug_far.goto_first_input`({instQuery})
+
+Note: Deprecated! Use: grug_far.get_instance(...):goto_first_input()
+
+moves cursor to the first input
+operates on grug-far instance with given instance name or current buffer instance
+Parameters ~
+{instQuery} `(string)` | number | nil
+
+------------------------------------------------------------------------------
+                                                    *grug_far.goto_next_input()*
+                    `grug_far.goto_next_input`({instQuery})
+
+Note: Deprecated! Use: grug_far.get_instance(...):goto_next_input()
+
+moves cursor to the next input
+operates on grug-far instance with given instance name or current buffer instance
+Parameters ~
+{instQuery} `(string)` | number | nil
+
+------------------------------------------------------------------------------
+                                                    *grug_far.goto_prev_input()*
+                    `grug_far.goto_prev_input`({instQuery})
+
+Note: Deprecated! Use: grug_far.get_instance(...):goto_prev_input()
+
+moves cursor to the next input
+operates on grug-far instance with given instance name or current buffer instance
+Parameters ~
+{instQuery} `(string)` | number | nil
+
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

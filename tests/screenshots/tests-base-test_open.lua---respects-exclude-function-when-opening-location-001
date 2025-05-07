@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|                          │                          │                          
+02|  Search:                │      grug talks and grug │                          
+03|grug                      │drinks                    │                          
+04|  Replace:               │      then grug thinks    │                          
+05|                          │                          │                          
+06|  Files Filter:          │                          │                          
+07|                          │                          │                          
+08| 󰮚 Flags:                 │                          │                          
+09|                          │                          │                          
+10|  Paths:                 │                          │                          
+11|                          │                          │                          
+12|                          │                          │                          
+13| STATUS_SUCCESS ⟪ ripgrep │                          │                          
+14| 5 matches in 2 files     │                          │                          
+15|                          │                          │                          
+16|file1.txt                 │                          │                          
+17|  2        grug walks  [1]│                          │                          
+18|  3        then grug s [2]│                          │                          
+19|                          │                          │                          
+20|file2.doc                 │                          │                          
+21|  2       grug talks a [3]│                          │                          
+22|      rug drinks          │                          │                          
+23|Grug FAR - 1: grug    13,1 file2.doc              2,7 [No Name]              0,0
+24|                                                                                

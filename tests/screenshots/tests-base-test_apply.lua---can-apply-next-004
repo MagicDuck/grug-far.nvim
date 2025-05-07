@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01|                                        │                                       
+02|      curly talks and curly drinks      │  Paths:                              
+03|      then grug thinks                  │                                       
+04|                                        │                                       
+05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+06|                                        │ 5 matches in 2 files   sync completed
+07|                                        │                                       
+08|                                        │  file2.doc                            
+09|                                        │▒   3       then grug thinks        [4]
+10|                                        │▒   3       then curly thinks          
+11|                                        │                                       
+12|                                        │                                       
+13|                                        │                                       
+14|                                        │                                       
+15|                                        │                                       
+16|                                        │                                       
+17|                                        │                                       
+18|                                        │                                       
+19|                                        │                                       
+20|                                        │                                       
+21|                                        │                                       
+22|                                        │                                       
+23|file2.doc                           3,12 Grug FAR - 1: grug                  9,1
+24|                                                                                

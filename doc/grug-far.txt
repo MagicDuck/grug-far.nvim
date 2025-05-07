@@ -1,0 +1,144 @@
+*grug-far*  simple to use find and replace plugin
+
+==============================================================================
+CONTENTS                                                     *grug-far-contents*
+
+    1. Introduction ......................... |grug-far-introduction|
+    2. Setup ................................ |grug-far-setup|
+    3. Commands ............................. |grug-far-commands|
+    4. Options .............................. |grug-far-opts|
+    5. API Overview ......................... |grug-far-api-overview|
+    6. Instance API Overview ................ |grug-far-instance-api-overview|
+    7. Filetype  ............................ |grug-far-filetype|
+    8. Highlights  .......................... |grug-far-highlights|
+
+==============================================================================
+INTRODUCTION                                             *grug-far-introduction*
+
+grug-far adds search/replace inside a buffer to neovim. 
+
+==============================================================================
+SETUP                                                           *grug-far-setup*
+
+Setup is way to override default plugin options that apply to all instances of
+the plugin. It's entirely optional.
+>lua
+    require('grug-far').setup({ ... })
+<
+You can also do it like so if you prefer not calling a setup() function:
+>lua
+    vim.g.grug_far = { ... }
+<
+
+See Also: ~
+|grug_far.setup()|
+
+Note (keymaps): ~
+By default, grug-far, will use `<localleader>` for its buffer local keymaps
+as that is the vim recommended way for plugins. 
+See https://learnvimscriptthehardway.stevelosh.com/chapters/11.html#local-leader
+
+So make sure you have `<localleader>` configured. For example, to use `,` as the
+local leader you will need to have the following in your nvim configuration:
+>lua
+    vim.g.maplocalleader = ','
+<
+
+==============================================================================
+COMMANDS                                                     *grug-far-commands*
+
+:GrugFar                                                               *GrugFar*
+
+Opens up a grug-far buffer in a split. Multiple such buffers can
+be opened, each with their potentially different searches and they will
+show up in your buffers list. In visual mode, it will pre-fill search
+with the current visual selection.
+
+:GrugFarWithin                                                   *GrugFarWithin*
+
+Same as :GrugFar, except that in visual mode, it will search and replace
+within the range.
+
+==============================================================================
+API OVERVIEW                                             *grug-far-api-overview*
+
+In addition to the commands, grug-far offers a lua API that can give you more
+control over options, etc.
+For example, you can programmatically open a grug-far buffer like so:
+>lua
+    require('grug-far').open(option_overrides)
+<
+
+See Also: ~
+|grug_far.open()|
+
+Note: If the above is called while in visual mode, it will pre-fill current
+visual selection as search text. It will also set `--fixed-strings` flag as 
+selection can contain special characters.
+
+Note: In the rare case that if you want to pre-fill current visual selection
+from command mode (not recommended, this is only the case when creating a 
+keymapping where the right hand side is a string instead of a lua function), 
+you would have to use: 
+>lua
+  :lua require('grug-far').with_visual_selection(option_overrides)
+<
+
+See Also: ~
+|grug_far.with_visual_selection()|
+
+The documentation for each particular  API function is provided through the
+lua language server and available here: |grug-far-api|.
+
+==============================================================================
+INSTANCE API OVERVIEW                           *grug-far-instance-api-overview*
+
+It is possible to operate on a particular grug-far instance. In order to 
+accomplish that, you first need to get hold of the instance, which you can
+acquire either by {instanceName} (as provided when opening the instance) or by
+providing the buffer number associated with the instance. You can also get any
+random first instance, which is useful in situations where you only have one
+active grug-far instance. See: |grug_far.get_instance()|
+
+example 1 (targeting instance with name 'my_precious'): ~
+>lua
+    require('grug-far').open({ instanceName = 'my_precious' })
+    require('grug-far').get_instance('my_precious'):some_func()
+<
+
+example 2 (targeting current buffer instance): ~
+>lua
+    require('grug-far').get_instance(0):some_func()
+<
+
+A typical usage for the instance API is to create custom buffer local keybinds
+for the grug-far buffer. Here is an example that opens a result location and 
+immediately closes grug-far on `<C-enter>`:
+>lua
+    vim.api.nvim_create_autocmd('FileType', {
+	group = vim.api.nvim_create_augroup('grug-far-keybindings', { clear = true }),
+	pattern = { 'grug-far' },
+	callback = function()
+	    vim.keymap.set('n', '<C-enter>', function()
+	        local inst = require('grug-far').get_instance(0)
+		inst:open_location()
+		inst:close()
+	    end, { buffer = true })
+	end,
+    })
+<
+
+The documentation for each particular instance API function is provided
+through the lua language server and available here: |grug-far-instance-api|.
+
+==============================================================================
+FILETYPE                                                     *grug-far-filetype*
+
+grug-far main buffers will have `filetype=grug-far`.
+grug-far history buffers will have `filetype=grug-far-history`
+grug-far help buffers will have `filetype=grug-far-help` 
+
+This information is useful if you need filter/exclude them in any situations.
+Excluding seems to be necessary with copilot at the time of writing this.
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

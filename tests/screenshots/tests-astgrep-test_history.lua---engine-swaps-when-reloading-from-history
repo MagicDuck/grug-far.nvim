@@ -1,0 +1,17 @@
+--|
+01|
+02|
+03|Engine: ripgrep
+04|Search: grug
+05|Replace: 
+06|Files Filter: 
+07|Flags: 
+08|Paths: 
+09|
+10|
+11|Engine: astgrep
+12|Search: grug.$A
+13|Replace: 
+14|Files Filter: 
+15|Flags: 
+16|Paths: 

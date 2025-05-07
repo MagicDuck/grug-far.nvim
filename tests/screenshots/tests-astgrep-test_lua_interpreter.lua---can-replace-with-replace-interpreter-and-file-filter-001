@@ -1,0 +1,11 @@
+--|
+01|
+02|grug.$A
+03|return match .. "_" .. vars.A
+04|**/*.ts
+05|
+06|
+07|
+08|file2.ts
+09|      grug.walks(talks)
+10|      grug.walks_walks(talks)
