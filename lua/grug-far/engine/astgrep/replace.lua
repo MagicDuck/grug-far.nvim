@@ -106,7 +106,7 @@ local function replace_with_eval(params, args, eval_fn)
   return abort
 end
 
----@class replaceInAstgrepBufrangeParams
+---@class grug.far.replaceInAstgrepBufrangeParams
 ---@field options GrugFarOptions
 ---@field args string[]
 ---@field replacement_eval_fn? fun(...): (string?, string?)
@@ -114,7 +114,7 @@ end
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string?)
 
 --- replaces in bufrange
----@param params replaceInAstgrepBufrangeParams
+---@param params grug.far.replaceInAstgrepBufrangeParams
 local function replaceInBufrange(params)
   local on_finish = params.on_finish
   local replacement_eval_fn = params.replacement_eval_fn

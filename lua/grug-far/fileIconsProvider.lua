@@ -1,12 +1,12 @@
 local M = {}
 
----@class FileIconsProvider
+---@class grug.far.FileIconsProvider
 ---@field type FileIconsProviderType
 ---@field _lib? any
 ---@field get_lib fun():(lib: any)
 ---@field get_icon fun(lib: any, path: string):(icon:string, icon_hl: string)
 
----@type FileIconsProvider[]
+---@type grug.far.FileIconsProvider[]
 local providers = {
   {
     type = 'nvim-web-devicons',
