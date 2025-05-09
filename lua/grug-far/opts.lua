@@ -477,6 +477,11 @@ grug_far.defaultOptions = {
   helpWindow = {},
   historyWindow = {},
   previewWindow = {},
+
+  -- enable "smart" handling of o/p/P when inside a grug-far input, such that added text stays inside the input
+  -- you basically never want to disable this as it makes things a lot convenient, unless you are doing something
+  -- very niche where you have re-mapped those base nvim keys
+  smartInputHandling = true,
 }
 
 ---@alias KeymapDef grug.far.KeymapTable | string | boolean
@@ -787,6 +792,7 @@ grug_far.defaultOptions = {
 ---@field helpWindow vim.api.keyset.win_config
 ---@field historyWindow vim.api.keyset.win_config
 ---@field previewWindow vim.api.keyset.win_config
+---@field smartInputHandling boolean
 
 ---@class grug.far.OptionsOverride
 ---@field debounceMs? integer
@@ -833,6 +839,7 @@ grug_far.defaultOptions = {
 ---@field helpWindow? vim.api.keyset.win_config
 ---@field historyWindow? vim.api.keyset.win_config
 ---@field previewWindow? vim.api.keyset.win_config
+---@field smartInputHandling? boolean
 ---@private
 
 --- generates merged options

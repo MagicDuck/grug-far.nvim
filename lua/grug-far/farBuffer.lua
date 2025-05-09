@@ -318,7 +318,10 @@ function M.createBuffer(win, context)
   for _, action in ipairs(context.actions) do
     utils.setBufKeymap(buf, action.text, action.keymap, action.action)
   end
-  inputs.bindInputSaavyKeys(context, buf)
+
+  if context.options.smartInputHandling then
+    inputs.bindInputSaavyKeys(context, buf)
+  end
 
   local debouncedSearch = utils.debounce(vim.schedule_wrap(search), context.options.debounceMs)
   local function searchOnChange()
