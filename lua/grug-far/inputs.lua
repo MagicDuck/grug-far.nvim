@@ -299,58 +299,39 @@ local function openBelow(context, buf)
   vim.api.nvim_feedkeys(keys, 'n', false)
 end
 
-local mode_bits_map = {
-  n = 1,
-  x = 2,
-}
-
---- gets lhs for given rhs in given mode
----@param key string
----@param mode_bits integer
----@return string
-local function get_lhs_for(key, mode_bits)
-  for _, m in ipairs(vim.fn.maplist()) do
-    if bit.band(m.mode_bits, mode_bits) > 0 and m.rhs == key then
-      return m.lhs
-    end
-  end
-
-  return key
-end
-
 --- some key rebinds that improve quality of life in the inputs area
 ---@param context grug.far.Context
 ---@param buf integer
 function M.bindInputSaavyKeys(context, buf)
-  vim.api.nvim_buf_set_keymap(buf, 'n', get_lhs_for('p', mode_bits_map.n), '', {
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'p', '', {
     noremap = true,
     nowait = true,
     callback = function()
       pasteBelow(context, buf)
     end,
   })
-  vim.api.nvim_buf_set_keymap(buf, 'x', get_lhs_for('p', mode_bits_map.x), '', {
+  vim.api.nvim_buf_set_keymap(buf, 'v', 'p', '', {
     noremap = true,
     nowait = true,
     callback = function()
       pasteBelow(context, buf, true)
     end,
   })
-  vim.api.nvim_buf_set_keymap(buf, 'n', get_lhs_for('P', mode_bits_map.n), '', {
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'P', '', {
     noremap = true,
     nowait = true,
     callback = function()
       pasteAbove(context, buf)
     end,
   })
-  vim.api.nvim_buf_set_keymap(buf, 'x', get_lhs_for('P', mode_bits_map.x), '', {
+  vim.api.nvim_buf_set_keymap(buf, 'v', 'P', '', {
     noremap = true,
     nowait = true,
     callback = function()
       pasteAbove(context, buf, true)
     end,
   })
-  vim.api.nvim_buf_set_keymap(buf, 'n', get_lhs_for('o', mode_bits_map.n), '', {
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'o', '', {
     noremap = true,
     nowait = true,
     callback = function()
