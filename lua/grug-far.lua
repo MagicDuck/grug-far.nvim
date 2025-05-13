@@ -241,7 +241,8 @@ end
 --- gets grug-far instance
 --- if instQuery is a string, gets instance with that name
 --- if instQuery is a number, gets instance at that buffer (use 0 for current buffer)
---- if instQuery is nil, get any first instance we can get our hands on
+--- if instQuery is nil, get any first instance we can get our hands on,
+---    with instance in the current tab page preferred
 --- if instQuery is non-nil, and no instance found, an error is emitted
 ---@param instQuery grug.far.InstanceQuery
 ---@return grug.far.Instance? instance, string? instanceName
