@@ -12,7 +12,8 @@ local function writeChangedFile(params)
       return on_done('Could not read: ' .. file .. '\n' .. err1)
     end
 
-    local lines = vim.split(contents or '', utils.eol)
+    local eol = utils.detect_eol(contents or '')
+    local lines = vim.split(contents or '', eol)
 
     local changedLines = changedFile.changedLines
     for i = 1, #changedLines do
@@ -30,7 +31,7 @@ local function writeChangedFile(params)
       lines[lnum] = changedLine.newLine
     end
 
-    local newContents = table.concat(lines, utils.eol)
+    local newContents = table.concat(lines, eol)
     utils.overwriteFileAsync(file, newContents, function(err2)
       if err2 then
         return on_done('Could not write: ' .. file .. '\n' .. err2)
