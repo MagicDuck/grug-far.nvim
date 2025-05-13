@@ -362,8 +362,6 @@ function M.flagsStrContainsFlag(flagsStr, flagToCheck)
   return false
 end
 
-M.eol = is_win and '\r\n' or '\n'
-
 --- splits string into parts separated by whitespace, ignoring spaces preceded by \
 ---@param pathsStr string
 ---@return string[]
@@ -757,6 +755,16 @@ function M.convertAnyScratchBufToRealBuf()
     if vim.b[b].__grug_far_scratch_buf then
       M.convertScratchBufToRealBuf(b)
     end
+  end
+end
+
+--- detects line ending
+---@param contents string
+function M.detect_eol(contents)
+  if contents:find('\r\n') then
+    return '\r\n' -- dos
+  else
+    return '\n' -- unix and mac (post OSX)
   end
 end
 
