@@ -63,6 +63,17 @@ do
     end
 
     if instQuery == nil then
+      -- try to find one in current tabpage
+      local tabpage = vim.api.nvim_get_current_tabpage()
+      local tabpage_windows = vim.api.nvim_tabpage_list_wins(tabpage)
+      for _, win in ipairs(tabpage_windows) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local instance, instanceName = inst.get_instance_by_buf(buf)
+        if instance then
+          return instance, instanceName
+        end
+      end
+
       -- use first available
       for instanceName, instance in pairs(instances) do
         return instance, instanceName
