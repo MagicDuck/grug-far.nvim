@@ -82,27 +82,19 @@ function M.throttle(callback, ms)
   end
 end
 
---- finds last location of given substring in string
+--- finds last location of given substring in string (1-based index)
+--- note: this does not handle utf-8, but neither does lua string.find, so
+--- this is the best we can do atm
 ---@param str string
 ---@param substr string
----@return integer | nil, integer | nil
+---@return integer | nil
 function M.strFindLast(str, substr)
-  local i = 0
-  local j = nil
-  while true do
-    local i2, j2 = string.find(str, substr, i + 1, true)
-    if i2 == nil then
-      break
-    end
-    i = i2
-    j = j2
+  local pos = vim.fn.strridx(str, substr)
+  if pos == -1 then
+    return nil
   end
 
-  if j == nil then
-    return nil, nil
-  end
-
-  return i, j
+  return pos + 1
 end
 
 --- splits off last line in string
@@ -761,7 +753,8 @@ end
 --- detects line ending
 ---@param contents string
 function M.detect_eol(contents)
-  if contents:find('\r\n') then
+  local pos = contents:find('\n')
+  if pos and pos > 1 and contents:sub(pos - 1, pos - 1) == '\r' then
     return '\r\n' -- dos
   else
     return '\n' -- unix and mac (post OSX)
