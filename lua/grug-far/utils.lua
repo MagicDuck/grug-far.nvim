@@ -761,4 +761,15 @@ function M.detect_eol(contents)
   end
 end
 
+--- strips trailing newline from str if it's there
+---@param str string
+---@return string
+function M.strip_trailing_newline(str)
+  if vim.endswith(str, '\n') then
+    return str:sub(1, -2)
+  end
+
+  return str
+end
+
 return M
