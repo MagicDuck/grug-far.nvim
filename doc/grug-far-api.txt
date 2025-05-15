@@ -17,9 +17,9 @@ launch grug-far with the given overrides
 Parameters ~
 {options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
 Return ~
-`(string)` instanceName
+grug.far.Instance instance
 See also ~
-Option types: |grug.far.Options|
+Option types: |grug.far.Options| and |grug-far-instance-api|
 
 ------------------------------------------------------------------------------
                                               *grug_far.with_visual_selection()*
@@ -28,8 +28,10 @@ launch grug-far with the given overrides, pre-filling
 search with current visual selection.
 Parameters ~
 {options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+Return ~
+grug.far.Instance instance
 See also ~
-Option types: |grug.far.Options|
+Option types: |grug.far.Options| and |grug-far-instance-api|
 
 ------------------------------------------------------------------------------
                                  *grug_far.get_current_visual_selection_lines()*
