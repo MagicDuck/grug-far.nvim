@@ -1,3 +1,5 @@
+local exec_error_prefix = 'nvim_exec2%(%)%[%d+]%.%.'
+
 ---@type grug.far.ReplacementInterpreter
 local VimscriptInterpreter = {
   type = 'vimscript',
@@ -30,16 +32,15 @@ local VimscriptInterpreter = {
           return result and tostring(result) or '', nil
         else
           return nil,
-            'Replace [vimscript]:\n' .. result:gsub('function __grug_far_vimscript_eval, ', '')
+            'Replace [vimscript]:\n' .. result
+              :gsub('function __grug_far_vimscript_eval, ', '')
+              :gsub(exec_error_prefix, '')
         end
       end
     else
       local err = exec_error --[[@as string?]]
       if err then
-        local exec_error_prefix = 'nvim_exec2()..'
-        if vim.startswith(err, exec_error_prefix) then
-          err = err:sub(#exec_error_prefix + 1)
-        end
+        err = err:gsub(exec_error_prefix, '')
       end
       return nil, 'Replace [vimscript]:\n' .. (err or 'could not evaluate vimscript chunk')
     end

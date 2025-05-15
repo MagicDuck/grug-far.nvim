@@ -772,4 +772,16 @@ function M.strip_trailing_newline(str)
   return str
 end
 
+--- replaces old with new in str once
+---@param str string
+---@param old string
+---@param new string
+function M.str_replace_once(str, old, new)
+  local start, _end = str:find(old, 1, true)
+  if start == nil then
+    return str
+  else
+    return str:sub(1, start - 1) .. new .. str:sub(_end + 1)
+  end
+end
 return M
