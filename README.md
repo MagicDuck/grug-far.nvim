@@ -371,11 +371,11 @@ return {
       if not grug_far.has_instance("explorer") then
         grug_far.open({ instanceName = "explorer" })
       else
-        grug_far.open_instance("explorer")
+        grug_far.get_instance('explorer'):open()
       end
       -- doing it seperately because multiple paths doesn't open work when passed with open
       -- updating the prefills without clearing the search and other fields
-      grug_far.update_instance_prefills("explorer", prefills, false)
+      grug_far.get_instance('explorer'):update_input_values(prefills, false)
     end
     require("neo-tree").setup {
       commands = {
