@@ -191,7 +191,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
     elseif match.type == 'match' then
       last_context_line_number = nil
       stats.matches = stats.matches + #data.submatches
-      local match_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
+      local match_lines_text = utils.strip_trailing_newline(data.lines.text)
       local match_lines = vim.split(match_lines_text, '\n')
       last_line_number = data.line_number + #match_lines - 1
 
@@ -306,7 +306,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
         table.insert(lines, engine.DiffSeparatorChars)
       end
       last_context_line_number = match.data.line_number
-      local context_lines_text = data.lines.text:sub(1, -2) -- strip trailing newline
+      local context_lines_text = utils.strip_trailing_newline(data.lines.text)
       local context_lines = vim.split(context_lines_text, '\n')
       last_line_number = data.line_number + #context_lines - 1
 
