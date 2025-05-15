@@ -147,8 +147,8 @@ end
 
 --- launch grug-far with the given overrides
 ---@param options? grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
----@return string instanceName
----@seealso Option types: |grug.far.Options|
+---@return grug.far.Instance instance
+---@seealso Option types: |grug.far.Options| and |grug-far-instance-api|
 function grug_far.open(options)
   local opts = require('grug-far.opts')
   local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())
@@ -163,7 +163,7 @@ end
 --- launch grug-far with the given options and params
 ---@param options grug.far.Options
 ---@param params { visual_selection_info: grug.far.VisualSelectionInfo? }
----@return string instanceName
+---@return grug.far.Instance instance
 ---@private
 function grug_far._open_internal(options, params)
   local instances = require('grug-far.instances')
@@ -184,18 +184,27 @@ function grug_far._open_internal(options, params)
   end
 
   local win = grug_far._createWindow(context)
-  local buf = require('grug-far.farBuffer').createBuffer(win, context)
+  local buf = vim.api.nvim_create_buf(not context.options.transient, true)
+  -- bind buf to win immediately, so we can get correct win in buf relative event like FileType.
+  vim.api.nvim_win_set_buf(win, buf)
+
+  local instance = instances.new(context, buf)
+
   grug_far._setupWindow(context, win, buf)
   setupCleanup(buf, context)
-  instances.add_instance(options.instanceName, instances.new(context, buf))
+  instances.add_instance(options.instanceName, instance)
 
-  return options.instanceName
+  require('grug-far.farBuffer').setupBuffer(win, buf, context, function()
+    instance:_set_ready()
+  end)
+  return instance
 end
 
 --- launch grug-far with the given overrides, pre-filling
 --- search with current visual selection.
 ---@param options? grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
----@seealso Option types: |grug.far.Options|
+---@return grug.far.Instance instance
+---@seealso Option types: |grug.far.Options| and |grug-far-instance-api|
 function grug_far.with_visual_selection(options)
   local opts = require('grug-far.opts')
   local resolvedOpts = opts.with_defaults(options or {}, opts.getGlobalOptions())

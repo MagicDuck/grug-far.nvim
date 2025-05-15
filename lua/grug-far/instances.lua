@@ -9,6 +9,8 @@ do
   ---@field _context grug.far.Context
   ---@field _buf integer
   ---@field _params { context: grug.far.Context, buf: integer }
+  ---@field _is_ready boolean
+  ---@field _on_ready_fns [fun()]
   inst = {}
   inst.__index = inst
 
@@ -112,7 +114,32 @@ do
     self._context = context
     self._buf = buf
     self._params = { context = context, buf = buf }
+    self._is_ready = false
+    self._on_ready_fns = {}
     return self
+  end
+end
+
+--- executes all outstanding ready fns
+---@private
+function inst:_exec_ready_fns()
+  for _, fn in ipairs(self._on_ready_fns) do
+    fn()
+  end
+  self._on_ready_fns = {}
+end
+
+function inst:_set_ready()
+  self._is_ready = true
+  self:_exec_ready_fns()
+end
+
+--- executes given callback when the instance has been rendered and is ready
+---@param callback fun()
+function inst:when_ready(callback)
+  table.insert(self._on_ready_fns, callback)
+  if inst._is_ready then
+    inst:_exec_ready_fns()
   end
 end
 

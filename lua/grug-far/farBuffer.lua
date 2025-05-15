@@ -297,14 +297,11 @@ local function setupGlobalOptOverrides(buf, context)
 end
 
 ---@param win integer
+---@param buf integer
 ---@param context grug.far.Context
+---@param on_ready fun()
 ---@return integer bufId
-function M.createBuffer(win, context)
-  local buf = vim.api.nvim_create_buf(not context.options.transient, true)
-  -- bind buf to win immediately, so we can get correct win in buf relative
-  -- event like FileType.
-  vim.api.nvim_win_set_buf(win, buf)
-
+function M.setupBuffer(win, buf, context, on_ready)
   vim.api.nvim_set_option_value('filetype', 'grug-far', { buf = buf })
   vim.api.nvim_set_option_value('swapfile', false, { buf = buf })
   vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
@@ -416,8 +413,10 @@ function M.createBuffer(win, context)
         vim.cmd('startinsert!')
       end
 
-      -- launch a search in case there are prefills
       render(buf, context)
+      on_ready()
+
+      -- launch a search in case there are prefills
       searchOnChange()
     end)
   end)
