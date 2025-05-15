@@ -360,7 +360,7 @@ T['respects exclude function when opening location'] = function()
   vim.fn.delete('./temp_history_dir', 'rf')
   vim.fn.mkdir('./temp_history_dir')
   helpers.cdTempTestDir(child)
-  child.lua_get([[
+  child.lua([[
     GrugFar.open({
       prefills = { search = 'grug' },
       openTargetWindow = {

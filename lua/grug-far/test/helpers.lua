@@ -236,13 +236,12 @@ end
 --- run open(options) in child
 ---@param child NeovimChild
 ---@param options grug.far.OptionsOverride
----@return string instanceName
 function M.childRunGrugFar(child, options)
   vim.fn.delete('./temp_history_dir', 'rf')
   vim.fn.mkdir('./temp_history_dir')
 
   M.cdTempTestDir(child)
-  return child.lua_get('GrugFar.open(...)', {
+  return child.lua('GrugFar.open(...)', {
     options,
   })
 end

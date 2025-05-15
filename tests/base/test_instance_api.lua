@@ -18,7 +18,8 @@ local T = MiniTest.new_set({
 T['can create instance, open, close and kill it'] = function()
   -- create it
   -- TODO (sbadragan): fix those
-  local instanceName = helpers.childRunGrugFar(child, { staticTitle = 'Find and Replace' })
+  local instanceName = 'bob_instance'
+  helpers.childRunGrugFar(child, { staticTitle = 'Find and Replace', instanceName = instanceName })
   helpers.childWaitForScreenshotText(child, 'Search:')
   helpers.childExpectScreenshot(child)
 
@@ -79,9 +80,11 @@ T['can update instance prefills'] = function()
   })
 
   -- create it
-  local instanceName = helpers.childRunGrugFar(child, {
+  local instanceName = 'bob_instance'
+  helpers.childRunGrugFar(child, {
     staticTitle = 'Find and Replace',
     prefills = { search = 'grug' },
+    instanceName = instanceName,
   })
   helpers.childWaitForScreenshotText(child, '5 matches in 2 files')
 
