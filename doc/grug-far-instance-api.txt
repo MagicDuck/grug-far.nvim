@@ -1,6 +1,14 @@
 *grug-far-instance-api*
 
 ------------------------------------------------------------------------------
+                                                             *inst:when_ready()*
+                         `inst:when_ready`({callback})
+executes given callback when the instance has been rendered and is ready
+if that has already happened, the callback is executed immediately
+Parameters ~
+{callback} `(fun())`
+
+------------------------------------------------------------------------------
                                                                 *inst:get_buf()*
                                 `inst:get_buf`()
 gets buffer associated with instance
