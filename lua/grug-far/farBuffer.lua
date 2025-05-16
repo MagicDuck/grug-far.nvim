@@ -123,8 +123,12 @@ local function getActions(buf, context)
       keymap = keymaps.openNextLocation,
       description = "Move cursor to next result line relative to current line and trigger 'Open' action",
       action = function()
-        get_inst():goto_next_match()
-        get_inst():open_location()
+        local location = get_inst():goto_next_match()
+        if location then
+          get_inst():open_location()
+        else
+          get_inst():goto_first_input()
+        end
       end,
     },
     {
@@ -132,8 +136,12 @@ local function getActions(buf, context)
       keymap = keymaps.openPrevLocation,
       description = "Move cursor to previous result line relative to current line and trigger 'Open' action",
       action = function()
-        get_inst():goto_prev_match()
-        get_inst():open_location()
+        local location = get_inst():goto_prev_match()
+        if location then
+          get_inst():open_location()
+        else
+          get_inst():goto_first_input()
+        end
       end,
     },
     {
