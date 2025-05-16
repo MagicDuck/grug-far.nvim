@@ -55,7 +55,7 @@ end
 --- moves to location at current cursor line (if there is one)
 --- if count > 0 given, it will use the result location with that number instead
 --- if increment is given, it will use the first location that is at least <increment> away from the current line
----@param params { buf: integer, context: grug.far.Context, increment: -1 | 1 | nil, count: number?, includeUncounted: boolean? }
+---@param params { buf: integer, context: grug.far.Context, increment: -1 | 1 | nil, count: number?, includeUncounted: boolean?, wrap: boolean? }
 ---@return grug.far.ResultLocation?, integer?
 local function gotoMatch(params)
   local buf = params.buf
@@ -64,12 +64,25 @@ local function gotoMatch(params)
   local includeUncounted = params.includeUncounted
   local count = params.count or 0
   local grugfar_win = vim.fn.bufwinid(buf)
+  local wrap = params.wrap
 
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
   local location, row = getLocation(buf, context, cursor_row, increment, count, includeUncounted)
 
   if not location then
-    return
+    if wrap and increment == -1 then
+      local last_line = vim.api.nvim_buf_line_count(buf)
+      location = resultsList.getResultLocation(last_line - 1, buf, context)
+      row = last_line
+      if not location then
+        location, row = getLocation(buf, context, last_line, increment, count, includeUncounted)
+      end
+    elseif wrap and increment == 1 then
+      location, row = getLocation(buf, context, 1, increment, count, includeUncounted)
+    end
+    if not location then
+      return
+    end
   end
 
   if row then
