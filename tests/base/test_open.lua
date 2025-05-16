@@ -104,8 +104,7 @@ T['can open next location'] = function()
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openNextLocation.n)
-  helpers.sleep(child, 100)
-  helpers.childWaitForScreenshotText(child, '3,12')
+  helpers.childWaitForScreenshotText(child, '2,1')
   helpers.childExpectScreenshot(child)
 end
 
@@ -144,7 +143,7 @@ T['can open prev location'] = function()
 
   child.type_keys(keymaps.openPrevLocation.n)
   helpers.sleep(child, 100)
-  helpers.childWaitForScreenshotText(child, '2,8')
+  helpers.childWaitForScreenshotText(child, '2,1')
   helpers.childExpectScreenshot(child)
 end
 
