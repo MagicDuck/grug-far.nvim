@@ -239,7 +239,7 @@ end
 --- move cursor to next match
 --- if includeUncounted = true, it will move through lines that do not have a match count
 --- (which can happen for multiline searches)
----@param params? { includeUncounted?: boolean }
+---@param params? { includeUncounted?: boolean, wrap?: boolean  }
 ---@return boolean hasMoved
 function inst:goto_next_match(params)
   self:ensure_open()
@@ -252,7 +252,7 @@ end
 --- move cursor to prev match
 --- if includeUncounted = true, it will move through lines that do not have a match count
 --- (which can happen for multiline searches)
----@param params? { includeUncounted?: boolean }
+---@param params? { includeUncounted?: boolean, wrap?: boolean }
 ---@return boolean hasMoved
 function inst:goto_prev_match(params)
   self:ensure_open()
