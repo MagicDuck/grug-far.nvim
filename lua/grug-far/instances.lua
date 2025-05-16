@@ -171,89 +171,69 @@ end
 
 --- ensure instance window is open
 function inst:ensure_open()
-  self:when_ready(function()
-    self:_ensure_valid()
-
-    if not self:is_open() then
-      -- toggle it on
-      local win = require('grug-far')._createWindow(self._context)
-      vim.api.nvim_win_set_buf(win, self._buf)
-      require('grug-far')._setupWindow(self._context, win, self._buf)
-    end
-  end)
+  self:_ensure_valid()
+  
+  if not self:is_open() then
+    -- toggle it on
+    local win = require('grug-far')._createWindow(self._context)
+    vim.api.nvim_win_set_buf(win, self._buf)
+    require('grug-far')._setupWindow(self._context, win, self._buf)
+  end
 end
 
 --- show help
 function inst:help()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.help')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.help')(self._params)
 end
 
 --- perform replace
 function inst:replace()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.replace')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.replace')(self._params)
 end
 
 --- perform sync all
 function inst:sync_all()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.syncLocations')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.syncLocations')(self._params)
 end
 
 --- perform sync line (for current line)
 function inst:sync_line()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.syncLine')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.syncLine')(self._params)
 end
 
 --- perform sync file (for file around current line)
 function inst:sync_file()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.syncFile')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.syncFile')(self._params)
 end
 
 --- open history window
 function inst:history_open()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.historyOpen')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.historyOpen')(self._params)
 end
 
 --- add current input values as a new history entry
 function inst:history_add()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.historyAdd')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.historyAdd')(self._params)
 end
 
 --- perform search
 function inst:search()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.search')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.search')(self._params)
 end
 
 --- move cursor to <count>th match
 ---@param count number
 function inst:goto_match(count)
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.gotoMatch')(vim.tbl_extend('keep', self._params, { count = count }))
-  end)
+  self:ensure_open()
+  require('grug-far.actions.gotoMatch')(vim.tbl_extend('keep', self._params, { count = count }))
 end
 
 --- move cursor to next match
@@ -261,12 +241,10 @@ end
 --- (which can happen for multiline searches)
 ---@param params? { includeUncounted?: boolean }
 function inst:goto_next_match(params)
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.gotoMatch')(
-      vim.tbl_extend('keep', self._params, { increment = 1 }, params or {})
-    )
-  end)
+  self:ensure_open()
+  require('grug-far.actions.gotoMatch')(
+    vim.tbl_extend('keep', self._params, { increment = 1 }, params or {})
+  )
 end
 
 --- move cursor to prev match
@@ -274,34 +252,28 @@ end
 --- (which can happen for multiline searches)
 ---@param params? { includeUncounted?: boolean }
 function inst:goto_prev_match(params)
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.gotoMatch')(
-      vim.tbl_extend('keep', self._params, { increment = -1 }, params or {})
-    )
-  end)
+  self:ensure_open()
+  require('grug-far.actions.gotoMatch')(
+    vim.tbl_extend('keep', self._params, { increment = -1 }, params or {})
+  )
 end
 
 --- goto source location (file, line, column) associated with current line
 function inst:goto_location()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.gotoLocation')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.gotoLocation')(self._params)
 end
 
 --- open source location (file, line, column) associated with current line (stays in grug-far buffer)
 function inst:open_location()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.openLocation')(
-      vim.tbl_extend(
-        'keep',
-        self._params,
-        { useScratchBuffer = self._context.options.openTargetWindow.useScratchBuffer }
-      )
+  self:ensure_open()
+  require('grug-far.actions.openLocation')(
+    vim.tbl_extend(
+      'keep',
+      self._params,
+      { useScratchBuffer = self._context.options.openTargetWindow.useScratchBuffer }
     )
-  end)
+  )
 end
 
 --- 1. apply change at current line (and notify if notify=true)
@@ -310,12 +282,10 @@ end
 --- 4. open source location (if open_location = true, defaults to true)
 ---@param params? { open_location?: boolean, remove_synced?: boolean, notify?: boolean }
 function inst:apply_next_change(params)
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.applyChange')(
-      vim.tbl_extend('keep', self._params, { increment = 1 }, params or {})
-    )
-  end)
+  self:ensure_open()
+  require('grug-far.actions.applyChange')(
+    vim.tbl_extend('keep', self._params, { increment = 1 }, params or {})
+  )
 end
 
 --- 1. apply change at current line (and notify if notify=true)
@@ -324,126 +294,98 @@ end
 --- 4. open source location (if open_location = true, defaults to true)
 ---@param params? { open_location?: boolean, remove_synced?: boolean, notify?: boolean }
 function inst:apply_prev_change(params)
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.applyChange')(
-      vim.tbl_extend('keep', self._params, { increment = -1 }, params or {})
-    )
-  end)
+  self:ensure_open()
+  require('grug-far.actions.applyChange')(
+    vim.tbl_extend('keep', self._params, { increment = -1 }, params or {})
+  )
 end
 
 --- send result lines to the quickfix list. Deleting result lines will cause them not to be included.
 function inst:open_quickfix()
-  self:when_ready(function()
-    self:_ensure_valid()
-    require('grug-far.actions.qflist')(self._params)
-  end)
+  self:_ensure_valid()
+  require('grug-far.actions.qflist')(self._params)
 end
 
 --- abort current operation. Can be useful if you've ended up doing too large of a search or
 --- if you've changed your mind about a replacement midway.
 function inst:abort()
-  self:when_ready(function()
-    self:_ensure_valid()
-    require('grug-far.actions.abort')(self._params)
-  end)
+  self:_ensure_valid()
+  require('grug-far.actions.abort')(self._params)
 end
 
 --- Close grug-far buffer/window. This is the same as `:bd` except that it will also ask you
 --- to confirm if there is a replace/sync in progress, as those would be aborted.
 function inst:close()
-  self:when_ready(function()
-    self:_ensure_valid()
-    require('grug-far.actions.close')(self._params)
-  end)
+  self:_ensure_valid()
+  require('grug-far.actions.close')(self._params)
 end
 
 --- hides grug-far window (but instance is still valid)
 function inst:hide()
-  self:when_ready(function()
-    self:_ensure_valid()
-    local win = vim.fn.bufwinid(self._buf)
-    if win ~= -1 then
-      vim.api.nvim_win_close(win, true)
-    end
-  end)
+  self:_ensure_valid()
+  local win = vim.fn.bufwinid(self._buf)
+  if win ~= -1 then
+    vim.api.nvim_win_close(win, true)
+  end
 end
 
 --- opens/focuses grug-far window
 function inst:open()
-  self:when_ready(function()
-    self:ensure_open()
-
-    -- focus it
-    local win = vim.fn.bufwinid(self._buf)
-    vim.api.nvim_set_current_win(win)
-  end)
+  self:ensure_open()
+  
+  -- focus it
+  local win = vim.fn.bufwinid(self._buf)
+  vim.api.nvim_set_current_win(win)
 end
 
 --- swaps search engine with the next one as configured through options.enabledEngines
 function inst:swap_engine()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.swapEngine')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.swapEngine')(self._params)
 end
 
 --- toggle showing search command. Can be useful for debugging purposes.
 function inst:toggle_show_search_command()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.toggleShowCommand')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.toggleShowCommand')(self._params)
 end
 
 --- preview source location associated with current line in a floating window
 function inst:preview_location()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.previewLocation')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.previewLocation')(self._params)
 end
 
 --- swaps replacement interperter with the next one as configured through
 --- options.enabledReplacementInterpreters
 function inst:swap_replacement_interpreter()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.actions.swapReplacementInterpreter')(self._params)
-  end)
+  self:ensure_open()
+  require('grug-far.actions.swapReplacementInterpreter')(self._params)
 end
 
 --- move cursor to input with given name
 ---@param inputName grug.far.InputName
 function inst:goto_input(inputName)
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.inputs').goto_input(self._context, self._buf, inputName)
-  end)
+  self:ensure_open()
+  require('grug-far.inputs').goto_input(self._context, self._buf, inputName)
 end
 
 --- move cursor to first input
 function inst:goto_first_input()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.inputs').goto_first_input(self._context, self._buf)
-  end)
+  self:ensure_open()
+  require('grug-far.inputs').goto_first_input(self._context, self._buf)
 end
 
 --- move cursor to next input
 function inst:goto_next_input()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.inputs').goto_next_input(self._context, self._buf)
-  end)
+  self:ensure_open()
+  require('grug-far.inputs').goto_next_input(self._context, self._buf)
 end
 
 --- move cursor to prev input
 function inst:goto_prev_input()
-  self:when_ready(function()
-    self:ensure_open()
-    require('grug-far.inputs').goto_prev_input(self._context, self._buf)
-  end)
+  self:ensure_open()
+  require('grug-far.inputs').goto_prev_input(self._context, self._buf)
 end
 
 --- update input values to new ones
@@ -451,11 +393,9 @@ end
 ---@param values grug.far.Prefills
 ---@param clearOld boolean
 function inst:update_input_values(values, clearOld)
-  self:when_ready(function()
-    self:ensure_open()
-    vim.schedule(function()
-      require('grug-far.inputs').fill(self._context, self._buf, values, clearOld)
-    end)
+  self:ensure_open()
+  vim.schedule(function()
+    require('grug-far.inputs').fill(self._context, self._buf, values, clearOld)
   end)
 end
 
