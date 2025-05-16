@@ -89,6 +89,8 @@ if includeUncounted = true, it will move through lines that do not have a match 
 (which can happen for multiline searches)
 Parameters ~
 {params} `(optional)` { includeUncounted?: `(boolean)` }
+Return ~
+`(boolean)` hasMoved
 
 ------------------------------------------------------------------------------
                                                         *inst:goto_prev_match()*
@@ -98,6 +100,8 @@ if includeUncounted = true, it will move through lines that do not have a match 
 (which can happen for multiline searches)
 Parameters ~
 {params} `(optional)` { includeUncounted?: `(boolean)` }
+Return ~
+`(boolean)` hasMoved
 
 ------------------------------------------------------------------------------
                                                           *inst:goto_location()*
