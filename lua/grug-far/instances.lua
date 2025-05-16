@@ -172,7 +172,7 @@ end
 --- ensure instance window is open
 function inst:ensure_open()
   self:_ensure_valid()
-  
+
   if not self:is_open() then
     -- toggle it on
     local win = require('grug-far')._createWindow(self._context)
@@ -240,22 +240,26 @@ end
 --- if includeUncounted = true, it will move through lines that do not have a match count
 --- (which can happen for multiline searches)
 ---@param params? { includeUncounted?: boolean }
+---@return boolean hasMoved
 function inst:goto_next_match(params)
   self:ensure_open()
-  require('grug-far.actions.gotoMatch')(
+  local location = require('grug-far.actions.gotoMatch')(
     vim.tbl_extend('keep', self._params, { increment = 1 }, params or {})
   )
+  return not not location
 end
 
 --- move cursor to prev match
 --- if includeUncounted = true, it will move through lines that do not have a match count
 --- (which can happen for multiline searches)
 ---@param params? { includeUncounted?: boolean }
+---@return boolean hasMoved
 function inst:goto_prev_match(params)
   self:ensure_open()
-  require('grug-far.actions.gotoMatch')(
+  local location = require('grug-far.actions.gotoMatch')(
     vim.tbl_extend('keep', self._params, { increment = -1 }, params or {})
   )
+  return not not location
 end
 
 --- goto source location (file, line, column) associated with current line
@@ -332,7 +336,7 @@ end
 --- opens/focuses grug-far window
 function inst:open()
   self:ensure_open()
-  
+
   -- focus it
   local win = vim.fn.bufwinid(self._buf)
   vim.api.nvim_set_current_win(win)
