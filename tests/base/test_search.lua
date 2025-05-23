@@ -588,6 +588,32 @@ T['can search for some string in <buflist>'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['can search for some string in <buflist-cwd>'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    { filename = 'file2', content = [[ grug talks ]] },
+    { filename = 'file3', content = [[ grug drinks ]] },
+    { filename = 'file4', content = [[ grug thinks ]] },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('edit file1')
+  helpers.sleep(child, 20)
+  child.cmd('edit file2')
+  helpers.sleep(child, 20)
+  child.cmd('edit ../README.md')
+  helpers.sleep(child, 20)
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', paths = '<buflist-cwd>' },
+  })
+
+  helpers.childWaitForScreenshotText(child, '2 matches in 2 files')
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 T['can search for some string in <qflist>'] = function()
   helpers.writeTestFiles({
     { filename = 'file1', content = [[ grug walks ]] },

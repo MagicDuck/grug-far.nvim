@@ -409,6 +409,30 @@
       },
     },
 
+    -- configuration for "path providers". These are simply special strings that expand
+    -- to a list of paths when surrounded by angle brackets in 'Paths' input.
+    -- For example, adding <buflist> to 'Paths' input will search within the files corresponding
+    -- to the the opened buffers
+    pathProviders = {
+      -- <buflist> expands to list of files corresponding to opened buffers
+      ['buflist'] = function()
+        return require('grug-far.pathProviders').getBuflistFiles()
+      end,
+      -- <buflist-cwd> like <buflist>, but filtered down to files in cwd
+      ['buflist-cwd'] = function()
+        return require('grug-far.pathProviders').getBuflistFilesInCWD()
+      end,
+      -- <qflist> expands to list of files corresponding to quickfix list
+      ['qflist'] = function()
+        return require('grug-far.pathProviders').getQuickfixListFiles()
+      end,
+      -- <loclist> expands to list of files corresponding to loclist associated with
+      -- window user is in when opening grug-far
+      ['loclist'] = function(opts)
+        return require('grug-far.pathProviders').getLoclistFiles(opts.prevWin)
+      end,
+    },
+
     -- unique instance name. This is used as a handle to refer to a particular instance of grug-far when
     -- toggling visibility, etc.
     -- As this needs to be unique per instance, this option is meant to be specified for a particular instance
@@ -549,7 +573,7 @@ Class ~
 {grug.far.IconsTable}
 Fields ~
 {enabled} `(boolean)`
-{fileIconsProvider} "first_available" | "mini.icons" |  "nvim-web-devicons" | false
+{fileIconsProvider} "first_available" | "mini.icons" | "nvim-web-devicons" | false
 {searchInput} `(string)`
 {actionEntryBullet} `(string)`
 {replaceInput} `(string)`
@@ -642,7 +666,6 @@ Fields ~
                                                               *grug.far.Options*
 Class ~
 {grug.far.Options}
-options type definitions
 Fields ~
 {debounceMs} `(integer)`
 {minSearchChars} `(integer)`
@@ -686,6 +709,7 @@ Fields ~
 {icons} grug.far.IconsTable
 {prefills} grug.far.Prefills
 {history} grug.far.HistoryTable
+{pathProviders} `(table<string, fun(opts: { prevWin: integer }): string[]>)`
 {instanceName} `(optional)` `(string)`
 {folding} grug.far.FoldingTable
 {engines} grug.far.EnginesTable

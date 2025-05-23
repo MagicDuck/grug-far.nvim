@@ -410,7 +410,6 @@ grug_far.defaultOptions = {
     },
   },
 
-  -- TODO (sbadragan): needs tests
   -- configuration for "path providers". These are simply special strings that expand
   -- to a list of paths when surrounded by angle brackets in 'Paths' input.
   -- For example, adding <buflist> to 'Paths' input will search within the files corresponding
@@ -419,6 +418,10 @@ grug_far.defaultOptions = {
     -- <buflist> expands to list of files corresponding to opened buffers
     ['buflist'] = function()
       return require('grug-far.pathProviders').getBuflistFiles()
+    end,
+    -- <buflist-cwd> like <buflist>, but filtered down to files in cwd
+    ['buflist-cwd'] = function()
+      return require('grug-far.pathProviders').getBuflistFilesInCWD()
     end,
     -- <qflist> expands to list of files corresponding to quickfix list
     ['qflist'] = function()
