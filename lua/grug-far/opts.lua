@@ -424,6 +424,11 @@ grug_far.defaultOptions = {
     ['qflist'] = function()
       return require('grug-far.pathProviders').getQuickfixListFiles()
     end,
+    -- <loclist> expands to list of files corresponding to loclist associated with
+    -- window user is in when opening grug-far
+    ['loclist'] = function(opts)
+      return require('grug-far.pathProviders').getLoclistFiles(opts.prevWin)
+    end,
   },
 
   -- unique instance name. This is used as a handle to refer to a particular instance of grug-far when
@@ -588,9 +593,9 @@ grug_far.defaultOptions = {
 ---@field autoSave? grug.far.AutoSaveTable
 ---@private
 
----@alias grug.far.FileIconsProviderType "first_available" | "mini.icons" |  "nvim-web-devicons" | false
+---@alias grug.far.FileIconsProviderType "first_available" | "mini.icons" | "nvim-web-devicons" | false
 
----@alias grug.far.PathProviders table<string, fun(): string[]>
+---@alias grug.far.PathProviders table<string, fun(opts: { prevWin: integer }): string[]>
 
 ---@class grug.far.IconsTable
 ---@field enabled boolean
@@ -764,7 +769,6 @@ grug_far.defaultOptions = {
 
 ---@class grug.far.Options
 ---@tag grug.far.Options
----@toc_entry options type definitions
 ---@field debounceMs integer
 ---@field minSearchChars integer
 ---@field maxSearchMatches integer?

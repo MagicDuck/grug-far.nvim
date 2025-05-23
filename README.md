@@ -133,6 +133,7 @@ _Note:_ Paths input supports `~`, environment variables and "path providers". Th
 to a list of paths. Currently available are:
 - `<buflist>`: expands to list of files corresponding to opened buffers
 - `<qflist>`: expands to list of files corresponding to quickfix list
+- `<loclist>` expands to list of files corresponding to loclist associated with window user is in when opening grug-far
 
 _Note:_ When replacing matches with the empty string, you will be prompted to confirm, as the change is not
 visible in the results area due to UI considering it just a search. If you

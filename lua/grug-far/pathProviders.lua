@@ -7,10 +7,9 @@ M.getBuflistFiles = function()
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     local buftype = vim.api.nvim_get_option_value('buftype', { buf = buf })
     local buflisted = vim.api.nvim_get_option_value('buflisted', { buf = buf })
-    local filetype = vim.api.nvim_get_option_value('filetype', { buf = buf })
     local path = vim.api.nvim_buf_get_name(buf)
-    if buftype == '' and buflisted and filetype ~= '' and path then
-      table.insert(paths, vim.fn.fnameescape(path))
+    if buftype == '' and buflisted and path then
+      table.insert(paths, path)
     end
   end
   return paths
@@ -22,14 +21,21 @@ M.getQuickfixListFiles = function()
   local paths = {}
   for _, item in ipairs(vim.fn.getqflist()) do
     local path = vim.api.nvim_buf_get_name(item.bufnr)
-    table.insert(paths, vim.fn.fnameescape(path))
+    table.insert(paths, path)
   end
   return paths
 end
 
--- TODO (sbadragan): do loclist?
--- this one takes the winid, so we would either have to make it operate on prevWin
--- or add a number parameter
--- |getloclist()|.
+--- get list of paths corresponding to files in loclist for the given window
+---@param win integer
+---@return string[]
+M.getLoclistFiles = function(win)
+  local paths = {}
+  for _, item in ipairs(vim.fn.getloclist(win)) do
+    local path = vim.api.nvim_buf_get_name(item.bufnr)
+    table.insert(paths, path)
+  end
+  return paths
+end
 
 return M

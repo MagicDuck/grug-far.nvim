@@ -33,7 +33,8 @@ end
 ---@private
 local function createContext(options)
   contextCount = contextCount + 1
-  return {
+
+  local context = {
     count = contextCount,
     options = options,
     engine = require('grug-far.engine').getEngine(options.engine),
@@ -66,6 +67,11 @@ local function createContext(options)
       previousInputValues = {},
     },
   }
+
+  ---@diagnostic disable-next-line: inject-field
+  options.__grug_far_context__ = context
+
+  return context
 end
 
 ---@param context grug.far.Context

@@ -17,7 +17,6 @@ local T = MiniTest.new_set({
 
 T['can create instance, open, close and kill it'] = function()
   -- create it
-  -- TODO (sbadragan): fix those
   local instanceName = 'bob_instance'
   helpers.childRunGrugFar(child, { staticTitle = 'Find and Replace', instanceName = instanceName })
   helpers.childWaitForScreenshotText(child, 'Search:')

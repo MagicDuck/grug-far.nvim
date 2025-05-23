@@ -43,7 +43,9 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   end
 
   if #inputs.paths > 0 then
-    local paths = utils.normalizePaths(utils.splitPaths(inputs.paths), options.pathProviders)
+    ---@diagnostic disable-next-line: undefined-field
+    local context = options.__grug_far_context__
+    local paths = utils.normalizePaths(utils.splitPaths(inputs.paths), context)
     for _, path in ipairs(paths) do
       table.insert(args, path)
     end
