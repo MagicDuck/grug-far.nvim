@@ -573,9 +573,11 @@ end
 --- Normalizes paths. Expands a tilde at the beginning, environment variables.
 --- Expands path providers into path lists.
 ---@param paths string[]
----@param pathProviders? grug.far.PathProviders
+---@param context grug.far.Context
 ---@return string[]
-M.normalizePaths = function(paths, pathProviders)
+M.normalizePaths = function(paths, context)
+  local pathProviders = context.options.pathProviders
+  local cwd = vim.fn.getcwd()
   local normalizedPaths = {}
   for _, path in ipairs(paths) do
     local isProvider = false
@@ -584,14 +586,14 @@ M.normalizePaths = function(paths, pathProviders)
       for providerName, providerFn in pairs(pathProviders) do
         if name == providerName then
           isProvider = true
-          for _, p in ipairs(providerFn()) do
-            table.insert(normalizedPaths, M.normalizePath(p))
+          for _, p in ipairs(providerFn({ prevWin = context.prevWin })) do
+            table.insert(normalizedPaths, vim.fn.fnameescape(M.normalizePath(p, cwd)))
           end
         end
       end
     end
     if not isProvider then
-      table.insert(normalizedPaths, M.normalizePath(path))
+      table.insert(normalizedPaths, M.normalizePath(path, cwd))
     end
   end
 
@@ -599,13 +601,21 @@ M.normalizePaths = function(paths, pathProviders)
 end
 
 --- Normalizes a path. Expands a tilde at the beginning, environment variables.
+--- Makes relative to cwd if under cwd
 ---@param path string
+---@param cwd string
 ---@return string
-M.normalizePath = function(path)
+M.normalizePath = function(path, cwd)
   if vim.startswith(path, '.') then
     return path
   end
-  return vim.fs.normalize(path)
+  local normPath = vim.fs.normalize(path)
+  local relPath = vim.fs.relpath(cwd, normPath)
+  if relPath then
+    return relPath
+  end
+
+  return normPath
 end
 
 --- parse a string containing json separated by newline into a list of tables

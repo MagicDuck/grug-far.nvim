@@ -564,4 +564,81 @@ T['will error out on bad buffer-range'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can search for some string in <buflist>'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    { filename = 'file2', content = [[ grug talks ]] },
+    { filename = 'file3', content = [[ grug drinks ]] },
+    { filename = 'file4', content = [[ grug thinks ]] },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('edit file1')
+  helpers.sleep(child, 20)
+  child.cmd('edit file2')
+  helpers.sleep(child, 20)
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', paths = '<buflist>' },
+  })
+
+  helpers.childWaitForScreenshotText(child, '2 matches in 2 files')
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search for some string in <qflist>'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    { filename = 'file2', content = [[ grug talks ]] },
+    { filename = 'file3', content = [[ grug drinks ]] },
+    { filename = 'file4', content = [[ grug thinks ]] },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[
+    vim.fn.setqflist({
+      { filename = 'file1', lnum = 1 },
+      { filename = 'file3', lnum = 1 }
+    })
+  ]])
+  child.cmd('copen')
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', paths = '<qflist>' },
+  })
+
+  helpers.childWaitForScreenshotText(child, '2 matches in 2 files')
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
+T['can search for some string in <loclist>'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    { filename = 'file2', content = [[ grug talks ]] },
+    { filename = 'file3', content = [[ grug drinks ]] },
+    { filename = 'file4', content = [[ grug thinks ]] },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[
+    vim.fn.setloclist(0, {
+      { filename = 'file2', lnum = 1 },
+      { filename = 'file4', lnum = 1 }
+    })
+  ]])
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', paths = '<loclist>' },
+  })
+
+  helpers.childWaitForScreenshotText(child, '2 matches in 2 files')
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+end
+
 return T
