@@ -15,6 +15,21 @@ M.getBuflistFiles = function()
   return paths
 end
 
+--- get list of paths corresponding to opened buffers that are relative to CWD
+---@return string[]
+M.getBuflistFilesInCWD = function()
+  local list = require('grug-far.pathProviders').getBuflistFiles()
+  local cwd = vim.fn.getcwd()
+  return vim
+    .iter(list)
+    :filter(function(path)
+      local absPath = vim.fs.abspath(path)
+      local relPath = vim.fs.relpath(cwd, absPath)
+      return not not relPath
+    end)
+    :totable()
+end
+
 --- get list of paths corresponding to files in quickfix list
 ---@return string[]
 M.getQuickfixListFiles = function()

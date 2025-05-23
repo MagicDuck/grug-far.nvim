@@ -132,8 +132,9 @@ Error messages from ripgrep when entering invalid flags and so on are displayed 
 _Note:_ Paths input supports `~`, environment variables and "path providers". The latter are special strings that expand
 to a list of paths. Currently available are:
 - `<buflist>`: expands to list of files corresponding to opened buffers
+- `<buflist-cwd>`: like `<buflist>`, but filtered down to files in cwd
 - `<qflist>`: expands to list of files corresponding to quickfix list
-- `<loclist>` expands to list of files corresponding to loclist associated with window user is in when opening grug-far
+- ... for a full list, see `:h grug-far-opts` and search for "path providers" ...
 
 _Note:_ When replacing matches with the empty string, you will be prompted to confirm, as the change is not
 visible in the results area due to UI considering it just a search. If you
