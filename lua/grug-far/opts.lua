@@ -410,6 +410,22 @@ grug_far.defaultOptions = {
     },
   },
 
+  -- TODO (sbadragan): needs tests
+  -- configuration for "path providers". These are simply special strings that expand
+  -- to a list of paths when surrounded by angle brackets in 'Paths' input.
+  -- For example, adding <buflist> to 'Paths' input will search within the files corresponding
+  -- to the the opened buffers
+  pathProviders = {
+    -- <buflist> expands to list of files corresponding to opened buffers
+    ['buflist'] = function()
+      return require('grug-far.pathProviders').getBuflistFiles()
+    end,
+    -- <qflist> expands to list of files corresponding to quickfix list
+    ['qflist'] = function()
+      return require('grug-far.pathProviders').getQuickfixListFiles()
+    end,
+  },
+
   -- unique instance name. This is used as a handle to refer to a particular instance of grug-far when
   -- toggling visibility, etc.
   -- As this needs to be unique per instance, this option is meant to be specified for a particular instance
@@ -572,11 +588,13 @@ grug_far.defaultOptions = {
 ---@field autoSave? grug.far.AutoSaveTable
 ---@private
 
----@alias FileIconsProviderType "first_available" | "mini.icons" |  "nvim-web-devicons" | false
+---@alias grug.far.FileIconsProviderType "first_available" | "mini.icons" |  "nvim-web-devicons" | false
+
+---@alias grug.far.PathProviders table<string, fun(): string[]>
 
 ---@class grug.far.IconsTable
 ---@field enabled boolean
----@field fileIconsProvider FileIconsProviderType
+---@field fileIconsProvider grug.far.FileIconsProviderType
 ---@field searchInput string
 ---@field actionEntryBullet string
 ---@field replaceInput string
@@ -597,7 +615,7 @@ grug_far.defaultOptions = {
 
 ---@class grug.far.IconsTableOverride
 ---@field enabled? boolean
----@field fileIconsProvider? FileIconsProviderType
+---@field fileIconsProvider? grug.far.FileIconsProviderType
 ---@field searchInput? string
 ---@field actionEntryBullet? string
 ---@field replaceInput? string
@@ -779,6 +797,7 @@ grug_far.defaultOptions = {
 ---@field icons grug.far.IconsTable
 ---@field prefills grug.far.Prefills
 ---@field history grug.far.HistoryTable
+---@field pathProviders grug.far.PathProviders
 ---@field instanceName? string
 ---@field folding grug.far.FoldingTable
 ---@field engines grug.far.EnginesTable
@@ -827,6 +846,7 @@ grug_far.defaultOptions = {
 ---@field icons? grug.far.IconsTableOverride
 ---@field prefills? grug.far.Prefills
 ---@field history? grug.far.HistoryTableOverride
+---@field pathProviders? grug.far.PathProviders
 ---@field instanceName? string
 ---@field folding? grug.far.FoldingTableOverride
 ---@field engines? grug.far.EnginesTableOverride

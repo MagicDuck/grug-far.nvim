@@ -570,6 +570,34 @@ M.escape_path_for_cmd = function(path)
   return escaped_path
 end
 
+--- Normalizes paths. Expands a tilde at the beginning, environment variables.
+--- Expands path providers into path lists.
+---@param paths string[]
+---@param pathProviders? grug.far.PathProviders
+---@return string[]
+M.normalizePaths = function(paths, pathProviders)
+  local normalizedPaths = {}
+  for _, path in ipairs(paths) do
+    local isProvider = false
+    if pathProviders and vim.startswith(path, '<') and vim.endswith(path, '>') then
+      local name = path:sub(2, -2)
+      for providerName, providerFn in pairs(pathProviders) do
+        if name == providerName then
+          isProvider = true
+          for _, p in ipairs(providerFn()) do
+            table.insert(normalizedPaths, M.normalizePath(p))
+          end
+        end
+      end
+    end
+    if not isProvider then
+      table.insert(normalizedPaths, M.normalizePath(path))
+    end
+  end
+
+  return vim.fn.uniq(vim.fn.sort(normalizedPaths)) --[[@as [string] ]]
+end
+
 --- Normalizes a path. Expands a tilde at the beginning, environment variables.
 ---@param path string
 ---@return string

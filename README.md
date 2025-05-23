@@ -129,6 +129,11 @@ that one has to enter before search is triggered.
 You can also specify a files filter to narrow down your search and more ripgrep flags to refine it further.
 Error messages from ripgrep when entering invalid flags and so on are displayed to guide you along. 
 
+_Note:_ Paths input supports `~`, environment variables and "path providers". The latter are special strings that expand
+to a list of paths. Currently available are:
+- `<buflist>`: expands to list of files corresponding to opened buffers
+- `<qflist>`: expands to list of files corresponding to quickfix list
+
 _Note:_ When replacing matches with the empty string, you will be prompted to confirm, as the change is not
 visible in the results area due to UI considering it just a search. If you
 would like to see the actual replacement in the results area, add `--replace=` to the flags.

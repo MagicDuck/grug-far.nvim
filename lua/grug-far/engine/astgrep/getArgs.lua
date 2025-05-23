@@ -56,9 +56,8 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   end
 
   if #inputs.paths > 0 then
-    local paths = utils.splitPaths(inputs.paths)
+    local paths = utils.normalizePaths(utils.splitPaths(inputs.paths), options.pathProviders)
     for _, path in ipairs(paths) do
-      path = utils.normalizePath(path)
       table.insert(args, path)
     end
   end
