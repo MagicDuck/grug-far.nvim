@@ -13,8 +13,10 @@ local function render(buf, context)
       and help.getHelpVirtLines(context, context.actions)
     or {}
 
-  -- add a blank line for aesthetics
-  table.insert(top_virt_lines, { { '' } })
+  if not context.options.compactUI.enabled then
+    -- add a blank line for aesthetics
+    table.insert(top_virt_lines, { { '' } })
+  end
 
   local lineNr = 0
   local lastInput
