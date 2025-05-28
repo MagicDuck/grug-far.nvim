@@ -1,4 +1,4 @@
-local renderHelp = require('grug-far.render.help')
+local help = require('grug-far.render.help')
 local renderInput = require('grug-far.render.input')
 local renderResults = require('grug-far.render.results')
 local utils = require('grug-far.utils')
@@ -9,24 +9,10 @@ local function render(buf, context)
   local placeholders = context.options.engines[context.engine.type].placeholders
   local inputsHighlight = context.options.inputsHighlight
 
-  if context.options.helpLine.enabled then
-    renderHelp({
-      buf = buf,
-      extmarkName = 'farHelp',
-      actions = context.actions,
-    }, context)
-  end
+  local top_virt_lines = context.options.helpLine.enabled and help.getHelpVirtLines(context) or {}
 
   -- add a blank line for aesthetics
-  context.extmarkIds.top_blank_line = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
-    id = context.extmarkIds.top_blank_line,
-    end_row = 0,
-    end_col = 0,
-    virt_lines = { { { '' } } },
-    virt_lines_leftcol = true,
-    virt_lines_above = true,
-    right_gravity = false,
-  })
+  table.insert(top_virt_lines, { { '' } })
 
   local lineNr = 0
   local lastInput
@@ -59,6 +45,7 @@ local function render(buf, context)
       label = label .. ':',
       placeholder = placeholders.enabled and placeholder,
       highlightLang = inputsHighlight and highlightLang or nil,
+      top_virt_lines = i == 1 and top_virt_lines or nil,
     }, context)
 
     lineNr = lineNr + 1
