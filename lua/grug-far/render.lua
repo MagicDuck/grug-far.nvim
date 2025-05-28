@@ -9,7 +9,9 @@ local function render(buf, context)
   local placeholders = context.options.engines[context.engine.type].placeholders
   local inputsHighlight = context.options.inputsHighlight
 
-  local top_virt_lines = context.options.helpLine.enabled and help.getHelpVirtLines(context) or {}
+  local top_virt_lines = context.options.helpLine.enabled
+      and help.getHelpVirtLines(context, context.actions)
+    or {}
 
   -- add a blank line for aesthetics
   table.insert(top_virt_lines, { { '' } })
