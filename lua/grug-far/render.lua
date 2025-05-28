@@ -3,7 +3,9 @@ local renderInput = require('grug-far.render.input')
 local renderResults = require('grug-far.render.results')
 local utils = require('grug-far.utils')
 
-local TOP_EMPTY_LINES = 1
+-- note: this was previously used to work around a nvim bug. Leaving it in for now
+-- this bug: https://github.com/neovim/neovim/issues/16166
+local TOP_EMPTY_LINES = 0
 
 ---@param buf integer
 ---@param context grug.far.Context
@@ -12,7 +14,9 @@ local function render(buf, context)
   local inputsHighlight = context.options.inputsHighlight
 
   local lineNr = 0
-  utils.ensureBufTopEmptyLines(buf, TOP_EMPTY_LINES)
+  if TOP_EMPTY_LINES > 0 then
+    utils.ensureBufTopEmptyLines(buf, TOP_EMPTY_LINES)
+  end
   if context.options.helpLine.enabled then
     renderHelp({
       buf = buf,
@@ -57,6 +61,10 @@ local function render(buf, context)
 
     lineNr = lineNr + 1
   end
+
+  -- show 1 row above the top line that exmtmark labels appear
+  -- fix for this bug: https://github.com/neovim/neovim/issues/16166
+  vim.fn.winrestview({ topfill = 1 })
 
   renderResults({
     buf = buf,
