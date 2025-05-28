@@ -13,7 +13,8 @@ local function render(buf, context)
       and help.getHelpVirtLines(context, context.actions)
     or {}
 
-  if not context.options.compactUI.enabled then
+  if not context.options.compactUI.enabled or context.options.helpLine.enabled then
+    -- if not context.options.compactUI.enabled then
     -- add a blank line for aesthetics
     table.insert(top_virt_lines, { { '' } })
   end
