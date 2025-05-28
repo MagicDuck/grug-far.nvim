@@ -211,7 +211,7 @@ grug_far.defaultOptions = {
   startInInsertMode = true,
 
   -- row in the window to position the cursor at at start
-  startCursorRow = 2,
+  startCursorRow = 1,
 
   -- whether to wrap text in the grug-far buffer
   wrap = true,

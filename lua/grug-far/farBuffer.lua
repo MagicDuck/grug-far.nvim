@@ -401,6 +401,7 @@ function M.setupBuffer(win, buf, context, on_ready)
   })
 
   -- do the initial render
+  local is_ready = false
   vim.schedule(function()
     render(buf, context)
 
@@ -422,12 +423,25 @@ function M.setupBuffer(win, buf, context, on_ready)
       end
 
       render(buf, context)
+      is_ready = true
       on_ready()
 
       -- launch a search in case there are prefills
       searchOnChange()
     end)
   end)
+
+  -- show 1 row above the top line on cursor move so that exmtmark labels appear
+  -- fix for this bug: https://github.com/neovim/neovim/issues/16166
+  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = function()
+      if is_ready then
+        vim.fn.winrestview({ topfill = 1 })
+      end
+    end,
+  })
 
   -- set up re-render of line number on cursor moved
   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
