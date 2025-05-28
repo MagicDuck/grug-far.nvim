@@ -1,4 +1,4 @@
-local renderHelp = require('grug-far.render.help')
+local help = require('grug-far.render.help')
 local history = require('grug-far.history')
 local utils = require('grug-far.utils')
 local tasks = require('grug-far.tasks')
@@ -79,21 +79,30 @@ local function renderHistoryBuffer(historyBuf, context)
   local keymaps = context.options.keymaps
 
   utils.ensureBufTopEmptyLines(historyBuf, 2)
-  renderHelp({
-    buf = historyBuf,
-    extmarkName = 'historyHelp',
-    top_virt_lines = {
+
+  local top_virt_lines = {
+    {
       {
-        {
-          '(edit and save as usual if you need to, make sure to preserve format) ',
-          'GrugFarHelpHeader',
-        },
+        '(edit and save as usual if you need to, make sure to preserve format) ',
+        'GrugFarHelpHeader',
       },
     },
-    actions = {
-      { text = 'Pick Entry', keymap = keymaps.pickHistoryEntry },
-    },
-  }, context)
+  }
+
+  local help_virt_lines = help.getHelpVirtLines(context, {
+    { text = 'Pick Entry', keymap = keymaps.pickHistoryEntry },
+  })
+  for _, virt_line in ipairs(help_virt_lines) do
+    table.insert(top_virt_lines, virt_line)
+  end
+
+  context.extmarkIds.historyHelp =
+    vim.api.nvim_buf_set_extmark(historyBuf, context.namespace, 0, 0, {
+      id = context.extmarkIds.historyHelp,
+      virt_text = top_virt_lines[1],
+      virt_text_pos = 'overlay',
+      virt_lines = vim.list_slice(top_virt_lines, 2),
+    })
 end
 
 local function highlightHistoryBuffer(historyBuf, context, start_row, end_row)

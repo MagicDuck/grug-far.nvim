@@ -7,12 +7,13 @@ local M = {}
 
 --- gets help virtual text lines
 ---@param context grug.far.Context
+---@param actions grug.far.Action[]
 ---@return grug.far.VirtText[][]
-function M.getHelpVirtLines(context)
+function M.getHelpVirtLines(context, actions)
   local virt_lines = {}
   local entries = vim.tbl_map(function(action)
     return { text = action.text, lhs = utils.getActionMapping(action.keymap) }
-  end, context.actions)
+  end, actions)
   entries = vim.tbl_filter(function(entry)
     return entry.lhs ~= nil
   end, entries)
