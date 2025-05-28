@@ -17,7 +17,7 @@ local function getActions(buf, context)
   local keymaps = context.options.keymaps
   return {
     {
-      text = 'Actions / Help',
+      text = 'Help',
       keymap = keymaps.help,
       description = 'Open up help window.',
       action = function()
