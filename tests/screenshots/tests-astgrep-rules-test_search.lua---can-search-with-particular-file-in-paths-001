@@ -1,14 +1,13 @@
---|
-01|
-02|id: grug_test
-03|language: typescript
-04|rule:
-05|  pattern: grug
-06|      
+--|---------|---
+01|id: grug_test
+02|language: typescript
+03|rule:
+04|  pattern: grug
+05|      
+06|
 07|
-08|
-09|./file2.ts
-10|
-11|file2.ts
-12|    if (grug || talks) {
-13|      grug.walks(talks)
+08|./file2.ts
+09|
+10|file2.ts
+11|    if (grug || talks) {
+12|      grug.walks(talks)

@@ -1,5 +1,5 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|   Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...       
+01| Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...         
 02|                                                                                
 03|  Rules:                                                                       
 04|  id: grug_test                                                                 
@@ -21,5 +21,5 @@
 20|  foo bar/file2.ts                                                              
 21|▒   2     if (grug || talks) {                                               [1]
 22|▒   2     if (curly || talks) {                                                 
-23|Grug FAR - 1: id: grug_test^@language: typesc...                            2,13
+23|Grug FAR - 1: id: grug_test^@language: typesc...                            1,13
 24|grug-far: replace completed!                                                    

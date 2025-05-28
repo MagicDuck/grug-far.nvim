@@ -1,17 +1,16 @@
---|
-01|
-02|id: grug_test
-03|language: typescript
-04|rule:
-05|  pattern: grug
-06|fix: curly
-07|**/*.ts
+--|---------|---
+01|id: grug_test
+02|language: typescript
+03|rule:
+04|  pattern: grug
+05|fix: curly
+06|**/*.ts
+07|
 08|
 09|
-10|
-11|file2.ts
-12|    if (grug || talks) {
-13|    if (curly || talks) {
-14| 
-15|      grug.walks(talks)
-16|      curly.walks(talks)
+10|file2.ts
+11|    if (grug || talks) {
+12|    if (curly || talks) {
+13| 
+14|      grug.walks(talks)
+15|      curly.walks(talks)
