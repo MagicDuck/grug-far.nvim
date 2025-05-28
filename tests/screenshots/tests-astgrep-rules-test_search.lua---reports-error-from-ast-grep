@@ -21,5 +21,5 @@
 20|  tip: a similar argument exists: '--stdin'                                     
 21|                                                                                
 22|Usage: ast-grep scan <PATHS|--follow|--no-ignore <FILE_TYPE>|--stdin|--globs @@@
-23|Grug FAR - 1: id: grug_test^@language: typesc...                            2,14
+23|Grug FAR - 1: id: grug_test^@language: typesc...                            1,14
 24|-- INSERT --                                                                    
