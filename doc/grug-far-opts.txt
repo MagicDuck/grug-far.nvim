@@ -215,6 +215,11 @@
     -- whether to wrap text in the grug-far buffer
     wrap = true,
 
+    -- whether to show a more compact version of the UI
+    compactUI = {
+      enabled = false,
+    },
+
     -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
     transient = false,
 
@@ -663,6 +668,12 @@ Fields ~
 {useScratchBuffer} `(boolean)`
 
 ------------------------------------------------------------------------------
+Class ~
+{grug.far.CompactUITable}
+Fields ~
+{enabled} `(boolean)`
+
+------------------------------------------------------------------------------
                                                               *grug.far.Options*
 Class ~
 {grug.far.Options}
@@ -683,6 +694,7 @@ Fields ~
 {staticTitle} `(optional)` `(string)`
 {startInInsertMode} `(boolean)`
 {startCursorRow} `(integer)`
+{compactUI} grug.far.CompactUITable
 {wrap} `(boolean)`
 {transient} `(boolean)`
 {ignoreVisualSelection} `(boolean)`
