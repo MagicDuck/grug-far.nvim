@@ -1,6 +1,6 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|   Actions:                                                                    
-02|     - Actions / Help g?                 Open up help window.                   
+02|     - Help g?                           Open up help window.                   
 03|    - Replace ,r                        Perform replace. Note that compared to 
 04|  'Sync All', replace can also handle multiline replacements.                   
 05|    - Sync All ,s                       Sync all result lines text (potentially
