@@ -29,12 +29,20 @@ end
 local function getSeparator(context)
   -- note: use a large number to ensure it's always > window width
   local separatorLine = context.options.resultsSeparatorLineChar:rep(400)
+
+  local engine_type = context.engine.type
+  local interpreter_type = context.replacementInterpreter and context.replacementInterpreter.type
+    or nil
+  if interpreter_type then
+    engine_type = engine_type .. ' | ' .. interpreter_type
+  end
+
   return ' '
     .. (getStatusText(context) or '')
     .. ' '
     .. (opts.getIcon('resultsEngineLeft', context) or '')
     .. ' '
-    .. context.engine.type
+    .. engine_type
     .. ' '
     .. (context.state.normalModeSearch and '- normal mode search ' or '')
     .. (opts.getIcon('resultsEngineRight', context) or '')
