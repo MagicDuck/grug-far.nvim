@@ -341,4 +341,14 @@ T['can fold at filename'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can display correctly in compactUI mode'] = function()
+  helpers.childRunGrugFar(child, {
+    compactUI = {
+      enabled = true,
+    },
+  })
+  helpers.childWaitForScreenshotText(child, 'READY')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
