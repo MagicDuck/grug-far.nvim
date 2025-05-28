@@ -37,7 +37,7 @@ T['can open a given location'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 end
 
@@ -62,7 +62,7 @@ T['can open a location with count'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>2' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 end
 
@@ -88,23 +88,23 @@ T['can open next location'] = function()
 
   child.type_keys('<esc>')
   child.type_keys(keymaps.openNextLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,8')
+  helpers.childWaitForScreenshotText(child, '2,8')
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openNextLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openNextLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,7')
+  helpers.childWaitForScreenshotText(child, '2,7')
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openNextLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,12')
+  helpers.childWaitForScreenshotText(child, '3,12')
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openNextLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,1')
+  helpers.childWaitForScreenshotText(child, '3,12')
   helpers.childExpectScreenshot(child)
 end
 
@@ -134,16 +134,16 @@ T['can open prev location'] = function()
   child.type_keys(keymaps.openNextLocation.n)
 
   child.type_keys(keymaps.openPrevLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openPrevLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,8')
+  helpers.childWaitForScreenshotText(child, '2,8')
   helpers.childExpectScreenshot(child)
 
   child.type_keys(keymaps.openPrevLocation.n)
   helpers.sleep(child, 100)
-  helpers.childWaitForScreenshotText(child, '1,1')
+  helpers.childWaitForScreenshotText(child, '2,8')
   helpers.childExpectScreenshot(child)
 end
 
@@ -169,7 +169,7 @@ T['can open a given location when only window in tabpage'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 end
 
@@ -196,13 +196,13 @@ T['can open a given location with left preferredLocation'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 
   -- check that the window gets reused
   child.type_keys('<esc>12G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,7')
+  helpers.childWaitForScreenshotText(child, '2,7')
   helpers.childExpectScreenshot(child)
 end
 
@@ -229,13 +229,13 @@ T['can open a given location with right preferredLocation'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 
   -- check that the window gets reused
   child.type_keys('<esc>12G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,7')
+  helpers.childWaitForScreenshotText(child, '2,7')
   helpers.childExpectScreenshot(child)
 end
 
@@ -262,13 +262,13 @@ T['can open a given location with above preferredLocation'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 
   -- check that the window gets reused
   child.type_keys('<esc>12G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,7')
+  helpers.childWaitForScreenshotText(child, '2,7')
   helpers.childExpectScreenshot(child)
 end
 
@@ -295,13 +295,13 @@ T['can open a given location with below preferredLocation'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 
   -- check that the window gets reused
   child.type_keys('<esc>12G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,7')
+  helpers.childWaitForScreenshotText(child, '2,7')
   helpers.childExpectScreenshot(child)
 end
 
@@ -330,13 +330,13 @@ T['respects exclude filetype when opening location'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 
   -- check that the window gets reused
   child.type_keys('<esc>12G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,7')
+  helpers.childWaitForScreenshotText(child, '2,7')
   helpers.childExpectScreenshot(child)
 end
 
@@ -380,13 +380,13 @@ T['respects exclude function when opening location'] = function()
 
   child.type_keys('<esc>9G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 
   -- check that the window gets reused
   child.type_keys('<esc>12G')
   child.type_keys('<esc>' .. keymaps.openLocation.n)
-  helpers.childWaitForScreenshotText(child, '1,7')
+  helpers.childWaitForScreenshotText(child, '2,7')
   helpers.childExpectScreenshot(child)
 end
 

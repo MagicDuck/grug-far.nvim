@@ -11,15 +11,15 @@
 10|                                                                                
 11|                                                                                
 12|file1.txt                                                                   3,13
-13|                                                                                
+13|  Paths:                                                                       
 14|                                                                                
-15| STATUS_SUCCESS ⟪ ripgrep ⟫
-16| 5 matches in 2 files                                                           
-17|                                                                                
-18|file1.txt                                                                       
-19|  2        grug walks                                                        [1]
-20|  3        then grug swims                                                   [2]
-21|                                                                                
-22|file2.doc                                                                       
-23|Grug FAR - 1: grug                                                          10,1
+15|                                                                                
+16| STATUS_SUCCESS ⟪ ripgrep ⟫
+17| 5 matches in 2 files                                                           
+18|                                                                                
+19|file1.txt                                                                       
+20|  2        grug walks                                                        [1]
+21|  3        then grug swims                                                   [2]
+22|                                                                                
+23|Grug FAR - 1: grug                                                           9,1
 24|                                                                                
