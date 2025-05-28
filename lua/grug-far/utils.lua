@@ -827,9 +827,12 @@ end
 --- fix for this bug: https://github.com/neovim/neovim/issues/16166
 ---@param context grug.far.Context
 function M.fixShowTopVirtLines(context)
-  local topfill = 2
+  local topfill = context.options.compactUI.enabled and 0 or 2
   if context.options.helpLine.enabled then
     topfill = topfill + 1
+    if context.options.compactUI.enabled then
+      topfill = topfill + 1
+    end
   end
   vim.fn.winrestview({ topfill = topfill })
 end
