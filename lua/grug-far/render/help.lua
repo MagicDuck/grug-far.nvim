@@ -39,9 +39,6 @@ local function getHelpVirtLines(virt_lines, actions, context)
 
   table.insert(virt_lines, line)
 
-  -- one blank line at end
-  table.insert(virt_lines, { { '' } })
-
   return virt_lines
 end
 
