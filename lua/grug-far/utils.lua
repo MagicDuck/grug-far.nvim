@@ -822,4 +822,16 @@ function M.str_replace_once(str, old, new)
     return str:sub(1, start - 1) .. new .. str:sub(_end + 1)
   end
 end
+
+--- show row above the top line so that extmark virtual lines appear
+--- fix for this bug: https://github.com/neovim/neovim/issues/16166
+---@param context grug.far.Context
+function M.fixShowTopVirtLines(context)
+  local topfill = 1
+  if context.options.helpLine.enabled then
+    topfill = topfill + 2
+  end
+  vim.fn.winrestview({ topfill = topfill })
+end
+
 return M

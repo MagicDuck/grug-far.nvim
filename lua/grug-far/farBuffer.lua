@@ -431,14 +431,13 @@ function M.setupBuffer(win, buf, context, on_ready)
     end)
   end)
 
-  -- show 1 row above the top line on cursor move so that exmtmark labels appear
   -- fix for this bug: https://github.com/neovim/neovim/issues/16166
   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
     group = context.augroup,
     buffer = buf,
     callback = function()
       if is_ready then
-        vim.fn.winrestview({ topfill = 1 })
+        utils.fixShowTopVirtLines(context)
       end
     end,
   })

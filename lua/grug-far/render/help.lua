@@ -61,9 +61,12 @@ local function renderHelp(params, context)
   local virt_lines = getHelpVirtLines(top_virt_lines, actions, context)
   context.extmarkIds[extmarkName] = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
     id = context.extmarkIds[extmarkName],
-    virt_text = virt_lines[1],
-    virt_text_pos = 'overlay',
-    virt_lines = vim.list_slice(virt_lines, 2),
+    end_row = 0,
+    end_col = 0,
+    virt_lines = virt_lines,
+    virt_lines_leftcol = true,
+    virt_lines_above = true,
+    right_gravity = false,
   })
 end
 
