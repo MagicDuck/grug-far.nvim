@@ -12,7 +12,7 @@
 11|  Paths:                                                                       
 12|                                                                                
 13|                                                                                
-14| STATUS_SUCCESS ⟪ astgrep ⟫
+14| STATUS_SUCCESS ⟪ astgrep | vimscript ⟫
 15| 1 matches in 1 files                                                           
 16|                                                                                
 17|  file2.ts                                                                      

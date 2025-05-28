@@ -12,7 +12,7 @@
 11|  Paths:                                                                       
 12|                                                                                
 13|                                                                                
-14| STATUS_ERROR ⟪ astgrep ⟫
+14| STATUS_ERROR ⟪ astgrep | vimscript ⟫
 15|  replace failed!                                                              
 16|                                                                                
 17|Replace [vimscript]:                                                            

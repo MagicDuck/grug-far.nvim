@@ -12,7 +12,7 @@
 11|  Paths:                                                                       
 12|                                                                                
 13|                                                                                
-14| STATUS_ERROR ⟪ astgrep ⟫
+14| STATUS_ERROR ⟪ astgrep | vimscript ⟫
 15|                                                                                
 16|Replace [vimscript]:                                                            
 17|line 1: Vim(return):E121: Undefined variable: non_existent_one                  
