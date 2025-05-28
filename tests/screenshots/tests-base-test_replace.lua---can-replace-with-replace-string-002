@@ -1,5 +1,5 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|   Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...       
+01| Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...         
 02|                                                                                
 03|  Search:                                                                      
 04|  curly                                                                         
@@ -21,5 +21,5 @@
 20|                                                                                
 21|  file2.doc                                                                     
 22|▒   2       curly talks and curly drinks                                     [2]
-23|Grug FAR - 1: curly                                                          2,6
+23|Grug FAR - 1: curly                                                          1,6
 24|-- INSERT --                                                                    

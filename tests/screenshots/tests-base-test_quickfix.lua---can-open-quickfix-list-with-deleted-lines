@@ -1,18 +1,18 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|                                        │                                       
-02|       grug walks                       │                                       
-03|       then grug swims                  │ STATUS_SUCCESS ⟪ ripgrep ⟫
-04|                                        │ 6 matches in 2 files                  
-05|                                        │                                       
-06|                                        │file1.txt                              
-07|                                        │  3        then grug swims          [2]
+02|       grug walks                       │file1.txt                              
+03|       then grug swims                  │  2        grug walks               [1]
+04|                                        │                                       
+05|                                        │file2.doc                              
+06|                                        │  2       grug talks and grug drink [3]
+07|                                        │  4       and grug flies            [5]
 08|                                        │                                       
-09|                                        │file2.doc                              
-10|                                        │  3       then grug thinks          [4]
-11|                                        │  4       and grug flies            [5]
-12|file1.txt                           3,13 Grug FAR - 1: grug                 12,1
-13|file1.txt|3 col 13| then grug swims                                             
-14|file2.doc|3 col 12| then grug thinks                                            
+09|                                        │                                       
+10|                                        │                                       
+11|                                        │                                       
+12|file1.txt                            2,8 Grug FAR - 1: grug                 12,1
+13|file1.txt|2 col 8| grug walks                                                   
+14|file2.doc|2 col 7| grug talks and grug drinks                                   
 15|file2.doc|4 col 11| and grug flies                                              
 16|                                                                                
 17|                                                                                

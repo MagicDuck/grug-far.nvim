@@ -1,5 +1,5 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|   Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...       
+01| Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...         
 02|                                                                                
 03|  Search:                                                                      
 04|  $A                                                                            
@@ -21,5 +21,5 @@
 20|▒   4     }                                                                     
 21|▒   5                                                                           
 22|▒   6                                                                           
-23|Grug FAR - 1: $A                                                             2,3
+23|Grug FAR - 1: $A                                                             1,3
 24|-- INSERT --                                                                    

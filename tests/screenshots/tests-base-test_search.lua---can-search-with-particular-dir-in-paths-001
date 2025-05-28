@@ -1,14 +1,13 @@
---|
-01|
-02|GRUG
+--|----
+01|GRUG
+02|
 03|
-04|
-05|--ignore-case
-06|.
-07|
-08|file1
-09| grug walks 
-10|
-11|file2
-12|      grug talks and grug drinks
-13|      then grug thinks
+04|--ignore-case
+05|.
+06|
+07|file1
+08| grug walks 
+09|
+10|file2
+11|      grug talks and grug drinks
+12|      then grug thinks

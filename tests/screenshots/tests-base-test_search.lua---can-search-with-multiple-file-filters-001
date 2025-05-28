@@ -1,14 +1,13 @@
---|
-01|
-02|grug
-03|
-04|*.txt
-05|*.md
+--|----
+01|grug
+02|
+03|*.txt
+04|*.md
+05|
 06|
 07|
-08|
-09|file1.md
-10| grug jumps 
-11|
-12|file1.txt
-13| grug walks 
+08|file1.md
+09| grug jumps 
+10|
+11|file1.txt
+12| grug walks 

@@ -1,5 +1,5 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|   Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...       
+01| Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...         
 02|                                                                                
 03|  Search:                                                                      
 04|  grug                                                                          
@@ -21,5 +21,5 @@
 20|                                                                                
 21|  ./foo bar/file2.doc                                                           
 22|▒   2       grug talks and grug drinks                                       [2]
-23|Grug FAR - 1: grug                                                           2,4
+23|Grug FAR - 1: grug                                                           1,4
 24|grug-far: replace completed!                                                    

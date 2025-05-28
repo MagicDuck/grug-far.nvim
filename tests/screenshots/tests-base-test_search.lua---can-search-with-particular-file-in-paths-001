@@ -1,10 +1,9 @@
--|
-1|
-2|GRUG
+-|----
+1|GRUG
+2|
 3|
-4|
-5|--ignore-case
-6|./file1
-7|
-8|./file1
-9| grug walks 
+4|--ignore-case
+5|./file1
+6|
+7|./file1
+8| grug walks 

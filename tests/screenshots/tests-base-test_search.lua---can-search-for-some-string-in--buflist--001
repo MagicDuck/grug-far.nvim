@@ -1,13 +1,12 @@
---|
-01|
-02|grug
+--|----
+01|grug
+02|
 03|
 04|
-05|
-06|<buflist>
-07|
-08|file1
-09| grug walks 
-10|
-11|file2
-12| grug talks 
+05|<buflist>
+06|
+07|file1
+08| grug walks 
+09|
+10|file2
+11| grug talks 
