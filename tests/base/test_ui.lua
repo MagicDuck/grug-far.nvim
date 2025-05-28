@@ -287,7 +287,7 @@ T['can change border style for preview window'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>9G')
+  child.type_keys('<esc>8G')
   child.type_keys('<esc>' .. keymaps.previewLocation.n)
   helpers.childExpectScreenshot(child)
 end

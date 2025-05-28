@@ -61,8 +61,8 @@ T['can open quickfix list with deleted lines'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>9G', 'dd')
-  child.type_keys(10, '<esc>12G', 'dd')
+  child.type_keys(10, '<esc>8G', 'dd')
+  child.type_keys(10, '<esc>11G', 'dd')
 
   child.type_keys('<esc>' .. keymaps.qflist.n)
   helpers.childWaitForScreenshotText(child, 'Quickfix List')

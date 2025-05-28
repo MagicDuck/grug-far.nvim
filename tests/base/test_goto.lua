@@ -35,9 +35,9 @@ T['can goto given location'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>10G0')
+  child.type_keys('<esc>9G0')
   child.type_keys('<esc>' .. keymaps.gotoLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 end
 
@@ -62,7 +62,7 @@ T['can goto given location with count'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.type_keys('<esc>2' .. keymaps.gotoLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 end
 
@@ -86,9 +86,9 @@ T['can goto given location when only window in tabpage'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>10G0')
+  child.type_keys('<esc>9G0')
   child.type_keys('<esc>' .. keymaps.gotoLocation.n)
-  helpers.childWaitForScreenshotText(child, '2,13')
+  helpers.childWaitForScreenshotText(child, '3,13')
   helpers.childExpectScreenshot(child)
 end
 
