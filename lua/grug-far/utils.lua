@@ -827,9 +827,9 @@ end
 --- fix for this bug: https://github.com/neovim/neovim/issues/16166
 ---@param context grug.far.Context
 function M.fixShowTopVirtLines(context)
-  local topfill = 1
+  local topfill = 2
   if context.options.helpLine.enabled then
-    topfill = topfill + 2
+    topfill = topfill + 1
   end
   vim.fn.winrestview({ topfill = topfill })
 end

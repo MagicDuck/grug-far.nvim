@@ -3,20 +3,12 @@ local renderInput = require('grug-far.render.input')
 local renderResults = require('grug-far.render.results')
 local utils = require('grug-far.utils')
 
--- note: this was previously used to work around a nvim bug. Leaving it in for now
--- this bug: https://github.com/neovim/neovim/issues/16166
-local TOP_EMPTY_LINES = 0
-
 ---@param buf integer
 ---@param context grug.far.Context
 local function render(buf, context)
   local placeholders = context.options.engines[context.engine.type].placeholders
   local inputsHighlight = context.options.inputsHighlight
 
-  local lineNr = 0
-  if TOP_EMPTY_LINES > 0 then
-    utils.ensureBufTopEmptyLines(buf, TOP_EMPTY_LINES)
-  end
   if context.options.helpLine.enabled then
     renderHelp({
       buf = buf,
@@ -25,8 +17,18 @@ local function render(buf, context)
     }, context)
   end
 
-  lineNr = lineNr + TOP_EMPTY_LINES
+  -- add a blank line for aesthetics
+  context.extmarkIds.top_blank_line = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
+    id = context.extmarkIds.top_blank_line,
+    end_row = 0,
+    end_col = 0,
+    virt_lines = { { { '' } } },
+    virt_lines_leftcol = true,
+    virt_lines_above = true,
+    right_gravity = false,
+  })
 
+  local lineNr = 0
   local lastInput
   for i, input in ipairs(context.engine.inputs) do
     lastInput = input
