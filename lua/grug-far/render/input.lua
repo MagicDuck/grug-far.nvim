@@ -24,6 +24,7 @@ local function renderInput(params, context)
   local top_virt_lines = params.top_virt_lines
   local placeholder = params.placeholder
   local icon = opts.getIcon(params.icon, context) or ''
+  local isCompactUI = context.options.compactUI.enabled
 
   -- make sure we don't go beyond prev input pos
   if prevExtmarkName then
@@ -81,7 +82,15 @@ local function renderInput(params, context)
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
 
   local label_virt_lines = top_virt_lines or {}
-  table.insert(label_virt_lines, { { ' ' .. icon .. label, 'GrugFarInputLabel' } })
+  if not isCompactUI then
+    table.insert(label_virt_lines, { { ' ' .. icon .. label, 'GrugFarInputLabel' } })
+  end
+  if vim.fn.strdisplaywidth(icon) > 2 then
+    error(
+      'Icons need to be at most 2 characters wide in compactUI mode. "'
+        .. params.icon('" is wider than that!')
+    )
+  end
   context.extmarkIds[extmarkName] =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
       id = context.extmarkIds[extmarkName],
@@ -90,6 +99,8 @@ local function renderInput(params, context)
       virt_lines = label_virt_lines,
       virt_lines_leftcol = true,
       virt_lines_above = true,
+      sign_text = isCompactUI and icon or nil,
+      sign_hl_group = isCompactUI and 'GrugFarInputLabel' or nil,
       right_gravity = false,
     })
 
@@ -106,12 +117,15 @@ local function renderInput(params, context)
     }, extmarkName)
   end
 
-  if placeholder then
+  if placeholder or isCompactUI then
     local placeholderExtmarkName = extmarkName .. '_placeholder'
     if #input_lines == 1 and #input_lines[1] == 0 then
       local ellipsis = ' ...'
       local available_win_width = vim.api.nvim_win_get_width(0) - #ellipsis - 2
-      local text = placeholder
+      local text = placeholder or ''
+      if isCompactUI then
+        text = label .. ' ' .. text
+      end
       local newline = opts.getIcon('newline', context)
       if newline then
         text = text:gsub('\\n', newline)

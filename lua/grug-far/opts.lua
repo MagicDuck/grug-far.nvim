@@ -216,6 +216,11 @@ grug_far.defaultOptions = {
   -- whether to wrap text in the grug-far buffer
   wrap = true,
 
+  -- whether to show a more compact version of the UI
+  compactUI = {
+    enabled = false,
+  },
+
   -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
   transient = false,
 
@@ -754,6 +759,13 @@ grug_far.defaultOptions = {
 ---@field useScratchBuffer? boolean
 ---@private
 
+---@class grug.far.CompactUITable
+---@field enabled boolean
+
+---@class grug.far.CompactUITableOverride
+---@field enabled? boolean
+---@private
+
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
 
 ---@alias LineNumberLabelType fun(params: {
@@ -788,6 +800,7 @@ grug_far.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode boolean
 ---@field startCursorRow integer
+---@field compactUI grug.far.CompactUITable
 ---@field wrap boolean
 ---@field transient boolean
 ---@field ignoreVisualSelection boolean
@@ -837,6 +850,7 @@ grug_far.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
+---@field compactUI? grug.far.CompactUITableOverride
 ---@field wrap? boolean
 ---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
