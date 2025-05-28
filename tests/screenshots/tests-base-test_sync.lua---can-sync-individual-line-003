@@ -1,15 +1,14 @@
---|
-01|
-02|grug
+--|----
+01|grug
+02|
 03|
 04|
 05|
 06|
-07|
-08|file1.txt
-09|       grug walks
-10|       then grug swims a deep depth indeed!
-11|
-12|file2.doc
-13|      grug talks and grug drinks
-14|      then grug thinks
+07|file1.txt
+08|       grug walks
+09|       then grug swims a deep depth indeed!
+10|
+11|file2.doc
+12|      grug talks and grug drinks
+13|      then grug thinks
