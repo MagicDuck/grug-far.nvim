@@ -12,7 +12,7 @@
 11|  Paths:                                                                       
 12|                                                                                
 13|                                                                                
-14| STATUS_ERROR ⟪ astgrep ⟫
+14| STATUS_ERROR ⟪ astgrep | lua ⟫
 15|                                                                                
 16|[string "Replace"]:1: attempt to concatenate global 'non_existent_one' (a nil va
 17|      lue)                                                                      
