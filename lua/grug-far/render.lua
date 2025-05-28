@@ -61,10 +61,7 @@ local function render(buf, context)
 
     lineNr = lineNr + 1
   end
-
-  -- show 1 row above the top line that exmtmark labels appear
-  -- fix for this bug: https://github.com/neovim/neovim/issues/16166
-  vim.fn.winrestview({ topfill = 1 })
+  utils.fixShowTopVirtLines(context)
 
   renderResults({
     buf = buf,
