@@ -1,17 +1,18 @@
 local opts = require('grug-far.opts')
 local utils = require('grug-far.utils')
 
----@alias VirtText string[]
+local M = {}
+
+---@alias grug.far.VirtText string[]
 
 --- gets help virtual text lines
----@param virt_lines VirtText[][]
----@param actions grug.far.Action[]
 ---@param context grug.far.Context
----@return VirtText[][]
-local function getHelpVirtLines(virt_lines, actions, context)
+---@return grug.far.VirtText[][]
+function M.getHelpVirtLines(context)
+  local virt_lines = {}
   local entries = vim.tbl_map(function(action)
     return { text = action.text, lhs = utils.getActionMapping(action.keymap) }
-  end, actions)
+  end, context.actions)
   entries = vim.tbl_filter(function(entry)
     return entry.lhs ~= nil
   end, entries)
@@ -42,29 +43,4 @@ local function getHelpVirtLines(virt_lines, actions, context)
   return virt_lines
 end
 
----@param params {
---- buf: integer,
---- extmarkName: string,
---- actions: grug.far.Action[],
---- top_virt_lines?: VirtText[][],
----}
----@param context grug.far.Context
-local function renderHelp(params, context)
-  local buf = params.buf
-  local actions = params.actions
-  local top_virt_lines = params.top_virt_lines or {}
-  local extmarkName = params.extmarkName
-
-  local virt_lines = getHelpVirtLines(top_virt_lines, actions, context)
-  context.extmarkIds[extmarkName] = vim.api.nvim_buf_set_extmark(buf, context.namespace, 0, 0, {
-    id = context.extmarkIds[extmarkName],
-    end_row = 0,
-    end_col = 0,
-    virt_lines = virt_lines,
-    virt_lines_leftcol = true,
-    virt_lines_above = true,
-    right_gravity = false,
-  })
-end
-
-return renderHelp
+return M

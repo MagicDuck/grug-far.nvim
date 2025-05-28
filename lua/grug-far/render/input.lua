@@ -11,6 +11,7 @@ local treesitter = require('grug-far.render.treesitter')
 --- placeholder?: string | false,
 --- icon?: string,
 --- highlightLang?: string,
+--- top_virt_lines?: grug.far.VirtText[][],
 --- }
 ---@param context grug.far.Context
 local function renderInput(params, context)
@@ -20,6 +21,7 @@ local function renderInput(params, context)
   local prevExtmarkName = params.prevExtmarkName
   local nextExtmarkName = params.nextExtmarkName
   local label = params.label
+  local top_virt_lines = params.top_virt_lines
   local placeholder = params.placeholder
   local icon = opts.getIcon(params.icon, context) or ''
 
@@ -78,14 +80,14 @@ local function renderInput(params, context)
 
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
 
+  local label_virt_lines = top_virt_lines or {}
+  table.insert(label_virt_lines, { { ' ' .. icon .. label, 'GrugFarInputLabel' } })
   context.extmarkIds[extmarkName] =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
       id = context.extmarkIds[extmarkName],
       end_row = currentStartRow,
       end_col = 0,
-      virt_lines = {
-        { { ' ' .. icon .. label, 'GrugFarInputLabel' } },
-      },
+      virt_lines = label_virt_lines,
       virt_lines_leftcol = true,
       virt_lines_above = true,
       right_gravity = false,
