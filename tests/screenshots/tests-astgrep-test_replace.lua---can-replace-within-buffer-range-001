@@ -1,11 +1,10 @@
---|
-01|
-02|grug
-03|bruv
-04|
-05|
-06|buffer-range=file2.ts:2:13-3:-1
-07|
-08|file2.ts
-09|      grug.walks(talks)
-10|      bruv.walks(talks)
+-|----
+1|grug
+2|bruv
+3|
+4|
+5|buffer-range=file2.ts:2:13-3:-1
+6|
+7|file2.ts
+8|      grug.walks(talks)
+9|      bruv.walks(talks)

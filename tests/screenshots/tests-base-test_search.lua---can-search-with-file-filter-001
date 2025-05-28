@@ -1,10 +1,9 @@
--|
-1|
-2|grug
-3|
-4|**/*.txt
+-|----
+1|grug
+2|
+3|**/*.txt
+4|
 5|
 6|
-7|
-8|file1.txt
-9| grug walks 
+7|file1.txt
+8| grug walks 

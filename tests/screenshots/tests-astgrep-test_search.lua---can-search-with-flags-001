@@ -1,11 +1,10 @@
---|
-01|
-02|grug
-03|
-04|
-05|--lang=ts
-06|
-07|
-08|file2.ts
-09|    if (grug || talks) {
-10|      grug.walks(talks)
+-|----
+1|grug
+2|
+3|
+4|--lang=ts
+5|
+6|
+7|file2.ts
+8|    if (grug || talks) {
+9|      grug.walks(talks)

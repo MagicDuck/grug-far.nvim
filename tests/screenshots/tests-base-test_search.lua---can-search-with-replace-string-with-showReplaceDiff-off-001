@@ -1,14 +1,13 @@
---|
-01|
-02|grug
-03|curly
+--|----
+01|grug
+02|curly
+03|
 04|
 05|
 06|
-07|
-08|file1.txt
-09| curly walks 
-10|
-11|file2.doc
-12|      curly talks and curly drinks
-13|      then curly thinks
+07|file1.txt
+08| curly walks 
+09|
+10|file2.doc
+11|      curly talks and curly drinks
+12|      then curly thinks

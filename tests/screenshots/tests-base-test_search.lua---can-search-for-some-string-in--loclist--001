@@ -1,13 +1,12 @@
---|
-01|
-02|grug
+--|----
+01|grug
+02|
 03|
 04|
-05|
-06|<loclist>
-07|
-08|file2
-09| grug talks 
-10|
-11|file4
-12| grug thinks 
+05|<loclist>
+06|
+07|file2
+08| grug talks 
+09|
+10|file4
+11| grug thinks 

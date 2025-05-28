@@ -1,25 +1,25 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|   Actions / Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...       
-02|                                                                                
-03|  Search:                                                                      
-04|  grug                                                                          
-05|  Replace:                                                                     
-06|  curly                                                                         
-07|  Files Filter:                                                                
-08|                                                                                
-09| 󰮚 Flags:                                                                       
-10|                                                                                
-11|  Paths:                                                                       
+01|                                                                                
+02|  Search:                                                                      
+03|  grug                                                                          
+04|  Replace:                                                                     
+05|  curly                                                                         
+06|  Files Filter:                                                                
+07|                                                                                
+08| 󰮚 Flags:                                                                       
+09|                                                                                
+10|  Paths:                                                                       
+11|                                                                                
 12|                                                                                
-13|                                                                                
-14| STATUS_SUCCESS ⟪ ripgrep ⟫
-15| 6 matches in 2 files   sync completed!                                        
-16|                                                                                
-17|  file1.txt                                                                     
-18|▒   3        then grug swims                                                 [2]
-19|▒   3        then curly swims a deep depth indeed!                              
-20|                                                                                
-21|  file2.doc                                                                     
-22|▒   3       then grug believes he thinks                                     [4]
-23|Grug FAR - 1: grug                                                         13,28
+13| STATUS_SUCCESS ⟪ ripgrep ⟫
+14| 6 matches in 2 files   sync completed!                                        
+15|                                                                                
+16|  file1.txt                                                                     
+17|▒   2        grug walks                                                      [1]
+18|▒   3        then curly swims                                                   
+19|   a deep depth indeed!                                                         
+20|  file2.doc                                                                     
+21|▒   2       grug talks and grug drinks                                       [3]
+22|▒   3       then curly believes he thinks                                       
+23|Grug FAR - 1: grug                                                         13,29
 24|grug-far: synced changes!                                                       

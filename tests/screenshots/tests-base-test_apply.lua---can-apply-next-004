@@ -1,15 +1,15 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │                                       
-02|      curly talks and curly drinks      │  Paths:                              
-03|      then grug thinks                  │                                       
+01|                                        │ 󰮚 Flags:                              
+02|      curly talks and curly drinks      │                                       
+03|      then grug thinks                  │  Paths:                              
 04|                                        │                                       
-05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-06|                                        │ 5 matches in 2 files   sync completed
-07|                                        │                                       
-08|                                        │  file2.doc                            
-09|                                        │▒   3       then grug thinks        [4]
-10|                                        │▒   3       then curly thinks          
-11|                                        │                                       
+05|                                        │                                       
+06|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+07|                                        │ 5 matches in 2 files   sync completed
+08|                                        │                                       
+09|                                        │  file2.doc                            
+10|                                        │▒   3       then grug thinks        [4]
+11|                                        │▒   3       then curly thinks          
 12|                                        │                                       
 13|                                        │                                       
 14|                                        │                                       
@@ -21,5 +21,5 @@
 20|                                        │                                       
 21|                                        │                                       
 22|                                        │                                       
-23|file2.doc                           3,12 Grug FAR - 1: grug                  9,1
+23|file2.doc                           3,12 Grug FAR - 1: grug                  8,1
 24|                                                                                

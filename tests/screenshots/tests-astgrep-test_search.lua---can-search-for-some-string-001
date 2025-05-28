@@ -1,10 +1,9 @@
--|
-1|
-2|grug.$A
+-|-------
+1|grug.$A
+2|
 3|
 4|
 5|
 6|
-7|
-8|file2.ts
-9|      grug.walks(talks)
+7|file2.ts
+8|      grug.walks(talks)

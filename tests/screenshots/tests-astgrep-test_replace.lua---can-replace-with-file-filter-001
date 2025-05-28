@@ -1,14 +1,13 @@
---|
-01|
-02|grug
-03|curly
-04|**/*.ts
+--|----
+01|grug
+02|curly
+03|**/*.ts
+04|
 05|
 06|
-07|
-08|file2.ts
-09|    if (grug || talks) {
-10|    if (curly || talks) {
-11| 
-12|      grug.walks(talks)
-13|      curly.walks(talks)
+07|file2.ts
+08|    if (grug || talks) {
+09|    if (curly || talks) {
+10| 
+11|      grug.walks(talks)
+12|      curly.walks(talks)
