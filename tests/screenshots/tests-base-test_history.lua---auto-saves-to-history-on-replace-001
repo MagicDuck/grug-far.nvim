@@ -3,13 +3,13 @@
 02|│(edit and save as usual if you need to, make sure to preserve format)         │
 03|│ Pick Entry <enter>                                                          │
 04|│                                                                              │
-05|│                                                                              │
-06|│Engine: ripgrep                                                               │
-07|│Search: grug                                                                  │
-08|│Replace: curly                                                                │
-09|│Files Filter:                                                                 │
-10|│Flags:                                                                        │
-11|│Paths:                                                                        │
+05|│Engine: ripgrep                                                               │
+06|│Search: grug                                                                  │
+07|│Replace: curly                                                                │
+08|│Files Filter:                                                                 │
+09|│Flags:                                                                        │
+10|│Paths:                                                                        │
+11|│                                                                              │
 12|│                                                                              │
 13|│                                                                              │
 14|│                                                                              │
@@ -21,5 +21,5 @@
 20|                                                                                
 21|  file2.doc                                                                     
 22|▒   2       grug talks and grug drinks                                       [2]
-23|Grug FAR - 1: grug                                                           2,4
+23|Grug FAR - 1: grug                                                           1,4
 24|grug-far: replace completed!                                  3,1           All 
