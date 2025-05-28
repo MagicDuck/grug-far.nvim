@@ -71,7 +71,7 @@ T['can goto next input'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    startCursorRow = 5,
+    startCursorRow = 4,
     prefills = { search = 'grug' },
   })
   helpers.childWaitForFinishedStatus(child)
@@ -105,7 +105,7 @@ T['can goto prev input'] = function()
   })
 
   helpers.childRunGrugFar(child, {
-    startCursorRow = 3,
+    startCursorRow = 2,
     prefills = { search = 'grug' },
   })
   helpers.childWaitForFinishedStatus(child)
