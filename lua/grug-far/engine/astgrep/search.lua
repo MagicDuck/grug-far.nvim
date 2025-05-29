@@ -137,10 +137,10 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
       local before, after = parseResults.split_last_file_matches(matches)
       matches = after
       local results = parseResults.parseResults(before, bufrange, hadNoResults)
-      on_fetch_chunk(results)
       if #results.lines > 0 then
         hadNoResults = false
       end
+      on_fetch_chunk(results)
     end,
     on_finish = function(status, errorMessage)
       if chunk_error then
@@ -150,10 +150,10 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
       if status == 'success' and #matches > 0 then
         -- do the last few
         local results = parseResults.parseResults(matches, bufrange, hadNoResults)
-        on_fetch_chunk(results)
         if #results.lines > 0 then
           hadNoResults = false
         end
+        on_fetch_chunk(results)
         matches = {}
       end
       vim.schedule(function()

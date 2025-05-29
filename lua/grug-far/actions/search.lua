@@ -107,14 +107,18 @@ local function search(params)
     if data.type == SearchUpdateType.Finish then
       on_finish(vim.F.unpack_len(data.params))
     else -- FetchChunk
+      if #data.lines == 0 then
+        return
+      end
+
+      resultsList.appendResultsChunk(buf, context, data)
+      resultsList.highlight(buf, context)
+
       state.status = 'progress'
       state.progressCount = state.progressCount + 1
       state.stats.matches = state.stats.matches + data.stats.matches
       state.stats.files = state.stats.files + data.stats.files
       renderResultsHeader(buf, context)
-
-      resultsList.appendResultsChunk(buf, context, data)
-      resultsList.highlight(buf, context)
     end
   end
 

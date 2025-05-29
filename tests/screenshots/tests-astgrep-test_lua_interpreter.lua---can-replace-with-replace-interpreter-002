@@ -15,11 +15,11 @@
 14| STATUS_SUCCESS ⟪ astgrep | lua ⟫
 15| 14 matches in 1 files                                                          
 16|                                                                                
-17|                                                                                
-18|  file2.ts                                                                      
-19|▒   2     if (grug || talks) {                                               [1]
-20|▒   3       grug.walks_walks(talks)                                             
-21|▒   4     }                                                                     
-22|▒   5                                                                           
+17|  file2.ts                                                                      
+18|▒   2     if (grug || talks) {                                               [1]
+19|▒   3       grug.walks_walks(talks)                                             
+20|▒   4     }                                                                     
+21|▒   5                                                                           
+22|▒   6                                                                           
 23|Grug FAR - 1: $A                                                             1,3
 24|-- INSERT --                                                                    

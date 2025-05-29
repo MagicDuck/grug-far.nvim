@@ -119,10 +119,10 @@ local function addResultChunkLines(buf, context, data)
   end
 
   -- add text
-  local lastline = vim.api.nvim_buf_line_count(buf)
-  if #data.lines > 0 then
-    setBufLines(buf, lastline, lastline, false, data.lines)
-  end
+  local headerRow = M.getHeaderRow(context, buf)
+  local linecount = vim.api.nvim_buf_line_count(buf)
+  local lastline = linecount == headerRow + 1 and headerRow or linecount
+  setBufLines(buf, lastline, linecount, false, data.lines)
 
   return lastline
 end
@@ -539,7 +539,7 @@ function M.clear(buf, context)
 
   -- remove all lines after heading
   local headerRow = M.getHeaderRow(context, buf)
-  setBufLines(buf, headerRow, -1, false, {})
+  setBufLines(buf, headerRow + 1, -1, false, {})
 end
 
 --- appends search command to results list
@@ -547,8 +547,11 @@ end
 ---@param context grug.far.Context
 ---@param rgArgs string[]
 function M.appendSearchCommand(buf, context, rgArgs)
+  local headerRow = M.getHeaderRow(context, buf)
+  local linecount = vim.api.nvim_buf_line_count(buf)
+  local lastline = linecount == headerRow + 1 and headerRow or linecount
+
   local cmd_path = context.options.engines[context.engine.type].path
-  local lastline = vim.api.nvim_buf_line_count(buf)
   local header = 'Search Command:'
   local lines = { header }
   for i, arg in ipairs(rgArgs) do
@@ -564,7 +567,7 @@ function M.appendSearchCommand(buf, context, rgArgs)
   table.insert(lines, '')
   table.insert(lines, '')
 
-  setBufLines(buf, lastline, lastline, false, lines)
+  setBufLines(buf, lastline, linecount, false, lines)
   vim.hl.range(
     buf,
     context.helpHlNamespace,
