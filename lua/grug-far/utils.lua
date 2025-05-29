@@ -827,7 +827,8 @@ end
 --- show row above the top line so that extmark virtual lines appear
 --- fix for this bug: https://github.com/neovim/neovim/issues/16166
 ---@param context grug.far.Context
-function M.fixShowTopVirtLines(context)
+---@param buf integer
+function M.fixShowTopVirtLines(context, buf)
   local topfill = 0
 
   if context.options.helpLine.enabled then
@@ -842,7 +843,8 @@ function M.fixShowTopVirtLines(context)
     topfill = topfill + 1
   end
 
-  vim.fn.winrestview({ topfill = topfill })
+  local grugfar_win = vim.fn.bufwinid(buf)
+  vim.fn.win_execute(grugfar_win, 'lua vim.fn.winrestview({ topfill = ' .. topfill .. ' })')
 end
 
 return M

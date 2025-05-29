@@ -437,7 +437,7 @@ function M.setupBuffer(win, buf, context, on_ready)
     buffer = buf,
     callback = function()
       if is_ready then
-        utils.fixShowTopVirtLines(context)
+        utils.fixShowTopVirtLines(context, buf)
       end
     end,
   })
