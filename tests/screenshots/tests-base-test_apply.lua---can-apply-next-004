@@ -1,14 +1,14 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │  Paths:                              
+01|                                        │                                       
 02|      curly talks and curly drinks      │                                       
-03|      then grug thinks                  │                                       
-04|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-05|                                        │ 5 matches in 2 files   sync completed
+03|      then grug thinks                  │ STATUS_SUCCESS ⟪ ripgrep ⟫
+04|                                        │ 5 matches in 2 files   sync completed
+05|                                        │                                       
 06|                                        │                                       
-07|                                        │                                       
-08|                                        │  file2.doc                            
-09|                                        │▒   3       then grug thinks        [4]
-10|                                        │▒   3       then curly thinks          
+07|                                        │  file2.doc                            
+08|                                        │▒   3       then grug thinks        [4]
+09|                                        │▒   3       then curly thinks          
+10|                                        │                                       
 11|                                        │                                       
 12|                                        │                                       
 13|                                        │                                       

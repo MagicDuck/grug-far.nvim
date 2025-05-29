@@ -1,14 +1,14 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|  Paths:                                                                       
+01|                                                                                
 02|                                                                                
-03|                                                                                
-04| STATUS_SUCCESS ⟪ ripgrep ⟫
-05| 5 matches in 2 files                                                           
-06|                                                                                
-07|file1.txt                                                                       
-08|  2        grug walks                                                        [1]
-09|  3        then grug swims                                                   [2]
-10|                                                                                
+03| STATUS_SUCCESS ⟪ ripgrep ⟫
+04| 5 matches in 2 files                                                           
+05|                                                                                
+06|file1.txt                                                                       
+07|  2        grug walks                                                        [1]
+08|  3        then grug swims                                                   [2]
+09|                                                                                
+10|file2.doc                                                                       
 11|Grug FAR - 1: grug                                                           8,1
 12|                                                                                
 13|       grug walks                                                               

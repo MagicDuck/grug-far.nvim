@@ -1,19 +1,19 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │ 󰮚 Flags:                              
-02|      grug talks and grug drinks        │                                       
-03|      then grug thinks                  │  Paths:                              
+01|                                        │                                       
+02|      grug talks and grug drinks        │  Paths:                              
+03|      then grug thinks                  │                                       
 04|                                        │                                       
-05|                                        │                                       
-06|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-07|                                        │ 5 matches in 2 files   sync completed
+05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+06|                                        │ 5 matches in 2 files   sync completed
+07|                                        │                                       
 08|                                        │                                       
-09|                                        │                                       
-10|                                        │  file2.doc                            
-11|                                        │▒   2       grug talks and grug dri [3]
-12|                                        │▒   2       curly talks and curly drink
-13|                                        │              s                        
-14|                                        │▒   3       then grug thinks        [4]
-15|                                        │▒   3       then curly thinks          
+09|                                        │  file2.doc                            
+10|                                        │▒   2       grug talks and grug dri [3]
+11|                                        │▒   2       curly talks and curly drink
+12|                                        │              s                        
+13|                                        │▒   3       then grug thinks        [4]
+14|                                        │▒   3       then curly thinks          
+15|                                        │                                       
 16|                                        │                                       
 17|                                        │                                       
 18|                                        │                                       
