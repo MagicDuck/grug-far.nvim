@@ -122,7 +122,7 @@ local function addResultChunkLines(buf, context, data)
   local headerRow = M.getHeaderRow(context, buf)
   local linecount = vim.api.nvim_buf_line_count(buf)
   local lastline = linecount == headerRow + 1 and headerRow or linecount
-  setBufLines(buf, lastline, linecount, false, data.lines)
+  setBufLines(buf, lastline, -1, false, data.lines)
 
   return lastline
 end
@@ -387,10 +387,10 @@ function M.setError(buf, context, error)
   M.clear(buf, context)
 
   local headerRow = M.getHeaderRow(context, buf)
-  local startLine = headerRow + 1
+  local startLine = headerRow
 
   local err_lines = vim.split((error and #error > 0) and error or 'Unexpected error!', '\n')
-  setBufLines(buf, startLine, startLine, false, err_lines)
+  setBufLines(buf, startLine, -1, false, err_lines)
 
   for i = startLine, startLine + #err_lines do
     vim.hl.range(buf, context.namespace, 'DiagnosticError', { i, 0 }, { i, -1 })
@@ -408,7 +408,7 @@ function M.appendWarning(buf, context, warning)
   local lastline = vim.api.nvim_buf_line_count(buf)
 
   local warn_lines = vim.split(warning, '\n')
-  setBufLines(buf, lastline, lastline, false, warn_lines)
+  setBufLines(buf, lastline, -1, false, warn_lines)
 
   for i = lastline, lastline + #warn_lines - 1 do
     vim.hl.range(buf, context.namespace, 'DiagnosticWarn', { i, 0 }, { i, -1 })
@@ -567,7 +567,7 @@ function M.appendSearchCommand(buf, context, rgArgs)
   table.insert(lines, '')
   table.insert(lines, '')
 
-  setBufLines(buf, lastline, linecount, false, lines)
+  setBufLines(buf, lastline, -1, false, lines)
   vim.hl.range(
     buf,
     context.helpHlNamespace,
