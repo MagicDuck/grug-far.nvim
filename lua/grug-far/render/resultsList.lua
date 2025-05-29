@@ -537,9 +537,9 @@ function M.clear(buf, context)
   vim.api.nvim_buf_clear_namespace(buf, context.locationsNamespace, 0, -1)
   vim.api.nvim_buf_clear_namespace(buf, context.resultListNamespace, 0, -1)
 
-  -- remove all lines after heading and add one blank line
+  -- remove all lines after heading
   local headerRow = M.getHeaderRow(context, buf)
-  setBufLines(buf, headerRow, -1, false, { '' })
+  setBufLines(buf, headerRow, -1, false, {})
 end
 
 --- appends search command to results list

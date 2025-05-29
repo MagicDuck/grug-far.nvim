@@ -49,11 +49,10 @@ local function getSeparator(context)
     .. separatorLine
 end
 
---- render stats information line
----@param buf integer
+--- gets stats information line
 ---@param context grug.far.Context
----@param headerRow integer
-local function renderInfoLine(buf, context, headerRow)
+---@return grug.far.VirtText[]
+local function getInfoLine(context)
   local virt_texts = {}
 
   local stats = context.state.stats
@@ -70,21 +69,7 @@ local function renderInfoLine(buf, context, headerRow)
     table.insert(virt_texts, { icon .. actionMessage, 'GrugFarResultsActionMessage' })
   end
 
-  if #virt_texts > 0 then
-    context.extmarkIds.results_info_line =
-      vim.api.nvim_buf_set_extmark(buf, context.namespace, headerRow, 0, {
-        id = context.extmarkIds.results_info_line,
-        end_row = headerRow,
-        end_col = 0,
-        virt_lines = { virt_texts },
-        virt_lines_leftcol = true,
-        virt_lines_above = true,
-        right_gravity = false,
-      })
-  elseif context.extmarkIds.results_info_line then
-    vim.api.nvim_buf_del_extmark(buf, context.namespace, context.extmarkIds.results_info_line)
-    context.extmarkIds.results_info_line = nil
-  end
+  return virt_texts
 end
 
 ---@param buf integer
@@ -99,6 +84,13 @@ local function renderResultsHeader(buf, context, row)
 
   table.insert(virt_lines, { { getSeparator(context), 'GrugFarResultsHeader' } })
 
+  local infoLine = getInfoLine(context)
+  if #infoLine > 0 then
+    table.insert(virt_lines, infoLine)
+  end
+  -- blank line
+  table.insert(virt_lines, { { '', 'Normal' } })
+
   context.extmarkIds.results_header =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, headerRow, 0, {
       id = context.extmarkIds.results_header,
@@ -109,8 +101,6 @@ local function renderResultsHeader(buf, context, row)
       virt_lines_above = true,
       right_gravity = false,
     })
-
-  renderInfoLine(buf, context, headerRow)
 end
 
 return renderResultsHeader
