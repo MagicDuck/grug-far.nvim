@@ -4,13 +4,12 @@
 03|
 04|
 05|
-06|
-07|file1.txt
-08| grug walks 
-09| grug_and_curly walks 
-10|
-11|file2.doc
-12|      grug talks and grug drinks
-13|      grug_and_curly talks and grug_and_curly drinks
-14|      then grug thinks
-15|      then grug_and_curly thinks
+06|file1.txt
+07| grug walks 
+08| grug_and_curly walks 
+09|
+10|file2.doc
+11|      grug talks and grug drinks
+12|      grug_and_curly talks and grug_and_curly drinks
+13|      then grug thinks
+14|      then grug_and_curly thinks

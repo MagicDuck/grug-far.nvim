@@ -1,11 +1,10 @@
---|---------|---
-01|id: grug_test
-02|language: typescript
-03|rule:
-04|  pattern: george
-05|    
-06|*.ts
-07|
-08|
-09|
-10|no matches
+-|---------|---
+1|id: grug_test
+2|language: typescript
+3|rule:
+4|  pattern: george
+5|    
+6|*.ts
+7|
+8|
+9|no matches

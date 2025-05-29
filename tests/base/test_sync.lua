@@ -64,9 +64,9 @@ T['can sync all with changes ignoring deleted lines'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>8G', 'dddd', 'j')
+  child.type_keys(10, '<esc>7G', 'dddd', 'j')
   child.type_keys(10, 'A', ' a deep depth indeed!')
-  child.type_keys(10, '<esc>12G', 'dddd')
+  child.type_keys(10, '<esc>11G', 'dddd')
   child.type_keys(10, '$bi', 'believes he ')
 
   child.type_keys('<esc>' .. keymaps.syncLocations.n)
@@ -102,7 +102,7 @@ T['is prevented when multiline search'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>8G', 'dd')
+  child.type_keys(10, '<esc>7G', 'dd')
   child.type_keys(10, 'A', ' a deep depth indeed!')
 
   child.type_keys('<esc>' .. keymaps.syncLocations.n)
@@ -131,7 +131,7 @@ T['can sync individual line'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>9G', 'A', ' a deep depth indeed!')
+  child.type_keys(10, '<esc>8G', 'A', ' a deep depth indeed!')
   helpers.childExpectScreenshot(child)
 
   child.type_keys('<esc>' .. keymaps.syncLine.n)
@@ -169,7 +169,7 @@ T['can sync all within buffer range'] = function()
   helpers.childWaitForFinishedStatus(child)
 
   child.cmd('set number')
-  child.type_keys(10, '<esc>8G', 'dddd', 'j')
+  child.type_keys(10, '<esc>7G', 'dddd', 'j')
   child.type_keys(10, 'A', ' a deep depth indeed!')
 
   child.type_keys('<esc>' .. keymaps.syncLocations.n)
@@ -205,7 +205,7 @@ T['can sync file around line'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>9G0')
+  child.type_keys('<esc>8G0')
   child.type_keys(10, '<esc>' .. keymaps.syncFile.n)
 
   helpers.childWaitForScreenshotText(child, 'sync completed!')
@@ -233,7 +233,7 @@ T['can sync next'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>9G0')
+  child.type_keys('<esc>8G0')
   child.type_keys(10, '<esc>' .. keymaps.syncNext.n)
 
   helpers.childWaitForScreenshotText(child, 'sync completed!')
@@ -261,7 +261,7 @@ T['can sync prev'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>10G0')
+  child.type_keys('<esc>9G0')
   child.type_keys(10, '<esc>' .. keymaps.syncPrev.n)
 
   helpers.childWaitForScreenshotText(child, 'sync completed!')

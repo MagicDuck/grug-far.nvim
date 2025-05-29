@@ -4,10 +4,9 @@
 03|
 04|
 05|
-06|
-07|file2.ts
-08|    if (grug || talks) {
-09|    if (curly || talks) {
-10| 
-11|      grug.walks(talks)
-12|      curly.walks(talks)
+06|file2.ts
+07|    if (grug || talks) {
+08|    if (curly || talks) {
+09| 
+10|      grug.walks(talks)
+11|      curly.walks(talks)

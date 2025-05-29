@@ -14,12 +14,12 @@
 13|                                                                                
 14| STATUS_SUCCESS ⟪ ripgrep ⟫
 15| 3 matches in 1 files   sync completed!                                        
-16|    6                                                                           
-17|    7 file1.txt                                                                 
-18|▒   8   3       then grug thinks                                             [2]
-19|▒   9   3       then curly thinks a deep depth indeed!                          
-20|▒  10   4       and grug flies                                               [3]
-21|▒  11   4       and curly flies                                                 
-22|   12                                                                           
-23|Grug FAR - 1: grug                                                          9,44
+16|                                                                                
+17|    6 file1.txt                                                                 
+18|▒   7   3       then grug thinks                                             [2]
+19|▒   8   3       then curly thinks a deep depth indeed!                          
+20|▒   9   4       and grug flies                                               [3]
+21|▒  10   4       and curly flies                                                 
+22|                                                                                
+23|Grug FAR - 1: grug                                                          8,44
 24|grug-far: synced changes!                                                       

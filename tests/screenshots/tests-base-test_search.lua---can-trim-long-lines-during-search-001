@@ -4,10 +4,9 @@
 03|
 04|
 05|
-06|
-07|file1.txt
-08|grug walks a distance that is  ... (very long line, trimmed to 30 chars)
-09|
-10|file2.doc
-11|      grug talks and grug drin ... (very long line, trimmed to 30 chars)
-12|      then grug thinks
+06|file1.txt
+07|grug walks a distance that is  ... (very long line, trimmed to 30 chars)
+08|
+09|file2.doc
+10|      grug talks and grug drin ... (very long line, trimmed to 30 chars)
+11|      then grug thinks
