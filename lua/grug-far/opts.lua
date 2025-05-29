@@ -216,16 +216,14 @@ grug_far.defaultOptions = {
   -- whether to wrap text in the grug-far buffer
   wrap = true,
 
-  -- whether to show a more compact version of the UI
-  compactUI = {
-    enabled = false,
+  -- whether to show a more compact version of the inputs UI
+  showCompactInputs = false,
 
-    -- whether inputs top padding line should be removed
-    removeInputsTopPadding = false,
+  -- whether inputs top padding line should be present
+  showInputsTopPadding = true,
 
-    -- whether inputs bottom padding line should be removed
-    removeInputsBottomPadding = false,
-  },
+  -- whether inputs bottom padding line should be present
+  showInputsBottomPadding = true,
 
   -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
   transient = false,
@@ -765,17 +763,6 @@ grug_far.defaultOptions = {
 ---@field useScratchBuffer? boolean
 ---@private
 
----@class grug.far.CompactUITable
----@field enabled boolean
----@field removeInputsTopPadding boolean
----@field removeInputsBottomPadding boolean
-
----@class grug.far.CompactUITableOverride
----@field enabled? boolean
----@field removeInputsTopPadding? boolean
----@field removeInputsBottomPadding? boolean
----@private
-
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
 
 ---@alias LineNumberLabelType fun(params: {
@@ -810,7 +797,9 @@ grug_far.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode boolean
 ---@field startCursorRow integer
----@field compactUI grug.far.CompactUITable
+---@field showCompactInputs boolean
+---@field showInputsTopPadding boolean
+---@field showInputsBottomPadding boolean
 ---@field wrap boolean
 ---@field transient boolean
 ---@field ignoreVisualSelection boolean
@@ -860,7 +849,9 @@ grug_far.defaultOptions = {
 ---@field staticTitle? string
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
----@field compactUI? grug.far.CompactUITableOverride
+---@field showCompactInputs? boolean
+---@field showInputsTopPadding? boolean
+---@field showInputsBottomPadding? boolean
 ---@field wrap? boolean
 ---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
@@ -1009,22 +1000,6 @@ function grug_far.getGlobalOptions()
     _globalOptionsOverride or vim.g.grug_far or {},
     grug_far.defaultOptions
   )
-end
-
---- wether should add inputs top padding
----@param options grug.far.Options
----@return boolean
----@private
-function grug_far.shouldAddInputsTopPadding(options)
-  return not (options.compactUI.enabled and options.compactUI.removeInputsTopPadding)
-end
-
---- wether should add inputs bottom padding
----@param options grug.far.Options
----@return boolean
----@private
-function grug_far.shouldAddInputsBottomPadding(options)
-  return not (options.compactUI.enabled and options.compactUI.removeInputsBottomPadding)
 end
 
 return grug_far

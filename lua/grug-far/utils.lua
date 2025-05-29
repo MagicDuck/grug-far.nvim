@@ -1,4 +1,3 @@
-local opts = require('grug-far.opts')
 local uv = vim.uv
 local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 local M = {}
@@ -839,12 +838,12 @@ function M.fixShowTopVirtLines(context, buf)
       topfill = topfill + 1
     end
 
-    if not context.options.compactUI.enabled then
-      topfill = topfill + 1 -- first input label
+    if context.options.showInputsTopPadding then
+      topfill = topfill + 1
     end
 
-    if opts.shouldAddInputsTopPadding(context.options) then
-      topfill = topfill + 1
+    if not context.options.showCompactInputs then
+      topfill = topfill + 1 -- first input label
     end
   end
 

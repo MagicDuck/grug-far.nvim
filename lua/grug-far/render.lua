@@ -2,7 +2,6 @@ local help = require('grug-far.render.help')
 local renderInput = require('grug-far.render.input')
 local renderResults = require('grug-far.render.results')
 local utils = require('grug-far.utils')
-local opts = require('grug-far.opts')
 
 ---@param buf integer
 ---@param context grug.far.Context
@@ -14,7 +13,7 @@ local function render(buf, context)
       and help.getHelpVirtLines(context, context.actions)
     or {}
 
-  if opts.shouldAddInputsTopPadding(context.options) then
+  if context.options.showInputsTopPadding then
     table.insert(top_virt_lines, { { '' } })
   end
 
