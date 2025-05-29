@@ -1,21 +1,21 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|                                        │ 󰮚 Flags:                              
-02|       grug walks                       │                                       
-03|       then grug swims                  │  Paths:                              
+02|       grug walks                       │---------------------------------------
+03|       then grug swims                  │---------------------------------------
 04|                                        │                                       
-05|                                        │                                       
-06|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-07|                                        │ 5 matches in 2 files                  
-08|                                        │                                       
-09|                                        │file1.txt                              
-10|                                        │  2        grug walks               [1]
-11|                                        │  3        then grug swims          [2]
-12|                                        │                                       
-13|                                        │file2.doc                              
-14|                                        │  2       grug talks and grug drink [3]
-15|                                        │  3       then grug thinks          [4]
-16|                                        │                                       
-17|                                        │                                       
+05|                                        │  Paths:                              
+06|                                        │                                       
+07|                                        │                                       
+08|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+09|                                        │ 5 matches in 2 files                  
+10|                                        │                                       
+11|                                        │file1.txt                              
+12|                                        │  2        grug walks               [1]
+13|                                        │  3        then grug swims          [2]
+14|                                        │                                       
+15|                                        │file2.doc                              
+16|                                        │  2       grug talks and grug drink [3]
+17|                                        │  3       then grug thinks          [4]
 18|                                        │                                       
 19|                                        │                                       
 20|                                        │                                       

@@ -1,4 +1,5 @@
 local resultsList = require('grug-far.render.resultsList')
+local utils = require('grug-far.utils')
 
 --- gets result location that we should move to and row in buffer where it is referenced
 ---@param buf integer
@@ -89,6 +90,7 @@ local function gotoMatch(params)
     vim.api.nvim_win_set_cursor(grugfar_win, { row, 0 })
     vim.fn.win_execute(grugfar_win, 'normal! m`')
     if increment ~= nil or count > 0 then
+      utils.revertFixShowTopVirtLines(grugfar_win)
       vim.fn.win_execute(grugfar_win, 'normal! zz')
     end
   end
