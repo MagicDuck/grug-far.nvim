@@ -112,6 +112,8 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
         return
       end
 
+      print('--------------data chunk')
+      print(data)
       local err = parseResults.json_decode_matches(matches, data, eval_fn)
       if err then
         chunk_error = err

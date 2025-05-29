@@ -141,7 +141,7 @@ function M.parseResults(matches, bufrange)
     stats.matches = stats.matches + 1
     local isFileBoundary = i == 1 or match.file ~= matches[i - 1].file
 
-    if isFileBoundary and i > 1 then
+    if isFileBoundary then
       table.insert(lines, '')
     end
 
@@ -266,10 +266,6 @@ function M.parseResults(matches, bufrange)
         },
       })
       table.insert(lines, engine.DiffSeparatorChars)
-    end
-
-    if i == #matches then
-      table.insert(lines, '')
     end
   end
 
