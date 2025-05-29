@@ -1,25 +1,25 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │ Help g?    Replace ,r ...           
-02|       curly walks                      │                                       
-03|       then grug swims                  │  Search:                             
-04|                                        │  grug                                 
-05|                                        │  Replace:                            
-06|                                        │  curly                                
-07|                                        │  Files Filter:                       
-08|                                        │                                       
-09|                                        │ 󰮚 Flags:                              
+01|                                        │ 󰮚 Flags:                              
+02|       curly walks                      │  -------------------------------------
+03|       then grug swims                  │  -------------------------------------
+04|                                        │                                       
+05|                                        │  Paths:                              
+06|                                        │                                       
+07|                                        │                                       
+08|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+09|                                        │ 5 matches in 2 files   sync completed
 10|                                        │                                       
-11|                                        │  Paths:                              
-12|                                        │                                       
-13|                                        │                                       
-14|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-15|                                        │ 5 matches in 2 files   sync completed
+11|                                        │  file1.txt                            
+12|                                        │▒   2        grug walks             [1]
+13|                                        │▒   2        curly walks               
+14|                                        │▒   3        then grug swims        [2]
+15|                                        │▒   3        then curly swims          
 16|                                        │                                       
-17|                                        │  file1.txt                            
-18|                                        │▒   2        grug walks             [1]
-19|                                        │▒   2        curly walks               
-20|                                        │▒   3        then grug swims        [2]
-21|                                        │▒   3        then curly swims          
-22|                                        │                                       
+17|                                        │  file2.doc                            
+18|                                        │▒   2       grug talks and grug dri [3]
+19|                                        │▒   2       curly talks and curly drink
+20|                                        │              s                        
+21|                                        │▒   3       then grug thinks        [4]
+22|                                        │▒   3       then curly thinks          
 23|file1.txt                            1,1 Grug FAR - 1: grug                  9,1
 24|grug-far: synced changes!                                                       

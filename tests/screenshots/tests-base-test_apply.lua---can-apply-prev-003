@@ -1,15 +1,15 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │  Paths:                              
+01|                                        │                                       
 02|      grug walks                        │                                       
-03|      grug winks                        │                                       
-04|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-05|                                        │ 5 matches in 2 files   sync completed
-06|                                        │                                       
-07|                                        │  file1.txt                            
-08|                                        │▒   2       grug walks              [1]
-09|                                        │▒   2       curly walks                
-10|                                        │▒   3       grug winks              [2]
-11|                                        │▒   3       curly winks                
+03|      grug winks                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+04|                                        │ 5 matches in 2 files   sync completed
+05|                                        │                                       
+06|                                        │  file1.txt                            
+07|                                        │▒   2       grug walks              [1]
+08|                                        │▒   2       curly walks                
+09|                                        │▒   3       grug winks              [2]
+10|                                        │▒   3       curly winks                
+11|                                        │                                       
 12|                                        │                                       
 13|                                        │                                       
 14|                                        │                                       

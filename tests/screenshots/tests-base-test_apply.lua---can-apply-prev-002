@@ -1,17 +1,17 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-02|      grug talks and grug drinks        │ 5 matches in 2 files   sync completed
-03|      then curly thinks                 │                                       
-04|                                        │  file1.txt                            
-05|                                        │▒   2       grug walks              [1]
-06|                                        │▒   2       curly walks                
-07|                                        │▒   3       grug winks              [2]
-08|                                        │▒   3       curly winks                
-09|                                        │                                       
-10|                                        │  file2.doc                            
-11|                                        │▒   2       grug talks and grug dri [3]
-12|                                        │▒   2       curly talks and curly drink
-13|                                        │              s                        
+01|                                        │  file1.txt                            
+02|      grug talks and grug drinks        │▒   2       grug walks              [1]
+03|      then curly thinks                 │▒   2       curly walks                
+04|                                        │▒   3       grug winks              [2]
+05|                                        │▒   3       curly winks                
+06|                                        │                                       
+07|                                        │  file2.doc                            
+08|                                        │▒   2       grug talks and grug dri [3]
+09|                                        │▒   2       curly talks and curly drink
+10|                                        │              s                        
+11|                                        │                                       
+12|                                        │                                       
+13|                                        │                                       
 14|                                        │                                       
 15|                                        │                                       
 16|                                        │                                       
