@@ -24,7 +24,7 @@ local function renderInput(params, context)
   local top_virt_lines = params.top_virt_lines
   local placeholder = params.placeholder
   local icon = opts.getIcon(params.icon, context) or ''
-  local isCompactUI = context.options.compactUI.enabled
+  local showCompactInputs = context.options.showCompactInputs
 
   -- make sure we don't go beyond prev input pos
   if prevExtmarkName then
@@ -82,12 +82,12 @@ local function renderInput(params, context)
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
 
   local label_virt_lines = top_virt_lines or {}
-  if not isCompactUI then
+  if not showCompactInputs then
     table.insert(label_virt_lines, { { ' ' .. icon .. label, 'GrugFarInputLabel' } })
   end
   if vim.fn.strdisplaywidth(icon) > 2 then
     error(
-      'Icons need to be at most 2 characters wide in compactUI mode. "'
+      'Icons need to be at most 2 characters wide when option showCompactInputs=true. "'
         .. params.icon('" is wider than that!')
     )
   end
@@ -99,8 +99,8 @@ local function renderInput(params, context)
       virt_lines = label_virt_lines,
       virt_lines_leftcol = true,
       virt_lines_above = true,
-      sign_text = isCompactUI and icon or nil,
-      sign_hl_group = isCompactUI and 'GrugFarInputLabel' or nil,
+      sign_text = showCompactInputs and icon or nil,
+      sign_hl_group = showCompactInputs and 'GrugFarInputLabel' or nil,
       right_gravity = false,
     })
 
@@ -117,13 +117,13 @@ local function renderInput(params, context)
     }, extmarkName)
   end
 
-  if placeholder or isCompactUI then
+  if placeholder or showCompactInputs then
     local placeholderExtmarkName = extmarkName .. '_placeholder'
     if #input_lines == 1 and #input_lines[1] == 0 then
       local ellipsis = ' ...'
       local available_win_width = vim.api.nvim_win_get_width(0) - #ellipsis - 2
       local text = placeholder or ''
-      if isCompactUI then
+      if showCompactInputs then
         text = label .. ' ' .. text
       end
       local newline = opts.getIcon('newline', context)

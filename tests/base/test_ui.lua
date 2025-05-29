@@ -341,11 +341,25 @@ T['can fold at filename'] = function()
   helpers.childExpectScreenshot(child)
 end
 
-T['can display correctly in compactUI mode'] = function()
+T['can display correctly with showCompactInputs=true'] = function()
   helpers.childRunGrugFar(child, {
-    compactUI = {
-      enabled = true,
-    },
+    showCompactInputs = true,
+  })
+  helpers.childWaitForScreenshotText(child, 'READY')
+  helpers.childExpectScreenshot(child)
+end
+
+T['can display correctly with showInputsTopPadding=false'] = function()
+  helpers.childRunGrugFar(child, {
+    showInputsTopPadding = false,
+  })
+  helpers.childWaitForScreenshotText(child, 'READY')
+  helpers.childExpectScreenshot(child)
+end
+
+T['can display correctly with showInputsBottomPadding=false'] = function()
+  helpers.childRunGrugFar(child, {
+    showInputsBottomPadding = false,
   })
   helpers.childWaitForScreenshotText(child, 'READY')
   helpers.childExpectScreenshot(child)
