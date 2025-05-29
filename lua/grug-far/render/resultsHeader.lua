@@ -78,7 +78,7 @@ end
 local function renderResultsHeader(buf, context, row)
   local headerRow = row or resultsList.getHeaderRow(context, buf)
   local virt_lines = {}
-  if opts.shouldAddInputsPadding(context.options) then
+  if opts.shouldAddInputsBottomPadding(context.options) then
     table.insert(virt_lines, { { '', 'Normal' } })
   end
 
