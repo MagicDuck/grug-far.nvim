@@ -4,13 +4,12 @@
 03|
 04|--replace=
 05|
-06|
-07|file1.txt
-08| grug walks 
-09|  walks 
-10|
-11|file2.doc
-12|      grug talks and grug drinks
-13|       talks and  drinks
-14|      then grug thinks
-15|      then  thinks
+06|file1.txt
+07| grug walks 
+08|  walks 
+09|
+10|file2.doc
+11|      grug talks and grug drinks
+12|       talks and  drinks
+13|      then grug thinks
+14|      then  thinks

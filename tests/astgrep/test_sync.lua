@@ -41,7 +41,7 @@ T['sync all is not supported'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>8G', 'dd')
+  child.type_keys(10, '<esc>7G', 'dd')
   child.type_keys(10, 'A', ' a deep depth indeed!')
 
   child.type_keys('<esc>' .. keymaps.syncLocations.n)
@@ -75,7 +75,7 @@ T['sync line is not supported'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys(10, '<esc>8G', 'dd')
+  child.type_keys(10, '<esc>7G', 'dd')
   child.type_keys(10, 'A', ' a deep depth indeed!')
 
   child.type_keys('<esc>' .. keymaps.syncLine.n)

@@ -4,9 +4,8 @@
 03|
 04|
 05|buffer-range=file1.txt:2:11-3:-1
-06|
-07|file1.txt
-08|talks and grug drinks
-09|talks and curly drinks
-10|      then grug thinks
-11|      then curly thinks
+06|file1.txt
+07|talks and grug drinks
+08|talks and curly drinks
+09|      then grug thinks
+10|      then curly thinks

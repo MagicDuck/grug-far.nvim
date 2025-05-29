@@ -95,7 +95,7 @@ T['can apply prev'] = function()
   helpers.childExpectScreenshot(child)
 
   -- apply on each item in sequence
-  child.type_keys('<esc>G', keymaps.openPrevLocation.n, keymaps.applyPrev.n)
+  child.type_keys('<esc>G', keymaps.applyPrev.n)
   helpers.childWaitForScreenshotNotContainingText(child, 'grug thinks')
   helpers.childExpectScreenshot(child)
   child.type_keys('<esc>' .. keymaps.applyPrev.n)

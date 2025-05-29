@@ -4,7 +4,6 @@
 3|
 4|
 5|buffer-range=file2.doc:2:0-2:-1
-6|
-7|file2.doc
-8|      grug talks and grug drinks
-9|      grug_and_curly talks and grug_and_curly drinks
+6|file2.doc
+7|      grug talks and grug drinks
+8|      grug_and_curly talks and grug_and_curly drinks

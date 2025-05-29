@@ -1,19 +1,19 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │  Paths:                              
+01|                                        │ 󰮚 Flags:                              
 02|      grug talks and grug drinks        │                                       
-03|      then grug thinks                  │                                       
-04|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
-05|                                        │ 5 matches in 2 files   sync completed
-06|                                        │                                       
-07|                                        │  file2.doc                            
-08|                                        │▒   2       grug talks and grug dri [3]
-09|                                        │▒   2       curly talks and curly drink
-10|                                        │              s                        
-11|                                        │▒   3       then grug thinks        [4]
-12|                                        │▒   3       then curly thinks          
-13|                                        │                                       
-14|                                        │                                       
-15|                                        │                                       
+03|      then grug thinks                  │  Paths:                              
+04|                                        │                                       
+05|                                        │                                       
+06|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+07|                                        │ 5 matches in 2 files   sync completed
+08|                                        │                                       
+09|                                        │                                       
+10|                                        │  file2.doc                            
+11|                                        │▒   2       grug talks and grug dri [3]
+12|                                        │▒   2       curly talks and curly drink
+13|                                        │              s                        
+14|                                        │▒   3       then grug thinks        [4]
+15|                                        │▒   3       then curly thinks          
 16|                                        │                                       
 17|                                        │                                       
 18|                                        │                                       

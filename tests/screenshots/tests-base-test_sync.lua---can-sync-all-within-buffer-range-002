@@ -4,9 +4,8 @@
 03|
 04|
 05|buffer-range=file1.txt:2:11-4:-1
-06|
-07|file1.txt
+06|file1.txt
+07|      then curly thinks a deep depth indeed!
 08|      then curly thinks a deep depth indeed!
-09|      then curly thinks a deep depth indeed!
+09|      and curly flies
 10|      and curly flies
-11|      and curly flies

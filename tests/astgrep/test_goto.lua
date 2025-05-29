@@ -33,7 +33,7 @@ T['can open a given location'] = function()
   })
   helpers.childWaitForFinishedStatus(child)
 
-  child.type_keys('<esc>8G0')
+  child.type_keys('<esc>7G0')
   child.type_keys('<esc>' .. keymaps.gotoLocation.n)
   helpers.childWaitForScreenshotText(child, '3,7')
   helpers.childExpectScreenshot(child)
