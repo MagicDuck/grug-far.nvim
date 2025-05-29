@@ -219,6 +219,9 @@ grug_far.defaultOptions = {
   -- whether to show a more compact version of the UI
   compactUI = {
     enabled = false,
+
+    -- whether empty padding lines around inputs should be removed
+    removeInputsPadding = false,
   },
 
   -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
@@ -761,9 +764,11 @@ grug_far.defaultOptions = {
 
 ---@class grug.far.CompactUITable
 ---@field enabled boolean
+---@field removeInputsPadding boolean
 
 ---@class grug.far.CompactUITableOverride
 ---@field enabled? boolean
+---@field removeInputsPadding? boolean
 ---@private
 
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
@@ -999,6 +1004,14 @@ function grug_far.getGlobalOptions()
     _globalOptionsOverride or vim.g.grug_far or {},
     grug_far.defaultOptions
   )
+end
+
+--- gets global opts
+---@param options grug.far.Options
+---@return boolean
+---@private
+function grug_far.shouldAddInputsPadding(options)
+  return not (options.compactUI.enabled and options.compactUI.removeInputsPadding)
 end
 
 return grug_far

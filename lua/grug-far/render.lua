@@ -2,6 +2,7 @@ local help = require('grug-far.render.help')
 local renderInput = require('grug-far.render.input')
 local renderResults = require('grug-far.render.results')
 local utils = require('grug-far.utils')
+local opts = require('grug-far.opts')
 
 ---@param buf integer
 ---@param context grug.far.Context
@@ -13,9 +14,7 @@ local function render(buf, context)
       and help.getHelpVirtLines(context, context.actions)
     or {}
 
-  if not context.options.compactUI.enabled or context.options.helpLine.enabled then
-    -- if not context.options.compactUI.enabled then
-    -- add a blank line for aesthetics
+  if opts.shouldAddInputsPadding(context.options) then
     table.insert(top_virt_lines, { { '' } })
   end
 
