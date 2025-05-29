@@ -829,24 +829,23 @@ end
 ---@param context grug.far.Context
 ---@param buf integer
 function M.fixShowTopVirtLines(context, buf)
-  -- do nothing if first row is not visible
   local top_screenpos = vim.fn.screenpos(0, 1, 0)
-  if top_screenpos.row == 0 then
-    return
-  end
+  local topVisible = top_screenpos.row ~= 0
 
   local topfill = 0
 
-  if context.options.helpLine.enabled then
-    topfill = topfill + 1
-  end
+  if topVisible then
+    if context.options.helpLine.enabled then
+      topfill = topfill + 1
+    end
 
-  if not context.options.compactUI.enabled then
-    topfill = topfill + 1 -- first input label
-  end
+    if not context.options.compactUI.enabled then
+      topfill = topfill + 1 -- first input label
+    end
 
-  if opts.shouldAddInputsTopPadding(context.options) then
-    topfill = topfill + 1
+    if opts.shouldAddInputsTopPadding(context.options) then
+      topfill = topfill + 1
+    end
   end
 
   local grugfar_win = vim.fn.bufwinid(buf)
