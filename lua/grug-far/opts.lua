@@ -220,8 +220,11 @@ grug_far.defaultOptions = {
   compactUI = {
     enabled = false,
 
-    -- whether empty padding lines around inputs should be removed
-    removeInputsPadding = false,
+    -- whether inputs top padding line should be removed
+    removeInputsTopPadding = false,
+
+    -- whether inputs bottom padding line should be removed
+    removeInputsBottomPadding = false,
   },
 
   -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
@@ -764,11 +767,13 @@ grug_far.defaultOptions = {
 
 ---@class grug.far.CompactUITable
 ---@field enabled boolean
----@field removeInputsPadding boolean
+---@field removeInputsTopPadding boolean
+---@field removeInputsBottomPadding boolean
 
 ---@class grug.far.CompactUITableOverride
 ---@field enabled? boolean
----@field removeInputsPadding? boolean
+---@field removeInputsTopPadding? boolean
+---@field removeInputsBottomPadding? boolean
 ---@private
 
 ---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'ignore'
@@ -1006,12 +1011,20 @@ function grug_far.getGlobalOptions()
   )
 end
 
---- gets global opts
+--- wether should add inputs top padding
 ---@param options grug.far.Options
 ---@return boolean
 ---@private
-function grug_far.shouldAddInputsPadding(options)
-  return not (options.compactUI.enabled and options.compactUI.removeInputsPadding)
+function grug_far.shouldAddInputsTopPadding(options)
+  return not (options.compactUI.enabled and options.compactUI.removeInputsTopPadding)
+end
+
+--- wether should add inputs bottom padding
+---@param options grug.far.Options
+---@return boolean
+---@private
+function grug_far.shouldAddInputsBottomPadding(options)
+  return not (options.compactUI.enabled and options.compactUI.removeInputsBottomPadding)
 end
 
 return grug_far

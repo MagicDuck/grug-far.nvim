@@ -838,7 +838,7 @@ function M.fixShowTopVirtLines(context)
     topfill = topfill + 1 -- first input label
   end
 
-  if opts.shouldAddInputsPadding(context.options) then
+  if opts.shouldAddInputsTopPadding(context.options) then
     topfill = topfill + 1
   end
 

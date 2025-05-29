@@ -14,7 +14,7 @@ local function render(buf, context)
       and help.getHelpVirtLines(context, context.actions)
     or {}
 
-  if opts.shouldAddInputsPadding(context.options) then
+  if opts.shouldAddInputsTopPadding(context.options) then
     table.insert(top_virt_lines, { { '' } })
   end
 
