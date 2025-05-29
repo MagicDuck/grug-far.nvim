@@ -92,16 +92,19 @@ end
 ---@param row? integer 0-based row, defaults to headerRow
 local function renderResultsHeader(buf, context, row)
   local headerRow = row or resultsList.getHeaderRow(context, buf)
+  local virt_lines = {}
+  if opts.shouldAddInputsPadding(context.options) then
+    table.insert(virt_lines, { { '', 'Normal' } })
+  end
+
+  table.insert(virt_lines, { { getSeparator(context), 'GrugFarResultsHeader' } })
 
   context.extmarkIds.results_header =
     vim.api.nvim_buf_set_extmark(buf, context.namespace, headerRow, 0, {
       id = context.extmarkIds.results_header,
       end_row = headerRow,
       end_col = 0,
-      virt_lines = {
-        { { '', 'Normal' } },
-        { { getSeparator(context), 'GrugFarResultsHeader' } },
-      },
+      virt_lines = virt_lines,
       virt_lines_leftcol = true,
       virt_lines_above = true,
       right_gravity = false,
