@@ -135,6 +135,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
   ---@type grug.far.ResultMark[]
   local marks = {}
 
+  local is_first_one = isFirst
   local last_line_number = nil
   local file_name = nil
   local last_context_line_number = nil
@@ -165,9 +166,11 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
     end
 
     if match.type == 'begin' then
-      if not isFirst then
+      if not is_first_one then
         table.insert(lines, '')
       end
+      is_first_one = false
+
       stats.files = stats.files + 1
       last_context_line_number = nil
       file_name = bufrange and bufrange.file_name or data.path.text

@@ -160,6 +160,10 @@ local function run_search(params)
     args = params.args,
     stdin = params.stdin,
     on_fetch_chunk = function(data)
+      if #data == 0 then
+        return
+      end
+
       -- handle non-json data (like when running rg with --help flag)
       if not vim.startswith(data, '{') then
         params.on_fetch_chunk({
@@ -238,6 +242,11 @@ local function run_search_with_replace(params)
 
   local matches = {}
   processingQueue = ProcessingQueue.new(function(data, on_done)
+    if #data == 0 then
+      on_done()
+      return
+    end
+
     -- handle non-json data (like when running rg with --help flag)
     if not vim.startswith(data, '{') then
       on_fetch_chunk({
@@ -331,6 +340,9 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
     stdin = params.stdin,
     on_fetch_chunk = function(data)
       if chunk_error then
+        return
+      end
+      if #data == 0 then
         return
       end
 
