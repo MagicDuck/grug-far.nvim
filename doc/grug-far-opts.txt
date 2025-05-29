@@ -215,16 +215,14 @@
     -- whether to wrap text in the grug-far buffer
     wrap = true,
 
-    -- whether to show a more compact version of the UI
-    compactUI = {
-      enabled = false,
+    -- whether to show a more compact version of the inputs UI
+    showCompactInputs = false,
 
-      -- whether inputs top padding line should be removed
-      removeInputsTopPadding = false,
+    -- whether inputs top padding line should be present
+    showInputsTopPadding = true,
 
-      -- whether inputs bottom padding line should be removed
-      removeInputsBottomPadding = false,
-    },
+    -- whether inputs bottom padding line should be present
+    showInputsBottomPadding = true,
 
     -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
     transient = false,
@@ -674,14 +672,6 @@ Fields ~
 {useScratchBuffer} `(boolean)`
 
 ------------------------------------------------------------------------------
-Class ~
-{grug.far.CompactUITable}
-Fields ~
-{enabled} `(boolean)`
-{removeInputsTopPadding} `(boolean)`
-{removeInputsBottomPadding} `(boolean)`
-
-------------------------------------------------------------------------------
                                                               *grug.far.Options*
 Class ~
 {grug.far.Options}
@@ -702,7 +692,9 @@ Fields ~
 {staticTitle} `(optional)` `(string)`
 {startInInsertMode} `(boolean)`
 {startCursorRow} `(integer)`
-{compactUI} grug.far.CompactUITable
+{showCompactInputs} `(boolean)`
+{showInputsTopPadding} `(boolean)`
+{showInputsBottomPadding} `(boolean)`
 {wrap} `(boolean)`
 {transient} `(boolean)`
 {ignoreVisualSelection} `(boolean)`
