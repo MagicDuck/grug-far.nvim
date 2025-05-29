@@ -93,6 +93,7 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
   local chunk_error = nil
   local stdin = bufrange and uv.new_pipe() or nil
   local abort, effectiveArgs
+  local partial_json_output = ''
   abort, effectiveArgs = fetchCommandOutput({
     cmd_path = options.engines.astgrep.path,
     args = args,
@@ -100,6 +101,9 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
     on_fetch_chunk = function(data)
       if chunk_error then
         return
+      end
+      if #partial_json_output > 0 then
+        data = partial_json_output .. data
       end
 
       if isTextOutput then
@@ -112,9 +116,11 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
         return
       end
 
-      print('--------------data chunk')
-      print(data)
       local err = parseResults.json_decode_matches(matches, data, eval_fn)
+      if err == '__json_decode_error__' then
+        partial_json_output = data
+        return
+      end
       if err then
         chunk_error = err
         if abort then

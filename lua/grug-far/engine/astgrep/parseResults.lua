@@ -287,7 +287,10 @@ function M.json_decode_matches(matches, data, eval_fn)
   local json_lines = vim.split(data, '\n')
   for _, json_line in ipairs(json_lines) do
     if #json_line > 0 then
-      local match = vim.json.decode(json_line)
+      local success, match = pcall(vim.json.decode, json_line)
+      if not success then
+        return '__json_decode_error__'
+      end
       if eval_fn then
         local vars = {}
         if match.metaVariables then
