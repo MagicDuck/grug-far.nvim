@@ -829,6 +829,12 @@ end
 ---@param context grug.far.Context
 ---@param buf integer
 function M.fixShowTopVirtLines(context, buf)
+  -- do nothing if first row is not visible
+  local top_screenpos = vim.fn.screenpos(0, 1, 0)
+  if top_screenpos.row == 0 then
+    return
+  end
+
   local topfill = 0
 
   if context.options.helpLine.enabled then
@@ -845,13 +851,6 @@ function M.fixShowTopVirtLines(context, buf)
 
   local grugfar_win = vim.fn.bufwinid(buf)
   vim.fn.win_execute(grugfar_win, 'lua vim.fn.winrestview({ topfill = ' .. topfill .. ' })')
-end
-
---- revert fix for this bug: https://github.com/neovim/neovim/issues/16166
---- this is useful temporarily for stuff like `normal! zz`
----@param win integer
-function M.revertFixShowTopVirtLines(win)
-  vim.fn.win_execute(win, 'lua vim.fn.winrestview({ topfill = ' .. 0 .. ' })')
 end
 
 return M
