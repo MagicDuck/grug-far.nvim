@@ -847,4 +847,11 @@ function M.fixShowTopVirtLines(context, buf)
   vim.fn.win_execute(grugfar_win, 'lua vim.fn.winrestview({ topfill = ' .. topfill .. ' })')
 end
 
+--- revert fix for this bug: https://github.com/neovim/neovim/issues/16166
+--- this is useful temporarily for stuff like `normal! zz`
+---@param win integer
+function M.revertFixShowTopVirtLines(win)
+  vim.fn.win_execute(win, 'lua vim.fn.winrestview({ topfill = ' .. 0 .. ' })')
+end
+
 return M
