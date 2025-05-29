@@ -90,8 +90,14 @@ local function gotoMatch(params)
     vim.api.nvim_win_set_cursor(grugfar_win, { row, 0 })
     vim.fn.win_execute(grugfar_win, 'normal! m`')
     if increment ~= nil or count > 0 then
-      utils.revertFixShowTopVirtLines(grugfar_win)
-      vim.fn.win_execute(grugfar_win, 'normal! zz')
+      local top_screenpos = vim.fn.screenpos(0, 1, 0)
+      local topVisible = top_screenpos.row ~= 0
+      local linecount = vim.api.nvim_buf_line_count(buf)
+      local bottom_screenpos = vim.fn.screenpos(0, linecount, 0)
+      local bottomVisible = bottom_screenpos.row ~= 0
+      if not (topVisible or bottomVisible) then
+        vim.fn.win_execute(grugfar_win, 'normal! zz')
+      end
     end
   end
 
