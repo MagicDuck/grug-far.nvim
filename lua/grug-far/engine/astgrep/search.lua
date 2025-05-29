@@ -94,6 +94,7 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
   local stdin = bufrange and uv.new_pipe() or nil
   local abort, effectiveArgs
   local partial_json_output = ''
+  local hadNoResults = true
   abort, effectiveArgs = fetchCommandOutput({
     cmd_path = options.engines.astgrep.path,
     args = args,
@@ -132,7 +133,11 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
       -- at once. This helps with applying replacements
       local before, after = parseResults.split_last_file_matches(matches)
       matches = after
-      on_fetch_chunk(parseResults.parseResults(before, bufrange))
+      local results = parseResults.parseResults(before, bufrange, hadNoResults)
+      on_fetch_chunk(results)
+      if #results.lines > 0 then
+        hadNoResults = false
+      end
     end,
     on_finish = function(status, errorMessage)
       if chunk_error then
@@ -141,7 +146,11 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
       end
       if status == 'success' and #matches > 0 then
         -- do the last few
-        on_fetch_chunk(parseResults.parseResults(matches, bufrange))
+        local results = parseResults.parseResults(matches, bufrange, hadNoResults)
+        on_fetch_chunk(results)
+        if #results.lines > 0 then
+          hadNoResults = false
+        end
         matches = {}
       end
       vim.schedule(function()

@@ -95,6 +95,7 @@ local function getResultsWithReplaceDiff(params)
   end
 
   local bufrange = vim.deepcopy(params.bufrange)
+  local hadNoResults = true
   local abort = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = replaceArgs,
@@ -118,7 +119,11 @@ local function getResultsWithReplaceDiff(params)
         end
 
         local showDiff = params.options.engines.ripgrep.showReplaceDiff
-        local results = parseResults.parseResults(json_data, true, showDiff, bufrange)
+        local results = parseResults.parseResults(json_data, true, showDiff, bufrange, hadNoResults)
+        if #results.lines > 0 then
+          hadNoResults = false
+        end
+
         params.on_finish(status, nil, results)
       else
         params.on_finish(status, errorMessage)
@@ -149,6 +154,7 @@ local function run_search(params)
   local bufrange = vim.deepcopy(params.bufrange)
   local matches = {}
 
+  local hadNoResults = true
   return fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = params.args,
@@ -172,7 +178,11 @@ local function run_search(params)
       end
       local before, after = parseResults.split_last_file_matches(matches)
       matches = after
-      params.on_fetch_chunk(parseResults.parseResults(before, false, false, bufrange))
+      local results = parseResults.parseResults(before, false, false, bufrange, hadNoResults)
+      params.on_fetch_chunk(results)
+      if #results.lines > 0 then
+        hadNoResults = false
+      end
     end,
     on_finish = function(status, errorMessage)
       if status == 'error' and errorMessage and #errorMessage == 0 then
@@ -180,7 +190,11 @@ local function run_search(params)
       end
       if status == 'success' and #matches > 0 then
         -- do the last few
-        params.on_fetch_chunk(parseResults.parseResults(matches, false, false, bufrange))
+        local results = parseResults.parseResults(matches, false, false, bufrange, hadNoResults)
+        params.on_fetch_chunk(results)
+        if #results.lines > 0 then
+          hadNoResults = false
+        end
         matches = {}
       end
       vim.schedule(function()
@@ -310,6 +324,7 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
   local abort, effectiveArgs
   local bufrange = vim.deepcopy(params.bufrange)
   local matches = {}
+  local hadNoResults = true
   abort, effectiveArgs = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = searchArgs,
@@ -353,7 +368,11 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
       end
       local before, after = parseResults.split_last_file_matches(matches)
       matches = after
-      params.on_fetch_chunk(parseResults.parseResults(before, true, true, bufrange))
+      local results = parseResults.parseResults(before, true, true, bufrange, hadNoResults)
+      params.on_fetch_chunk(results)
+      if #results.lines > 0 then
+        hadNoResults = false
+      end
     end,
     on_finish = function(status, errorMessage)
       if status == 'error' and errorMessage and #errorMessage == 0 then
@@ -365,7 +384,11 @@ local function run_search_with_replace_interpreter(replacementInterpreter, param
       end
       if status == 'success' and #matches > 0 then
         -- do the last few
-        params.on_fetch_chunk(parseResults.parseResults(matches, true, true, bufrange))
+        local results = parseResults.parseResults(matches, true, true, bufrange, hadNoResults)
+        params.on_fetch_chunk(results)
+        if #results.lines > 0 then
+          hadNoResults = false
+        end
         matches = {}
       end
       vim.schedule(function()
