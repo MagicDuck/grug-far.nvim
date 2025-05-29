@@ -136,15 +136,17 @@ function M.parseResults(matches, bufrange, isFirst)
   ---@type grug.far.ResultMark[]
   local marks = {}
 
+  local is_first_one = isFirst
   local file_name = nil
   for i = 1, #matches, 1 do
     local match = matches[i]
     stats.matches = stats.matches + 1
     local isFileBoundary = i == 1 or match.file ~= matches[i - 1].file
 
-    if isFileBoundary and not isFirst then
+    if isFileBoundary and not is_first_one then
       table.insert(lines, '')
     end
+    is_first_one = false
 
     if isFileBoundary then
       stats.files = stats.files + 1

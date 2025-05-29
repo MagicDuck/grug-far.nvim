@@ -103,6 +103,9 @@ local function run_astgrep_search(args, _bufrange, options, eval_fn, on_fetch_ch
       if chunk_error then
         return
       end
+      if #data == 0 then
+        return
+      end
       if #partial_json_output > 0 then
         data = partial_json_output .. data
       end
