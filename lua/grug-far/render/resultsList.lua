@@ -120,7 +120,9 @@ local function addResultChunkLines(buf, context, data)
 
   -- add text
   local lastline = vim.api.nvim_buf_line_count(buf)
-  setBufLines(buf, lastline, lastline, false, data.lines)
+  if #data.lines > 0 then
+    setBufLines(buf, lastline, lastline, false, data.lines)
+  end
 
   return lastline
 end

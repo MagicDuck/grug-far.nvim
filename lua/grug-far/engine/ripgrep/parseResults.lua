@@ -164,6 +164,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
     end
 
     if match.type == 'begin' then
+      table.insert(lines, '')
       stats.files = stats.files + 1
       last_context_line_number = nil
       file_name = bufrange and bufrange.file_name or data.path.text
@@ -187,7 +188,6 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
       table.insert(lines, file_name)
     elseif match.type == 'end' then
       last_line_number = nil
-      table.insert(lines, '')
     elseif match.type == 'match' then
       last_context_line_number = nil
       stats.matches = stats.matches + #data.submatches
