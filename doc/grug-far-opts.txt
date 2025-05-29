@@ -218,6 +218,9 @@
     -- whether to show a more compact version of the UI
     compactUI = {
       enabled = false,
+
+      -- whether empty padding lines around inputs should be removed
+      removeInputsPadding = false,
     },
 
     -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
@@ -672,6 +675,7 @@ Class ~
 {grug.far.CompactUITable}
 Fields ~
 {enabled} `(boolean)`
+{removeInputsPadding} `(boolean)`
 
 ------------------------------------------------------------------------------
                                                               *grug.far.Options*
