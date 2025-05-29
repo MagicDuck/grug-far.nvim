@@ -123,8 +123,9 @@ end
 ---@param isSearchWithReplace boolean
 ---@param showDiff boolean
 ---@param bufrange? grug.far.VisualSelectionInfo
+---@param isFirst? boolean
 ---@return grug.far.ParsedResultsData
-function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
+function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirst)
   ---@type grug.far.ParsedResultsStats
   local stats = { files = 0, matches = 0 }
   ---@type string[]
@@ -164,7 +165,9 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange)
     end
 
     if match.type == 'begin' then
-      table.insert(lines, '')
+      if not isFirst then
+        table.insert(lines, '')
+      end
       stats.files = stats.files + 1
       last_context_line_number = nil
       file_name = bufrange and bufrange.file_name or data.path.text

@@ -124,8 +124,9 @@ end
 --- parse results data and get info
 ---@param matches grug.far.AstgrepMatch[]
 ---@param bufrange grug.far.VisualSelectionInfo?
+---@param isFirst boolean
 ---@return grug.far.ParsedResultsData
-function M.parseResults(matches, bufrange)
+function M.parseResults(matches, bufrange, isFirst)
   ---@type grug.far.ParsedResultsStats
   local stats = { files = 0, matches = 0 }
   ---@type string[]
@@ -141,7 +142,7 @@ function M.parseResults(matches, bufrange)
     stats.matches = stats.matches + 1
     local isFileBoundary = i == 1 or match.file ~= matches[i - 1].file
 
-    if isFileBoundary then
+    if isFileBoundary and not isFirst then
       table.insert(lines, '')
     end
 
