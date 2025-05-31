@@ -539,7 +539,7 @@ function M.clear(buf, context)
 
   -- remove all lines after heading
   local headerRow = M.getHeaderRow(context, buf)
-  setBufLines(buf, headerRow + 1, -1, false, {})
+  setBufLines(buf, headerRow, -1, false, { '' })
 end
 
 --- appends search command to results list
