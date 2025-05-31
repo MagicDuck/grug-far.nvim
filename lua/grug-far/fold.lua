@@ -67,6 +67,8 @@ function M.setup(context, win, buf)
     vim.wo[win][0].foldtext = 'v:lua.require("grug-far.fold")._fold_funcs["'
       .. context.options.instanceName
       .. '"].foldtext()'
+  else
+    vim.wo[win][0].foldcolumn = '0'
   end
 end
 
