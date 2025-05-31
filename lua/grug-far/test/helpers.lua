@@ -269,6 +269,7 @@ end
 ---@param child NeovimChild
 function M.childExpectScreenshot(child)
   vim.api.nvim__redraw({ flush = true })
+  vim.cmd('redrawstatus')
   screenshot.reference_screenshot(
     child.get_screenshot(),
     nil,
