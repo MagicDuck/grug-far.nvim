@@ -225,6 +225,17 @@ grug_far.defaultOptions = {
   -- whether inputs bottom padding line should be present
   showInputsBottomPadding = true,
 
+  -- whether to show status icon in the results separator line
+  showStatusIcon = true,
+
+  -- whether to show engine info in the results separator line
+  showEngineInfo = true,
+
+  -- whether to show status info line below the results separator line
+  -- typically you would only want to turn this off if you are displaying the information
+  -- in another way, such as in in a status bar
+  showStatusInfo = true,
+
   -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
   transient = false,
 
@@ -800,6 +811,9 @@ grug_far.defaultOptions = {
 ---@field showCompactInputs boolean
 ---@field showInputsTopPadding boolean
 ---@field showInputsBottomPadding boolean
+---@field showStatusIcon boolean
+---@field showEngineInfo boolean
+---@field showStatusInfo boolean
 ---@field wrap boolean
 ---@field transient boolean
 ---@field ignoreVisualSelection boolean
@@ -852,6 +866,9 @@ grug_far.defaultOptions = {
 ---@field showCompactInputs? boolean
 ---@field showInputsTopPadding? boolean
 ---@field showInputsBottomPadding? boolean
+---@field showStatusIcon? boolean
+---@field showEngineInfo? boolean
+---@field showStatusInfo? boolean
 ---@field wrap? boolean
 ---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
