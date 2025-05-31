@@ -106,7 +106,7 @@ local function renderResultsHeader(buf, context, row)
       right_gravity = false,
     })
 
-  context.throttledOnStatusChange()
+  context.throttledOnStatusChange(buf)
 end
 
 return renderResultsHeader
