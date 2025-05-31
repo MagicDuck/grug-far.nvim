@@ -30,23 +30,27 @@ local function getSeparator(context)
   -- note: use a large number to ensure it's always > window width
   local separatorLine = context.options.resultsSeparatorLineChar:rep(400)
 
-  local engine_type = context.engine.type
-  local interpreter_type = context.replacementInterpreter and context.replacementInterpreter.type
-    or nil
-  if interpreter_type then
-    engine_type = engine_type .. ' | ' .. interpreter_type
+  local engineInfo = ''
+  if context.options.showEngineInfo then
+    local engine_type = context.engine.type
+    local interpreter_type = context.replacementInterpreter and context.replacementInterpreter.type
+      or nil
+    if interpreter_type then
+      engine_type = engine_type .. ' | ' .. interpreter_type
+    end
+
+    engineInfo = (opts.getIcon('resultsEngineLeft', context) or '')
+      .. ' '
+      .. engine_type
+      .. ' '
+      .. (context.state.normalModeSearch and '- normal mode search ' or '')
+      .. (opts.getIcon('resultsEngineRight', context) or '')
   end
 
-  return ' '
-    .. (getStatusText(context) or '')
-    .. ' '
-    .. (opts.getIcon('resultsEngineLeft', context) or '')
-    .. ' '
-    .. engine_type
-    .. ' '
-    .. (context.state.normalModeSearch and '- normal mode search ' or '')
-    .. (opts.getIcon('resultsEngineRight', context) or '')
-    .. separatorLine
+  local statusText = context.options.showStatusIcon and ' ' .. (getStatusText(context) or '') .. ' '
+    or ''
+
+  return statusText .. engineInfo .. separatorLine
 end
 
 --- gets stats information line
@@ -84,7 +88,7 @@ local function renderResultsHeader(buf, context, row)
 
   table.insert(virt_lines, { { getSeparator(context), 'GrugFarResultsHeader' } })
 
-  local infoLine = getInfoLine(context)
+  local infoLine = context.options.showStatusInfo and getInfoLine(context) or ''
   if #infoLine > 0 then
     table.insert(virt_lines, infoLine)
   end
