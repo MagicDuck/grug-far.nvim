@@ -4,5 +4,5 @@ repos:
       - id: gendocs
         name: Gendocs
         language: system
-        entry: make --silent documentation
+        entry: make --silent docs-and-gitadd
         types: [lua]
