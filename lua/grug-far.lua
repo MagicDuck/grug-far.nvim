@@ -1,5 +1,6 @@
 --- *grug-far-api*
 
+--test
 local grug_far = {}
 
 ---@alias grug.far.InstanceQuery string | number | nil
