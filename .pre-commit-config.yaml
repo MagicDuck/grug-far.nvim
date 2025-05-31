@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: gendocs
+        name: Gendocs
+        language: system
+        entry: make --silent documentation
+        types: [lua]
