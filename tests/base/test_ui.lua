@@ -365,4 +365,32 @@ T['can display correctly with showInputsBottomPadding=false'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can display correctly with showStatusInfo=false'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+  })
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug' },
+    showStatusInfo = false,
+  })
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can display correctly with showEngineInfo=false'] = function()
+  helpers.childRunGrugFar(child, {
+    showEngineInfo = false,
+  })
+  helpers.childWaitForScreenshotText(child, 'READY')
+  helpers.childExpectScreenshot(child)
+end
+
+T['can display correctly with showStatusIcon=false'] = function()
+  helpers.childRunGrugFar(child, {
+    showStatusIcon = false,
+  })
+  helpers.childWaitForScreenshotText(child, 'Search')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
