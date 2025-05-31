@@ -224,6 +224,29 @@
     -- whether inputs bottom padding line should be present
     showInputsBottomPadding = true,
 
+    -- whether to show status icon in the results separator line
+    showStatusIcon = true,
+
+    -- whether to show engine info in the results separator line
+    showEngineInfo = true,
+
+    -- whether to show status info line below the results separator line
+    -- typically you would only want to turn this off if you are displaying the information
+    -- in another way, such as in in a status bar
+    showStatusInfo = true,
+
+    -- callback that executes whenever the status might have changed
+    -- executes throttled by onStatusChangeThrottleTime (see option below)
+    -- by default, it just redraws the status bar in case there are components there which show grug-far status.
+    -- You can get status info with require('grug-far').get_instance(...):get_status_info()
+    onStatusChange = function(buf)
+      local win = vim.fn.bufwinid(buf)
+      vim.fn.win_execute(win, 'redrawstatus')
+    end,
+
+    -- time in milliseconds to throttle execution of onStatusChange by
+    onStatusChangeThrottleTime = 500,
+
     -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
     transient = false,
 
@@ -695,6 +718,11 @@ Fields ~
 {showCompactInputs} `(boolean)`
 {showInputsTopPadding} `(boolean)`
 {showInputsBottomPadding} `(boolean)`
+{showStatusIcon} `(boolean)`
+{showEngineInfo} `(boolean)`
+{showStatusInfo} `(boolean)`
+{onStatusChange} `(fun(buf: integer))`
+{onStatusChangeThrottleTime} `(integer)`
 {wrap} `(boolean)`
 {transient} `(boolean)`
 {ignoreVisualSelection} `(boolean)`

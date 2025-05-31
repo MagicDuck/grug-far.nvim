@@ -1,5 +1,13 @@
 # Contributing
 
+## Pre-Commit
+
+Install pre-commit as per https://pre-commit.com (might be possible through your package manager)
+Run :
+```bash
+$ pre-commit install
+```
+
 ## Linting
 
 You'll need to install [stylua][stylua] and [selene][selene].

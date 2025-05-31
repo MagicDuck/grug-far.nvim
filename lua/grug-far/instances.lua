@@ -413,12 +413,12 @@ end
 
 --- gets status info
 ---@return {
---- status: grug.far.Status,
---- stats?: { matches: integer, files: integer },
---- actionMessage?: string,
---- engineType: string,
---- interpreterType?: string,
---- normalModeSearch: boolean,
+---   status: grug.far.Status,
+---   stats?: { matches: integer, files: integer },
+---   actionMessage?: string,
+---   engineType: string,
+---   interpreterType?: string,
+---   normalModeSearch: boolean,
 --- }
 function inst:get_status_info()
   self:_ensure_valid()
