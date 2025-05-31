@@ -411,4 +411,26 @@ function inst:toggle_flags(flags)
   return require('grug-far.inputs').toggle_flags(self._context, self._buf, flags)
 end
 
+--- gets status info
+---@return {
+--- status: grug.far.Status,
+--- stats?: { matches: integer, files: integer },
+--- actionMessage?: string,
+--- engineType: string,
+--- interpreterType?: string,
+--- normalModeSearch: boolean,
+--- }
+function inst:get_status_info()
+  self:_ensure_valid()
+  local context = self._context
+  return {
+    status = context.state.status,
+    stats = context.state.stats,
+    actionMessage = context.state.actionMessage,
+    engineType = context.engine.type,
+    interpreterType = context.replacementInterpreter and context.replacementInterpreter.type or nil,
+    normalModeSearch = context.state.normalModeSearch,
+  }
+end
+
 return inst
