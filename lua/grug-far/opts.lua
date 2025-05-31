@@ -240,14 +240,13 @@ grug_far.defaultOptions = {
   -- executes throttled by onStatusChangeThrottleTime (see option below)
   -- by default, it just redraws the status bar in case there are components there which show grug-far status.
   -- You can get status info with require('grug-far').get_instance(...):get_status_info()
-  onStatusChange = function()
-    -- TODO (sbadragan): remove
-    -- local inst = require('grug-far').get_instance(0)
-    vim.cmd('redrawstatus')
+  onStatusChange = function(buf)
+    local win = vim.fn.bufwinid(buf)
+    vim.fn.win_execute(win, 'redrawstatus')
   end,
 
   -- time in milliseconds to throttle execution of onStatusChange by
-  onStatusChangeThrottleTime = 200,
+  onStatusChangeThrottleTime = 500,
 
   -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
   transient = false,
@@ -827,7 +826,7 @@ grug_far.defaultOptions = {
 ---@field showStatusIcon boolean
 ---@field showEngineInfo boolean
 ---@field showStatusInfo boolean
----@field onStatusChange fun()
+---@field onStatusChange fun(buf: integer)
 ---@field onStatusChangeThrottleTime integer
 ---@field wrap boolean
 ---@field transient boolean
