@@ -52,6 +52,7 @@
 ---@field engine grug.far.Engine
 ---@field replacementInterpreter? grug.far.ReplacementInterpreter
 ---@field fileIconsProvider? grug.far.FileIconsProvider
+---@field throttledOnStatusChange fun()
 
 ---@class grug.far.VisualSelectionInfo
 ---@field file_name string

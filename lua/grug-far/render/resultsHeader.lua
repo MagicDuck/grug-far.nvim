@@ -105,6 +105,8 @@ local function renderResultsHeader(buf, context, row)
       virt_lines_above = true,
       right_gravity = false,
     })
+
+  context.throttledOnStatusChange()
 end
 
 return renderResultsHeader

@@ -18,6 +18,7 @@ local grug_far = {}
 local contextCount = 0
 
 require('grug-far.highlights').setup()
+local utils = require('grug-far.utils')
 
 --- set up grug-far
 --- sets global options, which can also be configured through vim.g.grug_far
@@ -52,6 +53,10 @@ local function createContext(options)
     fileIconsProvider = options.icons.enabled
         and require('grug-far.fileIconsProvider').getProvider(options.icons.fileIconsProvider)
       or nil,
+    throttledOnStatusChange = utils.throttle(
+      options.onStatusChange,
+      options.onStatusChangeThrottleTime
+    ),
     state = {
       inputs = {},
       resultLocationByExtmarkId = {},
