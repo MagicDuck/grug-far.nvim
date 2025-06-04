@@ -39,7 +39,7 @@ lint:
 	stylua --check lua tests
 
 documentation: | deps/mini.nvim
-	$(nvim_path) --headless --noplugin -u ./scripts/minidoc.lua -c "qa!"
+	$(nvim_path) --headless -i NONE --noplugin -u ./scripts/minidoc.lua -c "qa!"
 
 docs-and-gitadd:
 	make documentation

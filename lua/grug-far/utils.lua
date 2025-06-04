@@ -693,6 +693,9 @@ function M.parse_buf_range_str(str)
   end
 
   local buf = vim.fn.bufnr(file_name)
+  if buf == -1 then
+    return nil, 'Invalid buffer range provided! No buffer exists for the given file name.'
+  end
   local num_lines = vim.api.nvim_buf_line_count(buf)
 
   start_row = tonumber(start_row) --[[@as integer]]
@@ -849,6 +852,20 @@ function M.fixShowTopVirtLines(context, buf)
 
   local grugfar_win = vim.fn.bufwinid(buf)
   vim.fn.win_execute(grugfar_win, 'lua vim.fn.winrestview({ topfill = ' .. topfill .. ' })')
+end
+
+--- gets bufrange if we have one specified in paths
+---@param inputStr string
+---@return grug.far.VisualSelectionInfo? bufrange, string? err
+function M.getBufrange(inputStr)
+  if #inputStr > 0 then
+    local paths = M.splitPaths(inputStr)
+    for _, path in ipairs(paths) do
+      return M.parse_buf_range_str(path)
+    end
+  end
+
+  return nil, nil
 end
 
 return M

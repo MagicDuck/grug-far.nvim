@@ -141,6 +141,7 @@ M.DiffSeparatorChars = ' '
 ---  visualSelectionUsage: VisualSelectionUsageType): grug.far.Prefills gets prefills updated with visual selection (for example adds --fixed-strings for rg, etc)
 ---@field getSearchDescription fun(inputs: grug.far.Inputs): string a string describing the current search to be used as buffer title for example
 ---@field isEmptySearch fun(inputs: grug.far.Inputs, options: grug.far.Options): boolean whether search query is empty
+---@field bufrangeInputName? grug.far.InputName name of input which can contain bufrange (for GrugFarWithin)
 
 --- returns engine given type
 ---@param type grug.far.EngineType

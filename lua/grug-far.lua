@@ -18,7 +18,6 @@ local grug_far = {}
 local contextCount = 0
 
 require('grug-far.highlights').setup()
-local utils = require('grug-far.utils')
 
 --- set up grug-far
 --- sets global options, which can also be configured through vim.g.grug_far
@@ -47,13 +46,14 @@ local function createContext(options)
     resultListNamespace = vim.api.nvim_create_namespace(''),
     historyHlNamespace = vim.api.nvim_create_namespace(''),
     helpHlNamespace = vim.api.nvim_create_namespace(''),
+    bufrangeNamespace = vim.api.nvim_create_namespace(''),
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
     extmarkIds = {},
     actions = {},
     fileIconsProvider = options.icons.enabled
         and require('grug-far.fileIconsProvider').getProvider(options.icons.fileIconsProvider)
       or nil,
-    throttledOnStatusChange = utils.throttle(
+    throttledOnStatusChange = require('grug-far.utils').throttle(
       options.onStatusChange,
       options.onStatusChangeThrottleTime
     ),
@@ -77,6 +77,83 @@ local function createContext(options)
   options.__grug_far_context__ = context
 
   return context
+end
+
+--- quality of life highlight of buf range for operate-within-range
+---@param buf integer
+---@param context grug.far.Context
+---@private
+local function setupBufRangeHighlight(buf, context)
+  local bufrangeInputName = context.engine.bufrangeInputName
+  if not bufrangeInputName then
+    return
+  end
+
+  local inputs = require('grug-far.inputs')
+  local utils = require('grug-far.utils')
+  local bufrange_input_val = ''
+  local highlighted_buffer = nil
+
+  local removeBufrangeHighlight = function()
+    if highlighted_buffer then
+      vim.api.nvim_buf_clear_namespace(highlighted_buffer, context.bufrangeNamespace, 0, -1)
+      highlighted_buffer = nil
+    end
+  end
+
+  local addBufrangeHighlight = function(bufrange_input_str)
+    local bufrange, bufrange_err = utils.getBufrange(bufrange_input_str)
+    if not bufrange or bufrange_err then
+      removeBufrangeHighlight()
+      return
+    end
+
+    local origin_buf = vim.fn.bufnr(bufrange.file_name)
+    if highlighted_buffer and origin_buf ~= highlighted_buffer then
+      removeBufrangeHighlight()
+    end
+    highlighted_buffer = origin_buf
+
+    vim.hl.range(
+      origin_buf,
+      context.bufrangeNamespace,
+      'GrugFarVisualBufrange',
+      { bufrange.start_row - 1, bufrange.start_col },
+      { bufrange.end_row - 1, bufrange.end_col }
+    )
+  end
+
+  -- make sure highlight is applied on bufrange change
+  vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = function()
+      local input_value = inputs.getInputValue(context, buf, bufrangeInputName)
+      if bufrange_input_val ~= input_value then
+        addBufrangeHighlight(input_value)
+        bufrange_input_val = input_value
+      end
+    end,
+  })
+
+  -- make sure highlight is applied on entering grug buffer
+  vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = function()
+      local input_value = inputs.getInputValue(context, buf, bufrangeInputName)
+      addBufrangeHighlight(input_value)
+    end,
+  })
+
+  -- make sure highlight is removed on leaving grug buffer
+  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = function()
+      removeBufrangeHighlight()
+    end,
+  })
 end
 
 ---@param context grug.far.Context
@@ -137,6 +214,7 @@ local function setupCleanup(buf, context)
     vim.api.nvim_buf_clear_namespace(buf, context.namespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.historyHlNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.helpHlNamespace, 0, -1)
+    vim.api.nvim_buf_clear_namespace(buf, context.bufrangeNamespace, 0, -1)
     vim.api.nvim_del_augroup_by_id(context.augroup)
     require('grug-far.render.treesitter').clear(buf)
     require('grug-far.fold').cleanup(context)
@@ -204,6 +282,10 @@ function grug_far._open_internal(options, params)
   grug_far._setupWindow(context, win, buf)
   setupCleanup(buf, context)
   instances.add_instance(options.instanceName, instance)
+
+  if options.visualSelectionUsage == 'operate-within-range' then
+    setupBufRangeHighlight(buf, context)
+  end
 
   require('grug-far.farBuffer').setupBuffer(win, buf, context, function()
     instance:_set_ready()

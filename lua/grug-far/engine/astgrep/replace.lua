@@ -178,7 +178,7 @@ function M.replace(params)
   local isRuleMode = inputs.rules ~= nil
 
   local extraArgs = { '--update-all' }
-  local bufrange, bufrange_err = search.getBufrange(inputs)
+  local bufrange, bufrange_err = utils.getBufrange(inputs.paths)
   if bufrange_err then
     params.on_finish('error', bufrange_err)
     return
