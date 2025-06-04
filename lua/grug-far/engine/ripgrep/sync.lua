@@ -1,7 +1,6 @@
 local syncChangedFiles = require('grug-far.engine.syncChangedFiles')
 local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local utils = require('grug-far.utils')
-local search = require('grug-far.engine.astgrep.search')
 local syncBufrange = require('grug-far.engine.syncBufrange')
 
 local M = {}
@@ -37,7 +36,7 @@ M.sync = function(params)
     return
   end
 
-  local bufrange, bufrange_err = search.getBufrange(params.inputs)
+  local bufrange, bufrange_err = utils.getBufrange(params.inputs.paths)
   if bufrange_err then
     params.on_finish('error', bufrange_err)
     return

@@ -161,7 +161,7 @@ local function addResultChunkHighlights(buf, context, data, startLine)
 
       vim.hl.range(
         buf,
-        context.namespace,
+        context.resultListNamespace,
         highlight.hl_group,
         { lineNr, start_col },
         { lineNr, end_col }
@@ -178,7 +178,7 @@ local function addResultChunkHighlights(buf, context, data, startLine)
         local start_col = #line - trimmedLineMsgLen
         vim.hl.range(
           buf,
-          context.namespace,
+          context.resultListNamespace,
           'GrugFarResultsLongLineStr',
           { lineNr, start_col },
           { lineNr, -1 }
@@ -393,7 +393,7 @@ function M.setError(buf, context, error)
   setBufLines(buf, startLine, -1, false, err_lines)
 
   for i = startLine, startLine + #err_lines do
-    vim.hl.range(buf, context.namespace, 'DiagnosticError', { i, 0 }, { i, -1 })
+    vim.hl.range(buf, context.resultListNamespace, 'DiagnosticError', { i, 0 }, { i, -1 })
   end
 end
 
@@ -411,7 +411,7 @@ function M.appendWarning(buf, context, warning)
   setBufLines(buf, lastline, -1, false, warn_lines)
 
   for i = lastline, lastline + #warn_lines - 1 do
-    vim.hl.range(buf, context.namespace, 'DiagnosticWarn', { i, 0 }, { i, -1 })
+    vim.hl.range(buf, context.resultListNamespace, 'DiagnosticWarn', { i, 0 }, { i, -1 })
   end
 end
 

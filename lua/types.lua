@@ -42,6 +42,7 @@
 ---@field resultListNamespace integer
 ---@field historyHlNamespace integer
 ---@field helpHlNamespace integer
+---@field bufrangeNamespace integer
 ---@field augroup integer
 ---@field extmarkIds {[string]: integer}
 ---@field state grug.far.State

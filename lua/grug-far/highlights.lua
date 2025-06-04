@@ -36,6 +36,8 @@ local highlights = {
   GrugFarResultsCmdHeader = { default = true, link = 'Underlined' },
   GrugFarResultsNumberLabel = { default = true, link = 'Identifier' },
   GrugFarResultsLongLineStr = { default = true, link = 'Comment' },
+
+  GrugFarVisualBufrange = { default = true, link = 'Visual' },
 }
 
 ---@private

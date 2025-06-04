@@ -5,7 +5,6 @@ local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local argUtils = require('grug-far.engine.ripgrep.argUtils')
 local parseResults = require('grug-far.engine.ripgrep.parseResults')
 local utils = require('grug-far.utils')
-local search = require('grug-far.engine.ripgrep.search')
 local uv = vim.uv
 
 local M = {}
@@ -164,7 +163,7 @@ M.replace = function(params)
     end
   end
 
-  local bufrange, bufrange_err = search.getBufrange(params.inputs)
+  local bufrange, bufrange_err = utils.getBufrange(params.inputs.paths)
   if bufrange_err then
     params.on_finish('error', bufrange_err)
     return

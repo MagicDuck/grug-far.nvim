@@ -35,20 +35,6 @@ function M.isSearchWithReplacement(args)
   return false
 end
 
---- gets bufrange if we have one specified in paths
----@param inputs grug.far.Inputs
----@return grug.far.VisualSelectionInfo? bufrange,string? err
-function M.getBufrange(inputs)
-  if #inputs.paths > 0 then
-    local paths = utils.splitPaths(inputs.paths)
-    for _, path in ipairs(paths) do
-      return utils.parse_buf_range_str(path)
-    end
-  end
-
-  return nil, nil
-end
-
 --- adds results of doing a replace to results of doing a search
 ---@param params {
 --- json_data: RipgrepJson[],
@@ -439,7 +425,7 @@ function M.search(params)
     return
   end
 
-  local bufrange, bufrange_err = M.getBufrange(params.inputs)
+  local bufrange, bufrange_err = utils.getBufrange(params.inputs.paths)
   if bufrange_err then
     params.on_finish('error', bufrange_err)
     return

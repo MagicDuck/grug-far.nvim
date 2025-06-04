@@ -45,6 +45,8 @@ local AstgrepEngine = {
     },
   },
 
+  bufrangeInputName = 'paths',
+
   isSearchWithReplacement = function(inputs, options)
     local args = search.getSearchArgs(inputs, options)
     return search.isSearchWithReplacement(args)
