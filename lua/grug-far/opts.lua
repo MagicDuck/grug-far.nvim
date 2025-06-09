@@ -251,7 +251,8 @@ grug_far.defaultOptions = {
   -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
   transient = false,
 
-  -- whether or not to allow the backspace key to delete an EOL character
+  -- whether or not to allow the <BS>, <Del> Ctrl-W, and, Ctrl-U key to delete an EOL character;
+  -- when disabled, deletions will be limited to the current line.
   backspaceEol = false,
 
   -- by default, in visual mode, the visual selection is used to prefill the search
