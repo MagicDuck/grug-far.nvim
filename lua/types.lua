@@ -35,7 +35,6 @@
 ---@field action? fun()
 
 ---@class grug.far.Context
----@field backspaceEol boolean
 ---@field count integer
 ---@field options grug.far.Options
 ---@field namespace integer
