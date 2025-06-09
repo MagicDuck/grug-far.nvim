@@ -278,7 +278,7 @@ end
 
 ---@param buf integer
 ---@param context grug.far.Context
-local function setupGlobalOptOverrides(buf, context)
+local function setupGlobalBackspaceOptOverrides(buf, context)
   local originalBackspaceOpt
   local function apply_overrides()
     -- this prevents backspacing over eol when clearing an input line
@@ -318,7 +318,9 @@ function M.setupBuffer(win, buf, context, on_ready)
     vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = buf })
   end
 
-  setupGlobalOptOverrides(buf, context)
+  if not context.options.backspaceEol then
+    setupGlobalBackspaceOptOverrides(buf, context)
+  end
   context.actions = getActions(buf, context)
   for _, action in ipairs(context.actions) do
     utils.setBufKeymap(buf, action.text, action.keymap, action.action)

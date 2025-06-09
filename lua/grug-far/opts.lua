@@ -251,6 +251,9 @@ grug_far.defaultOptions = {
   -- whether or not to make a transient buffer which is both unlisted and fully deletes itself when not in use
   transient = false,
 
+  -- whether or not to allow the backspace key to delete an EOL character
+  backspaceEol = false,
+
   -- by default, in visual mode, the visual selection is used to prefill the search
   -- setting this option to true disables that behaviour
   -- deprecated, please use visualSelectionUsage instead
@@ -804,6 +807,7 @@ grug_far.defaultOptions = {
 
 ---@class grug.far.Options
 ---@tag grug.far.Options
+---@field backspaceEol boolean
 ---@field debounceMs integer
 ---@field minSearchChars integer
 ---@field maxSearchMatches integer?
