@@ -293,6 +293,7 @@ local function setupInputBoundaryBackspace(buf, context)
         end
       end
     end
+
     return false
   end
 
