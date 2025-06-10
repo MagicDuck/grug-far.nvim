@@ -387,11 +387,17 @@ function M.bindInputSaavyKeys(context, buf)
   })
 
   if context.options.backspaceEol then
+    local isSetUp = false
     vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
       group = context.augroup,
       buffer = buf,
       callback = function()
+        if isSetUp then
+          return
+        end
+
         setupInputBoundaryBackspace(buf, context)
+        isSetUp = true
       end,
     })
   end
