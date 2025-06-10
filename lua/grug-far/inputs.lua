@@ -124,6 +124,29 @@ function M.fill(context, buf, values, clearOld)
   end)
 end
 
+--- gets 0-based row of results header
+---@param context grug.far.Context
+---@param buf integer
+---@return integer
+M.getHeaderRow = function(context, buf)
+  local headerRow = 0
+  if context.extmarkIds.results_header then
+    local row = unpack(
+      vim.api.nvim_buf_get_extmark_by_id(
+        buf,
+        context.namespace,
+        context.extmarkIds.results_header,
+        {}
+      )
+    ) --[[@as integer]]
+    if row then
+      headerRow = row
+    end
+  end
+
+  return headerRow
+end
+
 ---@class grug.far.InputDetails
 ---@field start_row integer
 ---@field start_col integer
@@ -137,6 +160,10 @@ end
 ---@param row integer
 ---@return grug.far.InputDetails?
 function M.getInputAtRow(context, buf, row)
+  local headerRow = M.getHeaderRow(context, buf)
+  if headerRow and row > headerRow then
+    return
+  end
   local names = vim
     .iter(context.engine.inputs)
     :map(function(input)

@@ -1,5 +1,5 @@
 local sync = require('grug-far.actions.sync')
-local resultsList = require('grug-far.render.resultsList')
+local inputs = require('grug-far.inputs')
 
 --- syncs current result line with original file location
 ---@param params { buf: integer, context: grug.far.Context }
@@ -8,7 +8,7 @@ local function syncLine(params)
   local buf = params.buf
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0)) - 1
 
-  local headerRow = resultsList.getHeaderRow(context, buf)
+  local headerRow = inputs.getHeaderRow(context, buf)
   if cursor_row <= headerRow then
     return
   end

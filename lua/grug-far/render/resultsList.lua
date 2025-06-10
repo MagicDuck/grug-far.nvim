@@ -8,29 +8,6 @@ local inputs = require('grug-far.inputs')
 
 local M = {}
 
---- gets 0-based row of results header
----@param context grug.far.Context
----@param buf integer
----@return integer
-M.getHeaderRow = function(context, buf)
-  local headerRow = 0
-  if context.extmarkIds.results_header then
-    local row = unpack(
-      vim.api.nvim_buf_get_extmark_by_id(
-        buf,
-        context.namespace,
-        context.extmarkIds.results_header,
-        {}
-      )
-    ) --[[@as integer]]
-    if row then
-      headerRow = row
-    end
-  end
-
-  return headerRow
-end
-
 --- sets buf lines, even when buf is not modifiable
 ---@param buf integer
 ---@param start integer
@@ -119,7 +96,7 @@ local function addResultChunkLines(buf, context, data)
   end
 
   -- add text
-  local headerRow = M.getHeaderRow(context, buf)
+  local headerRow = inputs.getHeaderRow(context, buf)
   local linecount = vim.api.nvim_buf_line_count(buf)
   local lastline = linecount == headerRow + 1 and headerRow or linecount
   setBufLines(buf, lastline, -1, false, data.lines)
@@ -195,7 +172,7 @@ end
 ---@param startLine integer
 local function addResultChunkMarks(buf, context, data, startLine)
   local resultLocationByExtmarkId = context.state.resultLocationByExtmarkId
-  local headerRow = M.getHeaderRow(context, buf)
+  local headerRow = inputs.getHeaderRow(context, buf)
   local resultLocationOpts = context.options.resultLocation
   local maxLineLength = context.options.maxLineLength
   local window_width = vim.api.nvim_win_get_width(0)
@@ -386,7 +363,7 @@ end
 function M.setError(buf, context, error)
   M.clear(buf, context)
 
-  local headerRow = M.getHeaderRow(context, buf)
+  local headerRow = inputs.getHeaderRow(context, buf)
   local startLine = headerRow
 
   local err_lines = vim.split((error and #error > 0) and error or 'Unexpected error!', '\n')
@@ -538,7 +515,7 @@ function M.clear(buf, context)
   vim.api.nvim_buf_clear_namespace(buf, context.resultListNamespace, 0, -1)
 
   -- remove all lines after heading
-  local headerRow = M.getHeaderRow(context, buf)
+  local headerRow = inputs.getHeaderRow(context, buf)
   setBufLines(buf, headerRow, -1, false, { '' })
 end
 
@@ -547,7 +524,7 @@ end
 ---@param context grug.far.Context
 ---@param rgArgs string[]
 function M.appendSearchCommand(buf, context, rgArgs)
-  local headerRow = M.getHeaderRow(context, buf)
+  local headerRow = inputs.getHeaderRow(context, buf)
   local linecount = vim.api.nvim_buf_line_count(buf)
   local lastline = linecount == headerRow + 1 and headerRow or linecount
 
@@ -586,7 +563,7 @@ end
 function M.forceRedrawBuffer(buf, context)
   ---@diagnostic disable-next-line
   if vim.api.nvim__redraw then
-    local headerRow = M.getHeaderRow(context, buf)
+    local headerRow = inputs.getHeaderRow(context, buf)
     ---@diagnostic disable-next-line
     vim.api.nvim__redraw({ buf = buf, flush = true, range = { 0, headerRow + 100 } })
   end
@@ -599,7 +576,7 @@ function M.highlight(buf, context)
     return
   end
   local regions = context.state.highlightRegions
-  local headerRow = M.getHeaderRow(context, buf)
+  local headerRow = inputs.getHeaderRow(context, buf)
 
   -- Process any pending results
   for filename, results in pairs(context.state.highlightResults) do

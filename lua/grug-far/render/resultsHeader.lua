@@ -1,5 +1,5 @@
 local opts = require('grug-far.opts')
-local resultsList = require('grug-far.render.resultsList')
+local inputs = require('grug-far.inputs')
 
 --- gets status text
 ---@param context grug.far.Context
@@ -80,7 +80,7 @@ end
 ---@param context grug.far.Context
 ---@param row? integer 0-based row, defaults to headerRow
 local function renderResultsHeader(buf, context, row)
-  local headerRow = row or resultsList.getHeaderRow(context, buf)
+  local headerRow = row or inputs.getHeaderRow(context, buf)
   local virt_lines = {}
   if context.options.showInputsBottomPadding then
     table.insert(virt_lines, { { '', 'Normal' } })

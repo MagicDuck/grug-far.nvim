@@ -1,5 +1,6 @@
 local engine = require('grug-far.engine')
 local resultsList = require('grug-far.render.resultsList')
+local inputs = require('grug-far.inputs')
 local M = {}
 
 --- updates folds of first window associated with given buffer
@@ -32,7 +33,7 @@ function M.setup(context, win, buf)
         if not vim.api.nvim_win_is_valid(win) then
           return
         end
-        if vim.v.lnum <= resultsList.getHeaderRow(context, buf) then
+        if vim.v.lnum <= inputs.getHeaderRow(context, buf) then
           return 0
         end
 
