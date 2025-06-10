@@ -304,12 +304,6 @@ end
 ---@param buf integer
 ---@param context grug.far.Context
 local function setupInputBoundaryBackspace(buf, context)
-  local function isInputRow(row)
-    local inputRow = M.getInputAtRow(context, buf, row)
-
-    return inputRow ~= nil and inputRow.start_row == row
-  end
-
   local function setupDeletionKey(key, shouldBlock)
     vim.api.nvim_buf_set_keymap(buf, 'i', key, '', {
       noremap = true,
@@ -328,12 +322,22 @@ local function setupInputBoundaryBackspace(buf, context)
   end
 
   local function shouldBlockBackward(row, col)
-    return col == 0 and isInputRow(row)
+    if col > 0 then
+      return false
+    end
+
+    local input = M.getInputAtRow(context, buf, row)
+    return input ~= nil and input.start_row == row
   end
 
   local function shouldBlockForward(row, col)
     local line = vim.api.nvim_buf_get_lines(buf, row, row + 1, false)[1]
-    return col >= #line and isInputRow(row)
+    if col < #line then
+      return false
+    end
+
+    local input = M.getInputAtRow(context, buf, row)
+    return input ~= nil and input.end_row == row
   end
 
   setupDeletionKey('<BS>', shouldBlockBackward)

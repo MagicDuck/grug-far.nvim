@@ -441,4 +441,13 @@ T['deleting from end of input is ignored even with backspaceEol'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['deleting from end of multiline input is ignored even with backspaceEol'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug\nwalks', replacement = 'grug walks' },
+    backspaceEol = true,
+  })
+  child.type_keys('<esc>', 'j', 'A', '<del>')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
