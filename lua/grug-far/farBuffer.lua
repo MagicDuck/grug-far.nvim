@@ -276,6 +276,69 @@ local function updateBufName(buf, context)
   utils.buf_set_name(buf, title)
 end
 
+--- set up backspace handling that respects
+--- prevents backspacing causing text to spill across input boxes
+---@param buf integer
+---@param context grug.far.Context
+local function setupInputBoundaryBackspace(buf, context)
+  local function isInputRow(row)
+    for _, input in ipairs(context.engine.inputs) do
+      local extmarkId = context.extmarkIds[input.name]
+      if extmarkId then
+        local inputRow =
+          unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, extmarkId, {})) --[[@as integer?]]
+
+        if inputRow and inputRow == row then
+          return true
+        end
+      end
+    end
+    return false
+  end
+
+  local function setupBackwardDeletionKey(key)
+    vim.api.nvim_buf_set_keymap(buf, 'i', key, '', {
+      noremap = true,
+      silent = true,
+      callback = function()
+        local cursor = vim.api.nvim_win_get_cursor(0)
+        local row, col = cursor[1] - 1, cursor[2]
+
+        -- Block backward delete at start of input line
+        if col == 0 and isInputRow(row) then
+          return
+        end
+
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), 'n', false)
+      end,
+    })
+  end
+
+  local function setupForwardDeletionKey(key)
+    vim.api.nvim_buf_set_keymap(buf, 'i', key, '', {
+      noremap = true,
+      silent = true,
+      callback = function()
+        local cursor = vim.api.nvim_win_get_cursor(0)
+        local row, col = cursor[1] - 1, cursor[2]
+
+        -- Block forward delete at end of input line
+        local line = vim.api.nvim_buf_get_lines(buf, row, row + 1, false)[1]
+        if col >= #line and isInputRow(row) then
+          return
+        end
+
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), 'n', false)
+      end,
+    })
+  end
+
+  setupBackwardDeletionKey('<BS>')
+  setupBackwardDeletionKey('<C-w>')
+  setupBackwardDeletionKey('<C-u>')
+  setupForwardDeletionKey('<Del>')
+end
+
 ---@param buf integer
 ---@param context grug.far.Context
 local function setupGlobalBackspaceOptOverrides(buf, context)
@@ -318,7 +381,9 @@ function M.setupBuffer(win, buf, context, on_ready)
     vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = buf })
   end
 
-  if not context.options.backspaceEol then
+  if context.options.backspaceEol then
+    setupInputBoundaryBackspace(buf, context)
+  else
     setupGlobalBackspaceOptOverrides(buf, context)
   end
   context.actions = getActions(buf, context)
