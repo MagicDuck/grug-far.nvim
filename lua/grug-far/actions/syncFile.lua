@@ -1,5 +1,6 @@
 local sync = require('grug-far.actions.sync')
 local resultsList = require('grug-far.render.resultsList')
+local inputs = require('grug-far.inputs')
 
 --- gets boundary location (cursor_row is 1-based)
 ---@param buf integer
@@ -60,7 +61,7 @@ local function syncFile(params)
   local buf = params.buf
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(0))
 
-  local headerRow = resultsList.getHeaderRow(context, buf)
+  local headerRow = inputs.getHeaderRow(context, buf)
   if cursor_row - 1 <= headerRow then
     return
   end
