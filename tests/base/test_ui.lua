@@ -393,4 +393,52 @@ T['can display correctly with showStatusIcon=false'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can backspace newlines with backspaceEol enabled'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug\nwalks' },
+    backspaceEol = true,
+  })
+  child.type_keys('<esc>', 'j', 'I', '<bs>')
+  helpers.childExpectScreenshot(child)
+end
+
+T['deleting with bs from start of input is ignored even with backspaceEol'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'walks' },
+    backspaceEol = true,
+  })
+
+  child.type_keys('<esc>', 'j', 'I', '<bs>')
+  helpers.childExpectScreenshot(child)
+end
+
+T['deleting with C-u from start of input is ignored even with backspaceEol'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'walks' },
+    backspaceEol = true,
+  })
+
+  child.type_keys('<esc>', 'j', 'I', '<C-u>')
+  helpers.childExpectScreenshot(child)
+end
+
+T['deleting with C-w from start of input is ignored even with backspaceEol'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'walks' },
+    backspaceEol = true,
+  })
+
+  child.type_keys('<esc>', 'j', 'I', '<C-w>')
+  helpers.childExpectScreenshot(child)
+end
+
+T['deleting from end of input is ignored even with backspaceEol'] = function()
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'walks' },
+    backspaceEol = true,
+  })
+  child.type_keys('<esc>', 'A', '<del>')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
