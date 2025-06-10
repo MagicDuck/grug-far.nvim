@@ -297,7 +297,7 @@ local function setupInputBoundaryBackspace(buf, context)
     return false
   end
 
-  local function setupBackwardDeletionKey(key)
+  local function setupDeletionKey(key, shouldBlock)
     vim.api.nvim_buf_set_keymap(buf, 'i', key, '', {
       noremap = true,
       silent = true,
@@ -305,8 +305,7 @@ local function setupInputBoundaryBackspace(buf, context)
         local cursor = vim.api.nvim_win_get_cursor(0)
         local row, col = cursor[1] - 1, cursor[2]
 
-        -- Block backward delete at start of input line
-        if col == 0 and isInputRow(row) then
+        if shouldBlock(row, col) then
           return
         end
 
@@ -315,29 +314,19 @@ local function setupInputBoundaryBackspace(buf, context)
     })
   end
 
-  local function setupForwardDeletionKey(key)
-    vim.api.nvim_buf_set_keymap(buf, 'i', key, '', {
-      noremap = true,
-      silent = true,
-      callback = function()
-        local cursor = vim.api.nvim_win_get_cursor(0)
-        local row, col = cursor[1] - 1, cursor[2]
-
-        -- Block forward delete at end of input line
-        local line = vim.api.nvim_buf_get_lines(buf, row, row + 1, false)[1]
-        if col >= #line and isInputRow(row) then
-          return
-        end
-
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), 'n', false)
-      end,
-    })
+  local function shouldBlockBackward(row, col)
+    return col == 0 and isInputRow(row)
   end
 
-  setupBackwardDeletionKey('<BS>')
-  setupBackwardDeletionKey('<C-w>')
-  setupBackwardDeletionKey('<C-u>')
-  setupForwardDeletionKey('<Del>')
+  local function shouldBlockForward(row, col)
+    local line = vim.api.nvim_buf_get_lines(buf, row, row + 1, false)[1]
+    return col >= #line and isInputRow(row)
+  end
+
+  setupDeletionKey('<BS>', shouldBlockBackward)
+  setupDeletionKey('<C-w>', shouldBlockBackward)
+  setupDeletionKey('<C-u>', shouldBlockBackward)
+  setupDeletionKey('<Del>', shouldBlockForward)
 end
 
 ---@param buf integer
