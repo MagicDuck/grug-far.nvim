@@ -282,19 +282,9 @@ end
 ---@param context grug.far.Context
 local function setupInputBoundaryBackspace(buf, context)
   local function isInputRow(row)
-    for _, input in ipairs(context.engine.inputs) do
-      local extmarkId = context.extmarkIds[input.name]
-      if extmarkId then
-        local inputRow =
-          unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, extmarkId, {})) --[[@as integer?]]
+    local inputRow = inputs.getInputAtRow(context, buf, row)
 
-        if inputRow and inputRow == row then
-          return true
-        end
-      end
-    end
-
-    return false
+    return inputRow ~= nil and inputRow.start_row == row
   end
 
   local function setupDeletionKey(key, shouldBlock)
