@@ -127,32 +127,32 @@ local function setupBufRangeHighlight(buf, context)
   vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
     group = context.augroup,
     buffer = buf,
-    callback = function()
+    callback = vim.schedule_wrap(function()
       local input_value = inputs.getInputValue(context, buf, bufrangeInputName)
       if bufrange_input_val ~= input_value then
         addBufrangeHighlight(input_value)
         bufrange_input_val = input_value
       end
-    end,
+    end),
   })
 
   -- make sure highlight is applied on entering grug buffer
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = context.augroup,
     buffer = buf,
-    callback = function()
+    callback = vim.schedule_wrap(function()
       local input_value = inputs.getInputValue(context, buf, bufrangeInputName)
       addBufrangeHighlight(input_value)
-    end,
+    end),
   })
 
   -- make sure highlight is removed on leaving grug buffer
   vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     group = context.augroup,
     buffer = buf,
-    callback = function()
+    callback = vim.schedule_wrap(function()
       removeBufrangeHighlight()
-    end,
+    end),
   })
 end
 
