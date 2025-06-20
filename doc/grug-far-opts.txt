@@ -252,7 +252,7 @@
 
     -- whether or not to allow the <BS>, <Del> Ctrl-W, and, Ctrl-U key to delete an EOL character;
     -- when disabled, deletions will be limited to the current line.
-    backspaceEol = false,
+    backspaceEol = true,
 
     -- by default, in visual mode, the visual selection is used to prefill the search
     -- setting this option to true disables that behaviour

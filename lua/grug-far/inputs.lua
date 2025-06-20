@@ -20,16 +20,16 @@ function M.getInputPos(context, buf, name)
     return nil, nil, theInput
   end
 
-  local startRow =
-    unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, context.extmarkIds[name], {})) --[[@as integer?]]
-  local endRow = unpack(
-    vim.api.nvim_buf_get_extmark_by_id(
-      buf,
-      context.namespace,
-      context.extmarkIds[nextExtmarkName],
-      {}
-    )
-  ) --[[@as integer?]]
+  local extmarkId = context.extmarkIds[name]
+  local nextExtmarkId = context.extmarkIds[nextExtmarkName]
+
+  if not extmarkId and nextExtmarkId then
+    return nil, nil, theInput
+  end
+
+  local startRow = unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, extmarkId, {})) --[[@as integer?]]
+  local endRow =
+    unpack(vim.api.nvim_buf_get_extmark_by_id(buf, context.namespace, nextExtmarkId, {})) --[[@as integer?]]
 
   return startRow, endRow, theInput
 end
