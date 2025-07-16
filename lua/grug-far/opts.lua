@@ -84,6 +84,15 @@ grug_far.defaultOptions = {
         flags = 'e.g. --help --ignore-case (-i) --replace= (empty replace) --multiline (-U)',
         paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
       },
+      -- defaults to fill into the inputs when loading or switching to this engine
+      -- they only apply when non-nil
+      defaults = {
+        search = nil,
+        replacement = nil,
+        filesFilter = nil,
+        flags = nil,
+        paths = nil,
+      },
     },
     -- see https://ast-grep.github.io
     astgrep = {
@@ -105,9 +114,19 @@ grug_far.defaultOptions = {
         search = 'e.g. $A && $A()   foo.bar($$$ARGS)   $_FUNC($_FUNC)',
         replacement = 'e.g. $A?.()   blah($$$ARGS)',
         replacement_lua = 'e.g. return vars.A == "blah" and "foo(" .. table.concat(vars.ARGS, ", ") .. ")" or match',
+        replacement_vimscript = 'e.g. return "bob_" .. match',
         filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
         flags = 'e.g. --help (-h) --debug-query=ast --rewrite= (empty replace) --strictness=<STRICTNESS>',
         paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
+      },
+      -- defaults to fill into the inputs when loading or switching to this engine
+      -- they only apply when non-nil
+      defaults = {
+        search = nil,
+        replacement = nil,
+        filesFilter = nil,
+        flags = nil,
+        paths = nil,
       },
     },
 
@@ -156,6 +175,14 @@ grug_far.defaultOptions = {
         filesFilter = 'e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters via ripgrep)',
         flags = 'e.g. --help (-h) --debug-query=ast --strictness=<STRICTNESS>',
         paths = 'e.g. /foo/bar   ../   ./hello\\ world/   ./src/foo.lua   ~/.config',
+      },
+      -- defaults to fill into the inputs when loading or switching to this engine
+      -- they only apply when non-nil
+      defaults = {
+        rules = nil,
+        filesFilter = nil,
+        flags = nil,
+        paths = nil,
       },
     },
   },
@@ -689,6 +716,15 @@ grug_far.defaultOptions = {
 ---@field flags? string
 ---@field paths? string
 
+---@class grug.far.DefaultsTable
+---@field search? string
+---@field rules? string
+---@field replacement? string
+---@field replacement_lua? string
+---@field filesFilter? string
+---@field flags? string
+---@field paths? string
+
 ---@alias grug.far.LanguageGlobsTable table<string, string[]>
 
 ---@class grug.far.FoldingTable
@@ -709,29 +745,34 @@ grug_far.defaultOptions = {
 ---@field extraArgs string
 ---@field showReplaceDiff boolean
 ---@field placeholders grug.far.PlaceholdersTable
+---@field defaults grug.far.DefaultsTable
 
 ---@class grug.far.RipgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
 ---@field showReplaceDiff? boolean
 ---@field placeholders? grug.far.PlaceholdersTable
+---@field defaults? grug.far.DefaultsTable
 ---@private
 
 ---@class grug.far.AstgrepEngineTable
 ---@field path string
 ---@field extraArgs string
 ---@field placeholders grug.far.PlaceholdersTable
+---@field defaults grug.far.DefaultsTable
 
 ---@class grug.far.AstgrepRulesEngineTable
 ---@field path string
 ---@field extraArgs string
 ---@field placeholders grug.far.PlaceholdersTable
 ---@field languageGlobs grug.far.LanguageGlobsTable
+---@field defaults grug.far.DefaultsTable
 
 ---@class grug.far.AstgrepEngineTableOverride
 ---@field path? string
 ---@field extraArgs? string
 ---@field placeholders? grug.far.PlaceholdersTable
+---@field defaults? grug.far.DefaultsTable
 ---@private
 
 ---@class grug.far.AstgrepRulesEngineTableOverride
@@ -739,6 +780,7 @@ grug_far.defaultOptions = {
 ---@field extraArgs? string
 ---@field placeholders? grug.far.PlaceholdersTable
 ---@field languageGlobs? grug.far.LanguageGlobsTable
+---@field defaults? grug.far.DefaultsTable
 ---@private
 
 ---@class grug.far.EnginesTable

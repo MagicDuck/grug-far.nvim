@@ -13,6 +13,7 @@ local function swapEngine(params)
   local nextIndex = (currentIndex + 1) % #engineTypes
   local nextEngineType = engineTypes[nextIndex + 1]
   local nextEngine = engine.getEngine(nextEngineType)
+  local nextEngineOpts = context.options.engines[nextEngineType]
 
   for name, value in pairs(inputs.getValues(context, buf)) do
     context.state.previousInputValues[name] = value
@@ -23,7 +24,10 @@ local function swapEngine(params)
   }
   for _, input in ipairs(nextEngine.inputs) do
     local value
-    if input.getDefaultValue then
+    if nextEngineOpts.defaults[input.name] then
+      value = nextEngineOpts.defaults[input.name]
+    end
+    if not value and input.getDefaultValue then
       value = input.getDefaultValue(context)
     end
     if value == nil then
