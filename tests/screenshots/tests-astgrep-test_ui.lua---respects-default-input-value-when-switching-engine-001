@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...                   
+02|                                                                                
+03|  Search:                                                                      
+04|grug                                                                            
+05|  Replace:                                                                     
+06|                                                                                
+07|  Files Filter:                                                                
+08|                                                                                
+09| 󰮚 Flags:                                                                       
+10|--strictness relaxed                                                            
+11|  Paths:                                                                       
+12|                                                                                
+13|                                                                                
+14| STATUS_PROGRESS ⟪ astgrep ⟫
+15|                                                                                
+16|                                                                                
+17|                                                                                
+18|                                                                                
+19|                                                                                
+20|                                                                                
+21|                                                                                
+22|                                                                                
+23|Grug FAR - 1: grug                                                           1,1
+24|grug-far: swapped to engine: astgrep!                                           

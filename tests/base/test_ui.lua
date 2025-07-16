@@ -450,4 +450,23 @@ T['deleting from end of multiline input is ignored even with backspaceEol'] = fu
   helpers.childExpectScreenshot(child)
 end
 
+T['respects default input value on load'] = function()
+  helpers.writeTestFiles({})
+  helpers.childRunGrugFar(child, {
+    prefills = {
+      search = 'grug',
+    },
+    engines = {
+      ripgrep = {
+        defaults = {
+          search = 'hello',
+          flags = '--smart-case',
+        },
+      },
+    },
+  })
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T
