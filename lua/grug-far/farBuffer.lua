@@ -409,8 +409,12 @@ function M.setupBuffer(win, buf, context, on_ready)
 
     vim.schedule(function()
       local values = {}
+      local engineOpts = context.options.engines[context.engine.type]
       for _, input in ipairs(context.engine.inputs) do
         local value = context.options.prefills[input.name]
+        if value == nil and engineOpts.defaults[input.name] then
+          value = engineOpts.defaults[input.name]
+        end
         if value == nil and input.getDefaultValue then
           value = input.getDefaultValue(context)
         end
