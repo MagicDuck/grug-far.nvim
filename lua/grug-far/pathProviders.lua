@@ -8,7 +8,7 @@ M.getBuflistFiles = function()
     local buftype = vim.api.nvim_get_option_value('buftype', { buf = buf })
     local buflisted = vim.api.nvim_get_option_value('buflisted', { buf = buf })
     local path = vim.api.nvim_buf_get_name(buf)
-    if buftype == '' and buflisted and path then
+    if buftype == '' and buflisted and path and #path > 0 then
       table.insert(paths, path)
     end
   end

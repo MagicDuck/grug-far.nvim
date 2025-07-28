@@ -587,7 +587,7 @@ M.normalizePaths = function(paths, context)
         if name == providerName then
           isProvider = true
           for _, p in ipairs(providerFn({ prevWin = context.prevWin })) do
-            table.insert(normalizedPaths, vim.fn.fnameescape(M.normalizePath(p, cwd)))
+            table.insert(normalizedPaths, M.normalizePath(p, cwd))
           end
         end
       end
