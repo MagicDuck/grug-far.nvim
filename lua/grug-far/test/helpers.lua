@@ -24,6 +24,7 @@ function M.getBufExtmarksVirtText(buf, namespaceName)
 
   for i = 1, #marks do
     local _, _, _, details = unpack(marks[i])
+    ---@diagnostic disable-next-line: need-check-nil
     local virt_lines = details.virt_lines
     if virt_lines then
       for j = 1, #virt_lines do
@@ -36,6 +37,7 @@ function M.getBufExtmarksVirtText(buf, namespaceName)
       end
     end
 
+    ---@diagnostic disable-next-line: need-check-nil
     local virt_text = details.virt_text
     if virt_text then
       for l = 1, #virt_text do
@@ -248,7 +250,7 @@ end
 
 --- writes files given based on given spec to temp test dir
 --- clears out temp test dir beforehand
----@param files {[string]: string}
+---@param files {filename: string, content: string}[]
 ---@param dirs? string[]
 function M.writeTestFiles(files, dirs)
   vim.fn.delete('./temp_test_dir', 'rf')
