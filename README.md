@@ -123,26 +123,30 @@ You can create multiple such buffers with potentially different searches, which 
 The buffers should be visible in the buffers list if you need to toggle to them.
 
 ### Searching and replacing
-Search and replace is accomplished by simply typing text on appropriately marked lines. Search will
-happen in a debounced manner as you type. In the options, you can also specify a minimum number of characters
-that one has to enter before search is triggered.
-You can also specify a files filter to narrow down your search and more ripgrep flags to refine it further.
-Error messages from ripgrep when entering invalid flags and so on are displayed to guide you along. 
-
-_Note:_ Paths input supports `~`, environment variables and "path providers". The latter are special strings that expand
-to a list of paths. Currently available are:
-- `<buflist>`: expands to list of files corresponding to opened buffers
-- `<buflist-cwd>`: like `<buflist>`, but filtered down to files in cwd
-- `<qflist>`: expands to list of files corresponding to quickfix list
-- ... for a full list, see `:h grug-far-opts` and search for "path providers" ...
+Searching is done by filling in the appropriate inputs and will happen in a debounced manner as you type. If you provide a replacement,
+a diff will be shown. To trigger the actual replacement, you need to invoke the `Replace` action (`<localleader>r` by default).
 
 _Note:_ When replacing matches with the empty string, you will be prompted to confirm, as the change is not
 visible in the results area due to UI considering it just a search. If you
 would like to see the actual replacement in the results area, add `--replace=` to the flags.
 
+In the options, you can also specify a minimum number of characters that one has to enter before search is triggered. By default it is 2.
+
+When searching, you can specify a files filter to narrow down your search and more flags to refine it further. Paths input can be used to
+target particular directories and files.
+
+_Note:_ Paths input supports relative and absolute paths, `~`, environment variables and "path providers". The latter are special strings that expand
+to a list of paths. Currently available `path providers` are:
+- `<buflist>`: expands to list of files corresponding to opened buffers
+- `<buflist-cwd>`: like `<buflist>`, but filtered down to files in cwd
+- `<qflist>`: expands to list of files corresponding to quickfix list
+- ... for a full list, see `:h grug-far-opts` and search for "path providers" ...
+
+Error messages from ripgrep/astgrep when entering invalid flags and so on are displayed to guide you along. 
+
 ### Replacing each match with the result of an interpreted script
 
-Some situations require the power of arbitrary code executed for each search to determine the proper replacements.
+Some situations require the power of arbitrary code executed for each search match to determine the proper replacements.
 In those cases, you can use the `Swap Replacement Interpreter` action to switch to a desired replacement interpreter,
 such as `lua` or `vimscript`.
 For example, with the `lua` interpreter, this will allow you to write multi-line lua code, essentially the body of a lua function,
@@ -156,7 +160,8 @@ It is a similar situation for the `vimscript` interpreter.
 
 ### Syncing results lines back to originating files
 
-It is possible to sync the text of the lines in the results area back to their originating files.
+It is possible to sync the text of the lines in the results area back to their originating files. This allows for free-form
+editing of results within the grug-far buffer, or even the old `%s/foo/bar`.
 There are 3 types of actions that can accomplish this operation:
 1. `Sync Line` - syncs current line
 2. `Sync All` - syncs all lines
@@ -169,20 +174,19 @@ Deleting result lines will cause them to be excluded from being synced by `Sync 
 This can be a nice way to refine a replacement in some situations if you want to exclude a particular file
 or some particular matches.
 
-_Note:_ sync is only supported by `ripgrep` engine. The following explanation is `ripgrep` engine specific:
-
-If you don't edit the results list, `Sync All` and `Replace` have equivalent outcomes, except for one case. 
-When you do multi-line replace with `--multiline` and `--multiline-dot-all` flags, sync won't work so you 
-have to use replace. Essentially the difference it that `Replace` runs `rg --replace=... --passthrough` on 
-each file and does not depend at all on what's in the results area. `Sync All` does a line by line
-sync based on what's in the results area.
-
-_Note:_ changing the `<line-number>:<column>:` prefix of result lines will disable sync for that line
-
 _Note:_ sync is disabled when doing multiline replacement (`--multiline` flag)
 
 _Note:_ if you would like sync to work when doing a replacement with empty string, please add `--replace=`
 to the flags.
+
+_Note:_ sync is only supported by `ripgrep` engine. The following explanation on the difference between sync and replace 
+is `ripgrep` engine specific:
+
+If you don't edit the results list, `Sync All` and `Replace` have equivalent outcomes, except for one case. 
+When you do multi-line replace with `--multiline` and `--multiline-dot-all` flags, sync won't work so you 
+have to use replace. Essentially the difference is that `Replace` runs `rg --replace=... --passthrough` on 
+each file and does not depend at all on what's in the results area. `Sync All` does a line by line
+sync based on what's in the results area.
 
 ### Going to / Opening / Previewing Result Location
 When the cursor is placed on a result file path, you can go to that file by pressing `<enter>` in normal mode (`Goto` action default keybind).
@@ -191,9 +195,11 @@ is opened in the last window you were in before opening grug-far, which is typic
 
 If you would like to do the same thing, but have the cursor stay in place, you can use the `Open` action instead.
 
-_Note:_ for both `Goto` and `Open` actions, if a `<count>` is entered beforehand, the location corresponding to `<count>` result line is used instead of the current cursor line. You can set the option `resultLocation.showNumberLabel = true` if you would like to have a visual indication of the `<count>`.
+_Note:_ for both `Goto` and `Open` actions, if a `<count>` is entered beforehand, the location corresponding to `<count>` result line
+is used instead of the current cursor line. You can set the option `resultLocation.showNumberLabel = true` if you would like to
+have a visual indication of the `<count>`.
 
-In order to smoothly `Open` each result location in sequence, you can use the `Open Next` and `Open Prev` actions.
+In order to smoothly `Open` each result location in sequence, you can use the `Open Next`(`<down> by default`) and `Open Prev`(`<up>` by default) actions.
 
 If you would like to keep the buffers layout, you can use the `Preview` action instead, which will open location in a floating window.
 
@@ -201,9 +207,7 @@ If you would like to keep the buffers layout, you can use the `Preview` action i
 
 Result lines can be opened in the quickfix list. Deleting result lines will cause them not to be included. 
 
-_Note:_ changing the `<line-number>:<column>:` prefix of result lines will remove lines from consideration
-
-_Note:_ quickfix list is disabled when doing multiline replacement (`--multiline` flag)
+_Note:_ quickfix list action is disabled when doing multiline replacement (`--multiline` flag)
 
 ### History
 
@@ -236,26 +240,29 @@ _Note_: **grug-far** will ignore lines that do not start with the prefixes above
 
 ### Seeing the full search command
 Sometimes, mostly for debug purposes, it's useful to see the full CLI command that gets executed on search. You
-can toggle that on with the `Toggle Show rg Command` action, and the command will appear as the first thing in the
+can toggle that on with the `Toggle Show Command` action, and the command will appear as the first thing in the
 search results area.
 
 The command is shell-escaped, so you can copy and execute it in a shell manually if you need to.
 
 ### Aborting
-If you inadvertently launched a wrong search/sync/replace, you can abort early using the `Abort` action.
+If you inadvertently launched a wrong search/sync/replace or it's taking too long, you can abort early using the `Abort` action.
 
 ### Swapping search engine
 You can swap search engines with the `Swap Engine` action. Currently `ripgrep` (default), `astgrep`, and `astgrep-rules` are supported. 
+The list of available engines is configurable if you would like to only include some in the swap cycle.
 
 `ripgrep` uses the `rg` CLI command to search and replace. See [ripgrep docs](https://github.com/BurntSushi/ripgrep) for more information about CLI options and regex syntax.
 
-`astgrep` and `astgrep-rules` are two different interfaces to the `sg` CLI command. `astgrep` is limited to single [patterns](https://ast-grep.github.io/guide/pattern-syntax.html), with `astgrep run --pattern=<your_search_string>`. `astgrep-rules` takes YAML input to define [rules](https://ast-grep.github.io/guide/rule-config.html), run with `sg scan --inline-rules=<your_rules_yaml>`, which is more verbose but more powerful. See [ast-grep docs](https://ast-grep.github.io/guide/introduction.html) for more information. grug-far will attempt to pre-populate reasonable YAML boilerplate when selecting the `astgrep-rules` engine. If you've been working on a pattern with `astgrep`, then swap engine to `astgrep-rules`, grug-far will include your existing pattern in the rule so you can build on it from there.
+`astgrep` and `astgrep-rules` are two different interfaces to the `ast-grep` CLI command. `astgrep` is limited to single [patterns](https://ast-grep.github.io/guide/pattern-syntax.html), with `astgrep run --pattern=<your_search_string>`. `astgrep-rules` takes YAML input to define [rules](https://ast-grep.github.io/guide/rule-config.html), run with `sg scan --inline-rules=<your_rules_yaml>`, which is more verbose but more powerful. See [ast-grep docs](https://ast-grep.github.io/guide/introduction.html) for more information. grug-far will attempt to pre-populate reasonable YAML boilerplate when selecting the `astgrep-rules` engine. If you've been working on a pattern with `astgrep`, then swap engine to `astgrep-rules`, grug-far will include your existing pattern in the rule so you can build on it from there.
 
 ### Closing
-When you are done, it is recommended to close the buffer with the configured keybinding 
-(see Configuration section above) or just `:bd` in order to save on resources as some search results
-can be quite beefy in size. The advantage of using the `Close` action as opposed to just `:bd` is that it
-will ask you to confirm if there is a replace/sync in progress, as those would be aborted.
+When you are done, it is recommended to close the buffer with the configured keybinding (`<localleader>c` by default) 
+or just `:bd` in order to save on resources as some search results can be quite beefy in size. 
+The advantage of using the `Close` action as opposed to just `:bd` is that it will ask you to confirm if there is a replace/sync in progress, as those would be aborted.
+
+_Note_: If you open *grug-far* with the `transient = true` option, the buffer will be unlisted and fully deletes itself when not in use (i.e. when window is closed)
+
 ### 🥪 Cookbook
 
 #### Launch with the current word under the cursor as the search string
