@@ -37,7 +37,7 @@ jobs:
           version: latest
           args: --check .
 
-  typecheck:
+  typecheck-emmylua:
     name: Typecheck sources
     strategy:
       matrix:
@@ -45,12 +45,20 @@ jobs:
         neovim_version: ["v0.11.0"]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
-      - name: Type Check Code Base
-        uses: stevearc/nvim-typecheck-action@v2
+      - name: Install emmylua_check from crates.io
+        uses: baptiste0928/cargo-install@v3
         with:
-          configpath: .github/workflows/.luarc.json
-          path: lua
-          level: Warning
-          nvim-version: v0.11.0
+          crate: emmylua_check
+          version: '^0.10.0'
+      - name: Setup neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim_version }}
+      - uses: actions/checkout@v4
+      # TODO (sbadragan): need to fetch LLS_Addons -> luvit library as well
+      - name: Run emmylua_check
+        run: |
+          export VIMRUNTIME=$( nvim -u NORC --headless -c 'echo $VIMRUNTIME' -c 'q' 2>&1)
+          echo $VIMRUNTIME
+          emmylua_check -c .emmyrc.json ./lua ./tests
