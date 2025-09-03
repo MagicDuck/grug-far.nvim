@@ -168,7 +168,7 @@ local function sync(params)
         end
 
         state.status = status
-        vim.cmd.checktime()
+        vim.cmd('silent! checktime')
 
         local wasAborted = status == nil and customActionMessage == nil
 
