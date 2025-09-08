@@ -83,7 +83,7 @@ local AstgrepEngine = {
   end,
 
   getSearchDescription = function(inputs)
-    return inputs.search
+    return inputs.search or ''
   end,
 
   isEmptySearch = function(inputs)
