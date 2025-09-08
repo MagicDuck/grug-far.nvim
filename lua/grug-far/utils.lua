@@ -664,7 +664,7 @@ end
 ---@param visual_selection_info grug.far.VisualSelectionInfo
 function M.get_visual_selection_info_as_str(visual_selection_info)
   return 'buffer-range='
-    .. visual_selection_info.file_name
+    .. string.gsub(visual_selection_info.file_name, ' ', '\\ ')
     .. ':'
     .. visual_selection_info.start_row
     .. ':'
@@ -684,13 +684,16 @@ function M.parse_buf_range_str(str)
     return nil
   end
 
-  local file_name, start_row, start_col, end_row, end_col =
+  local file_name, _start_row, _start_col, _end_row, _end_col =
     string.match(str, 'buffer%-range=(.+):(%d+):(%d+)-(%d+):(-?%d+)')
 
-  if not file_name then
-    return nil,
-      'Invalid buffer range provided! Format is "buffer-range=<file_path>:<start_row>:<start_col>-<end_row>:<end_col>"'
+  local invalid_bufrange_message =
+    'Invalid buffer range provided! Format is "buffer-range=<file_path>:<start_row>:<start_col>-<end_row>:<end_col>"'
+
+  if not (file_name and _start_row and _start_col and _end_row and _end_col) then
+    return nil, invalid_bufrange_message
   end
+  ---@cast file_name string
 
   local buf = vim.fn.bufnr(file_name)
   if buf == -1 then
@@ -698,14 +701,20 @@ function M.parse_buf_range_str(str)
   end
   local num_lines = vim.api.nvim_buf_line_count(buf)
 
-  start_row = tonumber(start_row) --[[@as integer]]
+  local start_row = tonumber(_start_row) --[[@as integer?]]
+  if not start_row then
+    return nil, invalid_bufrange_message
+  end
   if start_row < 1 then
     start_row = 1
   elseif start_row > num_lines then
     start_row = num_lines
   end
 
-  end_row = tonumber(end_row) --[[@as integer]]
+  local end_row = tonumber(_end_row) --[[@as integer?]]
+  if not end_row then
+    return nil, invalid_bufrange_message
+  end
   if end_row < 1 then
     end_row = 1
   elseif end_row > num_lines then
@@ -715,13 +724,19 @@ function M.parse_buf_range_str(str)
     end_row = start_row
   end
 
-  start_col = tonumber(start_col)
+  local start_col = tonumber(_start_col) --[[@as integer?]]
+  if not start_col then
+    return nil, invalid_bufrange_message
+  end
   local first_line = unpack(vim.api.nvim_buf_get_lines(buf, start_row - 1, start_row, true))
   if first_line and start_col > #first_line then
     start_col = #first_line
   end
 
-  end_col = tonumber(end_col)
+  local end_col = tonumber(_end_col) --[[@as integer?]]
+  if not end_col then
+    return nil, invalid_bufrange_message
+  end
   local last_line = unpack(vim.api.nvim_buf_get_lines(buf, end_row - 1, end_row, true))
   if last_line and end_col > #last_line then
     end_col = -1
@@ -734,7 +749,7 @@ function M.parse_buf_range_str(str)
     start_row = start_row,
     end_col = end_col,
     end_row = end_row,
-  }
+  } --[[@as grug.far.VisualSelectionInfo]]
   bufrange.lines = M.readFromBufrange(bufrange)
 
   return bufrange
