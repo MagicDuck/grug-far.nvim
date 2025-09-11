@@ -64,7 +64,7 @@ local function replaceInBufrange(params)
   local chunk_error = nil
   local abort
   local stdin = uv.new_pipe()
-  local input_text = table.concat(bufrange.lines, '\n')
+  local input_text = table.concat(bufrange.lines, utils.eol)
   abort = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
     args = args,

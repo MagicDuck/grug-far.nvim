@@ -474,7 +474,7 @@ function M.search(params)
 
   if stdin and bufrange then
     -- note: ripgrep parsing expects a trailing newline
-    local text = table.concat(bufrange.lines, '\n') .. '\n'
+    local text = table.concat(bufrange.lines, utils.eol) .. utils.eol
     uv.write(stdin, text, function()
       uv.shutdown(stdin)
     end)
