@@ -1,6 +1,7 @@
 local uv = vim.uv
-local is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 local M = {}
+
+M.is_win = vim.api.nvim_call_function('has', { 'win32' }) == 1
 
 ---@type number?
 M.scratch_buf = nil
@@ -400,7 +401,7 @@ end
 ---@param line string
 ---@return string
 function M.getLineWithoutCarriageReturn(line)
-  if not is_win then
+  if not M.is_win then
     return line
   end
 
@@ -556,7 +557,7 @@ end
 --- @return string
 M.escape_path_for_cmd = function(path)
   local escaped_path = vim.fn.fnameescape(path)
-  if is_win then
+  if M.is_win then
     -- there is too much history to this logic to capture in a reasonable comment.
     -- essentially, the following logic adds a number of `\` depending on the leading
     -- character in a path segment. see #1264, #1352, and #1448 in neo-tree.nvim repo for more info.
@@ -816,6 +817,8 @@ function M.detect_eol(contents)
     return '\n' -- unix and mac (post OSX)
   end
 end
+
+M.eol = M.is_win and '\r\n' or '\n'
 
 --- strips trailing newline from str if it's there
 ---@param str string
