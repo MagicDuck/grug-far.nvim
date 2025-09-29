@@ -20,6 +20,7 @@ local function openLocation(params)
     targetBuf = vim.api.nvim_create_buf(true, false)
     -- load lines into target buf and highlight them manually (to prevent LSP kickoff)
     vim.api.nvim_buf_set_name(targetBuf, location.filename)
+
     if useScratchBuffer then
       vim.bo[targetBuf].buftype = 'nofile'
       vim.b[targetBuf].__grug_far_scratch_buf = true
@@ -53,7 +54,7 @@ local function openLocation(params)
           -- due to an issue in nvim similar to this issue described in oil:
           -- https://github.com/stevearc/oil.nvim/issues/435
           ---@diagnostic disable-next-line: param-type-mismatch
-          pcall(vim.cmd, 'bdelete! ' .. targetBuf)
+          pcall(vim.cmd, 'bwipeout! ' .. targetBuf)
         end)
       end,
     })
