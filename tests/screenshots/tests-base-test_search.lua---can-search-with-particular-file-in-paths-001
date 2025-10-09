@@ -4,5 +4,5 @@
 3|
 4|--ignore-case
 5|./file1
-6|./file1
+6|file1
 7| grug walks 

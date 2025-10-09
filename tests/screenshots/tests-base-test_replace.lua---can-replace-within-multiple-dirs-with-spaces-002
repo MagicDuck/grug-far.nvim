@@ -15,11 +15,11 @@
 14| STATUS_SUCCESS ⟪ ripgrep ⟫
 15| 4 matches in 2 files                                                           
 16|                                                                                
-17|  ./foo bar/file1.txt                                                           
+17|  foo bar/file1.txt                                                             
 18|▒   1  curly walks                                                           [1]
 19|▒   1  curly walks                                                              
 20|                                                                                
-21|  ./hello world/file2.doc                                                       
+21|  hello world/file2.doc                                                         
 22|▒   2       curly talks and curly drinks                                     [2]
 23|Grug FAR - 1: curly                                                          1,6
 24|-- INSERT --                                                                    
