@@ -83,6 +83,11 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
   if #inputs.filesFilter > 0 and version and vim.version.gt(version, '0.27.999') then
     for _, fileFilter in ipairs(vim.split(inputs.filesFilter, '\n')) do
       local glob = vim.trim(fileFilter)
+      if utils.is_win then
+        -- convert backslashes to forward slashes in glob on windows as globset
+        -- does not support windows style paths
+        glob = vim.fs.normalize(fileFilter)
+      end
       if #glob > 0 then
         table.insert(args, '--globs=' .. glob)
       end

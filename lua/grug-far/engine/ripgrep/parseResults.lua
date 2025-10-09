@@ -173,7 +173,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
 
       stats.files = stats.files + 1
       last_context_line_number = nil
-      file_name = bufrange and bufrange.file_name or data.path.text
+      file_name = bufrange and bufrange.file_name or vim.fs.normalize(data.path.text)
       table.insert(highlights, {
         hl_group = ResultHighlightByType[ResultHighlightType.FilePath],
         start_line = #lines,
