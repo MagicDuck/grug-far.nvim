@@ -150,7 +150,7 @@ function M.parseResults(matches, bufrange, isFirst)
 
     if isFileBoundary then
       stats.files = stats.files + 1
-      file_name = bufrange and bufrange.file_name or match.file
+      file_name = bufrange and bufrange.file_name or vim.fs.normalize(match.file)
       table.insert(highlights, {
         hl_group = ResultHighlightByType[ResultHighlightType.FilePath],
         start_line = #lines,

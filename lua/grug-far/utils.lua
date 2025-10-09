@@ -578,7 +578,7 @@ end
 ---@return string[]
 M.normalizePaths = function(paths, context)
   local pathProviders = context.options.pathProviders
-  local cwd = vim.fn.getcwd()
+  local cwd = vim.fs.normalize(vim.fn.getcwd())
   local normalizedPaths = {}
   for _, path in ipairs(paths) do
     local isProvider = false
