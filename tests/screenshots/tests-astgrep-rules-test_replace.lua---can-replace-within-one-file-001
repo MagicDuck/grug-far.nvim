@@ -15,7 +15,7 @@
 14| STATUS_SUCCESS ⟪ ripgrep ⟫
 15| 2 matches in 1 files                                                           
 16|                                                                                
-17|./file2.ts                                                                      
+17|file2.ts                                                                        
 18|  2     if (curly || talks) {                                                [1]
 19|  3       curly.walks(talks)                                                 [2]
 20|                                                                                

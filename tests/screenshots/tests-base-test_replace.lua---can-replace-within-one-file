@@ -15,7 +15,7 @@
 14| STATUS_SUCCESS ⟪ ripgrep ⟫
 15| 3 matches in 1 files   replace completed!                                     
 16|                                                                                
-17|  ./file2.doc                                                                   
+17|  file2.doc                                                                     
 18|▒   2       grug talks and grug drinks                                       [1]
 19|▒   2       curly talks and curly drinks                                        
 20|▒   3       then grug thinks                                                 [2]
