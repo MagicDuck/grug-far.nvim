@@ -18,6 +18,10 @@ local function search(params)
   local context = params.context
   local state = context.state
 
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
+
   if tasks.hasActiveTasksWithType(context, 'sync') then
     vim.notify('grug-far: sync in progress', vim.log.levels.INFO)
     return
