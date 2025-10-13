@@ -246,6 +246,8 @@ grug_far.defaultOptions = {
   -- whether to show a more compact version of the inputs UI
   showCompactInputs = false,
 
+  uiMode = 'default',
+
   -- whether inputs top padding line should be present
   showInputsTopPadding = true,
 
@@ -868,6 +870,7 @@ grug_far.defaultOptions = {
 ---@field startInInsertMode boolean
 ---@field startCursorRow integer
 ---@field showCompactInputs boolean
+---@field uiMode string
 ---@field showInputsTopPadding boolean
 ---@field showInputsBottomPadding boolean
 ---@field showStatusIcon boolean
@@ -925,6 +928,7 @@ grug_far.defaultOptions = {
 ---@field startInInsertMode? boolean
 ---@field startCursorRow? integer
 ---@field showCompactInputs? boolean
+---@field uiMode? string
 ---@field showInputsTopPadding? boolean
 ---@field showInputsBottomPadding? boolean
 ---@field showStatusIcon? boolean

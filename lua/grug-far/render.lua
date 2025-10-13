@@ -45,7 +45,7 @@ local function render(buf, context)
       prevExtmarkName = prevInput and prevInput.name or nil,
       nextExtmarkName = nextInput and nextInput.name or 'results_header',
       icon = input.iconName,
-      label = label .. ':',
+      label = label,
       placeholder = placeholders.enabled and placeholder,
       highlightLang = inputsHighlight and highlightLang or nil,
       top_virt_lines = i == 1 and top_virt_lines or nil,

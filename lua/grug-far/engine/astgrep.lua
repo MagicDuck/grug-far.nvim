@@ -24,7 +24,7 @@ local AstgrepEngine = {
     },
     {
       name = 'filesFilter',
-      label = 'Files Filter',
+      label = 'Filter',
       iconName = 'filesFilterInput',
       highlightLang = 'gitignore',
       trim = true,

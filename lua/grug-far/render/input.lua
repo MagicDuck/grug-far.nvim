@@ -25,6 +25,18 @@ local function renderInput(params, context)
   local placeholder = params.placeholder
   local icon = opts.getIcon(params.icon, context) or ''
   local showCompactInputs = context.options.showCompactInputs
+  local uiMode = context.options.uiMode
+  local labelMaxlen = 7
+
+  local upIconLabel = not (uiMode== 'editbox' or showCompactInputs)
+  local downIcon = uiMode == 'editbox' or showCompactInputs
+  local downLabel = showCompactInputs and uiMode ~= 'editbox'
+  local downRightLabel = uiMode == 'editbox'
+  local downPlaceholder = placeholder or showCompactInputs
+
+  if upIconLabel or (downLabel and downPlaceholder) then
+      label = label .. ':'
+  end
 
   -- make sure we don't go beyond prev input pos
   if prevExtmarkName then
@@ -82,7 +94,7 @@ local function renderInput(params, context)
   local input_lines = vim.api.nvim_buf_get_lines(buf, currentStartRow, currentEndRow + 1, false)
 
   local label_virt_lines = top_virt_lines or {}
-  if not showCompactInputs then
+  if upIconLabel then
     table.insert(label_virt_lines, { { ' ' .. icon .. label, 'GrugFarInputLabel' } })
   end
   if vim.fn.strdisplaywidth(icon) > 2 then
@@ -99,10 +111,28 @@ local function renderInput(params, context)
       virt_lines = label_virt_lines,
       virt_lines_leftcol = true,
       virt_lines_above = true,
-      sign_text = showCompactInputs and icon or nil,
-      sign_hl_group = showCompactInputs and 'GrugFarInputLabel' or nil,
+      sign_text = downIcon and icon or nil,
+      sign_hl_group = downIcon and 'GrugFarInputLabel' or nil,
       right_gravity = false,
     })
+
+  if downRightLabel then
+    context.extmarkIds[label] =
+    vim.api.nvim_buf_set_extmark(buf, context.namespace, currentStartRow, 0, {
+      id = context.extmarkIds[label],
+      end_row = currentStartRow,
+      end_col = 0,
+      virt_text = {
+        {
+          string.format(' %-'..labelMaxlen..'s ', label),
+          'GrugFarInputLabel',
+        },
+      },
+      virt_text_pos = 'right_align',
+      right_gravity = false,
+      priority = 1,
+    })
+  end
 
   if params.highlightLang then
     local prev_line =
@@ -117,13 +147,13 @@ local function renderInput(params, context)
     }, extmarkName)
   end
 
-  if placeholder or showCompactInputs then
+  if downPlaceholder then
     local placeholderExtmarkName = extmarkName .. '_placeholder'
     if #input_lines == 1 and #input_lines[1] == 0 then
       local ellipsis = ' ...'
       local available_win_width = vim.api.nvim_win_get_width(0) - #ellipsis - 2
       local text = placeholder or ''
-      if showCompactInputs then
+      if downLabel then
         text = label .. ' ' .. text
       end
       local newline = opts.getIcon('newline', context)
@@ -146,6 +176,8 @@ local function renderInput(params, context)
             },
           },
           virt_text_pos = 'overlay',
+          hl_mode = 'combine',
+          priority = 0,
         })
     elseif context.extmarkIds[placeholderExtmarkName] then
       vim.api.nvim_buf_del_extmark(
