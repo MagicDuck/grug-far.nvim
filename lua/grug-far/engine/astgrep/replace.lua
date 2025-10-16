@@ -122,7 +122,7 @@ local function replaceInBufrange(params)
   local chunk_error = nil
   local abort
   local stdin = uv.new_pipe()
-  local input_text = table.concat(bufrange.lines, '\n')
+  local input_text = table.concat(bufrange.lines, utils.eol)
   local search_args = vim.deepcopy(params.args)
   table.insert(search_args, '--json=stream')
 
@@ -154,7 +154,7 @@ local function replaceInBufrange(params)
       if status == 'success' and #matches > 0 then
         local new_text = parseResults.getReplacedContents(input_text, matches)
 
-        utils.writeInBufrange(bufrange, vim.split(new_text, '\n'))
+        utils.writeInBufrange(bufrange, vim.split(new_text, utils.eol))
       end
 
       return on_finish('success')
