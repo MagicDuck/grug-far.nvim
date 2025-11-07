@@ -76,7 +76,7 @@ Grug find! Grug replace! Grug happy!
 ## ⚡️ Requirements
 
 - Neovim >= **0.11.0** (please use tag 1.6.3 for nvim 0.10)
-- [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) >= 14 recommended
+- [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) >= 14 supported, >= 15 recommended 
 - a [Nerd Font](https://www.nerdfonts.com/) **_(optional)_**
 - [ast-grep](https://ast-grep.github.io) **_(optional)_** if you would like to use the `ast-grep` search engine. Version >= `0.36` recommended.
 - either [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) or [mini.icons](https://github.com/echasnovski/mini.icons) for file icons support **_(optional)_**

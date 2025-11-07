@@ -234,10 +234,6 @@ local function run_search_with_replace(params)
     end
   end
 
-  -- TODO (sbadragan): remove this bit
-  local version = getRgVersion(params.options)
-  local isRipgrepReplaceDiffAvailable = version and vim.version.ge(version, '15')
-
   local abort = function()
     if processingQueue then
       processingQueue:stop()
@@ -247,8 +243,6 @@ local function run_search_with_replace(params)
     end
     on_finish(nil, nil)
   end
-
-  local searchArgs = argUtils.stripReplaceArgs(params.args)
 
   local matches = {}
   processingQueue = ProcessingQueue.new(function(data, on_done)
@@ -298,7 +292,7 @@ local function run_search_with_replace(params)
 
   abortSearch, effectiveArgs = fetchCommandOutput({
     cmd_path = params.options.engines.ripgrep.path,
-    args = searchArgs,
+    args = params.args,
     stdin = params.stdin,
     on_fetch_chunk = function(data)
       processingQueue:push(data)
@@ -465,7 +459,6 @@ function M.search(params)
 
   local abort, effectiveArgs
   if params.replacementInterpreter then
-    -- TODO (sbadragan): maybe need to do something?
     abort, effectiveArgs = run_search_with_replace_interpreter(params.replacementInterpreter, {
       stdin = stdin,
       options = options,
