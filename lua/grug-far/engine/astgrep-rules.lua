@@ -121,7 +121,9 @@ rule:
     return true
   end,
 
-  search = search.search,
+  search = function(...)
+    search.search(..., true)
+  end,
 
   replace = replace.replace,
 

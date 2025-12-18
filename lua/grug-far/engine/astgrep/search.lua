@@ -160,8 +160,9 @@ end
 
 --- does search
 ---@param params grug.far.EngineSearchParams
+---@param isRulesBasedSearch? boolean
 ---@return fun()? abort, string[]? effectiveArgs
-function M.search(params)
+function M.search(params, isRulesBasedSearch)
   local on_finish = params.on_finish
   local inputs = vim.deepcopy(params.inputs)
 
@@ -196,7 +197,10 @@ function M.search(params)
   end
   if bufrange then
     inputs.paths = ''
-    extraArgs = { '--stdin', '--lang=' .. M.get_language(bufrange.file_name) }
+    extraArgs = { '--stdin' }
+    if not isRulesBasedSearch then
+      table.insert(extraArgs, '--lang=' .. M.get_language(bufrange.file_name))
+    end
   end
 
   local args, blacklistedArgs = M.getSearchArgs(inputs, params.options, extraArgs)

@@ -453,4 +453,35 @@ rule:
   helpers.childExpectScreenshot(child)
 end
 
+T['can search within partial line range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    grug.jokes()
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file2.ts')
+  child.type_keys(10, 'ggVjj$')
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep-rules',
+    prefills = { rules = [[
+id: grug_test
+language: typescript
+rule:
+  pattern: grug.$A
+    ]] },
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T

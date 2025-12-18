@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...                   
+02|                                                                                
+03|  Rules:                                                                       
+04|id: grug_test                                                                   
+05|language: typescript                                                            
+06|rule:                                                                           
+07|  pattern: grug.$A                                                              
+08|                                                                                
+09|  Files Filter:                                                                
+10|e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters vi ...  
+11| 󰮚 Flags:                                                                       
+12|e.g. --help (-h) --debug-query=ast --strictness=<STRICTNESS>                    
+13|  Paths:                                                                       
+14|buffer-range=file2.ts:1:0-3:-1                                                  
+15|                                                                                
+16| STATUS_SUCCESS ⟪ astgrep-rules ⟫
+17| 1 matches in 1 files                                                           
+18|                                                                                
+19|file2.ts                                                                        
+20|  3       grug.walks(talks)                                                  [1]
+21|                                                                                
+22|                                                                                
+23|Grug FAR - 1: id: grug_test^@language: typesc...                            1,14
+24|-- INSERT --                                                                    
