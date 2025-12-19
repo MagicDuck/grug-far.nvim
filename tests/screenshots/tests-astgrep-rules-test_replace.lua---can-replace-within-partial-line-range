@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...                   
+02|                                                                                
+03|  Rules:                                                                       
+04|  id: grug_test                                                                 
+05|  language: typescript                                                          
+06|  rule:                                                                         
+07|    pattern: grug                                                               
+08|  fix: curly                                                                    
+09|                                                                                
+10|  Files Filter:                                                                
+11|  e.g. *.lua   *.{css,js}   **/docs/*.md   (specify one per line, filters vi ...
+12| 󰮚 Flags:                                                                       
+13|  e.g. --help (-h) --debug-query=ast --strictness=<STRICTNESS>                  
+14|  Paths:                                                                       
+15|  buffer-range=file2.ts:1:0-3:-1                                                
+16|                                                                                
+17| STATUS_SUCCESS ⟪ astgrep-rules ⟫
+18| 2 matches in 1 files   replace completed!                                     
+19|                                                                                
+20|  file2.ts                                                                      
+21|▒   2     if (grug || talks) {                                               [1]
+22|▒   2     if (curly || talks) {                                                 
+23|Grug FAR - 1: id: grug_test^@language: typesc...                            1,13
+24|grug-far: replace completed!                                                    

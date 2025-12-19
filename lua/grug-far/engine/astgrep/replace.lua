@@ -170,8 +170,9 @@ end
 
 --- does replace
 ---@param params grug.far.EngineReplaceParams
+---@param isRulesBasedSearch? boolean
 ---@return fun()? abort
-function M.replace(params)
+function M.replace(params, isRulesBasedSearch)
   local report_progress = params.report_progress
   local on_finish = params.on_finish
   local inputs = vim.deepcopy(params.inputs)
@@ -185,7 +186,10 @@ function M.replace(params)
   end
   if bufrange then
     inputs.paths = ''
-    extraArgs = { '--update-all', '--stdin', '--lang=' .. search.get_language(bufrange.file_name) }
+    extraArgs = { '--update-all', '--stdin' }
+    if not isRulesBasedSearch then
+      table.insert(extraArgs, '--lang=' .. search.get_language(bufrange.file_name))
+    end
   end
 
   local args, blacklistedArgs =
