@@ -125,7 +125,9 @@ rule:
     search.search(..., true)
   end,
 
-  replace = replace.replace,
+  replace = function(...)
+    replace.replace(..., true)
+  end,
 
   isSyncSupported = function()
     return false

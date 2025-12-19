@@ -242,4 +242,41 @@ fix: curly
   helpers.childExpectScreenshot(child)
 end
 
+T['can replace within partial line range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    grug.jokes()
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file2.ts')
+  child.type_keys(10, 'ggVjj$')
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep-rules',
+    prefills = {
+      rules = [[
+id: grug_test
+language: typescript
+rule:
+  pattern: grug
+fix: curly
+    ]],
+    },
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
