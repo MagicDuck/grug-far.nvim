@@ -213,6 +213,34 @@ T['can sync file around line'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can sync file around line in second result file'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ 
+       grug walks
+       then grug swims
+      ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'curly' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>13G0zz')
+  child.type_keys(10, '<esc>' .. keymaps.syncFile.n)
+
+  helpers.childWaitForScreenshotText(child, 'sync completed!')
+  child.cmd('vsp | e file2.doc')
+  helpers.childExpectScreenshot(child)
+end
+
 T['can sync next'] = function()
   helpers.writeTestFiles({
     { filename = 'file1.txt', content = [[ 
