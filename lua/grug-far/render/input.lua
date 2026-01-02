@@ -85,7 +85,7 @@ local function renderInput(params, context)
   if not showCompactInputs then
     table.insert(label_virt_lines, { { ' ' .. icon .. label, 'GrugFarInputLabel' } })
   end
-  if vim.fn.strdisplaywidth(icon) > 2 then
+  if showCompactInputs and vim.fn.strdisplaywidth(icon) > 2 then
     error(
       'Icons need to be at most 2 characters wide when option showCompactInputs=true. "'
         .. params.icon('" is wider than that!')
