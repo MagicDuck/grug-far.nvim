@@ -348,7 +348,7 @@ grug_far.defaultOptions = {
       {
         params.line_number and ('%' .. width .. 's '):format(params.line_number)
           or (
-            (' '):rep(width - vim.fn.strdisplaywidth(lineNumbersEllipsis)) -- to support multi-byte utf-8 chars
+            (' '):rep(width - vim.fn.strwidth(lineNumbersEllipsis)) -- to support multi-byte utf-8 chars
             .. lineNumbersEllipsis
             .. ' '
           ),
