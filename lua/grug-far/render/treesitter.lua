@@ -15,7 +15,7 @@ local ns = vim.api.nvim_create_namespace('grug.treesitter')
 
 local TSHighlighter = vim.treesitter.highlighter
 
-local function wrap(name)
+local function wrap(name, cb)
   return function(firstArg, win, buf, ...)
     if not M.cache[buf] then
       return false
@@ -24,6 +24,9 @@ local function wrap(name)
     local callback = TSHighlighter[name] --[[@as fun()]]
     for _, hl in pairs(M.cache[buf] or {}) do
       if hl.enabled then
+        if cb then
+          cb(hl.highlighter, buf, ...)
+        end
         TSHighlighter.active[buf] = hl.highlighter
         pcall(callback, firstArg, win, buf, ...)
       end
@@ -38,10 +41,34 @@ function M.setup()
     return
   end
   M.did_setup = true
+  local has_nvim12 = vim.fn.has('nvim-0.12.0') == 1
+
+  local on_range = wrap('_on_range')
+  local on_line = has_nvim12
+      and function(_, win, buf, row)
+        return on_range(_, win, buf, row, 0, row + 1, 0)
+      end
+    or wrap('_on_line')
+
+  -- https://github.com/neovim/neovim/issues/36503
+  local on_win_pre = has_nvim12
+      and function(h, buf, topline, botline)
+        if h.parsing then
+          return
+        end
+        h.parsing = nil
+          == h.tree:parse({ topline, botline + 1 }, function(_, trees)
+            if trees and h.parsing then
+              h.parsing = false
+              vim.api.nvim__redraw({ buf = buf, valid = false, flush = false })
+            end
+          end)
+      end
+    or nil
 
   vim.api.nvim_set_decoration_provider(ns, {
-    on_win = wrap('_on_win'),
-    on_line = wrap('_on_line'),
+    on_win = wrap('_on_win', on_win_pre),
+    on_line = on_line,
   })
 end
 
