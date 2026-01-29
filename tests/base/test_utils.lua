@@ -46,3 +46,36 @@ describe('detect_eol', function()
     expect.equality(utils.detect_eol('\nline2'), '\n')
   end)
 end)
+
+describe('create_cmd_complete', function()
+  it('get correct prev', function()
+    local tests = {
+      {
+        input = { '', 'Grug' },
+        prev = 'Grug',
+      },
+      {
+        input = { '', 'Grug   ' },
+        prev = 'Grug',
+      },
+      {
+        input = { 'a', 'Grug   a' },
+        prev = 'Grug',
+      },
+      {
+        input = { 'Far', 'Grug  Far' },
+        prev = 'Grug',
+      },
+      {
+        input = { '', 'Grug  Far  ' },
+        prev = 'Far',
+      },
+    }
+
+    for _, test in ipairs(tests) do
+      utils.create_cmd_complete(function(ctx)
+        expect.equality(test.prev, ctx.prev)
+      end)(test.input[1], test.input[2], #test.input[2])
+    end
+  end)
+end)

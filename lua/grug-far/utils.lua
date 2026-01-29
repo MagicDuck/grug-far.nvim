@@ -886,4 +886,60 @@ function M.getBufrange(inputStr)
   return nil, nil
 end
 
+---@alias grug.far.VimCmdCompleteFn fun(ArgLead: string, CmdLine: string, CursorPos: integer): string[]|nil
+
+---@class grug.far.CmdCompleteContext
+---@field words string[]
+---@field cur string
+---@field prev string
+---@field index integer
+---@field raw grug.far.VimCmdCompleteContext
+
+---@class grug.far.VimCmdCompleteContext
+---@field arglead string
+---@field cmdline string
+---@field cursorpos integer
+
+---@alias grug.far.CmdCompleteFn fun(ctx: grug.far.CmdCompleteContext): string[]|nil
+
+---Create a vim complete function with a bash-like complete function {fn}, which
+---accept a `grug.far.cmd.CompContext` object as completion context.
+---@param fn grug.far.CmdCompleteFn
+---@return grug.far.VimCmdCompleteFn
+function M.create_cmd_complete(fn)
+  return function(arglead, cmdline, cursorpos)
+    local words = vim.split(cmdline:sub(1, cursorpos), '%s+', { trimempty = true })
+    local ctx = {
+      raw = {
+        arglead = arglead,
+        cmdline = cmdline,
+        cursorpos = cursorpos,
+      },
+    }
+
+    ctx.words = words
+    ctx.cur = arglead
+    ctx.index = #words
+
+    if arglead == '' then
+      ctx.prev = words[#words]
+    else
+      ctx.prev = words[#words - 1] or words[#words]
+    end
+
+    local items = fn(ctx)
+
+    if ctx.cur == '' or not items then
+      return items
+    end
+
+    return vim
+      .iter(items)
+      :filter(function(v)
+        return vim.startswith(v, arglead)
+      end)
+      :totable()
+  end
+end
+
 return M
