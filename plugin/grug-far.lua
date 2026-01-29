@@ -6,11 +6,15 @@ if vim.fn.has('nvim-0.11.0') == 0 then
   return
 end
 
--- note: unfortunately has to be global so it can be passed to command complete= opt
--- selene: allow(unused_variable)
-function GrugFarCompleteEngine()
-  local opts = require('grug-far.opts')
-  return table.concat(vim.fn.keys(opts.defaultOptions.engines), '\n')
+---Create command complete fn.
+---@param name string
+---@return grug.far.CmdCompleteFn
+local function cmd_complete(name)
+  return require('grug-far.utils').create_cmd_complete(function(ctx)
+    if ctx.prev == name then
+      return vim.tbl_keys(require('grug-far.opts').defaultOptions.engines)
+    end
+  end)
 end
 
 vim.api.nvim_create_user_command('GrugFar', function(params)
@@ -33,7 +37,7 @@ vim.api.nvim_create_user_command('GrugFar', function(params)
 end, {
   nargs = '?',
   range = true,
-  complete = 'custom,v:lua.GrugFarCompleteEngine',
+  complete = cmd_complete('GrugFar'),
 })
 
 vim.api.nvim_create_user_command('GrugFarWithin', function(params)
@@ -57,5 +61,5 @@ vim.api.nvim_create_user_command('GrugFarWithin', function(params)
 end, {
   nargs = '?',
   range = true,
-  complete = 'custom,v:lua.GrugFarCompleteEngine',
+  complete = cmd_complete('GrugFarWithin'),
 })
