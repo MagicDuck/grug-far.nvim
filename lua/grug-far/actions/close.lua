@@ -25,7 +25,13 @@ local function close(params)
 
   local win = vim.fn.bufwinid(buf)
   vim.api.nvim_buf_delete(buf, { force = true })
-  if win ~= -1 then
+
+  -- only close window if we created a new window initially, and current window is that window
+  local shouldCloseWin = win ~= -1
+    and context.initialWin ~= context.prevWin
+    and win == context.initialWin
+
+  if shouldCloseWin then
     vim.fn.win_execute(win, 'quit!')
   end
 end
