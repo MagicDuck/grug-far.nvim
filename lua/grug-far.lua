@@ -167,6 +167,7 @@ function grug_far._createWindow(context)
 
   vim.cmd(context.options.windowCreationCommand)
   local win = vim.api.nvim_get_current_win()
+  context.initialWin = win
 
   return win
 end
