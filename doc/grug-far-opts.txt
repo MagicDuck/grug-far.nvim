@@ -288,9 +288,9 @@
 
     -- how to treat current visual selection when grug-far is invoked
     -- prefill-search - use to prefill "search string"
-    -- operate-within-range - use as buffer range to operate within
+    -- prefill-search-or-operate-within-range - if selection is multi-line, target that range, otherwise prefill "search string"
     -- ignore - ignore/discard visual selection
-    visualSelectionUsage = 'prefill-search',
+    visualSelectionUsage = 'prefill-search-or-operate-within-range',
 
     -- shortcuts for the actions you see at the top of the buffer
     -- set to '' or false to unset. Mappings with no normal mode value will be removed from the help header
