@@ -309,12 +309,17 @@ vim.keymap.set({ 'n', 'x' }, '<leader>ss', function()
   -- surround with \b if "word" search (such as when pressing `*`)
   if search and vim.startswith(search, '\\<') and vim.endswith(search, '\\>') then
     search = '\\b' .. search:sub(3, -3) .. '\\b'
+  elseif search and vim.startswith(search, '\\V') then
+    search = search:sub(3)
   end
-  require('grug-far').open({
+  local inst = require('grug-far').open({
     prefills = {
       search = search,
     },
   })
+  inst:when_ready(function()
+    inst:goto_input('replacement')
+  end)
 end, { desc = 'grug-far: Search using @/ register value or visual selection' })
 ```
 
