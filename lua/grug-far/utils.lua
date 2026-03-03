@@ -295,21 +295,19 @@ function M.getVisualSelectionLines()
   )
 
   local lines = {}
-  local _, start_row, start_col = unpack(region[1] and region[1][1] or {})
+  local _, start_row, start_col = unpack(region[1][1])
   if start_col == vim.v.maxcol then
     start_col = -1
-  elseif start_col ~= nil then
+  else
     start_col = start_col - 1
   end
 
-  local _, end_row, end_col = unpack(region[#region] and region[#region][2] or {})
-  if end_row and end_col then
-    local last_line = unpack(vim.api.nvim_buf_get_lines(0, end_row - 1, end_row, true))
-    if end_col == vim.v.maxcol or (last_line and end_col >= #last_line) then
-      end_col = -1
-    else
-      end_col = end_col + 1
-    end
+  local _, end_row, end_col = unpack(region[#region][2])
+  local last_line = unpack(vim.api.nvim_buf_get_lines(0, end_row - 1, end_row, true))
+  if end_col == vim.v.maxcol or (last_line and end_col >= #last_line) then
+    end_col = -1
+  else
+    end_col = end_col + 1
   end
 
   for _, range in ipairs(region) do
