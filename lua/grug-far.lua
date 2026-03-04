@@ -265,11 +265,20 @@ function grug_far._open_internal(options, params)
   if not options.instanceName then
     options.instanceName = '__grug_far_instance__' .. context.count
   end
+
+  local visualSelectionUsage = options.visualSelectionUsage
   if params.visual_selection_info then
+    if visualSelectionUsage == 'detect-prefill-search-or-operate-within-range' then
+      if params.visual_selection_info.visual_mode == 'V' then
+        visualSelectionUsage = 'operate-within-range'
+      else
+        visualSelectionUsage = 'prefill-search'
+      end
+    end
     options.prefills = context.engine.getInputPrefillsForVisualSelection(
       params.visual_selection_info,
       options.prefills,
-      options.visualSelectionUsage
+      visualSelectionUsage
     )
   end
 
@@ -284,7 +293,7 @@ function grug_far._open_internal(options, params)
   setupCleanup(buf, context)
   instances.add_instance(options.instanceName, instance)
 
-  if options.visualSelectionUsage == 'operate-within-range' then
+  if visualSelectionUsage == 'operate-within-range' then
     setupBufRangeHighlight(buf, context)
   end
 
