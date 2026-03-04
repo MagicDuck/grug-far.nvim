@@ -271,8 +271,10 @@ function grug_far._open_internal(options, params)
     if visualSelectionUsage == 'auto-detect' then
       if params.visual_selection_info.visual_mode == 'V' then
         visualSelectionUsage = 'operate-within-range'
-      else
+      elseif params.visual_selection_info.visual_mode == 'v' then
         visualSelectionUsage = 'prefill-search'
+      else
+        visualSelectionUsage = 'ignore'
       end
     end
     options.prefills = context.engine.getInputPrefillsForVisualSelection(
