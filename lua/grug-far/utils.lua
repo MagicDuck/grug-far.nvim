@@ -752,6 +752,16 @@ function M.parse_buf_range_str(str)
     start_row = start_row,
     end_col = end_col,
     end_row = end_row,
+    -- We could get `vim.fn.visualmode()` again here, but it may have changed
+    -- since it was used to specify the buf-range (if the user made some other
+    -- visual-selection since triggering grug-far), so `''` is better to
+    -- indicate "we don't know". It's not going to matter anyway. We don't need
+    -- to know here what visual mode was used, because `visual_mode` only
+    -- affects pre-fill, where-as parsing a buf-range from a string is for
+    -- adding highlights or performing search/replace. In future, if a new
+    -- feature requires this info, we should bake it into the string (like the
+    -- line numbers)
+    visual_mode = '',
   } --[[@as grug.far.VisualSelectionInfo]]
   bufrange.lines = M.readFromBufrange(bufrange)
 
