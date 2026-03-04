@@ -300,6 +300,12 @@ vim.keymap.set({ 'n', 'x' }, '<leader>si', function()
   require('grug-far').open({ visualSelectionUsage = 'operate-within-range' })
 end, { desc = 'grug-far: Search within range' })
 ```
+or auto-detect to only limit the range if the visual selection is linewise, otherwise use the selection to pre-fill the search input:
+```lua
+vim.keymap.set({ 'n', 'x' }, '<leader>si', function()
+  require('grug-far').open({ visualSelectionUsage = 'detect-prefill-search-or-operate-within-range' })
+end, { desc = 'grug-far: Search within range' })
+```
 
 #### Launch, with @/ register value as the search query, falling back to visual selection
 Note that `@/` register holds your last `/` or `*`, etc search query.
