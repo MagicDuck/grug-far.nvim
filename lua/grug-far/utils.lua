@@ -276,44 +276,58 @@ function M.ensureBufTopEmptyLines(buf, count)
   end
 end
 
---- leave visual mode if in visual mode
----@return boolean if left visual mode
-function M.leaveVisualMode()
-  local isVisualMode = vim.fn.mode():lower():find('v') ~= nil
-  if isVisualMode then
-    -- needed to make visual selection work
-    vim.fn.feedkeys(':', 'nx')
-  end
-  return isVisualMode
+--- are we in visual mode?
+---@return boolean
+function M.isVisualMode()
+  return vim.fn.mode():lower():find('v') ~= nil
 end
 
 --- get text lines in visual selection
 --- range row are 1-based, col are 0-based
 ---@return string[] lines, integer start_row, integer start_col, integer end_row, integer end_col
 function M.getVisualSelectionLines()
-  local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, '<'))
-  if not start_col then
-    start_col = 0
+  local isVisualMode = M.isVisualMode()
+
+  local region = vim.fn.getregionpos(
+    vim.fn.getpos(isVisualMode and '.' or "'<"),
+    vim.fn.getpos(isVisualMode and 'v' or "'>"),
+    { type = isVisualMode and vim.fn.mode() or nil, exclusive = true }
+  )
+
+  local lines = {}
+  local _, start_row, start_col = unpack(region[1][1])
+  if start_col == vim.v.maxcol then
+    start_col = -1
+  else
+    start_col = start_col - 1
   end
 
-  local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(0, '>'))
-  if not end_col then
-    end_col = -1
-  end
-  if end_col > 0 then
-    end_col = end_col + 1 -- this is necessary due to end mark not being after the selection
-  end
-
-  local first_line = unpack(vim.api.nvim_buf_get_lines(0, start_row - 1, start_row, true))
-  if first_line and start_col > #first_line then
-    start_col = #first_line
-  end
+  local _, end_row, end_col = unpack(region[#region][2])
   local last_line = unpack(vim.api.nvim_buf_get_lines(0, end_row - 1, end_row, true))
-  if last_line and end_col > #last_line then
+  if end_col == vim.v.maxcol or (last_line and end_col >= #last_line) then
     end_col = -1
+  else
+    end_col = end_col + 1
   end
 
-  local lines = vim.api.nvim_buf_get_text(0, start_row - 1, start_col, end_row - 1, end_col, {})
+  for _, range in ipairs(region) do
+    local start = range[1]
+    local finish = range[2]
+    local _, line, startcol = unpack(start)
+    if startcol == vim.v.maxcol then
+      startcol = -1
+    else
+      startcol = startcol - 1
+    end
+    local _, _, endcol = unpack(finish)
+    if endcol == vim.v.maxcol then
+      endcol = -1
+    else
+      endcol = endcol + 1
+    end
+    local line_text = vim.api.nvim_buf_get_text(0, line - 1, startcol, line - 1, endcol, {})[1]
+    table.insert(lines, line_text)
+  end
 
   return lines, start_row, start_col, end_row, end_col
 end
@@ -645,8 +659,8 @@ end
 ---@param strict? boolean Whether to require visual mode to be active to return, defaults to False
 ---@return grug.far.VisualSelectionInfo?
 function M.get_current_visual_selection_info(strict)
-  local was_visual = M.leaveVisualMode()
-  if strict and not was_visual then
+  local isVisualMode = require('grug-far.utils').isVisualMode()
+  if strict and not isVisualMode then
     return
   end
   local visual_mode = vim.fn.visualmode()

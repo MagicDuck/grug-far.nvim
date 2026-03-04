@@ -322,8 +322,8 @@ end
 ---@param strict? boolean Whether to require visual mode to be active, defaults to False
 ---@return string[]?
 function grug_far.get_current_visual_selection_lines(strict)
-  local was_visual = require('grug-far.utils').leaveVisualMode()
-  if strict and not was_visual then
+  local isVisualMode = require('grug-far.utils').isVisualMode()
+  if strict and not isVisualMode then
     return
   end
   local lines = require('grug-far.utils').getVisualSelectionLines()
