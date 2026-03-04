@@ -289,9 +289,7 @@
     -- how to treat current visual selection when grug-far is invoked
     -- prefill-search - use to prefill "search string"
     -- operate-within-range - use as buffer range to operate within
-    -- detect-prefill-search-or-operate-within-range - if line-wise visual (V)
-    --   then act like operate-within-range,  otherwise if  char-wise (v) then
-    --   prefill-search
+    -- auto-detect - if linewise visual (V) then act like operate-within-range, if charwise (v) then prefill-search
     -- ignore - ignore/discard visual selection
     visualSelectionUsage = 'prefill-search',
 
@@ -776,7 +774,7 @@ Fields ~
 {wrap} `(boolean)`
 {transient} `(boolean)`
 {ignoreVisualSelection} `(boolean)`
-{visualSelectionUsage} 'prefill-search' | 'operate-within-range' | 'detect-prefill-search-or-operate-within-range' | 'ignore'
+{visualSelectionUsage} 'prefill-search' | 'operate-within-range' | 'auto-detect' | 'ignore'
 {keymaps} grug.far.Keymaps
 {resultsSeparatorLineChar} `(string)`
 {resultsHighlight} `(boolean)`

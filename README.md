@@ -303,7 +303,7 @@ end, { desc = 'grug-far: Search within range' })
 or auto-detect to only limit the range if the visual selection is linewise, otherwise use the selection to pre-fill the search input:
 ```lua
 vim.keymap.set({ 'n', 'x' }, '<leader>si', function()
-  require('grug-far').open({ visualSelectionUsage = 'detect-prefill-search-or-operate-within-range' })
+  require('grug-far').open({ visualSelectionUsage = 'auto-detect' })
 end, { desc = 'grug-far: Search within range' })
 ```
 
