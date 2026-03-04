@@ -268,7 +268,7 @@ function grug_far._open_internal(options, params)
 
   local visualSelectionUsage = options.visualSelectionUsage
   if params.visual_selection_info then
-    if visualSelectionUsage == 'detect-prefill-search-or-operate-within-range' then
+    if visualSelectionUsage == 'auto-detect' then
       if params.visual_selection_info.visual_mode == 'V' then
         visualSelectionUsage = 'operate-within-range'
       else

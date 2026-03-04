@@ -832,7 +832,7 @@ grug_far.defaultOptions = {
 ---@field useScratchBuffer? boolean
 ---@private
 
----@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'detect-prefill-search-or-operate-within-range' | 'ignore'
+---@alias VisualSelectionUsageType 'prefill-search' | 'operate-within-range' | 'auto-detect' | 'ignore'
 
 ---@alias LineNumberLabelType fun(params: {
 ---   line_number: integer?,
