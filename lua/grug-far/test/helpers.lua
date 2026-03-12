@@ -233,6 +233,14 @@ function M.childWaitForFinishedStatus(child)
   end)
 end
 
+--- waits until child buf has given ready status
+---@param child NeovimChild
+function M.childWaitForReadyStatus(child)
+  M.childWaitForCondition(child, function()
+    return M.childBufUIVirtualTextContains(child, 'STATUS_READY')
+  end)
+end
+
 --- run open(options) in child
 ---@param child NeovimChild
 ---@param options grug.far.OptionsOverride

@@ -667,4 +667,81 @@ T['can search for some string in <loclist>'] = function()
   helpers.childExpectBufLines(child)
 end
 
+T['detects linewise visual selection as range to operate within'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2',
+      content = [[
+      grug talks and grug drinks
+      then grug thinks
+      something else
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2')
+  child.type_keys(
+    'V',
+    "<esc>:<C-u>lua GrugFar.with_visual_selection({ visualSelectionUsage = 'auto-detect' })<CR>"
+  )
+
+  helpers.childWaitForReadyStatus(child)
+  child.type_keys('igrug')
+
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['detects charwise visual selection as prefill'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2',
+      content = [[
+      grug talks and grug drinks
+      then grug thinks
+      something else
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2')
+  child.type_keys(
+    'wve',
+    "<esc>:<C-u>lua GrugFar.with_visual_selection({ visualSelectionUsage = 'auto-detect' })<CR>"
+  )
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
+T['detects blockwise visual selection as ignored'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2',
+      content = [[
+      grug talks and grug drinks
+      then grug thinks
+      something else
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2')
+  child.type_keys(
+    'wve',
+    "<esc>:<C-u>lua GrugFar.with_visual_selection({ visualSelectionUsage = 'auto-detect' })<CR>"
+  )
+
+  helpers.childWaitForReadyStatus(child)
+  child.type_keys('igrug')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectScreenshot(child)
+end
+
 return T
