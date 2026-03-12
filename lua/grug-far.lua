@@ -235,6 +235,19 @@ local function setupCleanup(buf, context)
   })
 end
 
+--- auto-detect how to use visual-selection
+---@param visual_selection_info? grug.far.VisualSelectionInfo?
+---@return string visualSelectionUsage
+local function auto_detect_visual_selection_usage(visual_selection_info)
+  local mode = visual_selection_info and visual_selection_info.visual_mode or ''
+  if mode == 'V' then
+    return 'operate-within-range'
+  elseif mode == 'v' then
+    return 'prefill-search'
+  end
+  return 'ignore'
+end
+
 --- launch grug-far with the given overrides
 ---@param options? grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
 ---@return grug.far.Instance instance
@@ -267,16 +280,11 @@ function grug_far._open_internal(options, params)
   end
 
   local visualSelectionUsage = options.visualSelectionUsage
+  if visualSelectionUsage == 'auto-detect' then
+    visualSelectionUsage = auto_detect_visual_selection_usage(params.visual_selection_info)
+  end
+
   if params.visual_selection_info then
-    if visualSelectionUsage == 'auto-detect' then
-      if params.visual_selection_info.visual_mode == 'V' then
-        visualSelectionUsage = 'operate-within-range'
-      elseif params.visual_selection_info.visual_mode == 'v' then
-        visualSelectionUsage = 'prefill-search'
-      else
-        visualSelectionUsage = 'ignore'
-      end
-    end
     options.prefills = context.engine.getInputPrefillsForVisualSelection(
       params.visual_selection_info,
       options.prefills,
