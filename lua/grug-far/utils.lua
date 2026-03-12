@@ -663,7 +663,7 @@ function M.get_current_visual_selection_info(strict)
   if strict and not isVisualMode then
     return
   end
-  local visual_mode = isVisualMode and vim.fn.mode() or ''
+  local visual_mode = isVisualMode and vim.fn.mode() or vim.fn.visualmode()
   local lines, start_row, start_col, end_row, end_col = M.getVisualSelectionLines()
 
   return {
