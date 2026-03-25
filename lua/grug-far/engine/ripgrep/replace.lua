@@ -161,6 +161,7 @@ M.replace = function(params)
 
   local on_abort = nil
   local function abort()
+    -- TODO (sbadragan): hook in our abort here?
     if on_abort then
       on_abort()
     end
@@ -172,7 +173,13 @@ M.replace = function(params)
     return
   end
 
+  local hooks = params.options.hooks
+
   if bufrange then
+    if hooks.on_before_edit_file then
+      -- TODO (sbadragan): handle abort...
+      hooks.on_before_edit_file({ path = bufrange.file_name, isBufferRange = true }, on_finish)
+    end
     on_abort = replaceInBufrange({
       inputs = params.inputs,
       options = params.options,

@@ -289,7 +289,6 @@
     -- how to treat current visual selection when grug-far is invoked
     -- prefill-search - use to prefill "search string"
     -- operate-within-range - use as buffer range to operate within
-    -- auto-detect - if linewise visual (V) then act like operate-within-range, if charwise (v) then prefill-search
     -- ignore - ignore/discard visual selection
     visualSelectionUsage = 'prefill-search',
 
@@ -569,6 +568,14 @@
     -- you basically never want to disable this as it makes things a lot convenient, unless you are doing something
     -- very niche where you have re-mapped those base nvim keys
     smartInputHandling = true,
+
+    -- points where you can customize grug-far behaviour by providing additional logic to be executed
+    hooks = {
+      -- if provided, function is called before applying any file edit for replace/sync/etc.
+      -- example use case: if using perforce you can call `p4 edit <file>` before each file is changed by replace/sync
+      -- see type for function signature
+      on_before_edit_file = nil,
+    },
   }
 
 <
@@ -735,6 +742,19 @@ Fields ~
 
 ------------------------------------------------------------------------------
 Class ~
+{grug.far.EditFileDescriptor}
+Fields ~
+{path} `(string)`
+{isBufferRange} `(optional)` `(boolean)`
+
+------------------------------------------------------------------------------
+Class ~
+{grug.far.HooksTable}
+Fields ~
+{on_before_edit_file} `(optional)` `(fun(file: grug.far.EditFileDescriptor, on_finish: fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)): (abort:)` fun())
+
+------------------------------------------------------------------------------
+Class ~
 {grug.far.OpenTargetWindowTable}
 Fields ~
 {exclude} `((string)` | fun(winid: number): boolean)[]
@@ -812,6 +832,7 @@ Fields ~
 {historyWindow} vim.api.keyset.win_config
 {previewWindow} vim.api.keyset.win_config
 {smartInputHandling} `(boolean)`
+{hooks} grug.far.HooksTable
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
