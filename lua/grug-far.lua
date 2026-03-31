@@ -431,6 +431,30 @@ function grug_far.hide_instance(instQuery)
   end
 end
 
+--- Convenience utility function to spawn external commands async.
+--- It returns a function that aborts the command.
+--- To fetch stdout you need to pass a on_stdout_chunk function as a param, which
+--- could be invoked multiple times if output is large.
+---
+---@param params {
+--- cmd_path: string,
+--- args: string[]?,
+--- on_stdout_chunk?: fun(data: string),
+--- on_finish: fun(status: grug.far.Status, errorMessage: string?),
+--- stdin?: uv_pipe_t,
+--- fixChunkLineTruncation?: boolean,
+--- isSuccess?: fun(code: integer, errorMessage: string): boolean
+--- }
+---@return fun()? abort
+function grug_far.spawn_cmd_async(params)
+  local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
+  params.isSuccess = params.isSuccess or function(code, _errorMessage)
+    return code == 0
+  end
+  local abort = fetchCommandOutput(params)
+  return abort
+end
+
 -- deprecated API -----------------------------------------------------------------------------
 
 ---@deprecated

@@ -175,8 +175,20 @@ M.replace = function(params)
 
   local hooks = params.options.hooks
 
+  -- TODO (sbadragan): implement same thing for ripgrep sync and astgrep replace/sync
   if bufrange then
-    async_job.chain(hooks.on_before_edit_file, function(resolve, reject)
+    async_job.chain(function(finish)
+      -- TODO (sbadragan): add unit test
+      if hooks.on_before_edit_file then
+        report_progress({ type = 'message', message = 'running on before edit file hook' })
+        hooks.on_before_edit_file(finish, {
+          path = bufrange.file_name,
+          isBufferRange = true,
+        })
+      else
+        finish('success')
+      end
+    end, function(finish)
       return replaceInBufrange({
         inputs = params.inputs,
         options = params.options,
@@ -185,54 +197,52 @@ M.replace = function(params)
         report_progress = function(count)
           report_progress({ type = 'update_count', count = count })
         end,
-        on_finish = on_finish,
+        on_finish = finish,
       })
-    end)(function(warningMessage, customActionMessage)
-      on_finish('success', warningMessage, customActionMessage)
-    end, function(errorMessage, customActionMessage)
-      on_finish('error', errorMessage, customActionMessage)
-    end, {
-      path = bufrange.file_name,
-      isBufferRange = true,
-    })
-    -- if hooks.on_before_edit_file then
-    --   -- TODO (sbadragan): handle abort...
-    --   hooks.on_before_edit_file({ path = bufrange.file_name, isBufferRange = true }, on_finish)
-    -- end
+    end)(on_finish)
   else
-    on_abort = fetchFilesWithMatches({
-      inputs = params.inputs,
-      options = params.options,
-      report_progress = function(count)
-        report_progress({ type = 'update_total', count = count })
-      end,
-      on_finish = function(status, errorMessage, files, blacklistedArgs)
-        if not status then
-          on_finish(
-            nil,
-            nil,
-            blacklistedArgs
-                and 'replace cannot work with flags: ' .. table.concat(blacklistedArgs, ', ')
-              or nil
-          )
-          return
-        elseif status == 'error' then
-          on_finish(status, errorMessage)
-          return
-        end
-
-        on_abort = replaceInMatchedFiles({
-          files = files,
-          inputs = params.inputs,
-          options = params.options,
-          replacement_eval_fn = replacement_eval_fn,
-          report_progress = function(count)
-            report_progress({ type = 'update_count', count = count })
+    async_job.chain(function(finish)
+      return fetchFilesWithMatches({
+        inputs = params.inputs,
+        options = params.options,
+        report_progress = function(count)
+          report_progress({ type = 'update_total', count = count })
+        end,
+        on_finish = finish,
+      })
+    end, function(finish, files)
+      -- TODO (sbadragan): add unit test
+      if hooks.on_before_edit_file then
+        report_progress({ type = 'message', message = 'running on before edit file hook' })
+        local items = vim
+          .iter(files)
+          :map(function(file)
+            return { path = file }
+          end)
+          :totable()
+        async_job.parallel_process({
+          items = items,
+          maxWorkers = params.options.maxWorkers,
+          process_item = hooks.on_before_edit_file,
+          on_finish = function(status, errorMessage)
+            finish(status, errorMessage, files)
           end,
-          on_finish = on_finish,
         })
-      end,
-    })
+      else
+        finish('success', nil, files)
+      end
+    end, function(finish, files)
+      return replaceInMatchedFiles({
+        files = files,
+        inputs = params.inputs,
+        options = params.options,
+        replacement_eval_fn = replacement_eval_fn,
+        report_progress = function(count)
+          report_progress({ type = 'update_count', count = count })
+        end,
+        on_finish = finish,
+      })
+    end)(on_finish)
   end
 
   return abort

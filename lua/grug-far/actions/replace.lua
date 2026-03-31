@@ -118,28 +118,40 @@ local function replace(params)
   )
 
   startTime = uv.now()
-  task.abort = context.engine.replace({
+  local abort = context.engine.replace({
     inputs = inputs.getValues(context, buf),
     options = context.options,
     replacementInterpreter = context.replacementInterpreter,
 
-    report_progress = tasks.task_callback_wrap(context, task, function(update)
-      state.status = 'progress'
-      state.progressCount = state.progressCount + 1
-      if update.type == 'update_total' then
-        filesTotal = filesTotal + update.count
-        state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
-      elseif update.type == 'update_count' then
-        filesCount = filesCount + update.count
-        state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
-      elseif update.type == 'message' then
-        state.actionMessage = update.message
-      end
-      renderResultsHeader(buf, context)
-      resultsList.throttledForceRedrawBuffer(buf, context)
-    end),
+    report_progress = tasks.task_callback_wrap(
+      context,
+      task,
+      vim.schedule_wrap(function(update)
+        state.status = 'progress'
+        state.progressCount = state.progressCount + 1
+        if update.type == 'update_total' then
+          filesTotal = filesTotal + update.count
+          state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
+        elseif update.type == 'update_count' then
+          filesCount = filesCount + update.count
+          state.actionMessage = getActionMessage(nil, filesCount, filesTotal)
+        elseif update.type == 'message' then
+          state.actionMessage = update.message
+        end
+        renderResultsHeader(buf, context)
+        resultsList.throttledForceRedrawBuffer(buf, context)
+      end)
+    ),
     on_finish = on_finish_all,
   })
+  task.abort = function()
+    if abort then
+      abort()
+    end
+    vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
+    state.actionMessage = 'replace aborted!'
+    renderResultsHeader(buf, context)
+  end
 end
 
 return replace
