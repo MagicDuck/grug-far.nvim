@@ -751,7 +751,7 @@ Fields ~
 Class ~
 {grug.far.HooksTable}
 Fields ~
-{on_before_edit_file} `(optional)` `(fun(file: grug.far.EditFileDescriptor, on_finish: fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)): (abort:)` fun())
+{on_before_edit_file} `(optional)` grug.far.HookAsyncJob<grug.far.EditFileDescriptor>
 
 ------------------------------------------------------------------------------
 Class ~
