@@ -4,44 +4,37 @@ local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
 local argUtils = require('grug-far.engine.ripgrep.argUtils')
 local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local parseResults = require('grug-far.engine.ripgrep.parseResults')
+local async_job = require('grug-far.async_job')
 
 ---@class grug.far.replaceInFileParams
 ---@field inputs grug.far.Inputs
 ---@field options grug.far.Options
 ---@field replacement_eval_fn fun(...): (string?, string?)
 ---@field file string
----@field on_done fun(errorMessage: string?)
+---@field on_finish fun(status: grug.far.Status, errorMessage: string?)
 
 --- performs replacement in given file
 ---@param params grug.far.replaceInFileParams
 ---@return fun()? abort
 local function replaceInFile(params)
   local file = params.file
-  local on_done = params.on_done
+  local on_finish = params.on_finish
   return fetchReplacedFileContent({
     inputs = params.inputs,
     options = params.options,
     file = file,
     on_finish = function(status, errorMessage, content)
-      if status == 'error' then
-        return on_done(errorMessage)
-      end
-      if status == nil then
-        -- aborted
-        return on_done(nil)
-      end
-
       if status == 'success' and content then
         return utils.overwriteFileAsync(file, content, function(err)
           if err then
-            return on_done('Could not write: ' .. file .. '\n' .. err)
+            return on_finish('error', 'Could not write: ' .. file .. '\n' .. err)
           end
 
-          on_done(nil)
+          on_finish('success')
         end)
       end
 
-      return on_done(nil)
+      return on_finish(status, errorMessage)
     end,
   })
 end
@@ -51,7 +44,7 @@ end
 ---@return fun()? abort
 local function replaceInFileWithEval(params)
   local file = params.file
-  local on_done = params.on_done
+  local on_finish = params.on_finish
   local replacement_eval_fn = params.replacement_eval_fn
 
   local inputs = vim.deepcopy(params.inputs)
@@ -59,7 +52,7 @@ local function replaceInFileWithEval(params)
   local args = getArgs(inputs, params.options, { '--json' })
   args = argUtils.stripReplaceArgs(args)
   if args then
-    table.insert(args, params.file)
+    table.insert(args, file)
   end
 
   local json_data = {}
@@ -93,31 +86,31 @@ local function replaceInFileWithEval(params)
     end,
     on_finish = function(status, errorMessage)
       if status == 'error' then
-        return on_done(errorMessage)
+        return on_finish('error', errorMessage)
       end
 
       if chunk_error then
-        return on_done(chunk_error)
+        return on_finish('error', chunk_error)
       end
 
       if status == 'success' and #json_data > 0 then
         return utils.readFileAsync(file, function(err1, contents)
           if err1 then
-            return on_done('Could not read: ' .. file .. '\n' .. err1)
+            return on_finish('error', 'Could not read: ' .. file .. '\n' .. err1)
           end
 
           local new_contents = parseResults.getReplacedContents(contents, json_data)
           return utils.overwriteFileAsync(file, new_contents, function(err2)
             if err2 then
-              return on_done('Could not write: ' .. file .. '\n' .. err2)
+              return on_finish('error', 'Could not write: ' .. file .. '\n' .. err2)
             end
 
-            on_done(nil)
+            on_finish('success')
           end)
         end)
       end
 
-      return on_done(nil)
+      return on_finish('success')
     end,
   })
 
@@ -134,70 +127,28 @@ end
 --- on_finish: fun(status: grug.far.Status, errorMessage: string?),
 --- }
 local function replaceInMatchedFiles(params)
-  local files = vim.deepcopy(params.files)
-  local report_progress = params.report_progress
-  local on_finish = params.on_finish
-  local engagedWorkers = 0
-  local errorMessage = nil
-  local isAborted = false
-  local abortByFile = {}
-
-  local function abortAll()
-    isAborted = true
-    for _, abort in pairs(abortByFile) do
-      if abort then
-        abort()
-      end
-    end
-  end
-
   local replace_in_file = params.replacement_eval_fn and replaceInFileWithEval or replaceInFile
 
-  local function replaceNextFile()
-    if isAborted then
-      files = {}
-    end
+  return async_job.parallel_process({
+    items = params.files,
+    maxWorkers = params.options.maxWorkers,
+    on_finish = params.on_finish,
+    process_item = function(finish, file)
+      return replace_in_file({
+        file = file --[[@as string]],
+        inputs = params.inputs,
+        options = params.options,
+        replacement_eval_fn = params.replacement_eval_fn,
+        on_finish = function(status, errorMessage)
+          if status == 'success' then
+            params.report_progress(1)
+          end
 
-    local file = table.remove(files)
-    if file == nil then
-      if engagedWorkers == 0 then
-        if errorMessage then
-          on_finish('error', errorMessage)
-        elseif isAborted then
-          on_finish(nil, nil)
-        else
-          on_finish('success', nil)
-        end
-      end
-      return
-    end
-
-    engagedWorkers = engagedWorkers + 1
-    abortByFile[file] = replace_in_file({
-      file = file,
-      inputs = params.inputs,
-      options = params.options,
-      replacement_eval_fn = params.replacement_eval_fn,
-      on_done = vim.schedule_wrap(function(err)
-        abortByFile[file] = nil
-        if err then
-          errorMessage = err
-          abortAll()
-        else
-          report_progress(1)
-        end
-
-        engagedWorkers = engagedWorkers - 1
-        replaceNextFile()
-      end),
-    })
-  end
-
-  for _ = 1, params.options.maxWorkers do
-    replaceNextFile()
-  end
-
-  return abortAll
+          finish(status, errorMessage)
+        end,
+      })
+    end,
+  })
 end
 
 return replaceInMatchedFiles

@@ -33,7 +33,17 @@ local function fetchFilesWithMatches(params)
       params.report_progress(count)
     end,
     on_finish = function(status, errorMessage)
-      params.on_finish(status, errorMessage, filesWithMatches, blacklistedArgs)
+      if not status then
+        params.on_finish(
+          nil,
+          nil,
+          blacklistedArgs
+              and 'replace cannot work with flags: ' .. table.concat(blacklistedArgs, ', ')
+            or nil
+        )
+      else
+        params.on_finish(status, errorMessage, filesWithMatches)
+      end
     end,
   })
 end

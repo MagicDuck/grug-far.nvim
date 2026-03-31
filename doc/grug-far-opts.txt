@@ -574,6 +574,14 @@
       -- if provided, function is called before applying any file edit for replace/sync/etc.
       -- example use case: if using perforce you can call `p4 edit <file>` before each file is changed by replace/sync
       -- see type for function signature
+      -- example:
+      --- on_before_edit_file = function(on_finish, file)
+      ---   return require('grug-far').spawn_cmd_async({
+      ---     cmd_path = 'p4',
+      ---     args = { 'edit', file.path},
+      ---     on_finish = on_finish,
+      ---   })
+      --- end,
       on_before_edit_file = nil,
     },
   }
@@ -751,7 +759,7 @@ Fields ~
 Class ~
 {grug.far.HooksTable}
 Fields ~
-{on_before_edit_file} `(optional)` grug.far.HookAsyncJob<grug.far.EditFileDescriptor>
+{on_before_edit_file} `(optional)` grug.far.AsyncJobOneParam<grug.far.EditFileDescriptor>
 
 ------------------------------------------------------------------------------
 Class ~

@@ -131,6 +131,27 @@ Parameters ~
 {instQuery} `(string)` | number | nil
 
 ------------------------------------------------------------------------------
+                                                    *grug_far.spawn_cmd_async()*
+                      `grug_far.spawn_cmd_async`({params})
+Convenience utility function to spawn external commands async.
+It returns a function that aborts the command.
+To fetch stdout you need to pass a on_stdout_chunk function as a param, which
+could be invoked multiple times if output is large.
+
+Parameters ~
+{params} {
+cmd_path: string,
+args: string[]?,
+on_stdout_chunk?: fun(data: string),
+on_finish: fun(status: grug.far.Status, errorMessage: string?),
+stdin?: uv_pipe_t,
+fixChunkLineTruncation?: boolean,
+isSuccess?: fun(code: integer, errorMessage: string): boolean
+}
+Return ~
+`(fun())` `(optional)` abort
+
+------------------------------------------------------------------------------
                                                        *grug_far.toggle_flags()*
                         `grug_far.toggle_flags`({flags})
 

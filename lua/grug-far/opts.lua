@@ -576,6 +576,14 @@ grug_far.defaultOptions = {
     -- if provided, function is called before applying any file edit for replace/sync/etc.
     -- example use case: if using perforce you can call `p4 edit <file>` before each file is changed by replace/sync
     -- see type for function signature
+    -- example:
+    --- on_before_edit_file = function(on_finish, file)
+    ---   return require('grug-far').spawn_cmd_async({
+    ---     cmd_path = 'p4',
+    ---     args = { 'edit', file.path},
+    ---     on_finish = on_finish,
+    ---   })
+    --- end,
     on_before_edit_file = nil,
   },
 }
@@ -827,14 +835,12 @@ grug_far.defaultOptions = {
 ---@field enabled? boolean
 ---@private
 
----@alias grug.far.HookAsyncJob<T> fun(resolve: fun(warningMessage?: string), reject: fun(errorMessage?: string), arg: T): (abort: fun()?)
-
 ---@class grug.far.EditFileDescriptor
 ---@field path string
 ---@field isBufferRange? boolean
 
 ---@class grug.far.HooksTable
----@field on_before_edit_file? grug.far.HookAsyncJob<grug.far.EditFileDescriptor>
+---@field on_before_edit_file? grug.far.AsyncJobOneParam<grug.far.EditFileDescriptor>
 
 ---@alias FilterWindowFn fun(winid: number): boolean
 ---@alias WinPreferredLocation "prev" | "left" | "right" | "above" | "below"
@@ -981,7 +987,7 @@ grug_far.defaultOptions = {
 ---@field historyWindow? vim.api.keyset.win_config
 ---@field previewWindow? vim.api.keyset.win_config
 ---@field smartInputHandling? boolean
----@field hooks grug.far.HooksTable
+---@field hooks? grug.far.HooksTable
 ---@private
 
 --- generates merged options

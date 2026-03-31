@@ -5,10 +5,12 @@ local uv = vim.uv
 ---@param params {
 --- cmd_path: string,
 --- args: string[]?,
---- on_fetch_chunk: fun(data: string),
+--- on_fetch_chunk?: fun(data: string),
+--- on_stdout_chunk?: fun(data: string),
 --- on_finish: fun(status: grug.far.Status, errorMessage: string?),
 --- stdin?: uv.uv_pipe_t,
 --- fixChunkLineTruncation?: boolean,
+--- isSuccess?: fun(code: integer, errorMessage: string): boolean
 --- }
 ---@return fun()? abort, string[]? effectiveArgs
 local function fetchCommandOutput(params)
@@ -17,9 +19,9 @@ local function fetchCommandOutput(params)
   local errorMessage = ''
 
   local lastLine = ''
-  local on_fetch_chunk = params.on_fetch_chunk
+  local on_fetch_chunk = params.on_stdout_chunk or params.on_fetch_chunk
   local on_finish = function(...)
-    if #lastLine > 0 then
+    if on_fetch_chunk and #lastLine > 0 then
       on_fetch_chunk(lastLine)
       lastLine = ''
     end
@@ -33,11 +35,12 @@ local function fetchCommandOutput(params)
   end
 
   local stdin = params.stdin
-  local stdout = uv.new_pipe()
+  local stdout = on_fetch_chunk and uv.new_pipe() or nil
   local stderr = uv.new_pipe()
   local hadStdout = false
 
   local handle
+
   handle = uv.spawn(params.cmd_path, {
     stdio = { stdin, stdout, stderr },
     cwd = vim.fn.getcwd(),
@@ -56,13 +59,26 @@ local function fetchCommandOutput(params)
 
     vim.schedule(function()
       finished = true
-      -- note: when no stdout, we report errors with a message as warnings (status = success) since
-      -- for example ripgrep can generate errors only for a particular file (like permission denied
-      -- but everything else succeeded
-      local isSuccess = code == 0 or (hadStdout and errorMessage and #errorMessage > 0)
+      local isSuccess = params.isSuccess and params.isSuccess(code, errorMessage)
+        -- note: when we had stdout, we report errors with a message as warnings (status = success) since
+        -- for example ripgrep can generate errors only for a particular file (like permission denied)
+        -- but everything else succeeded
+        or (code == 0 or (hadStdout and errorMessage and #errorMessage > 0))
       on_finish(isSuccess and 'success' or 'error', errorMessage)
     end)
   end)
+
+  if handle == nil then
+    finished = true
+    utils.closeHandle(stdin)
+    utils.closeHandle(stdout)
+    utils.closeHandle(stderr)
+    utils.closeHandle(handle)
+    vim.schedule(function()
+      on_finish('error', 'Failed to spawn command: ' .. params.cmd_path)
+    end)
+    return nil, args
+  end
 
   local on_abort = function()
     if finished then
@@ -83,42 +99,43 @@ local function fetchCommandOutput(params)
     end)
   end
 
-  ---@cast stdout -uv.uv_pipe_t
-  ---@cast stdout -?
-  ---@cast stdout +uv.uv_stream_t
-  uv.read_start(
-    stdout,
-    vim.schedule_wrap(function(err, data)
-      if finished then
-        return
-      end
+  if stdout and on_fetch_chunk then
+		---@cast stdout -uv.uv_pipe_t
+		---@cast stdout +uv.uv_stream_t
+    uv.read_start(
+      stdout,
+      vim.schedule_wrap(function(err, data)
+        if finished then
+          return
+        end
 
-      if err then
-        errorMessage = errorMessage .. '\nerror reading from command stdout!'
-        return
-      end
-      if fixChunkLineTruncation then
-        if data then
-          hadStdout = true
+        if err then
+          errorMessage = errorMessage .. '\nerror reading from command stdout!'
+          return
+        end
+        if fixChunkLineTruncation then
+          if data then
+            hadStdout = true
 
-          -- large outputs can cause the last line to be truncated
-          -- save it and prepend to next chunk
-          local chunkData = lastLine .. data
-          chunkData, lastLine = utils.splitLastLine(chunkData)
-          if #chunkData > 0 then
-            on_fetch_chunk(chunkData)
+            -- large outputs can cause the last line to be truncated
+            -- save it and prepend to next chunk
+            local chunkData = lastLine .. data
+            chunkData, lastLine = utils.splitLastLine(chunkData)
+            if #chunkData > 0 then
+              on_fetch_chunk(chunkData)
+            end
+          else
+            on_fetch_chunk(lastLine)
           end
         else
-          on_fetch_chunk(lastLine)
+          if data then
+            hadStdout = true
+            on_fetch_chunk(data)
+          end
         end
-      else
-        if data then
-          hadStdout = true
-          on_fetch_chunk(data)
-        end
-      end
-    end)
-  )
+      end)
+    )
+  end
 
   ---@cast stderr -uv.uv_pipe_t
   ---@cast stderr -?
