@@ -5,6 +5,7 @@ local getArgs = require('grug-far.engine.ripgrep.getArgs')
 local argUtils = require('grug-far.engine.ripgrep.argUtils')
 local parseResults = require('grug-far.engine.ripgrep.parseResults')
 local utils = require('grug-far.utils')
+local async_job = require('grug-far.async_job')
 local uv = vim.uv
 
 local M = {}
@@ -159,37 +160,45 @@ M.replace = function(params)
     end
   end
 
-  local on_abort = nil
-  local function abort()
-    -- TODO (sbadragan): hook in our abort here?
-    if on_abort then
-      on_abort()
-    end
-  end
-
   local bufrange, bufrange_err = utils.getBufrange(params.inputs.paths)
   if bufrange_err then
     params.on_finish('error', bufrange_err)
     return
   end
 
+  local on_abort = nil
+  local function abort()
+    if on_abort then
+      on_abort()
+    end
+  end
+
   local hooks = params.options.hooks
 
   if bufrange then
-    if hooks.on_before_edit_file then
-      -- TODO (sbadragan): handle abort...
-      hooks.on_before_edit_file({ path = bufrange.file_name, isBufferRange = true }, on_finish)
-    end
-    on_abort = replaceInBufrange({
-      inputs = params.inputs,
-      options = params.options,
-      bufrange = bufrange,
-      replacement_eval_fn = replacement_eval_fn,
-      report_progress = function(count)
-        report_progress({ type = 'update_count', count = count })
-      end,
-      on_finish = on_finish,
+    async_job.chain(hooks.on_before_edit_file, function(resolve, reject)
+      return replaceInBufrange({
+        inputs = params.inputs,
+        options = params.options,
+        bufrange = bufrange,
+        replacement_eval_fn = replacement_eval_fn,
+        report_progress = function(count)
+          report_progress({ type = 'update_count', count = count })
+        end,
+        on_finish = on_finish,
+      })
+    end)(function(warningMessage, customActionMessage)
+      on_finish('success', warningMessage, customActionMessage)
+    end, function(errorMessage, customActionMessage)
+      on_finish('error', errorMessage, customActionMessage)
+    end, {
+      path = bufrange.file_name,
+      isBufferRange = true,
     })
+    -- if hooks.on_before_edit_file then
+    --   -- TODO (sbadragan): handle abort...
+    --   hooks.on_before_edit_file({ path = bufrange.file_name, isBufferRange = true }, on_finish)
+    -- end
   else
     on_abort = fetchFilesWithMatches({
       inputs = params.inputs,

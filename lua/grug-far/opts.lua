@@ -827,14 +827,14 @@ grug_far.defaultOptions = {
 ---@field enabled? boolean
 ---@private
 
----@alias grug.far.OnFinishFn fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
+---@alias grug.far.HookAsyncJob<T> fun(resolve: fun(warningMessage?: string), reject: fun(errorMessage?: string), arg: T): (abort: fun()?)
 
 ---@class grug.far.EditFileDescriptor
 ---@field path string
 ---@field isBufferRange? boolean
 
 ---@class grug.far.HooksTable
----@field on_before_edit_file? fun(file: grug.far.EditFileDescriptor, on_finish: grug.far.OnFinishFn): (abort: fun())
+---@field on_before_edit_file? grug.far.HookAsyncJob<grug.far.EditFileDescriptor>
 
 ---@alias FilterWindowFn fun(winid: number): boolean
 ---@alias WinPreferredLocation "prev" | "left" | "right" | "above" | "below"
