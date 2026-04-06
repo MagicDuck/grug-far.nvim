@@ -1,8 +1,8 @@
 local M = {}
 
-local NVIM_VERSION = '0.11.0'
-local RG_VERSION = '14.1.0'
-local SG_VERSION = '0.35.0'
+local NVIM_VERSION = '0.12.1'
+local RG_VERSION = '15.1.0'
+local SG_VERSION = '0.41.1'
 
 --- checks if it has required version of executable
 ---@param path string
