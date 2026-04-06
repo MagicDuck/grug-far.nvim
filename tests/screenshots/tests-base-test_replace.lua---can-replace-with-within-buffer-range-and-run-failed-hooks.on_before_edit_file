@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...                   
+02|                                                                                
+03|  Search:                                                                      
+04|grug                                                                            
+05|  Replace:                                                                     
+06|curly                                                                           
+07|  Files Filter:                                                                
+08|                                                                                
+09| 󰮚 Flags:                                                                       
+10|                                                                                
+11|  Paths:                                                                       
+12|buffer-range=file1.txt:2:11-3:-1                                                
+13|                                                                                
+14| STATUS_ERROR ⟪ ripgrep ⟫
+15| 2 matches in 1 files   replace failed!                                        
+16|                                                                                
+17|Failed to spawn command: NON_EXISTENT_COMMAND                                   
+18|                                                                                
+19|                                                                                
+20|                                                                                
+21|                                                                                
+22|                                                                                
+23|Grug FAR - 1: grug                                                           1,4
+24|grug-far: replace failed!                                                       

@@ -237,4 +237,173 @@ T['can replace with within buffer range'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can run hooks.on_before_edit_file on replace'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  vim.fn.delete('./temp_history_dir', 'rf')
+  vim.fn.mkdir('./temp_history_dir')
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    prefills = { search = 'grug', replacement = 'curly' },
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        local contents = 'grug from ON_BEFORE_EDIT_FILE\n'
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'cat',
+          args = { file.path },
+          on_stdout_chunk = function(data) 
+            contents = contents .. data
+          end,
+          on_finish = function(...)
+            vim.fn.writefile(vim.split(contents, '\n'), file.path)
+            on_finish(...)
+          end
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'curly')
+  helpers.childWaitForScreenshotText(child, 'curly from ON_BEFORE_EDIT_FILE')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can run failed hooks.on_before_edit_file on replace'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  vim.fn.delete('./temp_history_dir', 'rf')
+  vim.fn.mkdir('./temp_history_dir')
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    prefills = { search = 'grug', replacement = 'curly' },
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'NON_EXISTENT_COMMAND',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can replace with within buffer range and run hooks.on_before_edit_file'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug is confused!
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.txt')
+  child.type_keys(10, 'ggjwwvj$')
+
+  vim.fn.delete('./temp_history_dir', 'rf')
+  vim.fn.mkdir('./temp_history_dir')
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    prefills = { search = 'grug', replacement = 'curly' },
+    visualSelectionUsage = 'operate-within-range',
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'cat',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'curly')
+  helpers.childWaitForScreenshotText(child, 'curly drinks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can replace with within buffer range and run failed hooks.on_before_edit_file'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file1.txt',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+      and grug is confused!
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file1.txt')
+  child.type_keys(10, 'ggjwwvj$')
+
+  vim.fn.delete('./temp_history_dir', 'rf')
+  vim.fn.mkdir('./temp_history_dir')
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    prefills = { search = 'grug', replacement = 'curly' },
+    visualSelectionUsage = 'operate-within-range',
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'NON_EXISTENT_COMMAND',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T

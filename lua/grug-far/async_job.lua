@@ -7,7 +7,7 @@ local M = {}
 ---@param job1? grug.far.AsyncJob
 ---@param job2? grug.far.AsyncJob
 ---@return grug.far.AsyncJob?
-function chain2(job1, job2)
+local function chain2(job1, job2)
   if job1 == nil then
     return job2
   end
@@ -62,10 +62,10 @@ end
 ---@vararg grug.far.AsyncJob
 ---@return grug.far.AsyncJob
 function M.chain(...)
-  local tasks = { ... }
   local result = nil
-  for _, task in ipairs(tasks) do
-    result = chain2(result, task)
+  for i = 1, select('#', ...) do
+    local job = select(i, ...)
+    result = chain2(result, job)
   end
 
   if result == nil then
@@ -74,7 +74,6 @@ function M.chain(...)
     return result
   end
 end
--- TODO (sbadragan): add unit tests for chain and parallel_process
 
 ---@generic T
 ---@param params {

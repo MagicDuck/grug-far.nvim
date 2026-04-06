@@ -178,7 +178,6 @@ M.replace = function(params)
   -- TODO (sbadragan): implement same thing for ripgrep sync and astgrep replace/sync
   if bufrange then
     async_job.chain(function(finish)
-      -- TODO (sbadragan): add unit test
       if hooks.on_before_edit_file then
         report_progress({ type = 'message', message = 'running on before edit file hook' })
         hooks.on_before_edit_file(finish, {
@@ -211,7 +210,6 @@ M.replace = function(params)
         on_finish = finish,
       })
     end, function(finish, files)
-      -- TODO (sbadragan): add unit test
       if hooks.on_before_edit_file then
         report_progress({ type = 'message', message = 'running on before edit file hook' })
         local items = vim
