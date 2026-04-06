@@ -79,14 +79,19 @@ end
 --- waits until condition fn evals to true, checking every interval ms
 --- times out at timeout ms
 ---@param child NeovimChild
----@param condition fun(): boolean
+---@param condition fun(): boolean, any
 ---@param timeout? integer, defaults to 2000
----@param interval? integer, defaults to 100
+---@param interval? integer, defaults to 10
 function M.childWaitForCondition(child, condition, timeout, interval)
   local max = timeout or 2000
-  local inc = interval or 100
+  -- TODO (sbadragan): decrease this?
+  local inc = interval or 10
+  local last_state
   for _ = 0, max, inc do
-    if condition() then
+    local done, state = condition()
+    last_state = state
+
+    if done then
       return
     else
       M.sleep(child, inc)
@@ -94,7 +99,10 @@ function M.childWaitForCondition(child, condition, timeout, interval)
   end
 
   error(
-    'Timed out waiting for condition after ' .. max .. 'ms!\n\n' .. tostring(child.get_screenshot())
+    'Timed out waiting for condition after '
+      .. max
+      .. 'ms!\n\n'
+      .. (last_state and vim.inspect(last_state) or tostring(child.get_screenshot()))
   )
 end
 

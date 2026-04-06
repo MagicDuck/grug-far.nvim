@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...                   
+02|                                                                                
+03|  Search:                                                                      
+04|  curly                                                                         
+05|  Replace:                                                                     
+06|  curly                                                                         
+07|  Files Filter:                                                                
+08|                                                                                
+09| 󰮚 Flags:                                                                       
+10|                                                                                
+11|  Paths:                                                                       
+12|  buffer-range=file1.txt:2:11-3:-1                                              
+13|                                                                                
+14| STATUS_SUCCESS ⟪ ripgrep ⟫
+15| 2 matches in 1 files                                                           
+16|                                                                                
+17|  file1.txt                                                                     
+18|▒   2 talks and curly drinks                                                 [1]
+19|▒   2 talks and curly drinks                                                    
+20|▒   3       then curly thinks                                                [2]
+21|▒   3       then curly thinks                                                   
+22|                                                                                
+23|Grug FAR - 1: curly                                                          1,6
+24|-- INSERT --                                                                    
