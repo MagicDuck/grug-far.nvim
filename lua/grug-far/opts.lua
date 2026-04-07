@@ -290,6 +290,7 @@ grug_far.defaultOptions = {
   -- how to treat current visual selection when grug-far is invoked
   -- prefill-search - use to prefill "search string"
   -- operate-within-range - use as buffer range to operate within
+  -- auto-detect - if linewise visual (V) then act like operate-within-range, if charwise (v) then prefill-search
   -- ignore - ignore/discard visual selection
   visualSelectionUsage = 'prefill-search',
 
