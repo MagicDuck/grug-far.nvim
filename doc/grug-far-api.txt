@@ -11,6 +11,15 @@ See also ~
 Option types: |grug.far.Options|
 
 ------------------------------------------------------------------------------
+                                          *auto_detect_visual_selection_usage()*
+         `auto_detect_visual_selection_usage`({visual_selection_info})
+auto-detect how to use visual-selection
+Parameters ~
+{visual_selection_info} `(optional)` grug.far.VisualSelectionInfo?
+Return ~
+`(string)` visualSelectionUsage
+
+------------------------------------------------------------------------------
                                                                *grug_far.open()*
                            `grug_far.open`({options})
 launch grug-far with the given overrides

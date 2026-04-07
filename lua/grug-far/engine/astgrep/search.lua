@@ -235,9 +235,13 @@ function M.search(params, isRulesBasedSearch)
     params.on_fetch_chunk(data)
   end, function(status, errorMessage)
     -- give the user more feedback when there are no matches
-    if status == 'success' and not (errorMessage and #errorMessage > 0) and not hadOutput then
-      status = 'error'
-      errorMessage = 'no matches'
+    if not (errorMessage and #errorMessage > 0) and not hadOutput then
+      if status == 'success' then
+        status = 'error'
+        errorMessage = 'no matches'
+      elseif status == 'error' then
+        errorMessage = 'no matches' -- newer versionns of astgrep have exit code 1 on no matches
+      end
     end
 
     on_finish(status, errorMessage)
