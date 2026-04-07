@@ -238,6 +238,7 @@ end
 --- auto-detect how to use visual-selection
 ---@param visual_selection_info? grug.far.VisualSelectionInfo?
 ---@return string visualSelectionUsage
+---@private
 local function auto_detect_visual_selection_usage(visual_selection_info)
   local mode = visual_selection_info and visual_selection_info.visual_mode or ''
   if mode == 'V' then
