@@ -137,6 +137,7 @@ local function getResultsWithReplaceDiff(params)
     end,
   })
 
+  ---@cast stdin -?
   uv.write(stdin, inputString, function()
     uv.shutdown(stdin)
   end)
@@ -145,7 +146,7 @@ local function getResultsWithReplaceDiff(params)
 end
 
 ---@class grug.far.RipgrepEngineSearchParams
----@field stdin uv_pipe_t?
+---@field stdin uv.uv_pipe_t?
 ---@field args string[]?
 ---@field options grug.far.Options
 ---@field inputs grug.far.Inputs

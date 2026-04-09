@@ -61,6 +61,9 @@ local function fetchReplacedFileContent(params)
     on_finish(isSuccess and 'success' or 'error', errorMessage, content)
   end)
 
+  ---@cast stdout -uv.uv_pipe_t
+  ---@cast stdout -?
+  ---@cast stdout +uv.uv_stream_t
   uv.read_start(stdout, function(err, data)
     if finished then
       return
@@ -79,6 +82,9 @@ local function fetchReplacedFileContent(params)
     end
   end)
 
+  ---@cast stderr -uv.uv_pipe_t
+  ---@cast stderr -?
+  ---@cast stderr +uv.uv_stream_t
   uv.read_start(stderr, function(err, data)
     if finished then
       return

@@ -25,9 +25,12 @@ end
 --- setTimeout, like in js
 ---@param callback fun()
 ---@param timeout integer milliseconds
----@return uv_timer_t timer
+---@return uv.uv_timer_t timer
 function M.setTimeout(callback, timeout)
   local timer = uv.new_timer()
+  if not timer then
+    error('could not create uv timer!')
+  end
   timer:start(timeout, 0, function()
     timer:stop()
     timer:close()
@@ -45,7 +48,7 @@ function M.getFileType(filename)
 end
 
 --- clear the timeout
----@param timer uv_timer_t
+---@param timer uv.uv_timer_t
 function M.clearTimeout(timer)
   if timer and not timer:is_closing() then
     timer:stop()
@@ -60,6 +63,9 @@ end
 ---@return T debouncedCallback
 function M.debounce(callback, ms)
   local timer = uv.new_timer()
+  if not timer then
+    error('could not create uv timer!')
+  end
   return function(...)
     local params = vim.F.pack_len(...)
     timer:start(ms, 0, function()
@@ -75,6 +81,9 @@ end
 ---@return T throttledCallback
 function M.throttle(callback, ms)
   local timer = uv.new_timer()
+  if not timer then
+    error('could not create uv timer!')
+  end
   return function(...)
     if not timer:is_active() then
       callback(...)
@@ -404,7 +413,7 @@ function M.splitPaths(pathsStr)
 end
 
 --- closes given uv handle if open
----@param handle uv_handle_t | nil
+---@param handle uv.uv_handle_t | nil
 function M.closeHandle(handle)
   if handle and not handle:is_closing() then
     handle:close()
