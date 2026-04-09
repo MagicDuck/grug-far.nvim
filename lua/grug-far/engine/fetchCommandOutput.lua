@@ -7,7 +7,7 @@ local uv = vim.uv
 --- args: string[]?,
 --- on_fetch_chunk: fun(data: string),
 --- on_finish: fun(status: grug.far.Status, errorMessage: string?),
---- stdin?: uv_pipe_t,
+--- stdin?: uv.uv_pipe_t,
 --- fixChunkLineTruncation?: boolean,
 --- }
 ---@return fun()? abort, string[]? effectiveArgs
@@ -83,6 +83,9 @@ local function fetchCommandOutput(params)
     end)
   end
 
+  ---@cast stdout -uv.uv_pipe_t
+  ---@cast stdout -?
+  ---@cast stdout +uv.uv_stream_t
   uv.read_start(
     stdout,
     vim.schedule_wrap(function(err, data)
@@ -117,6 +120,9 @@ local function fetchCommandOutput(params)
     end)
   )
 
+  ---@cast stderr -uv.uv_pipe_t
+  ---@cast stderr -?
+  ---@cast stderr +uv.uv_stream_t
   uv.read_start(
     stderr,
     vim.schedule_wrap(function(err, data)

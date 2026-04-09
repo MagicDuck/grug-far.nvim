@@ -127,6 +127,9 @@ local function search(params)
   end
 
   local update_timer = vim.uv.new_timer()
+  if not update_timer then
+    error('could not create uv timer!')
+  end
   local UPDATE_INTERVAL = 10
   local MAX_PROCESSING_BLOCK_SIZE = 2
   update_timer:start(

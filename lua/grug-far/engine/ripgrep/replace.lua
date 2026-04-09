@@ -117,6 +117,9 @@ local function replaceInBufrange(params)
     end,
   })
 
+  ---@cast stdin -uv.uv_pipe_t
+  ---@cast stdin -?
+  ---@cast stdin +uv.uv_stream_t
   uv.write(stdin, input_text, function()
     uv.shutdown(stdin)
   end)

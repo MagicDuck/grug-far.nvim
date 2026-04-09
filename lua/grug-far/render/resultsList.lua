@@ -298,6 +298,7 @@ local function addResultChunkMarks(buf, context, data, startLine)
         start_col = mark.start_col + math.max(0, start_col)
         end_col = math.min(mark.start_col + end_col, mark.end_col)
 
+        ---@cast start_col -?
         vim.api.nvim_buf_set_extmark(buf, context.resultListNamespace, line, start_col, {
           end_col = end_col,
           end_row = line,
