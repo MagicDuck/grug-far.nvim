@@ -50,7 +50,7 @@ jobs:
       - name: Type Check Code Base
         uses: stevearc/nvim-typecheck-action@v2
         with:
-          configpath: .github/workflows/.luarc.json
+          configpath: .luarc.json
           path: lua
           level: Warning
           nvim-version: v0.12.1
