@@ -300,4 +300,84 @@ T['can replace with replace interpreter within buf range'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can run hooks.on_before_edit_file while replacing with replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return match .. "_" .. vars.A',
+    },
+    replacementInterpreter = 'lua',
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'cat',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', '$A')
+  helpers.childWaitForScreenshotText(child, 'grug.walks_walks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can run failed hooks.on_before_edit_file while replacing with replace interpreter'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    engine = 'astgrep',
+    prefills = {
+      search = 'grug.$A',
+      replacement = 'return match .. "_" .. vars.A',
+    },
+    replacementInterpreter = 'lua',
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'NON_EXISTENT_COMMAND',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T

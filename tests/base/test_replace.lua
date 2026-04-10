@@ -249,9 +249,6 @@ T['can run hooks.on_before_edit_file on replace'] = function()
     },
   })
 
-  vim.fn.delete('./temp_history_dir', 'rf')
-  vim.fn.mkdir('./temp_history_dir')
-
   helpers.cdTempTestDir(child)
   child.lua([[GrugFar.open({
     prefills = { search = 'grug', replacement = 'curly' },
@@ -297,9 +294,6 @@ T['can run failed hooks.on_before_edit_file on replace'] = function()
     },
   })
 
-  vim.fn.delete('./temp_history_dir', 'rf')
-  vim.fn.mkdir('./temp_history_dir')
-
   helpers.cdTempTestDir(child)
   child.lua([[GrugFar.open({
     prefills = { search = 'grug', replacement = 'curly' },
@@ -336,10 +330,6 @@ T['can replace with within buffer range and run hooks.on_before_edit_file'] = fu
   child.cmd('e file1.txt')
   child.type_keys(10, 'ggjwwvj$')
 
-  vim.fn.delete('./temp_history_dir', 'rf')
-  vim.fn.mkdir('./temp_history_dir')
-
-  helpers.cdTempTestDir(child)
   child.lua([[GrugFar.open({
     prefills = { search = 'grug', replacement = 'curly' },
     visualSelectionUsage = 'operate-within-range',
@@ -382,10 +372,6 @@ T['can replace with within buffer range and run failed hooks.on_before_edit_file
   child.cmd('e file1.txt')
   child.type_keys(10, 'ggjwwvj$')
 
-  vim.fn.delete('./temp_history_dir', 'rf')
-  vim.fn.mkdir('./temp_history_dir')
-
-  helpers.cdTempTestDir(child)
   child.lua([[GrugFar.open({
     prefills = { search = 'grug', replacement = 'curly' },
     visualSelectionUsage = 'operate-within-range',

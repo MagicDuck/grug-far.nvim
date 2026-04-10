@@ -275,4 +275,173 @@ T['can replace within buffer range'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can run hooks.on_before_edit_file on replace'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    engine = 'astgrep',
+    prefills = { search = 'grug', replacement = 'curly' },
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        local contents = 'grug from ON_BEFORE_EDIT_FILE\n'
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'cat',
+          args = { file.path },
+          on_stdout_chunk = function(data) 
+            contents = contents .. data
+          end,
+          on_finish = function(...)
+            vim.fn.writefile(vim.split(contents, '\n'), file.path)
+            on_finish(...)
+          end
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'curly')
+  helpers.childWaitForScreenshotText(child, 'curly from ON_BEFORE_EDIT_FILE')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can run failed hooks.on_before_edit_file on replace'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    engine = 'astgrep',
+    prefills = { search = 'grug', replacement = 'curly' },
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'NON_EXISTENT_COMMAND',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can run hooks.on_before_edit_file while replacing within buffer range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file2.ts')
+  child.type_keys(10, 'ggjwwwwvj$')
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', replacement = 'bruv' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  child.lua([[GrugFar.open({
+    engine = 'astgrep',
+    prefills = { search = 'grug', replacement = 'bruv' },
+    visualSelectionUsage = 'operate-within-range',
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'cat',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForUIVirtualText(child, 'replace completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'bruv')
+  helpers.childWaitForScreenshotText(child, 'bruv.walks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can run failed hooks.on_before_edit_file while replacing within buffer range'] = function()
+  helpers.writeTestFiles({
+    {
+      filename = 'file2.ts',
+      content = [[ 
+    if (grug || talks) {
+      grug.walks(talks)
+    }
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd('e file2.ts')
+  child.type_keys(10, 'ggjwwwwvj$')
+  helpers.childRunGrugFar(child, {
+    engine = 'astgrep',
+    prefills = { search = 'grug', replacement = 'bruv' },
+    visualSelectionUsage = 'operate-within-range',
+  })
+
+  child.lua([[GrugFar.open({
+    engine = 'astgrep',
+    prefills = { search = 'grug', replacement = 'bruv' },
+    visualSelectionUsage = 'operate-within-range',
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'NON_EXISTENT_COMMAND',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
 return T

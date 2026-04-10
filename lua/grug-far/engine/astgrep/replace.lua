@@ -6,18 +6,19 @@ local argUtils = require('grug-far.engine.astgrep.argUtils')
 local parseResults = require('grug-far.engine.astgrep.parseResults')
 local ProcessingQueue = require('grug-far.engine.ProcessingQueue')
 local search = require('grug-far.engine.astgrep.search')
+local async_job = require('grug-far.async_job')
 local uv = vim.uv
 
 local M = {}
 
 ---@param params grug.far.EngineReplaceParams
 ---@param args string[]
----@param eval_fn fun(...): (string?, string?)
+---@param eval_fn? fun(...): (string?, string?)
+---@param processingQueue grug.far.ProcessingQueue
 ---@return fun()? abort
-local function replace_with_eval(params, args, eval_fn)
+local function fetch_matches_for_replace(params, args, eval_fn, processingQueue)
   local on_finish = vim.schedule_wrap(params.on_finish)
   local abortSearch = nil
-  local processingQueue = nil
 
   local abort = function()
     if processingQueue then
@@ -30,24 +31,6 @@ local function replace_with_eval(params, args, eval_fn)
 
   local search_args = vim.deepcopy(args)
   table.insert(search_args, '--json=stream')
-
-  processingQueue = ProcessingQueue.new(function(file_matches, on_done)
-    local file = file_matches[1].file
-    utils.readFileAsync(file, function(err1, contents)
-      if err1 then
-        return on_finish('error', 'Could not read: ' .. file .. '\n' .. err1)
-      end
-
-      local new_contents = parseResults.getReplacedContents(contents, file_matches)
-      return utils.overwriteFileAsync(file, new_contents, function(err2)
-        if err2 then
-          return on_finish('error', 'Could not write: ' .. file .. '\n' .. err2)
-        end
-
-        on_done()
-      end)
-    end)
-  end)
 
   local matches = {}
   local chunk_error = nil
@@ -94,16 +77,51 @@ local function replace_with_eval(params, args, eval_fn)
       if status == 'success' then
         processingQueue:on_finish(function()
           processingQueue:stop()
-          on_finish(status, errorMessage)
+          on_finish(
+            processingQueue.status or status,
+            processingQueue:append_error_message(errorMessage)
+          )
         end)
       else
         processingQueue:stop()
-        on_finish(status, errorMessage)
+        on_finish(
+          status or processingQueue.status,
+          processingQueue:append_error_message(errorMessage)
+        )
       end
     end,
   })
 
   return abort
+end
+
+---@param params grug.far.EngineReplaceParams
+---@param args string[]
+---@param eval_fn fun(...): (string?, string?)
+---@return fun()? abort
+local function replace_with_eval(params, args, eval_fn)
+  local processingQueue = ProcessingQueue.new(function(file_matches, on_done)
+    local file = file_matches[1].file
+
+    return async_job.chain(params.options.hooks.on_before_edit_file, function(finish)
+      utils.readFileAsync(file, function(err, contents)
+        if err then
+          return finish('error', 'Could not read: ' .. file .. '\n' .. err)
+        end
+        finish('success', nil, contents)
+      end)
+    end, function(finish, contents)
+      local new_contents = parseResults.getReplacedContents(contents, file_matches)
+      return utils.overwriteFileAsync(file, new_contents, function(err)
+        if err then
+          return finish('error', 'Could not write: ' .. file .. '\n' .. err)
+        end
+        finish('success')
+      end)
+    end)(on_done, { path = file })
+  end)
+
+  return fetch_matches_for_replace(params, args, eval_fn, processingQueue)
 end
 
 --- replaces in bufrange
@@ -233,35 +251,73 @@ function M.replace(params, isRulesBasedSearch)
     message = 'replacing... (buffer temporarily not modifiable)',
   })
 
-  local on_abort = nil
-  local function abort()
-    if on_abort then
-      on_abort()
-    end
-  end
+  local hooks = params.options.hooks
 
   if bufrange then
-    on_abort = replaceInBufrange({
-      args = args,
-      options = params.options,
-      bufrange = bufrange,
-      replacement_eval_fn = eval_fn,
-      on_finish = on_finish,
-    })
+    return async_job.chain(function(finish)
+      if hooks.on_before_edit_file then
+        report_progress({ type = 'message', message = 'running on before edit file hook' })
+        hooks.on_before_edit_file(finish, {
+          path = bufrange.file_name,
+          isBufferRange = true,
+        })
+      else
+        finish('success')
+      end
+    end, function(finish)
+      return replaceInBufrange({
+        args = args,
+        options = params.options,
+        bufrange = bufrange,
+        replacement_eval_fn = eval_fn,
+        on_finish = finish,
+      })
+    end)(on_finish)
   elseif eval_fn then
-    on_abort = replace_with_eval(params, args, eval_fn)
+    return replace_with_eval(params, args, eval_fn)
   else
-    on_abort = fetchCommandOutput({
-      cmd_path = params.options.engines.astgrep.path,
-      args = args,
-      on_fetch_chunk = function()
-        -- astgrep does not report progress while replacing
-      end,
-      on_finish = on_finish,
-    })
-  end
+    return async_job.chain(function(finish)
+      if not hooks.on_before_edit_file then
+        finish('success')
+        return
+      end
 
-  return abort
+      local files = {}
+      local processingQueue = ProcessingQueue.new(function(file_matches, on_done)
+        local file = file_matches[1].file
+        table.insert(files, { path = file })
+        on_done()
+      end)
+
+      local _params = vim.fn.copy(params)
+      _params.on_finish = function(status, errorMessage)
+        finish(status, errorMessage, files)
+      end
+      return fetch_matches_for_replace(_params, args, nil, processingQueue)
+    end, function(finish, files)
+      if not hooks.on_before_edit_file then
+        finish('success')
+        return
+      end
+
+      report_progress({ type = 'message', message = 'running on before edit file hook' })
+      return async_job.parallel_process({
+        items = files,
+        maxWorkers = params.options.maxWorkers,
+        process_item = hooks.on_before_edit_file,
+        on_finish = finish,
+      })
+    end, function(finish)
+      return fetchCommandOutput({
+        cmd_path = params.options.engines.astgrep.path,
+        args = args,
+        on_fetch_chunk = function()
+          -- astgrep does not report progress while replacing
+        end,
+        on_finish = finish,
+      })
+    end)(on_finish)
+  end
 end
 
 return M
