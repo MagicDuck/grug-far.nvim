@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...                   
+02|                                                                                
+03|  Search:                                                                      
+04|  grug                                                                          
+05|  Replace:                                                                     
+06|  bruv                                                                          
+07|  Files Filter:                                                                
+08|                                                                                
+09| 󰮚 Flags:                                                                       
+10|                                                                                
+11|  Paths:                                                                       
+12|                                                                                
+13|                                                                                
+14| STATUS_SUCCESS ⟪ astgrep ⟫
+15| 2 matches in 1 files   replace completed!                                     
+16|                                                                                
+17|  file2.ts                                                                      
+18|▒   2     if (grug || talks) {                                               [1]
+19|▒   2     if (bruv || talks) {                                                  
+20|┊                                                                              
+21|▒   3       grug.walks(talks)                                                [2]
+22|▒   3       bruv.walks(talks)                                                   
+23|Grug FAR - 2: grug                                                           1,4
+24|grug-far: replace completed!                                                    

@@ -1,3 +1,10 @@
+---@alias grug.far.ProcessingQueueCallback fun(item: any, on_done: fun(status: grug.far.Status?, errorMessage: string?)): fun()?
+
+---@class grug.far.ProcessingQueue
+---@field queue any[]
+---@field processCallback grug.far.ProcessingQueueCallback
+---@field is_stopped boolean
+---@field _abort fun()?
 local M = {}
 
 M.__index = M
@@ -5,12 +12,15 @@ M.__index = M
 --- a processing queue processes each item pushed to it in sequence
 --- until there are none. If more items are pushed it automatically starts
 --- processing again
----@param processCallback fun(item: any, on_done: fun())
+---@param processCallback grug.far.ProcessingQueueCallback
 function M.new(processCallback)
   local self = setmetatable({}, M)
   self.queue = {}
   self.processCallback = processCallback
   self.is_stopped = false
+  self._abort = nil
+  self.status = nil
+  self.errorMessage = nil
   return self
 end
 
@@ -20,7 +30,16 @@ function M:_processNext()
   end
 
   local item = self.queue[1]
-  self.processCallback(item, function()
+  self._abort = self.processCallback(item, function(status, errorMessage)
+    if status == 'error' then
+      -- stop queue on error
+      self.status = 'error'
+      self.errorMessage = errorMessage
+      self:stop()
+    elseif errorMessage then -- append error as warning
+      self.errorMessage = (self.errorMessage or '') .. errorMessage
+    end
+
     table.remove(self.queue, 1)
     if #self.queue > 0 then
       self:_processNext()
@@ -57,7 +76,14 @@ end
 
 --- stops the processing queue at the first available chance
 function M:stop()
+  if self.is_stopped then
+    return
+  end
+
   self.is_stopped = true
+  if self._abort then
+    self._abort()
+  end
 end
 
 function M:on_finish(callback)
@@ -65,6 +91,14 @@ function M:on_finish(callback)
     callback()
   else
     self._on_finish = callback
+  end
+end
+
+function M:append_error_message(prefix)
+  if self.errorMessage then
+    return prefix and (prefix .. '\n' .. self.errorMessage) or self.errorMessage
+  else
+    return prefix
   end
 end
 

@@ -166,18 +166,11 @@ M.replace = function(params)
     return
   end
 
-  local on_abort = nil
-  local function abort()
-    if on_abort then
-      on_abort()
-    end
-  end
-
   local hooks = params.options.hooks
 
-  -- TODO (sbadragan): implement same thing for ripgrep sync and astgrep replace/sync
+  -- TODO (sbadragan): implement same thing for ripgrep sync and astgrep sync
   if bufrange then
-    async_job.chain(function(finish)
+    return async_job.chain(function(finish)
       if hooks.on_before_edit_file then
         report_progress({ type = 'message', message = 'running on before edit file hook' })
         hooks.on_before_edit_file(finish, {
@@ -200,7 +193,7 @@ M.replace = function(params)
       })
     end)(on_finish)
   else
-    async_job.chain(function(finish)
+    return async_job.chain(function(finish)
       return fetchFilesWithMatches({
         inputs = params.inputs,
         options = params.options,
@@ -212,14 +205,14 @@ M.replace = function(params)
     end, function(finish, files)
       if hooks.on_before_edit_file then
         report_progress({ type = 'message', message = 'running on before edit file hook' })
-        local items = vim
-          .iter(files)
-          :map(function(file)
-            return { path = file }
-          end)
-          :totable()
-        async_job.parallel_process({
-          items = items,
+
+        return async_job.parallel_process({
+          items = vim
+            .iter(files)
+            :map(function(file)
+              return { path = file }
+            end)
+            :totable(),
           maxWorkers = params.options.maxWorkers,
           process_item = hooks.on_before_edit_file,
           on_finish = function(status, errorMessage)
@@ -228,6 +221,7 @@ M.replace = function(params)
         })
       else
         finish('success', nil, files)
+        return
       end
     end, function(finish, files)
       return replaceInMatchedFiles({
@@ -242,8 +236,6 @@ M.replace = function(params)
       })
     end)(on_finish)
   end
-
-  return abort
 end
 
 return M

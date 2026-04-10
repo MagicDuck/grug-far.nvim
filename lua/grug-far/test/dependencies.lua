@@ -34,11 +34,9 @@ function M.checkDependencies()
     )
   end
 
-  local has_run_prepare = vim
-    .iter({ 'deps/mini.nvim', 'temp_test_dir', 'temp_history_dir' })
-    :all(function(path)
-      return not not (vim.uv.fs_stat(vim.fs.abspath(path)))
-    end)
+  local has_run_prepare = vim.iter({ 'deps/mini.nvim' }):all(function(path)
+    return not not (vim.uv.fs_stat(vim.fs.abspath(path)))
+  end)
   if not has_run_prepare then
     print('\nPlease run "make prepare"\n\n')
     has_deps = false

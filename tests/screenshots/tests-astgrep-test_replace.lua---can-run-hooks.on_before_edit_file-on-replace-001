@@ -1,0 +1,14 @@
+--|----
+01|grug
+02|curly
+03|
+04|
+05|
+06|file2.ts
+07|    if (grug || talks) {
+08|    if (curly || talks) {
+09| 
+10|      grug.walks(talks)
+11|      curly.walks(talks)
+12|Applied 3 changes
+13|

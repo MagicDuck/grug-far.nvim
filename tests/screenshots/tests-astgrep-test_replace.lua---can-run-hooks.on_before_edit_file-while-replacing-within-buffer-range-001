@@ -1,0 +1,14 @@
+--|----
+01|grug
+02|bruv
+03|
+04|
+05|
+06|file2.ts
+07|    if (grug || talks) {
+08|    if (bruv || talks) {
+09| 
+10|      grug.walks(talks)
+11|      bruv.walks(talks)
+12|Applied 2 changes
+13|
