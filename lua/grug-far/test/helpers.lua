@@ -84,7 +84,6 @@ end
 ---@param interval? integer, defaults to 10
 function M.childWaitForCondition(child, condition, timeout, interval)
   local max = timeout or 2000
-  -- TODO (sbadragan): decrease this?
   local inc = interval or 10
   local last_state
   for _ = 0, max, inc do
