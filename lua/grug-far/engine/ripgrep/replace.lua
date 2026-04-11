@@ -168,7 +168,6 @@ M.replace = function(params)
 
   local hooks = params.options.hooks
 
-  -- TODO (sbadragan): implement same thing for ripgrep sync and astgrep sync
   if bufrange then
     return async_job.chain(function(finish)
       if hooks.on_before_edit_file then

@@ -297,4 +297,73 @@ T['can sync prev'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['can run hooks.on_before_edit_file while applying sync all'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    prefills = { search = 'grug', replacement = 'curly' },
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'cat',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.syncLocations.n)
+  helpers.childWaitForUIVirtualText(child, 'sync completed!')
+  helpers.childExpectScreenshot(child)
+  helpers.childExpectBufLines(child)
+
+  child.type_keys('<esc>cc', 'curly')
+  helpers.childWaitForScreenshotText(child, 'curly talks')
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
+
+T['can run failed hooks.on_before_edit_file while applying sync all'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    prefills = { search = 'grug', replacement = 'curly' },
+    hooks = {
+      on_before_edit_file = function(on_finish, file)
+        return require('grug-far').spawn_cmd_async({
+          cmd_path = 'NON_EXISTENT_COMMAND',
+          args = { file.path },
+          on_finish = on_finish,
+        })
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForFinishedStatus(child)
+  helpers.childExpectScreenshot(child)
+end
 return T
