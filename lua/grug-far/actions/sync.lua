@@ -147,7 +147,13 @@ local function sync(params)
       if update.type == 'update_count' then
         changesCount = changesCount + 1
       end
-      state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
+
+      if update.type == 'message' then
+        state.actionMessage = update.message
+      else
+        state.actionMessage = getActionMessage(nil, changesCount, changesTotal)
+      end
+
       renderResultsHeader(buf, context)
       resultsList.throttledForceRedrawBuffer(buf, context)
     end),

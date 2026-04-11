@@ -113,7 +113,7 @@ M.DiffSeparatorChars = ' '
 ---@field inputs grug.far.Inputs
 ---@field options grug.far.Options
 ---@field changedFiles grug.far.ChangedFile[]
----@field report_progress fun(update: { type: "update_total" | "update_count", count: integer })
+---@field report_progress fun(update: { type: "update_total" | "update_count", count: integer } | {type: "message", message: string})
 ---@field on_finish fun(status: grug.far.Status, errorMessage: string?, customActionMessage: string?)
 
 ---@class grug.far.EngineInput

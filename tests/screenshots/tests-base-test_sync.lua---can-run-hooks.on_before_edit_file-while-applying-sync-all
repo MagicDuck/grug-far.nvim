@@ -1,0 +1,25 @@
+--|---------|---------|---------|---------|---------|---------|---------|---------|
+01| Help g?    Replace ,r    Sync All ,s    Sync Line ,l ...                   
+02|                                                                                
+03|  Search:                                                                      
+04|  grug                                                                          
+05|  Replace:                                                                     
+06|  curly                                                                         
+07|  Files Filter:                                                                
+08|                                                                                
+09| 󰮚 Flags:                                                                       
+10|                                                                                
+11|  Paths:                                                                       
+12|                                                                                
+13|                                                                                
+14| STATUS_SUCCESS ⟪ ripgrep ⟫
+15| 4 matches in 2 files   sync completed!                                        
+16|                                                                                
+17|  file1.txt                                                                     
+18|▒   1  grug walks                                                            [1]
+19|▒   1  curly walks                                                              
+20|                                                                                
+21|  file2.doc                                                                     
+22|▒   2       grug talks and grug drinks                                       [2]
+23|Grug FAR - 1: grug                                                           1,4
+24|grug-far: synced changes!                                                       

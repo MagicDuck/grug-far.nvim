@@ -10,8 +10,7 @@ local uv = vim.uv
 --- on_finish: fun(status: grug.far.Status, errorMessage: string?),
 --- stdin?: uv.uv_pipe_t,
 --- fixChunkLineTruncation?: boolean,
---- isSuccess?: fun(code: integer, errorMessage: string): boolean
---- }
+--- isSuccess?: fun(code: integer, errorMessage: string): boolean }
 ---@return fun()? abort, string[]? effectiveArgs
 local function fetchCommandOutput(params)
   local args = params.args
@@ -100,8 +99,8 @@ local function fetchCommandOutput(params)
   end
 
   if stdout and on_fetch_chunk then
-		---@cast stdout -uv.uv_pipe_t
-		---@cast stdout +uv.uv_stream_t
+    ---@cast stdout -uv.uv_pipe_t
+    ---@cast stdout +uv.uv_stream_t
     uv.read_start(
       stdout,
       vim.schedule_wrap(function(err, data)
