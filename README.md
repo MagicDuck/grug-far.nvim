@@ -376,6 +376,22 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 ```
 
+#### Run a command (p4 edit <file>) before each file is modified on replace/sync
+```lua
+require('grug-far').open({ hooks = {
+  on_before_edit_file = function(on_finish, file)
+    return require('grug-far').spawn_cmd_async({
+      cmd_path = 'p4',
+      args = { 'edit', file.path},
+      on_finish = on_finish,
+    })
+  end,
+}})
+```
+
+*NOTE:* `spawn_cmd_async` is provided as a convenience that also handles abort (it returns abort function),
+but you can implement your own logic of course.
+
 #### Add neo-tree integration to open search limited to focused directory or file
 
 Create a hotkey `z` in `neo-tree` that will create/open a named instance of grug-far with the current directory of the file or directory in focus. On the second trigger, path of the grug-far instance will be updated, leaving other fields intact.

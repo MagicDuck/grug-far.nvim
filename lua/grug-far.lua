@@ -438,17 +438,16 @@ end
 ---
 ---@param params {
 --- cmd_path: string,
---- args: string[]?,
+--- args?: string[],
 --- on_stdout_chunk?: fun(data: string),
 --- on_finish: fun(status: grug.far.Status, errorMessage: string?),
---- stdin?: uv_pipe_t,
+--- stdin?: uv.uv_pipe_t,
 --- fixChunkLineTruncation?: boolean,
---- isSuccess?: fun(code: integer, errorMessage: string): boolean
---- }
+--- isSuccess: (fun(code: integer, errorMessage: string): boolean)? }
 ---@return fun()? abort
 function grug_far.spawn_cmd_async(params)
   local fetchCommandOutput = require('grug-far.engine.fetchCommandOutput')
-  params.isSuccess = params.isSuccess or function(code, _errorMessage)
+  params.isSuccess = params.isSuccess or function(code)
     return code == 0
   end
   local abort = fetchCommandOutput(params)

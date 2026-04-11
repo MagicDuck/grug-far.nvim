@@ -574,15 +574,21 @@
     hooks = {
       -- if provided, function is called before applying any file edit for replace/sync/etc.
       -- example use case: if using perforce you can call `p4 edit <file>` before each file is changed by replace/sync
-      -- see type for function signature
+      -- See type for function signature. The important points are:
+      -- 1. on_finish() must be called at some point and it takes an optional status and errorMessage
+      -- 2. you can optionally return an abort function (recommended). This is used to abort the process if it gets stuck for any reason.
+      --
       -- example:
-      --- on_before_edit_file = function(on_finish, file)
-      ---   return require('grug-far').spawn_cmd_async({
-      ---     cmd_path = 'p4',
-      ---     args = { 'edit', file.path},
-      ---     on_finish = on_finish,
-      ---   })
-      --- end,
+      -- on_before_edit_file = function(on_finish, file)
+      --   return require('grug-far').spawn_cmd_async({
+      --     cmd_path = 'p4',
+      --     args = { 'edit', file.path},
+      --     on_finish = on_finish,
+      --   })
+      -- end,
+      --
+      -- *NOTE:* `spawn_cmd_async` is provided as a convenience that also handles abort (it returns abort function),
+      -- but you can implement your own logic of course.
       on_before_edit_file = nil,
     },
   }

@@ -4,13 +4,13 @@ local uv = vim.uv
 --- fetch with ripgrep
 ---@param params {
 --- cmd_path: string,
---- args: string[]?,
+--- args?: string[],
 --- on_fetch_chunk?: fun(data: string),
 --- on_stdout_chunk?: fun(data: string),
 --- on_finish: fun(status: grug.far.Status, errorMessage: string?),
 --- stdin?: uv.uv_pipe_t,
 --- fixChunkLineTruncation?: boolean,
---- isSuccess?: fun(code: integer, errorMessage: string): boolean }
+--- isSuccess: (fun(code: integer, errorMessage: string): boolean)? }
 ---@return fun()? abort, string[]? effectiveArgs
 local function fetchCommandOutput(params)
   local args = params.args
