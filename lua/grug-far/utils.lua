@@ -436,12 +436,20 @@ function M.getLineWithoutCarriageReturn(line)
   return string.sub(line, 1, -2)
 end
 
---- gets companion window in which open files
+--- gets companion window in which to open files
 ---@param context grug.far.Context
 ---@param buf integer
 ---@return integer window, boolean isNew
 function M.getOpenTargetWin(context, buf)
   local preferredLocation = context.options.openTargetWindow.preferredLocation
+  if preferredLocation == 'prev' then
+    if vim.fn.winheight(context.prevWin) == -1 then
+      preferredLocation = 'left' -- fallback, as prev win does not exist anymore
+    else
+      return context.prevWin, false
+    end
+  end
+
   local grugfar_win = vim.fn.bufwinid(buf)
   -- get candidate windows in the current tab
   local tabpage = vim.api.nvim_win_get_tabpage(grugfar_win)
