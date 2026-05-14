@@ -330,7 +330,7 @@ grug_far.defaultOptions = {
   },
 
   -- separator between inputs and results, default depends on nerdfont
-  resultsSeparatorLineChar = '',
+  resultsSeparatorLineChar = '─',
 
   -- highlight the results with TreeSitter, if available
   resultsHighlight = true,

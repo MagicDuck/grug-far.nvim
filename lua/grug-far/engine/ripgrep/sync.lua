@@ -7,9 +7,14 @@ local async_job = require('grug-far.async_job')
 local M = {}
 
 --- are we doing a multiline search and replace?
+---@param inputs grug.far.Inputs
 ---@param args string[]
 ---@return boolean
-local function isMultilineSearchReplace(args)
+local function isMultilineSearchReplace(inputs, args)
+  if string.find(inputs.replacement, '\n', 1, true) then
+    return true
+  end
+
   local multilineFlags = { '--multiline', '-U', '--multiline-dotall' }
   for _, arg in ipairs(args) do
     if utils.isBlacklistedFlag(arg, multilineFlags) then
@@ -32,7 +37,7 @@ M.sync = function(params)
     return
   end
 
-  if isMultilineSearchReplace(args) then
+  if isMultilineSearchReplace(params.inputs, args) then
     on_finish(nil, nil, 'sync disabled for multiline search/replace!')
     return
   end
