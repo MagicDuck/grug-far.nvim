@@ -136,6 +136,7 @@ T['can sync individual line'] = function()
 
   child.type_keys('<esc>' .. keymaps.syncLine.n)
 
+  helpers.childWaitForFinishedStatus(child)
   helpers.childWaitForUIVirtualText(child, 'sync completed!')
   helpers.childExpectScreenshot(child)
 

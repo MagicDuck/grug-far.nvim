@@ -1,7 +1,7 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|                                        │                                       
 02|      grug walks                        │                                       
-03|      grug winks                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+03|      grug winks                        │ STATUS_SUCCESS ⟪ ripgrep ⟫────────────
 04|                                        │ 5 matches in 2 files   sync completed
 05|                                        │                                       
 06|                                        │  file1.txt                            
