@@ -3,7 +3,7 @@
 02|       grug walks                       │  Paths:                              
 03|       then grug swims                  │                                       
 04|                                        │                                       
-05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫
+05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫────────────
 06|                                        │ 5 matches in 2 files                  
 07|                                        │                                       
 08|                                        │file1.txt                              

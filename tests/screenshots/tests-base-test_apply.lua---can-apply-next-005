@@ -1,7 +1,7 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|                                        │                                       
 02|      curly talks and curly drinks      │                                       
-03|      then curly thinks                 │ STATUS_SUCCESS ⟪ ripgrep ⟫
+03|      then curly thinks                 │ STATUS_SUCCESS ⟪ ripgrep ⟫────────────
 04|                                        │ 5 matches in 2 files   sync completed
 05|                                        │                                       
 06|                                        │                                       
