@@ -42,15 +42,6 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
     end
   end
 
-  if #inputs.paths > 0 then
-    ---@diagnostic disable-next-line: undefined-field
-    local context = options.__grug_far_context__
-    local paths = utils.normalizePaths(utils.splitPaths(inputs.paths), context)
-    for _, path in ipairs(paths) do
-      table.insert(args, path)
-    end
-  end
-
   if #blacklisted > 0 then
     return nil, blacklisted
   end
@@ -90,6 +81,16 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
 
   if #inputs.search > 0 then
     table.insert(args, '--regexp=' .. inputs.search:gsub('\n', utils.eol))
+  end
+
+  if #inputs.paths > 0 then
+    table.insert(args, '--')
+    ---@diagnostic disable-next-line: undefined-field
+    local context = options.__grug_far_context__
+    local paths = utils.normalizePaths(utils.splitPaths(inputs.paths), context)
+    for _, path in ipairs(paths) do
+      table.insert(args, path)
+    end
   end
 
   return args, nil
