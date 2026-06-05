@@ -227,6 +227,21 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
           end)
           :totable()
 
+        if #ranges == 0 then
+          ranges = {
+            {
+              start = {
+                line = data.line_number,
+                column = 1,
+              },
+              ['end'] = {
+                line = last_line_number,
+                column = #match_lines[#match_lines] + 1,
+              },
+            },
+          }
+        end
+
         local next_mark_index = #marks + 1
         addResultLines(
           file_name,
