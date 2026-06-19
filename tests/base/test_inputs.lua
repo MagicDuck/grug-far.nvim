@@ -126,4 +126,25 @@ T['can goto prev input'] = function()
   helpers.childWaitForScreenshotText(child, '4,0')
 end
 
+T['respects existing user mappings when smartInputHandling is enabled'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+  })
+
+  child.cmd('nnoremap p ia_normal_p_triggered<esc>')
+  child.api.nvim_set_keymap('i', '<BS>', 'insert_bs_triggered', { noremap = true })
+
+  helpers.childRunGrugFar(child, {
+    startCursorRow = 1,
+    prefills = { search = 'grug' },
+  })
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>p')
+  helpers.childWaitForScreenshotText(child, 'a_normal_p_triggered')
+
+  child.type_keys('<esc>4Gia<BS>')
+  helpers.childWaitForScreenshotText(child, 'insert_bs_triggered')
+end
+
 return T
