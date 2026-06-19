@@ -206,18 +206,63 @@ function M.getInputAtRow(context, buf, row)
   end
 end
 
+--- extracts the mapping of the given key, mode, and buffer as a lua function.
+--- this allows programmatic triggering of the mapping's behavior even if it ends up being remapped later.
+--- smartInputHandling uses this to respect user mappings instead of assuming default behaviors.
+---
+--- specifically, we "copy" a keymap using maparg + mapset to a unique <Plug> lhs,
+--- and return a function that uses feedkeys to trigger the internal lhs.
+---@param buf integer
+---@param mode string
+---@param key string
+---@return fun() fallback
+local function extractMapping(buf, mode, key)
+  local user_mapping
+  vim.api.nvim_buf_call(buf, function()
+    user_mapping = vim.fn.maparg(key, mode, false, true)
+  end)
+
+  -- no user mapping; simply re-send the key
+  if vim.tbl_isempty(user_mapping) then
+    local keycodes = vim.api.nvim_replace_termcodes(key, true, false, true)
+    return function()
+      vim.api.nvim_feedkeys(keycodes, 'n', false)
+    end
+  end
+
+  -- user mapping exists; copy it to a unique <Plug> mapping
+  local clean_key = key:gsub('[^%w]', '_')
+  local private_lhs = '<Plug>(grug-far-fallback-' .. buf .. '-' .. mode .. '-' .. clean_key .. ')'
+  local private_lhs_keycodes = vim.api.nvim_replace_termcodes(private_lhs, true, false, true)
+
+  local map_data = vim.deepcopy(user_mapping)
+  map_data.lhs = private_lhs
+  map_data.lhsraw = private_lhs_keycodes
+  map_data.lhsrawalt = nil
+  map_data.buffer = 1 -- force buffer-local mapping in the grug-far buffer
+
+  vim.api.nvim_buf_call(buf, function()
+    vim.fn.mapset(mode, false, map_data)
+  end)
+
+  return function()
+    vim.api.nvim_feedkeys(private_lhs_keycodes, 'm', true)
+  end
+end
+
 --- special logic for paste below if in the context of an input
 --- if input is empty, prevents extra newline
 --- if on last line of input, temporarily adds a newline in order to prevent breaking out of it
 ---@param context grug.far.Context
 ---@param buf integer
 ---@param is_visual? boolean
-local function pasteBelow(context, buf, is_visual)
+---@param fallbacks table<string, fun()> fall-through handlers keyed by paste cmd ('p'/'P')
+local function pasteBelow(context, buf, is_visual, fallbacks)
   local win = vim.fn.bufwinid(buf)
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
   local input = M.getInputAtRow(context, buf, cursor_row - 1)
   if not input then
-    vim.api.nvim_feedkeys('p', 'n', false)
+    fallbacks.p()
     return
   end
 
@@ -225,7 +270,7 @@ local function pasteBelow(context, buf, is_visual)
   if not is_visual then
     if input.end_row > input.start_row and cursor_row - 1 < input.end_row then
       -- we have a trailing line, nothing extra to do
-      vim.api.nvim_feedkeys('p', 'n', false)
+      fallbacks.p()
       return
     end
 
@@ -247,8 +292,9 @@ local function pasteBelow(context, buf, is_visual)
       vim.api.nvim_buf_set_lines(buf, input.end_row, input.end_row + 1, true, {})
     end
   end
+  fallbacks[pasteCmd]()
   local keys = vim.api.nvim_replace_termcodes(
-    pasteCmd .. '<esc><cmd>lua require("grug-far.inputs")._pasteBelowCallback()<cr>',
+    '<esc><cmd>lua require("grug-far.inputs")._pasteBelowCallback()<cr>',
     true,
     false,
     true
@@ -262,13 +308,14 @@ end
 ---@param context grug.far.Context
 ---@param buf integer
 ---@param is_visual? boolean
-local function pasteAbove(context, buf, is_visual)
+---@param fallbacks table<string, fun()> fall-through handlers keyed by paste cmd ('p'/'P')
+local function pasteAbove(context, buf, is_visual, fallbacks)
   local win = vim.fn.bufwinid(buf)
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(win))
 
   local input = M.getInputAtRow(context, buf, cursor_row - 1)
   if not input then
-    vim.api.nvim_feedkeys('P', 'n', false)
+    fallbacks.P()
     return
   end
 
@@ -277,7 +324,7 @@ local function pasteAbove(context, buf, is_visual)
   if not is_visual then
     if input.end_row > input.start_row and cursor_row - 1 < input.end_row then
       -- we have a trailing line, nothing extra to do
-      vim.api.nvim_feedkeys('P', 'n', false)
+      fallbacks.P()
       return
     end
 
@@ -300,8 +347,9 @@ local function pasteAbove(context, buf, is_visual)
       vim.api.nvim_buf_set_lines(buf, input.end_row, input.end_row + 1, true, {})
     end
   end
+  fallbacks.P()
   local keys = vim.api.nvim_replace_termcodes(
-    'P<esc><cmd>lua require("grug-far.inputs")._pasteAboveCallback()<cr>',
+    '<esc><cmd>lua require("grug-far.inputs")._pasteAboveCallback()<cr>',
     true,
     false,
     true
@@ -313,12 +361,13 @@ end
 --- if cursor is on last line of input, prevent breaking into next input
 ---@param context grug.far.Context
 ---@param buf integer
-local function openBelow(context, buf)
+---@param fallback fun() fall-through handler for the `o` key
+local function openBelow(context, buf, fallback)
   local win = vim.fn.bufwinid(buf)
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(win))
   local input = M.getInputAtRow(context, buf, cursor_row - 1)
   if not input then
-    vim.api.nvim_feedkeys('o', 'n', false)
+    fallback()
     return
   end
 
@@ -332,6 +381,9 @@ end
 ---@param context grug.far.Context
 local function setupInputBoundaryBackspace(buf, context)
   local function setupDeletionKey(key, shouldBlock)
+    -- capture any pre-existing mapping (e.g. autopairs) before installing ours,
+    -- so we can fall through to it instead of clobbering it
+    local fallback = extractMapping(buf, 'i', key)
     vim.api.nvim_buf_set_keymap(buf, 'i', key, '', {
       noremap = true,
       silent = true,
@@ -343,7 +395,7 @@ local function setupInputBoundaryBackspace(buf, context)
           return
         end
 
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), 'n', false)
+        fallback()
       end,
     })
   end
@@ -377,39 +429,47 @@ end
 ---@param context grug.far.Context
 ---@param buf integer
 function M.bindInputSaavyKeys(context, buf)
+  -- capture any user mappings for these keys before we override them,
+  -- so our behavior can fall through to them instead of clobbering them
+  local pasteFallbacks = {
+    n = { p = extractMapping(buf, 'n', 'p'), P = extractMapping(buf, 'n', 'P') },
+    v = { p = extractMapping(buf, 'v', 'p'), P = extractMapping(buf, 'v', 'P') },
+  }
+  local openFallback = extractMapping(buf, 'n', 'o')
+
   vim.api.nvim_buf_set_keymap(buf, 'n', 'p', '', {
     noremap = true,
     nowait = true,
     callback = function()
-      pasteBelow(context, buf)
+      pasteBelow(context, buf, false, pasteFallbacks.n)
     end,
   })
   vim.api.nvim_buf_set_keymap(buf, 'v', 'p', '', {
     noremap = true,
     nowait = true,
     callback = function()
-      pasteBelow(context, buf, true)
+      pasteBelow(context, buf, true, pasteFallbacks.v)
     end,
   })
   vim.api.nvim_buf_set_keymap(buf, 'n', 'P', '', {
     noremap = true,
     nowait = true,
     callback = function()
-      pasteAbove(context, buf)
+      pasteAbove(context, buf, false, pasteFallbacks.n)
     end,
   })
   vim.api.nvim_buf_set_keymap(buf, 'v', 'P', '', {
     noremap = true,
     nowait = true,
     callback = function()
-      pasteAbove(context, buf, true)
+      pasteAbove(context, buf, true, pasteFallbacks.v)
     end,
   })
   vim.api.nvim_buf_set_keymap(buf, 'n', 'o', '', {
     noremap = true,
     nowait = true,
     callback = function()
-      openBelow(context, buf)
+      openBelow(context, buf, openFallback)
     end,
   })
 
