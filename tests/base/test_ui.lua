@@ -469,4 +469,57 @@ T['respects default input value on load'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+T['backspace falls through to user mapping when not at input boundary'] = function()
+  child.lua([[
+    vim.keymap.set('i', '<BS>', function()
+      vim.api.nvim_put({ 'BSMAP' }, 'c', false, true)
+    end)
+  ]])
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'walks' },
+    backspaceEol = true,
+  })
+
+  child.type_keys('<esc>', 'A', '<bs>')
+  helpers.childWaitForScreenshotText(child, 'BSMAP')
+  helpers.childExpectScreenshot(child)
+end
+
+T['backspace does not fall through to user mapping when at input boundary'] = function()
+  child.lua([[
+    vim.keymap.set('i', '<BS>', function()
+      vim.api.nvim_put({ 'BSMAP' }, 'c', false, true)
+    end)
+  ]])
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug', replacement = 'walks' },
+    backspaceEol = true,
+  })
+
+  child.type_keys('<esc>', '0', 'i', '<bs>')
+  helpers.childExpectScreenshot(child)
+end
+
+T['paste falls through directly to user mapping when not on last line'] = function()
+  child.lua([[ vim.keymap.set('n', 'p', 'iPMAP<esc>') ]])
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug\nwalks' },
+  })
+
+  child.type_keys('<esc>', 'gg', 'p')
+  helpers.childWaitForScreenshotText(child, 'PMAP')
+  helpers.childExpectScreenshot(child)
+end
+
+T['paste falls through indirectly to user mapping when on last line'] = function()
+  child.lua([[ vim.keymap.set('n', 'p', 'iPMAP<esc>') ]])
+  helpers.childRunGrugFar(child, {
+    prefills = { search = 'grug\nwalks' },
+  })
+
+  child.type_keys('<esc>', '2G', 'p')
+  helpers.childWaitForScreenshotText(child, 'PMAP')
+  helpers.childExpectScreenshot(child)
+end
+
 return T
