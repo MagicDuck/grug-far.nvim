@@ -206,47 +206,46 @@ function M.getInputAtRow(context, buf, row)
   end
 end
 
---- extracts the mapping of the given key, mode, and buffer as a lua function.
+--- extracts the mapping of the given lhs, mode, and buffer as a lua function.
 --- this allows programmatic triggering of the mapping's behavior even if it ends up being remapped later.
 --- smartInputHandling uses this to respect user mappings instead of assuming default behaviors.
 ---
---- specifically, we "copy" a keymap using maparg + mapset to a unique <Plug> lhs,
+--- specifically, we "copy" a keymap using maparg + mapset to a new, unique <Plug> lhs,
 --- and return a function that uses feedkeys to trigger the internal lhs.
 ---@param buf integer
 ---@param mode string
----@param key string
+---@param lhs string
 ---@return fun() fallback
-local function extractMapping(buf, mode, key)
-  local user_mapping
-  vim.api.nvim_buf_call(buf, function()
-    user_mapping = vim.fn.maparg(key, mode, false, true)
+local function extractMapping(buf, mode, lhs)
+  local mapping_data = vim.api.nvim_buf_call(buf, function()
+    return vim.fn.maparg(lhs, mode, false, true)
   end)
 
   -- no user mapping; simply re-send the key
-  if vim.tbl_isempty(user_mapping) then
-    local keycodes = vim.api.nvim_replace_termcodes(key, true, false, true)
+  if vim.tbl_isempty(mapping_data) then
+    local keycodes = vim.keycode(lhs)
     return function()
       vim.api.nvim_feedkeys(keycodes, 'n', false)
     end
   end
 
-  -- user mapping exists; copy it to a unique <Plug> mapping
-  local clean_key = key:gsub('[^%w]', '_')
-  local private_lhs = '<Plug>(grug-far-fallback-' .. buf .. '-' .. mode .. '-' .. clean_key .. ')'
-  local private_lhs_keycodes = vim.api.nvim_replace_termcodes(private_lhs, true, false, true)
-
-  local map_data = vim.deepcopy(user_mapping)
-  map_data.lhs = private_lhs
-  map_data.lhsraw = private_lhs_keycodes
-  map_data.lhsrawalt = nil
-  map_data.buffer = 1 -- force buffer-local mapping in the grug-far buffer
+  -- user mapping exists; copy it to a private lhs using a <Plug> prefix
+  local private_lhs = '<Plug>grug-far-fallback[' .. mapping_data.lhs .. ']'
+  local private_lhs_keycodes = vim.keycode('<Plug>')
+    .. 'grug-far-fallback['
+    .. mapping_data.lhsraw
+    .. ']'
+  mapping_data.lhs = private_lhs
+  mapping_data.lhsraw = private_lhs_keycodes
+  mapping_data.lhsrawalt = nil
+  mapping_data.buffer = 1 -- force buffer-local mapping in the grug-far buffer
 
   vim.api.nvim_buf_call(buf, function()
-    vim.fn.mapset(mode, false, map_data)
+    vim.fn.mapset(mode, false, mapping_data)
   end)
 
   return function()
-    vim.api.nvim_feedkeys(private_lhs_keycodes, 'm', true)
+    vim.api.nvim_feedkeys(private_lhs_keycodes, 'm', false)
   end
 end
 
