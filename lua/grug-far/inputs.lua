@@ -428,49 +428,52 @@ end
 ---@param context grug.far.Context
 ---@param buf integer
 function M.bindInputSaavyKeys(context, buf)
-  -- capture any user mappings for these keys before we override them,
-  -- so our behavior can fall through to them instead of clobbering them
-  local pasteFallbacks = {
-    n = { p = extractMapping(buf, 'n', 'p'), P = extractMapping(buf, 'n', 'P') },
-    v = { p = extractMapping(buf, 'v', 'p'), P = extractMapping(buf, 'v', 'P') },
-  }
-  local openFallback = extractMapping(buf, 'n', 'o')
+  do
+    local fallbacks = { p = extractMapping(buf, 'n', 'p'), P = extractMapping(buf, 'n', 'P') }
+    vim.api.nvim_buf_set_keymap(buf, 'n', 'p', '', {
+      noremap = true,
+      nowait = true,
+      callback = function()
+        pasteBelow(context, buf, false, fallbacks)
+      end,
+    })
+    vim.api.nvim_buf_set_keymap(buf, 'n', 'P', '', {
+      noremap = true,
+      nowait = true,
+      callback = function()
+        pasteAbove(context, buf, false, fallbacks)
+      end,
+    })
+  end
 
-  vim.api.nvim_buf_set_keymap(buf, 'n', 'p', '', {
-    noremap = true,
-    nowait = true,
-    callback = function()
-      pasteBelow(context, buf, false, pasteFallbacks.n)
-    end,
-  })
-  vim.api.nvim_buf_set_keymap(buf, 'v', 'p', '', {
-    noremap = true,
-    nowait = true,
-    callback = function()
-      pasteBelow(context, buf, true, pasteFallbacks.v)
-    end,
-  })
-  vim.api.nvim_buf_set_keymap(buf, 'n', 'P', '', {
-    noremap = true,
-    nowait = true,
-    callback = function()
-      pasteAbove(context, buf, false, pasteFallbacks.n)
-    end,
-  })
-  vim.api.nvim_buf_set_keymap(buf, 'v', 'P', '', {
-    noremap = true,
-    nowait = true,
-    callback = function()
-      pasteAbove(context, buf, true, pasteFallbacks.v)
-    end,
-  })
-  vim.api.nvim_buf_set_keymap(buf, 'n', 'o', '', {
-    noremap = true,
-    nowait = true,
-    callback = function()
-      openBelow(context, buf, openFallback)
-    end,
-  })
+  do
+    local fallbacks = { p = extractMapping(buf, 'v', 'p'), P = extractMapping(buf, 'v', 'P') }
+    vim.api.nvim_buf_set_keymap(buf, 'v', 'p', '', {
+      noremap = true,
+      nowait = true,
+      callback = function()
+        pasteBelow(context, buf, true, fallbacks)
+      end,
+    })
+    vim.api.nvim_buf_set_keymap(buf, 'v', 'P', '', {
+      noremap = true,
+      nowait = true,
+      callback = function()
+        pasteAbove(context, buf, true, fallbacks)
+      end,
+    })
+  end
+
+  do
+    local fallback = extractMapping(buf, 'n', 'o')
+    vim.api.nvim_buf_set_keymap(buf, 'n', 'o', '', {
+      noremap = true,
+      nowait = true,
+      callback = function()
+        openBelow(context, buf, fallback)
+      end,
+    })
+  end
 
   if context.options.backspaceEol then
     local isSetUp = false
