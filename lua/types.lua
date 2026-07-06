@@ -6,6 +6,8 @@
 ---@field lnum? integer
 ---@field col? integer
 ---@field end_col? integer
+---@field start_lnum? integer
+---@field end_lnum? integer
 ---@field text? string
 ---@field is_counted? boolean
 
