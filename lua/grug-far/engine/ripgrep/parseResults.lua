@@ -78,6 +78,15 @@ local function addResultLines(
     end
     resultLine = utils.getLineWithoutCarriageReturn(resultLine)
 
+    local match_end_col
+    if column_number then
+      if first_range['end'].line == current_line_number then
+        match_end_col = first_range['end'].column
+      else
+        match_end_col = #resultLine + 1
+      end
+    end
+
     local mark = {
       type = ResultMarkType.SourceLocation,
       start_line = current_line,
@@ -88,6 +97,7 @@ local function addResultLines(
         filename = file_name,
         lnum = lnum,
         col = column_number,
+        end_col = match_end_col,
         text = resultLine,
       },
       sign = sign,

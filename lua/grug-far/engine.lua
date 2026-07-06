@@ -55,13 +55,6 @@ M.ResultSigns = {
 
 M.DiffSeparatorChars = ' '
 
----@class grug.far.SourceLocation
----@field filename string
----@field lnum? integer
----@field col? integer
----@field text? string
----@field is_counted? boolean
-
 ---@class grug.far.ResultHighlight
 ---@field hl_group string
 ---@field start_line integer

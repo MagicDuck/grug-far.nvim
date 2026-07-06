@@ -79,6 +79,7 @@ local function openLocation(params)
     targetWin,
     { location.lnum or 1, location.col and location.col - 1 or 0 }
   )
+  resultsList.highlightCurrentMatch(context, location, targetBuf)
 end
 
 return openLocation

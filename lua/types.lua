@@ -1,6 +1,14 @@
 ---@meta
 ---@alias grug.far.Status nil | "success" | "error" | "progress"
 
+---@class grug.far.SourceLocation
+---@field filename string
+---@field lnum? integer
+---@field col? integer
+---@field end_col? integer
+---@field text? string
+---@field is_counted? boolean
+
 ---@class grug.far.ResultLocation: grug.far.SourceLocation
 ---@field count? integer
 ---@field max_line_number_length? integer
@@ -27,6 +35,7 @@
 ---@field normalModeSearch boolean
 ---@field searchDisabled boolean
 ---@field previousInputValues { [string]: string }
+---@field currentMatchBuf? integer
 
 ---@class grug.far.Action
 ---@field text string
@@ -43,6 +52,7 @@
 ---@field historyHlNamespace integer
 ---@field helpHlNamespace integer
 ---@field bufrangeNamespace integer
+---@field matchHlNamespace integer
 ---@field augroup integer
 ---@field extmarkIds {[string]: integer}
 ---@field state grug.far.State

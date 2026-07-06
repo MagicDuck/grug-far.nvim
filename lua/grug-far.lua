@@ -47,6 +47,7 @@ local function createContext(options)
     historyHlNamespace = vim.api.nvim_create_namespace(''),
     helpHlNamespace = vim.api.nvim_create_namespace(''),
     bufrangeNamespace = vim.api.nvim_create_namespace(''),
+    matchHlNamespace = vim.api.nvim_create_namespace(''),
     augroup = vim.api.nvim_create_augroup('grug-far.nvim-augroup-' .. contextCount, {}),
     extmarkIds = {},
     actions = {},
@@ -70,6 +71,7 @@ local function createContext(options)
       normalModeSearch = options.normalModeSearch,
       searchDisabled = false,
       previousInputValues = {},
+      currentMatchBuf = nil,
     },
   }
 
@@ -156,6 +158,42 @@ local function setupBufRangeHighlight(buf, context)
   })
 end
 
+--- sets up autocommands for current match highlight
+---@param buf integer
+---@param context grug.far.Context
+---@private
+local function setupCurrentMatchHighlight(buf, context)
+  local resultsList = require('grug-far.render.resultsList')
+
+  -- re-apply highlight on entering grug buffer
+  vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = vim.schedule_wrap(function()
+      local location = resultsList.getResultLocationAtCursor(buf, context)
+      if not location then
+        return
+      end
+
+      local targetBuf = vim.fn.bufnr(location.filename)
+      if targetBuf == -1 or not vim.api.nvim_buf_is_valid(targetBuf) then
+        return
+      end
+
+      resultsList.highlightCurrentMatch(context, location, targetBuf)
+    end),
+  })
+
+  -- clear highlight on leaving grug buffer
+  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = vim.schedule_wrap(function()
+      resultsList.clearCurrentMatchHighlight(context)
+    end),
+  })
+end
+
 ---@param context grug.far.Context
 ---@return integer windowId
 ---@private
@@ -216,6 +254,16 @@ local function setupCleanup(buf, context)
     vim.api.nvim_buf_clear_namespace(buf, context.historyHlNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.helpHlNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.bufrangeNamespace, 0, -1)
+    if
+      context.state.currentMatchBuf and vim.api.nvim_buf_is_valid(context.state.currentMatchBuf)
+    then
+      vim.api.nvim_buf_clear_namespace(
+        context.state.currentMatchBuf,
+        context.matchHlNamespace,
+        0,
+        -1
+      )
+    end
     vim.api.nvim_del_augroup_by_id(context.augroup)
     require('grug-far.render.treesitter').clear(buf)
     require('grug-far.fold').cleanup(context)
@@ -307,6 +355,8 @@ function grug_far._open_internal(options, params)
   if visualSelectionUsage == 'operate-within-range' then
     setupBufRangeHighlight(buf, context)
   end
+
+  setupCurrentMatchHighlight(buf, context)
 
   require('grug-far.farBuffer').setupBuffer(win, buf, context, function()
     instance:_set_ready()
