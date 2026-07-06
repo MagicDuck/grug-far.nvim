@@ -184,6 +184,26 @@ local function setupCurrentMatchHighlight(buf, context)
     end),
   })
 
+  -- track cursor movement for live highlight
+  vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = vim.schedule_wrap(function()
+      local location = resultsList.getResultLocationAtCursor(buf, context)
+      if not location then
+        resultsList.clearCurrentMatchHighlight(context)
+        return
+      end
+
+      local targetBuf = vim.fn.bufnr(location.filename)
+      if targetBuf == -1 or not vim.api.nvim_buf_is_valid(targetBuf) then
+        return
+      end
+
+      resultsList.highlightCurrentMatch(context, location, targetBuf)
+    end),
+  })
+
   -- clear highlight on leaving grug buffer
   vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     group = context.augroup,
