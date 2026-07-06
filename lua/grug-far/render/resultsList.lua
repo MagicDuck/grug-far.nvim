@@ -352,7 +352,13 @@ end
 ---@param context grug.far.Context
 ---@return grug.far.ResultLocation?, vim.api.keyset.get_extmark_item?
 function M.getResultLocationAtCursor(buf, context)
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return nil
+  end
   local grugfar_win = vim.fn.bufwinid(buf)
+  if grugfar_win == -1 or not vim.api.nvim_win_is_valid(grugfar_win) then
+    return nil
+  end
   local cursor_row = unpack(vim.api.nvim_win_get_cursor(grugfar_win))
   return M.getResultLocation(cursor_row - 1, buf, context)
 end
