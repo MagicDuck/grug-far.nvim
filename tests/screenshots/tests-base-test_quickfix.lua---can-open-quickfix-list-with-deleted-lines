@@ -11,9 +11,9 @@
 10|                                        │                                       
 11|                                        │  Paths:                              
 12|file1.txt                            2,8 Grug FAR - 1: grug                 11,1
-13|file1.txt|2 col 8| grug walks                                                   
-14|file2.doc|2 col 7| grug talks and grug drinks                                   
-15|file2.doc|4 col 11| and grug flies                                              
+13|file1.txt|2 col 8-12| grug walks                                                
+14|file2.doc|2 col 7-11| grug talks and grug drinks                                
+15|file2.doc|4 col 11-15| and grug flies                                           
 16|                                                                                
 17|                                                                                
 18|                                                                                

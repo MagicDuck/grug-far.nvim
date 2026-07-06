@@ -11,10 +11,10 @@
 10|                                        │                                       
 11|                                        │  Paths:                              
 12|file1.txt                            2,8 Grug FAR - 1: grug                  1,4
-13|file1.txt|2 col 8| grug walks                                                   
-14|file1.txt|3 col 13| then grug swims                                             
-15|file2.doc|2 col 7| grug talks and grug drinks                                   
-16|file2.doc|3 col 12| then grug thinks                                            
+13|file1.txt|2 col 8-12| grug walks                                                
+14|file1.txt|3 col 13-17| then grug swims                                          
+15|file2.doc|2 col 7-11| grug talks and grug drinks                                
+16|file2.doc|3 col 12-16| then grug thinks                                         
 17|                                                                                
 18|                                                                                
 19|                                                                                
