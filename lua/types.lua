@@ -16,6 +16,7 @@
 ---@field max_line_number_length? integer
 ---@field max_column_number_length? integer
 ---@field is_context? boolean
+---@field submatches? {col: integer, end_col: integer}[]
 
 ---@class grug.far.Inputs
 ---@field [grug.far.InputName] string?

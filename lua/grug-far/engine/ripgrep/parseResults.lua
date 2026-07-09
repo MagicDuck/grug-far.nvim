@@ -112,6 +112,7 @@ local function addResultLines(
     end
     table.insert(marks, mark)
 
+    local line_submatches = nil
     if matchHighlightType then
       for _, range in ipairs(ranges) do
         if range.start.line <= current_line_number and range['end'].line >= current_line_number then
@@ -123,8 +124,20 @@ local function addResultLines(
             end_col = range['end'].line == current_line_number and range['end'].column - 1
               or #resultLine,
           })
+          local col = range.start.line == current_line_number and range.start.column or 1
+          local end_col = range['end'].line == current_line_number and range['end'].column
+            or (#resultLine + 1)
+          if line_submatches then
+            line_submatches[#line_submatches + 1] = { col = col, end_col = end_col }
+          else
+            line_submatches = { { col = col, end_col = end_col } }
+          end
         end
       end
+    end
+
+    if line_submatches and #line_submatches > 1 then
+      mark.location.submatches = line_submatches
     end
 
     table.insert(lines, resultLine)
