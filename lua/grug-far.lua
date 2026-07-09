@@ -219,16 +219,7 @@ local function setupCleanup(buf, context)
     vim.api.nvim_buf_clear_namespace(buf, context.historyHlNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.helpHlNamespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buf, context.bufrangeNamespace, 0, -1)
-    if
-      context.state.currentMatchBuf and vim.api.nvim_buf_is_valid(context.state.currentMatchBuf)
-    then
-      vim.api.nvim_buf_clear_namespace(
-        context.state.currentMatchBuf,
-        context.matchHlNamespace,
-        0,
-        -1
-      )
-    end
+    require('grug-far.matchHighlight').clearCurrentMatchHighlight(context)
     vim.api.nvim_del_augroup_by_id(context.augroup)
     require('grug-far.render.treesitter').clear(buf)
     require('grug-far.fold').cleanup(context)
