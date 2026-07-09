@@ -72,6 +72,7 @@ local function createContext(options)
       searchDisabled = false,
       previousInputValues = {},
       currentMatchBuf = nil,
+      currentMatchKey = nil,
     },
   }
 
@@ -190,6 +191,17 @@ local function setupCurrentMatchHighlight(buf, context)
     buffer = buf,
     callback = vim.schedule_wrap(function()
       local location = resultsList.getResultLocationAtCursor(buf, context)
+      local new_key = location
+          and location.col
+          and (location.filename .. '|' .. location.lnum .. '|' .. location.col)
+        or nil
+
+      if new_key == context.state.currentMatchKey then
+        return
+      end
+
+      context.state.currentMatchKey = new_key
+
       if not location then
         resultsList.clearCurrentMatchHighlight(context)
         return

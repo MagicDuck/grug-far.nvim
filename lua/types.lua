@@ -38,6 +38,7 @@
 ---@field searchDisabled boolean
 ---@field previousInputValues { [string]: string }
 ---@field currentMatchBuf? integer
+---@field currentMatchKey? string
 
 ---@class grug.far.Action
 ---@field text string
