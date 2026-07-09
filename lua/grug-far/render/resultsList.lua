@@ -647,40 +647,4 @@ end
 
 M.throttledForceRedrawBuffer = utils.throttle(M.forceRedrawBuffer, 40)
 
---- clears current match highlight
----@param context grug.far.Context
-function M.clearCurrentMatchHighlight(context)
-  if context.state.currentMatchBuf and vim.api.nvim_buf_is_valid(context.state.currentMatchBuf) then
-    vim.api.nvim_buf_clear_namespace(context.state.currentMatchBuf, context.matchHlNamespace, 0, -1)
-  end
-  context.state.currentMatchBuf = nil
-end
-
---- highlights current match in the source buffer
----@param context grug.far.Context
----@param location grug.far.ResultLocation
----@param targetBuf integer
-function M.highlightCurrentMatch(context, location, targetBuf)
-  if not location or not location.lnum or not location.col or not location.end_col then
-    return
-  end
-
-  M.clearCurrentMatchHighlight(context)
-
-  local start_row = location.start_lnum - 1
-  local end_row = location.end_lnum - 1
-
-  local ok = pcall(
-    vim.hl.range,
-    targetBuf,
-    context.matchHlNamespace,
-    'GrugFarCurrentMatch',
-    { start_row, location.col - 1 },
-    { end_row, location.end_col - 1 }
-  )
-  if ok then
-    context.state.currentMatchBuf = targetBuf
-  end
-end
-
 return M

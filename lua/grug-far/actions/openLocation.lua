@@ -1,5 +1,6 @@
 local utils = require('grug-far.utils')
 local resultsList = require('grug-far.render.resultsList')
+local matchHighlight = require('grug-far.matchHighlight')
 
 --- opens location at current cursor line (if there is one) in target window
 ---@param params { buf: integer, context: grug.far.Context, useScratchBuffer?: boolean }
@@ -79,7 +80,7 @@ local function openLocation(params)
     targetWin,
     { location.lnum or 1, location.col and location.col - 1 or 0 }
   )
-  resultsList.highlightCurrentMatch(context, location, targetBuf)
+  matchHighlight.highlightCurrentMatch(context, location, targetBuf)
 end
 
 return openLocation

@@ -1,0 +1,105 @@
+local M = {}
+
+--- clears current match highlight
+---@param context grug.far.Context
+function M.clearCurrentMatchHighlight(context)
+  if context.state.currentMatchBuf and vim.api.nvim_buf_is_valid(context.state.currentMatchBuf) then
+    vim.api.nvim_buf_clear_namespace(context.state.currentMatchBuf, context.matchHlNamespace, 0, -1)
+  end
+  context.state.currentMatchBuf = nil
+end
+
+--- highlights current match in the source buffer
+---@param context grug.far.Context
+---@param location grug.far.ResultLocation
+---@param targetBuf integer
+function M.highlightCurrentMatch(context, location, targetBuf)
+  M.clearCurrentMatchHighlight(context)
+
+  if not location or not location.lnum or not location.col or not location.end_col then
+    return
+  end
+
+  local start_row = location.start_lnum - 1
+  local end_row = location.end_lnum - 1
+
+  local ok = pcall(
+    vim.hl.range,
+    targetBuf,
+    context.matchHlNamespace,
+    'GrugFarCurrentMatch',
+    { start_row, location.col - 1 },
+    { end_row, location.end_col - 1 }
+  )
+  if ok then
+    context.state.currentMatchBuf = targetBuf
+  end
+end
+
+--- sets up autocommands for current match highlight
+---@param buf integer
+---@param context grug.far.Context
+function M.setup(buf, context)
+  -- re-apply highlight on entering grug buffer
+  vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = vim.schedule_wrap(function()
+      local resultsList = require('grug-far.render.resultsList')
+      local location = resultsList.getResultLocationAtCursor(buf, context)
+      if not location then
+        return
+      end
+
+      local targetBuf = vim.fn.bufnr(location.filename)
+      if targetBuf == -1 or not vim.api.nvim_buf_is_valid(targetBuf) then
+        return
+      end
+
+      M.highlightCurrentMatch(context, location, targetBuf)
+    end),
+  })
+
+  -- track cursor movement for live highlight
+  vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = vim.schedule_wrap(function()
+      local resultsList = require('grug-far.render.resultsList')
+      local location = resultsList.getResultLocationAtCursor(buf, context)
+      local new_key = location
+          and location.col
+          and (location.filename .. '|' .. location.lnum .. '|' .. location.col)
+        or nil
+
+      if new_key == context.state.currentMatchKey then
+        return
+      end
+
+      context.state.currentMatchKey = new_key
+
+      if not location then
+        M.clearCurrentMatchHighlight(context)
+        return
+      end
+
+      local targetBuf = vim.fn.bufnr(location.filename)
+      if targetBuf == -1 or not vim.api.nvim_buf_is_valid(targetBuf) then
+        return
+      end
+
+      M.highlightCurrentMatch(context, location, targetBuf)
+    end),
+  })
+
+  -- clear highlight on leaving grug buffer
+  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    group = context.augroup,
+    buffer = buf,
+    callback = vim.schedule_wrap(function()
+      M.clearCurrentMatchHighlight(context)
+    end),
+  })
+end
+
+return M
