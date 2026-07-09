@@ -38,7 +38,7 @@ local highlights = {
   GrugFarResultsLongLineStr = { default = true, link = 'Comment' },
 
   GrugFarVisualBufrange = { default = true, link = 'Visual' },
-  GrugFarCurrentMatch = { default = true, link = 'Search' },
+  GrugFarCurrentMatch = { default = true, link = 'DiffText' },
 }
 
 ---@private
