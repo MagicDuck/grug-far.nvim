@@ -667,8 +667,8 @@ function M.highlightCurrentMatch(context, location, targetBuf)
 
   M.clearCurrentMatchHighlight(context)
 
-  local start_row = location.start_lnum and location.start_lnum - 1 or location.lnum - 1
-  local end_row = location.end_lnum and location.end_lnum - 2 or location.lnum - 1
+  local start_row = location.start_lnum - 1
+  local end_row = location.end_lnum - 1
 
   local ok = pcall(
     vim.hl.range,

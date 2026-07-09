@@ -69,7 +69,9 @@ local function addResultLines(
   local first_range = ranges[1]
   local match_first_line = first_range.start.line
   local match_end_line = first_range['end'].line
-  local is_multi_line = match_end_line ~= match_first_line
+  local start_lnum = bufrange and match_first_line + bufrange.start_row - 1 or match_first_line
+  local end_lnum = bufrange and match_end_line + bufrange.start_row - 1 or match_end_line
+
   for j, resultLine in ipairs(resultLines) do
     local current_line = numlines + j - 1
     local current_line_number = first_range.start.line + j - 1
@@ -97,12 +99,8 @@ local function addResultLines(
         lnum = lnum,
         col = column_number,
         end_col = match_end_col,
-        start_lnum = is_multi_line
-            and (bufrange and match_first_line + bufrange.start_row - 1 or match_first_line)
-          or nil,
-        end_lnum = is_multi_line
-            and (bufrange and match_end_line + bufrange.start_row or match_end_line + 1)
-          or nil,
+        start_lnum = start_lnum,
+        end_lnum = end_lnum,
         text = resultLine,
       },
       sign = sign,
