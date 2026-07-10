@@ -2,6 +2,7 @@ local MiniTest = require('mini.test')
 local helpers = require('grug-far.test.helpers')
 local opts = require('grug-far.opts')
 local keymaps = helpers.getKeymaps()
+local expect = MiniTest.expect
 
 ---@type NeovimChild
 local child = MiniTest.new_child_neovim()
@@ -188,6 +189,42 @@ T['replacement interpreter swaps when reloading from history'] = function()
   helpers.childWaitForScreenshotText(child, '1 matches in 1 files')
   helpers.childWaitForFinishedStatus(child)
   helpers.childExpectScreenshot(child)
+end
+
+T['can get last history entry with get_last_history_entry()'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grugHist talks and grug drinks
+      then grug thinks and talks
+    ]],
+    },
+  })
+
+  helpers.childRunGrugFar(child, {
+    prefills = {
+      search = 'grugHist',
+      replacement = 'return "bob"',
+    },
+    replacementInterpreter = 'lua',
+    engine = 'astgrep',
+  })
+  helpers.childWaitForFinishedStatus(child)
+  child.type_keys('<esc>' .. keymaps.historyAdd.n)
+  helpers.childWaitForScreenshotText(child, 'grug-far: added current search to history')
+
+  local entry = child.lua_get('GrugFar.get_last_history_entry()')
+  expect.equality(entry, {
+    engine = 'astgrep',
+    filesFilter = '',
+    flags = '',
+    paths = '',
+    replacement = 'return "bob"',
+    replacementInterpreter = 'lua',
+    search = 'grugHist',
+  })
 end
 
 return T

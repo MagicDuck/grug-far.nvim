@@ -142,6 +142,15 @@ Return ~
 `(fun())` `(optional)` abort
 
 ------------------------------------------------------------------------------
+                                             *grug_far.get_last_history_entry()*
+                `grug_far.get_last_history_entry`({historyFile})
+gets last history entry if there is one
+Parameters ~
+{historyFile} `(optional)` `(string)` history file to read from, by default uses standard location
+Return ~
+grug.far.HistoryEntry `(optional)`
+
+------------------------------------------------------------------------------
                                                        *grug_far.toggle_flags()*
                         `grug_far.toggle_flags`({flags})
 

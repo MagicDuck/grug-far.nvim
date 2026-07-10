@@ -329,6 +329,23 @@ vim.keymap.set({ 'n', 'x' }, '<leader>ss', function()
 end, { desc = 'grug-far: Search using @/ register value or visual selection' })
 ```
 
+
+#### Launch, pre-filling with last history entry
+```lua
+vim.keymap.set({ 'n', 'x' }, '<leader>ss', function()
+  ---@type grug.far.OptionsOverride
+  local opts = {}
+  local entry = require('grug-far').get_last_history_entry()
+  if entry ~= nil then
+    opts.prefills = entry
+    opts.engine = entry.engine
+    opts.replacementInterpreter = entry.replacementInterpreter
+  end
+
+  require('grug-far').open(opts)
+end, { desc = 'grug-far: Search, pre-filling with last history entry' })
+```
+
 #### Toggle visibility of a particular instance and set title to a fixed string
 ```lua
 :lua require('grug-far').toggle_instance({ instanceName="far", staticTitle="Find and Replace" })

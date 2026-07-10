@@ -107,6 +107,51 @@ function M.addHistoryEntry(context, buf, notify)
   end)
 end
 
+--- gets last entry in history
+---@param historyFile? string
+---@return grug.far.HistoryEntry?
+function M.getLastHistoryEntry(historyFile)
+  local path = historyFile
+  if not path then
+    path = require('grug-far.opts').getGlobalOptions().history.historyDir .. '/history'
+  end
+  if vim.fn.filereadable(path) == 0 then
+    return nil
+  end
+
+  local fd = assert(vim.uv.fs_open(path, 'r', 0))
+  local ok, result_text = pcall(function()
+    local content = ''
+    local offset = 0
+    -- how far back to look on each new chunk so a "\n\n" split across
+    -- a chunk boundary isn't missed (1 byte of overlap is enough)
+    local search_from = 1
+
+    while true do
+      local chunk = vim.uv.fs_read(fd, 4096, offset)
+      if not chunk or #chunk == 0 then
+        return content -- EOF, no double newline found
+      end
+
+      content = content .. chunk
+      content = content:gsub('^%s+', '') -- trim leading whitespace
+      offset = offset + #chunk
+
+      local s = content:find('\n\n', search_from, true)
+      if s then
+        return content:sub(1, s - 1) -- exclude the "\n\n"
+      end
+
+      -- next search can start slightly before the newly appended data
+      search_from = math.max(1, #content - #chunk)
+    end
+  end)
+
+  vim.uv.fs_close(fd)
+  assert(ok, result_text)
+  return M.getHistoryEntryFromLines(vim.split(result_text, '\n'))
+end
+
 --- gets first value on entry line starting with given pattern
 --- values can be continued on follow up lines by prefixing them with the continuation_prefix
 ---@param entryLines string[]

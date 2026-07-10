@@ -454,6 +454,13 @@ function grug_far.spawn_cmd_async(params)
   return abort
 end
 
+--- gets last history entry if there is one
+---@param historyFile? string history file to read from, by default uses standard location
+---@return grug.far.HistoryEntry?
+function grug_far.get_last_history_entry(historyFile)
+  return require('grug-far.history').getLastHistoryEntry(historyFile)
+end
+
 -- deprecated API -----------------------------------------------------------------------------
 
 ---@deprecated
