@@ -79,16 +79,12 @@ function M.setup(buf, context)
 
       local resultsList = require('grug-far.render.resultsList')
       local location = resultsList.getResultLocationAtCursor(buf, context)
-      local new_key = location
-          and location.col
-          and (location.filename .. '|' .. location.lnum .. '|' .. location.col)
-        or nil
 
-      if new_key == context.state.currentMatchKey then
+      if location == context.state.currentMatchLocation then
         return
       end
 
-      context.state.currentMatchKey = new_key
+      context.state.currentMatchLocation = location
 
       if not location then
         M.clearCurrentMatchHighlight(context)

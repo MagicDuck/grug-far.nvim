@@ -39,7 +39,7 @@
 ---@field searchDisabled boolean
 ---@field previousInputValues { [string]: string }
 ---@field currentMatchBuf? integer
----@field currentMatchKey? string
+---@field currentMatchLocation? grug.far.ResultLocation
 
 ---@class grug.far.Action
 ---@field text string

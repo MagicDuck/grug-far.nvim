@@ -72,7 +72,7 @@ local function createContext(options)
       searchDisabled = false,
       previousInputValues = {},
       currentMatchBuf = nil,
-      currentMatchKey = nil,
+      currentMatchLocation = nil,
     },
   }
 
