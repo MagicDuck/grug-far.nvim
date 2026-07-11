@@ -49,6 +49,10 @@ function M.setup(buf, context)
     group = context.augroup,
     buffer = buf,
     callback = vim.schedule_wrap(function()
+      if not vim.api.nvim_win_is_valid(vim.fn.bufwinid(buf)) then
+        return
+      end
+
       local resultsList = require('grug-far.render.resultsList')
       local location = resultsList.getResultLocationAtCursor(buf, context)
       if not location then
@@ -69,6 +73,10 @@ function M.setup(buf, context)
     group = context.augroup,
     buffer = buf,
     callback = vim.schedule_wrap(function()
+      if not vim.api.nvim_win_is_valid(vim.fn.bufwinid(buf)) then
+        return
+      end
+
       local resultsList = require('grug-far.render.resultsList')
       local location = resultsList.getResultLocationAtCursor(buf, context)
       local new_key = location
