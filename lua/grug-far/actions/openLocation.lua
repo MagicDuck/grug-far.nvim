@@ -80,7 +80,9 @@ local function openLocation(params)
     targetWin,
     { location.lnum or 1, location.col and location.col - 1 or 0 }
   )
-  matchHighlight.highlightCurrentMatch(context, location, targetBuf)
+  if context.options.highlightCurrentMatch then
+    matchHighlight.highlightCurrentMatch(context, location, targetBuf)
+  end
 end
 
 return openLocation

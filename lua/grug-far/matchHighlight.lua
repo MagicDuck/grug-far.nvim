@@ -69,7 +69,7 @@ function M.setup(buf, context)
   })
 
   -- track cursor movement for live highlight
-  vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
+  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
     group = context.augroup,
     buffer = buf,
     callback = vim.schedule_wrap(function()

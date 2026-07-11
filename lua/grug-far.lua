@@ -312,7 +312,9 @@ function grug_far._open_internal(options, params)
     setupBufRangeHighlight(buf, context)
   end
 
-  require('grug-far.matchHighlight').setup(buf, context)
+  if context.options.highlightCurrentMatch then
+    require('grug-far.matchHighlight').setup(buf, context)
+  end
 
   require('grug-far.farBuffer').setupBuffer(win, buf, context, function()
     instance:_set_ready()

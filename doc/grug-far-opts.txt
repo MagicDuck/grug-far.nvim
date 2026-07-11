@@ -337,6 +337,9 @@
     -- highlight the inputs with TreeSitter, if available
     inputsHighlight = true,
 
+    -- whether to highlight the currently selected result match in the source buffer
+    highlightCurrentMatch = true,
+
     -- constructor for label shown on left side of match lines,
     -- used to display line (and column) numbers
     -- should return a list of `[text, highlight]` tuples
@@ -814,6 +817,7 @@ Fields ~
 {resultsSeparatorLineChar} `(string)`
 {resultsHighlight} `(boolean)`
 {inputsHighlight} `(boolean)`
+{highlightCurrentMatch} `(boolean)`
 {lineNumberLabel} `(fun(params: {
   line_number: integer?,
   column_number: integer?,

@@ -338,6 +338,9 @@ grug_far.defaultOptions = {
   -- highlight the inputs with TreeSitter, if available
   inputsHighlight = true,
 
+  -- whether to highlight the currently selected result match in the source buffer
+  highlightCurrentMatch = true,
+
   -- constructor for label shown on left side of match lines,
   -- used to display line (and column) numbers
   -- should return a list of `[text, highlight]` tuples
@@ -913,6 +916,7 @@ grug_far.defaultOptions = {
 ---@field resultsSeparatorLineChar string
 ---@field resultsHighlight boolean
 ---@field inputsHighlight boolean
+---@field highlightCurrentMatch boolean
 ---@field lineNumberLabel LineNumberLabelType
 ---@field filePathConceal FilePathConcealType
 ---@field spinnerStates string[] | false
@@ -971,6 +975,7 @@ grug_far.defaultOptions = {
 ---@field resultsSeparatorLineChar? string
 ---@field resultsHighlight? boolean
 ---@field inputsHighlight? boolean
+---@field highlightCurrentMatch? boolean
 ---@field lineNumberLabel? LineNumberLabelType
 ---@field filePathConceal? FilePathConcealType
 ---@field spinnerStates? string[] | false
