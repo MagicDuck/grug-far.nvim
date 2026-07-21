@@ -1,0 +1,12 @@
+--|---------|---
+01|func grug() {
+02|  return café
+03|}
+04|
+05|
+06|--fixed-strings --multiline
+07|
+08|file2
+09|func grug() {
+10|  return café
+11|}

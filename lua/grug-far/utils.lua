@@ -297,10 +297,14 @@ end
 function M.getVisualSelectionLines()
   local isVisualMode = M.isVisualMode()
 
+  local exclusive = vim.o.selection == 'exclusive'
+  -- getregionpos' end col is one less when exclusive, so only bump it back then
+  local end_bump = exclusive and 1 or 0
+
   local region = vim.fn.getregionpos(
     vim.fn.getpos(isVisualMode and '.' or "'<"),
     vim.fn.getpos(isVisualMode and 'v' or "'>"),
-    { type = isVisualMode and vim.fn.mode() or nil, exclusive = true }
+    { type = isVisualMode and vim.fn.mode() or nil, exclusive = exclusive }
   )
 
   local lines = {}
@@ -316,7 +320,7 @@ function M.getVisualSelectionLines()
   if end_col == vim.v.maxcol or (last_line and end_col >= #last_line) then
     end_col = -1
   else
-    end_col = end_col + 1
+    end_col = end_col + end_bump
   end
 
   for _, range in ipairs(region) do
@@ -332,7 +336,7 @@ function M.getVisualSelectionLines()
     if endcol == vim.v.maxcol then
       endcol = -1
     else
-      endcol = endcol + 1
+      endcol = endcol + end_bump
     end
     local line_text = vim.api.nvim_buf_get_text(0, line - 1, startcol, line - 1, endcol, {})[1]
     table.insert(lines, line_text)

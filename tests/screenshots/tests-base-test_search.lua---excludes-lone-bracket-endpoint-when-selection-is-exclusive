@@ -1,0 +1,10 @@
+-|---------|---
+1|func grug() {
+2|  return café
+3|
+4|
+5|--fixed-strings --multiline
+6|
+7|file2
+8|func grug() {
+9|  return café

@@ -446,6 +446,41 @@ T['searches first line of multiline visual selection'] = function()
   helpers.childExpectScreenshot(child)
 end
 
+-- regression: a selection ending on a lone `}` at col 1 must keep that line
+T['keeps last line of visual selection ending on a lone bracket'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    { filename = 'file2', content = 'func grug() {\n  return café\n}' },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2')
+  -- gg0vG0 lands on the lone `}` at col 1; `$` would land one past it and miss the bug
+  child.type_keys(10, 'gg0vG0', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectBufLines(child)
+  helpers.childExpectScreenshot(child)
+end
+
+-- counterpart: with selection=exclusive the `}` endpoint is correctly excluded
+T['excludes lone bracket endpoint when selection is exclusive'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1', content = [[ grug walks ]] },
+    { filename = 'file2', content = 'func grug() {\n  return café\n}' },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.cmd(':e file2')
+  child.o.selection = 'exclusive'
+  child.type_keys(10, 'gg0vG0', '<esc>:<C-u>lua GrugFar.with_visual_selection()<CR>')
+
+  helpers.childWaitForFinishedStatus(child)
+
+  helpers.childExpectBufLines(child)
+end
+
 T['can trim long lines during search'] = function()
   helpers.writeTestFiles({
     {
