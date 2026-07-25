@@ -242,6 +242,9 @@
     -- whether to wrap text in the grug-far buffer
     wrap = true,
 
+    -- whether to auto-center cursor on match navigation (next/prev/count)
+    centerOnNavigation = true,
+
     -- whether to show a more compact version of the inputs UI
     showCompactInputs = false,
 
@@ -810,6 +813,7 @@ Fields ~
 {onStatusChange} `(fun(buf: integer))`
 {onStatusChangeThrottleTime} `(integer)`
 {wrap} `(boolean)`
+{centerOnNavigation} `(boolean)`
 {transient} `(boolean)`
 {ignoreVisualSelection} `(boolean)`
 {visualSelectionUsage} 'prefill-search' | 'operate-within-range' | 'auto-detect' | 'ignore'

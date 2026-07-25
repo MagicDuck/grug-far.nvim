@@ -88,7 +88,7 @@ local function gotoMatch(params)
   if row then
     vim.api.nvim_win_set_cursor(grugfar_win, { row, 0 })
     vim.fn.win_execute(grugfar_win, 'normal! m`')
-    if increment ~= nil or count > 0 then
+    if context.options.centerOnNavigation and (increment ~= nil or count > 0) then
       vim.fn.win_execute(grugfar_win, 'normal! zz')
     end
   end
