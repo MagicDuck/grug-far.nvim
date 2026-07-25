@@ -243,6 +243,9 @@ grug_far.defaultOptions = {
   -- whether to wrap text in the grug-far buffer
   wrap = true,
 
+  -- whether to auto-center cursor on match navigation (next/prev/count)
+  centerOnNavigation = true,
+
   -- whether to show a more compact version of the inputs UI
   showCompactInputs = false,
 
@@ -909,6 +912,7 @@ grug_far.defaultOptions = {
 ---@field onStatusChange fun(buf: integer)
 ---@field onStatusChangeThrottleTime integer
 ---@field wrap boolean
+---@field centerOnNavigation boolean
 ---@field transient boolean
 ---@field ignoreVisualSelection boolean
 ---@field visualSelectionUsage VisualSelectionUsageType
@@ -968,6 +972,7 @@ grug_far.defaultOptions = {
 ---@field onStatusChange? fun()
 ---@field onStatusChangeThrottleTime? integer
 ---@field wrap? boolean
+---@field centerOnNavigation? boolean
 ---@field transient? boolean
 ---@field ignoreVisualSelection? boolean
 ---@field visualSelectionUsage? VisualSelectionUsageType
