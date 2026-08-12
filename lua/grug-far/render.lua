@@ -53,7 +53,6 @@ local function render(buf, context)
 
     lineNr = lineNr + 1
   end
-  utils.fixShowTopVirtLines(context, buf)
 
   renderResults({
     buf = buf,

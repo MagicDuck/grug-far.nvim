@@ -905,8 +905,10 @@ function M.fixShowTopVirtLines(context, buf)
     end
   end
 
-  local grugfar_win = vim.fn.bufwinid(buf)
-  vim.fn.win_execute(grugfar_win, 'lua vim.fn.winrestview({ topfill = ' .. topfill .. ' })')
+  if topfill > 0 then
+    local grugfar_win = vim.fn.bufwinid(buf)
+    vim.fn.win_execute(grugfar_win, 'lua vim.fn.winrestview({ topfill = ' .. topfill .. ' })')
+  end
 end
 
 --- gets bufrange if we have one specified in paths
