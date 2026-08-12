@@ -1,14 +1,14 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|file1.txt                                                                       
-02|  2        grug walks                                                        [1]
-03|  3        then grug swims                                                   [2]
+01|                                                                                
+02| STATUS_SUCCESS ⟪ ripgrep ⟫─────────────────────────────────────────────────────
+03| 5 matches in 2 files                                                           
 04|                                                                                
-05|file2.doc                                                                       
-06|  2       grug talks and grug drinks                                         [3]
-07|  3       then grug thinks                                                   [4]
+05|file1.txt                                                                       
+06|  2        grug walks                                                        [1]
+07|  3        then grug swims                                                   [2]
 08|                                                                                
-09|                                                                                
-10|                                                                                
+09|file2.doc                                                                       
+10|  2       grug talks and grug drinks                                         [3]
 11|Grug FAR - 1: grug                                                          11,1
 12|                                                                                
 13|      grug talks and grug drinks                                                
