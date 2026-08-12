@@ -1,6 +1,6 @@
 local M = {}
 
-local NVIM_VERSION = '0.12.1'
+local NVIM_VERSION = '0.12.4'
 local RG_VERSION = '15.1.0'
 local SG_VERSION = '0.41.1'
 
