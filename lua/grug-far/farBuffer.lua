@@ -356,21 +356,20 @@ function M.setupBuffer(win, buf, context, on_ready)
     end
   end
 
-  local function handleBufferChange()
-    render(buf, context)
-    updateBufName(buf, context)
-
-    local isInsertMode = vim.fn.mode():lower():find('i') ~= nil
-    if not (context.state.normalModeSearch and isInsertMode) then
-      searchOnChange()
-    end
-  end
-
   -- set up re-render on change
-  vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
-    group = context.augroup,
-    buffer = buf,
-    callback = handleBufferChange,
+  vim.api.nvim_buf_attach(buf, false, {
+    on_lines = vim.schedule_wrap(function(_, bufnr, changedtick, first)
+      local headerRow = inputs.getHeaderRow(context, buf)
+      if first <= headerRow then
+        render(buf, context)
+        updateBufName(buf, context)
+
+        local isInsertMode = vim.fn.mode():lower():find('i') ~= nil
+        if not (context.state.normalModeSearch and isInsertMode) then
+          searchOnChange()
+        end
+      end
+    end),
   })
   vim.api.nvim_create_autocmd({ 'WinResized' }, {
     group = context.augroup,
@@ -380,7 +379,7 @@ function M.setupBuffer(win, buf, context, on_ready)
       end)
 
       if isWindowAffected then
-        handleBufferChange()
+        render(buf, context)
       end
     end,
   })
