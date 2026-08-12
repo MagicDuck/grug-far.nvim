@@ -1,9 +1,9 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │                                       
+01|                                        │  Paths:                              
 02|      curly talks and curly drinks      │                                       
-03|      then curly thinks                 │ STATUS_SUCCESS ⟪ ripgrep ⟫────────────
-04|                                        │ 5 matches in 2 files   sync completed
-05|                                        │                                       
+03|      then curly thinks                 │                                       
+04|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫────────────
+05|                                        │ 5 matches in 2 files   sync completed
 06|                                        │                                       
 07|                                        │                                       
 08|                                        │                                       

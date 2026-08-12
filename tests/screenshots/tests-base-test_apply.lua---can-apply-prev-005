@@ -1,11 +1,11 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │                                       
-02|      curly walks                       │  Paths:                              
-03|      curly winks                       │                                       
+01|                                        │ 󰮚 Flags:                              
+02|      curly walks                       │                                       
+03|      curly winks                       │  Paths:                              
 04|                                        │                                       
-05|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫────────────
-06|                                        │ 5 matches in 2 files   sync completed
-07|                                        │                                       
+05|                                        │                                       
+06|                                        │ STATUS_SUCCESS ⟪ ripgrep ⟫────────────
+07|                                        │ 5 matches in 2 files   sync completed
 08|                                        │                                       
 09|                                        │                                       
 10|                                        │                                       

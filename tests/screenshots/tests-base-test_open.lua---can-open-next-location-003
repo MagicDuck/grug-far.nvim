@@ -1,15 +1,15 @@
 --|---------|---------|---------|---------|---------|---------|---------|---------|
-01|                                        │file1.txt                              
-02|      grug talks and grug drinks        │  2        grug walks               [1]
-03|      then grug thinks                  │  3        then grug swims          [2]
+01|                                        │                                       
+02|      grug talks and grug drinks        │ STATUS_SUCCESS ⟪ ripgrep ⟫────────────
+03|      then grug thinks                  │ 5 matches in 2 files                  
 04|                                        │                                       
-05|                                        │file2.doc                              
-06|                                        │  2       grug talks and grug drink [3]
-07|                                        │  3       then grug thinks          [4]
+05|                                        │file1.txt                              
+06|                                        │  2        grug walks               [1]
+07|                                        │  3        then grug swims          [2]
 08|                                        │                                       
-09|                                        │                                       
-10|                                        │                                       
-11|                                        │                                       
+09|                                        │file2.doc                              
+10|                                        │  2       grug talks and grug drink [3]
+11|                                        │  3       then grug thinks          [4]
 12|                                        │                                       
 13|                                        │                                       
 14|                                        │                                       
