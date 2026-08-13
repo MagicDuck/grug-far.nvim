@@ -88,7 +88,7 @@ move cursor to next match
 if includeUncounted = true, it will move through lines that do not have a match count
 (which can happen for multiline searches)
 Parameters ~
-{params} `(optional)` `({ includeUncounted?: boolean, wrap?: boolean  })`
+{params} `(optional)` { includeUncounted?: `(boolean,)` wrap?: boolean  }
 Return ~
 `(boolean)` hasMoved
 
@@ -99,7 +99,7 @@ move cursor to prev match
 if includeUncounted = true, it will move through lines that do not have a match count
 (which can happen for multiline searches)
 Parameters ~
-{params} `(optional)` `({ includeUncounted?: boolean, wrap?: boolean })`
+{params} `(optional)` { includeUncounted?: `(boolean,)` wrap?: boolean }
 Return ~
 `(boolean)` hasMoved
 
@@ -121,7 +121,7 @@ open source location (file, line, column) associated with current line (stays in
 3. move cursor to next match
 4. open source location (if open_location = true, defaults to true)
 Parameters ~
-{params} `(optional)` `({ open_location?: boolean, remove_synced?: boolean, notify?: boolean })`
+{params} `(optional)` { open_location?: `(boolean,)` remove_synced?: boolean, notify?: boolean }
 
 ------------------------------------------------------------------------------
                                                       *inst:apply_prev_change()*
@@ -131,7 +131,7 @@ Parameters ~
 3. move cursor to prev match
 4. open source location (if open_location = true, defaults to true)
 Parameters ~
-{params} `(optional)` `({ open_location?: boolean, remove_synced?: boolean, notify?: boolean })`
+{params} `(optional)` { open_location?: `(boolean,)` remove_synced?: boolean, notify?: boolean }
 
 ------------------------------------------------------------------------------
                                                           *inst:open_quickfix()*
@@ -186,7 +186,7 @@ options.enabledReplacementInterpreters
                          `inst:goto_input`({inputName})
 move cursor to input with given name
 Parameters ~
-{inputName} `(grug.far.InputName)`
+{inputName} grug.far.InputName
 
 ------------------------------------------------------------------------------
                                                        *inst:goto_first_input()*
@@ -209,7 +209,7 @@ move cursor to prev input
 update input values to new ones
 if clearOld=true is given, the old input values are ignored
 Parameters ~
-{values} `(grug.far.Prefills)`
+{values} grug.far.Prefills
 {clearOld} `(boolean)`
 
 ------------------------------------------------------------------------------
