@@ -601,7 +601,7 @@
 
 <
 Type ~
-grug.far.Options
+`(grug.far.Options)`
 See also ~
 |grug.far.Options|
 
@@ -616,32 +616,32 @@ Fields ~
 Class ~
 {grug.far.Keymaps}
 Fields ~
-{replace} grug.far.KeymapTable | `(string)` | boolean
-{qflist} grug.far.KeymapTable | `(string)` | boolean
-{syncLocations} grug.far.KeymapTable | `(string)` | boolean
-{historyAdd} grug.far.KeymapTable | `(string)` | boolean
-{historyOpen} grug.far.KeymapTable | `(string)` | boolean
-{refresh} grug.far.KeymapTable | `(string)` | boolean
-{syncLine} grug.far.KeymapTable | `(string)` | boolean
-{close} grug.far.KeymapTable | `(string)` | boolean
-{gotoLocation} grug.far.KeymapTable | `(string)` | boolean
-{openLocation} grug.far.KeymapTable | `(string)` | boolean
-{openNextLocation} grug.far.KeymapTable | `(string)` | boolean
-{openPrevLocation} grug.far.KeymapTable | `(string)` | boolean
-{pickHistoryEntry} grug.far.KeymapTable | `(string)` | boolean
-{toggleShowCommand} grug.far.KeymapTable | `(string)` | boolean
-{abort} grug.far.KeymapTable | `(string)` | boolean
-{help} grug.far.KeymapTable | `(string)` | boolean
-{swapEngine} grug.far.KeymapTable | `(string)` | boolean
-{previewLocation} grug.far.KeymapTable | `(string)` | boolean
-{swapReplacementInterpreter} grug.far.KeymapTable | `(string)` | boolean
-{applyNext} grug.far.KeymapTable | `(string)` | boolean
-{applyPrev} grug.far.KeymapTable | `(string)` | boolean
-{syncNext} grug.far.KeymapTable | `(string)` | boolean
-{syncPrev} grug.far.KeymapTable | `(string)` | boolean
-{syncFile} grug.far.KeymapTable | `(string)` | boolean
-{nextInput} grug.far.KeymapTable | `(string)` | boolean
-{prevInput} grug.far.KeymapTable | `(string)` | boolean
+{replace} `(grug.far.KeymapTable | string | boolean)`
+{qflist} `(grug.far.KeymapTable | string | boolean)`
+{syncLocations} `(grug.far.KeymapTable | string | boolean)`
+{historyAdd} `(grug.far.KeymapTable | string | boolean)`
+{historyOpen} `(grug.far.KeymapTable | string | boolean)`
+{refresh} `(grug.far.KeymapTable | string | boolean)`
+{syncLine} `(grug.far.KeymapTable | string | boolean)`
+{close} `(grug.far.KeymapTable | string | boolean)`
+{gotoLocation} `(grug.far.KeymapTable | string | boolean)`
+{openLocation} `(grug.far.KeymapTable | string | boolean)`
+{openNextLocation} `(grug.far.KeymapTable | string | boolean)`
+{openPrevLocation} `(grug.far.KeymapTable | string | boolean)`
+{pickHistoryEntry} `(grug.far.KeymapTable | string | boolean)`
+{toggleShowCommand} `(grug.far.KeymapTable | string | boolean)`
+{abort} `(grug.far.KeymapTable | string | boolean)`
+{help} `(grug.far.KeymapTable | string | boolean)`
+{swapEngine} `(grug.far.KeymapTable | string | boolean)`
+{previewLocation} `(grug.far.KeymapTable | string | boolean)`
+{swapReplacementInterpreter} `(grug.far.KeymapTable | string | boolean)`
+{applyNext} `(grug.far.KeymapTable | string | boolean)`
+{applyPrev} `(grug.far.KeymapTable | string | boolean)`
+{syncNext} `(grug.far.KeymapTable | string | boolean)`
+{syncPrev} `(grug.far.KeymapTable | string | boolean)`
+{syncFile} `(grug.far.KeymapTable | string | boolean)`
+{nextInput} `(grug.far.KeymapTable | string | boolean)`
+{prevInput} `(grug.far.KeymapTable | string | boolean)`
 
 ------------------------------------------------------------------------------
 Class ~
@@ -658,14 +658,14 @@ Class ~
 Fields ~
 {maxHistoryLines} `(integer)`
 {historyDir} `(string)`
-{autoSave} grug.far.AutoSaveTable
+{autoSave} `(grug.far.AutoSaveTable)`
 
 ------------------------------------------------------------------------------
 Class ~
 {grug.far.IconsTable}
 Fields ~
 {enabled} `(boolean)`
-{fileIconsProvider} "first_available" | "mini.icons" | "nvim-web-devicons" | false
+{fileIconsProvider} "`(first_available)`" | "mini.icons" | "nvim-web-devicons" | false
 {searchInput} `(string)`
 {actionEntryBullet} `(string)`
 {replaceInput} `(string)`
@@ -725,8 +725,8 @@ Fields ~
 {path} `(string)`
 {extraArgs} `(string)`
 {showReplaceDiff} `(boolean)`
-{placeholders} grug.far.PlaceholdersTable
-{defaults} grug.far.DefaultsTable
+{placeholders} `(grug.far.PlaceholdersTable)`
+{defaults} `(grug.far.DefaultsTable)`
 
 ------------------------------------------------------------------------------
 Class ~
@@ -734,8 +734,8 @@ Class ~
 Fields ~
 {path} `(string)`
 {extraArgs} `(string)`
-{placeholders} grug.far.PlaceholdersTable
-{defaults} grug.far.DefaultsTable
+{placeholders} `(grug.far.PlaceholdersTable)`
+{defaults} `(grug.far.DefaultsTable)`
 
 ------------------------------------------------------------------------------
 Class ~
@@ -743,16 +743,16 @@ Class ~
 Fields ~
 {path} `(string)`
 {extraArgs} `(string)`
-{placeholders} grug.far.PlaceholdersTable
+{placeholders} `(grug.far.PlaceholdersTable)`
 {languageGlobs} `(table<string, string[]>)`
-{defaults} grug.far.DefaultsTable
+{defaults} `(grug.far.DefaultsTable)`
 
 ------------------------------------------------------------------------------
 Class ~
 {grug.far.ResultLocationTable}
 Fields ~
 {showNumberLabel} `(boolean)`
-{numberLabelPosition} "right_align" | "eol" | "inline"
+{numberLabelPosition} "`(right_align)`" | "eol" | "inline"
 {numberLabelFormat} `(string)`
 
 ------------------------------------------------------------------------------
@@ -772,14 +772,14 @@ Fields ~
 Class ~
 {grug.far.HooksTable}
 Fields ~
-{on_before_edit_file} `(optional)` grug.far.AsyncJobOneParam<grug.far.EditFileDescriptor>
+{on_before_edit_file} `(optional)` `(grug.far.AsyncJobOneParam)`<grug.far.EditFileDescriptor>
 
 ------------------------------------------------------------------------------
 Class ~
 {grug.far.OpenTargetWindowTable}
 Fields ~
-{exclude} `((string)` | fun(winid: number): boolean)[]
-{preferredLocation} "prev" | "left" | "right" | "above" | "below"
+{exclude} `((string | fun(winid: number): boolean)[])`
+{preferredLocation} "`(prev)`" | "left" | "right" | "above" | "below"
 {useScratchBuffer} `(boolean)`
 
 ------------------------------------------------------------------------------
@@ -816,8 +816,8 @@ Fields ~
 {centerOnNavigation} `(boolean)`
 {transient} `(boolean)`
 {ignoreVisualSelection} `(boolean)`
-{visualSelectionUsage} 'prefill-search' | 'operate-within-range' | 'auto-detect' | 'ignore'
-{keymaps} grug.far.Keymaps
+{visualSelectionUsage} '`(prefill)`-search' | 'operate-within-range' | 'auto-detect' | 'ignore'
+{keymaps} `(grug.far.Keymaps)`
 {resultsSeparatorLineChar} `(string)`
 {resultsHighlight} `(boolean)`
 {inputsHighlight} `(boolean)`
@@ -833,29 +833,29 @@ Fields ~
 {filePathConceal} `(fun(params: {
   file_path: string,
   window_width: integer,
-}): (start_col:)` integer?, end_col: integer?)
-{spinnerStates} `(string[])` | false
+}): (start_col: integer?, end_col: integer?))`
+{spinnerStates} `(string[] | false)`
 {filePathConcealChar} `(string)`
 {reportDuration} `(boolean)`
-{icons} grug.far.IconsTable
-{prefills} grug.far.Prefills
-{history} grug.far.HistoryTable
+{icons} `(grug.far.IconsTable)`
+{prefills} `(grug.far.Prefills)`
+{history} `(grug.far.HistoryTable)`
 {pathProviders} `(table<string, fun(opts: { prevWin: integer }): string[]>)`
 {instanceName} `(optional)` `(string)`
-{folding} grug.far.FoldingTable
-{engines} grug.far.EnginesTable
+{folding} `(grug.far.FoldingTable)`
+{engines} `(grug.far.EnginesTable)`
 {enabledEngines} `(string[])`
-{engine} "ripgrep" | "astgrep" | "astgrep-rules"
-{replacementInterpreter} "lua" | "vimscript" | "default"
-{enabledReplacementInterpreters} "lua" | "vimscript" | "default"[]
-{resultLocation} grug.far.ResultLocationTable
-{openTargetWindow} grug.far.OpenTargetWindowTable
-{helpLine} grug.far.HelpLineTable
-{helpWindow} vim.api.keyset.win_config
-{historyWindow} vim.api.keyset.win_config
-{previewWindow} vim.api.keyset.win_config
+{engine} "`(ripgrep)`" | "astgrep" | "astgrep-rules"
+{replacementInterpreter} "`(lua)`" | "vimscript" | "default"
+{enabledReplacementInterpreters} `(("lua" | "vimscript" | "default")[])`
+{resultLocation} `(grug.far.ResultLocationTable)`
+{openTargetWindow} `(grug.far.OpenTargetWindowTable)`
+{helpLine} `(grug.far.HelpLineTable)`
+{helpWindow} `(vim.api.keyset.win_config)`
+{historyWindow} `(vim.api.keyset.win_config)`
+{previewWindow} `(vim.api.keyset.win_config)`
 {smartInputHandling} `(boolean)`
-{hooks} grug.far.HooksTable
+{hooks} `(grug.far.HooksTable)`
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:

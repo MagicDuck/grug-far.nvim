@@ -16,26 +16,27 @@ end
 function M.highlightCurrentMatch(context, location, targetBuf)
   M.clearCurrentMatchHighlight(context)
 
-  if not location or not location.lnum or not location.col or not location.end_col then
+  if not location or not location.submatches then
     return
   end
 
   local start_row = location.start_lnum - 1
   local end_row = location.end_lnum - 1
-  local ranges = location.submatches or { { col = location.col, end_col = location.end_col } }
 
-  for _, range in ipairs(ranges) do
-    local ok = pcall(
-      vim.hl.range,
-      targetBuf,
-      context.matchHlNamespace,
-      'GrugFarCurrentMatch',
-      { start_row, range.col - 1 },
-      { end_row, range.end_col - 1 }
-    )
+  for _, range in ipairs(location.submatches) do
+    if range.col and range.end_col then
+      local ok = pcall(
+        vim.hl.range,
+        targetBuf,
+        context.matchHlNamespace,
+        'GrugFarCurrentMatch',
+        { start_row, range.col - 1 },
+        { end_row, range.end_col - 1 }
+      )
 
-    if ok then
-      context.state.currentMatchBuf = targetBuf
+      if ok then
+        context.state.currentMatchBuf = targetBuf
+      end
     end
   end
 end

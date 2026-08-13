@@ -42,44 +42,38 @@ local M = {}
 
 ---@alias RipgrepJson grug.far.RipgrepJsonMatchSummary | grug.far.RipgrepJsonMatchBegin | grug.far.RipgrepJsonMatchEnd | grug.far.RipgrepJsonMatch | grug.far.RipgrepJsonMatchContext
 
+---@class grug.far.ripgprep.addResultLinesParams
+---@field file_name? string,
+---@field resultLines string[],
+---@field ranges { start: { column: integer?, line: integer}, end: {column: integer?, line: integer}}[],
+---@field lines string[],
+---@field highlights grug.far.ResultHighlight[],
+---@field marks grug.far.ResultMark[],
+---@field sign? grug.far.ResultHighlightSign,
+---@field matchHighlightType? ResultHighlightType,
+---@field bufrange? grug.far.VisualSelectionInfo,
+---@field mark_opts? any
+---@field add_location_submatches? boolean
+
 --- adds result lines
----@param file_name string? associated file
----@param resultLines string[] lines to add
----@param ranges { start: { column: integer?, line: integer}, end: {column: integer?, line: integer}}[]
----@param lines string[] lines table to add to
----@param highlights grug.far.ResultHighlight[] highlights table to add to
----@param marks grug.far.ResultMark[] marks to add to
----@param sign? grug.far.ResultHighlightSign
----@param matchHighlightType? ResultHighlightType
----@param bufrange? grug.far.VisualSelectionInfo
----@param mark_opts? any
-local function addResultLines(
-  file_name,
-  resultLines,
-  ranges,
-  lines,
-  highlights,
-  marks,
-  sign,
-  matchHighlightType,
-  bufrange,
-  mark_opts
-)
-  local numlines = #lines
-  local first_range = ranges[1]
+---@param p grug.far.ripgprep.addResultLinesParams
+local function addResultLines(p)
+  local numlines = #p.lines
+  local first_range = p.ranges[1]
   local match_first_line = first_range.start.line
   local match_end_line = first_range['end'].line
-  local start_lnum = bufrange and match_first_line + bufrange.start_row - 1 or match_first_line
-  local end_lnum = bufrange and match_end_line + bufrange.start_row - 1 or match_end_line
+  local start_lnum = p.bufrange and match_first_line + p.bufrange.start_row - 1 or match_first_line
+  local end_lnum = p.bufrange and match_end_line + p.bufrange.start_row - 1 or match_end_line
 
-  for j, resultLine in ipairs(resultLines) do
+  for j, resultLine in ipairs(p.resultLines) do
     local current_line = numlines + j - 1
     local current_line_number = first_range.start.line + j - 1
-    local lnum = bufrange and current_line_number + bufrange.start_row - 1 or current_line_number
+    local lnum = p.bufrange and current_line_number + p.bufrange.start_row - 1
+      or current_line_number
     local column_number = first_range.start.column
-    if bufrange and bufrange.start_col and column_number then
-      column_number = column_number + bufrange.start_col
-      bufrange.start_col = nil -- we only want to add col to first line
+    if p.bufrange and p.bufrange.start_col and column_number then
+      column_number = column_number + p.bufrange.start_col
+      p.bufrange.start_col = nil -- we only want to add col to first line
     end
     resultLine = utils.getLineWithoutCarriageReturn(resultLine)
 
@@ -95,7 +89,7 @@ local function addResultLines(
       end_line = current_line,
       end_col = #resultLine,
       location = {
-        filename = file_name,
+        filename = p.file_name,
         lnum = lnum,
         col = column_number,
         end_col = match_end_col,
@@ -103,21 +97,23 @@ local function addResultLines(
         end_lnum = end_lnum,
         text = resultLine,
       },
-      sign = sign,
+      sign = p.sign,
     }
-    if mark_opts then
-      for key, value in pairs(mark_opts) do
+    if p.mark_opts then
+      for key, value in pairs(p.mark_opts) do
         mark[key] = value
       end
     end
-    table.insert(marks, mark)
+    table.insert(p.marks, mark)
 
-    if matchHighlightType then
-      local line_submatches = {}
-      for _, range in ipairs(ranges) do
+    if p.add_location_submatches then
+      mark.location.submatches = {}
+    end
+    if p.matchHighlightType then
+      for _, range in ipairs(p.ranges) do
         if range.start.line <= current_line_number and range['end'].line >= current_line_number then
-          table.insert(highlights, {
-            hl_group = ResultHighlightByType[matchHighlightType],
+          table.insert(p.highlights, {
+            hl_group = ResultHighlightByType[p.matchHighlightType],
             start_line = current_line,
             start_col = range.start.line == current_line_number and range.start.column - 1 or 0,
             end_line = current_line,
@@ -127,16 +123,18 @@ local function addResultLines(
           local col = range.start.line == current_line_number and range.start.column or 1
           local end_col = range['end'].line == current_line_number and range['end'].column
             or (#resultLine + 1)
-          table.insert(line_submatches, { col = col, end_col = end_col })
+          if mark.location.submatches then
+            table.insert(mark.location.submatches, { col = col, end_col = end_col })
+          end
         end
-      end
-
-      if #line_submatches > 1 then
-        mark.location.submatches = line_submatches
       end
     end
 
-    table.insert(lines, resultLine)
+    if p.add_location_submatches and #mark.location.submatches == 0 then
+      mark.location.submatches = { { col = column_number, end_col = match_end_col } }
+    end
+
+    table.insert(p.lines, resultLine)
   end
 end
 
@@ -265,17 +263,18 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
         end
 
         local next_mark_index = #marks + 1
-        addResultLines(
-          file_name,
-          match_lines,
-          ranges,
-          lines,
-          highlights,
-          marks,
-          sign,
-          matchHighlightType,
-          bufrange
-        )
+        addResultLines({
+          file_name = file_name,
+          resultLines = match_lines,
+          ranges = ranges,
+          lines = lines,
+          highlights = highlights,
+          marks = marks,
+          sign = sign,
+          matchHighlightType = matchHighlightType,
+          bufrange = bufrange,
+          add_location_submatches = true,
+        })
         marks[next_mark_index].location.is_counted = true
       end
 
@@ -317,18 +316,17 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
         local sign = showDiff and ResultSigns.Added or ResultSigns.Changed
         local matchHighlightType = showDiff and ResultHighlightType.MatchAdded
           or ResultHighlightType.Match
-
-        addResultLines(
-          file_name,
-          replaced_lines,
-          ranges,
-          lines,
-          highlights,
-          marks,
-          sign,
-          matchHighlightType,
-          bufrange
-        )
+        addResultLines({
+          file_name = file_name,
+          resultLines = replaced_lines,
+          ranges = ranges,
+          lines = lines,
+          highlights = highlights,
+          marks = marks,
+          sign = sign,
+          matchHighlightType = matchHighlightType,
+          bufrange = bufrange,
+        })
       end
     elseif match.type == 'context' then
       if
@@ -365,18 +363,17 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
           },
         },
       }
-      addResultLines(
-        file_name,
-        context_lines,
-        ranges,
-        lines,
-        highlights,
-        marks,
-        isSearchWithReplace and ResultSigns.Changed or nil,
-        nil,
-        bufrange,
-        { is_context = true }
-      )
+      addResultLines({
+        file_name = file_name,
+        resultLines = context_lines,
+        ranges = ranges,
+        lines = lines,
+        highlights = highlights,
+        marks = marks,
+        sign = isSearchWithReplace and ResultSigns.Changed or nil,
+        bufrange = bufrange,
+        mark_opts = { is_context = true },
+      })
     end
   end
 
