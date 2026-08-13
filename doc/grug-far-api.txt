@@ -6,7 +6,7 @@
 set up grug-far
 sets global options, which can also be configured through vim.g.grug_far
 Parameters ~
-{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+{options} `(optional)` `(grug.far.OptionsOverride)` partial override of |grug_far.defaultOptions|
 See also ~
 Option types: |grug.far.Options|
 
@@ -15,9 +15,9 @@ Option types: |grug.far.Options|
                            `grug_far.open`({options})
 launch grug-far with the given overrides
 Parameters ~
-{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+{options} `(optional)` `(grug.far.OptionsOverride)` partial override of |grug_far.defaultOptions|
 Return ~
-grug.far.Instance instance
+`(grug.far.Instance)` instance
 See also ~
 Option types: |grug.far.Options| and |grug-far-instance-api|
 
@@ -27,9 +27,9 @@ Option types: |grug.far.Options| and |grug-far-instance-api|
 launch grug-far with the given overrides, pre-filling
 search with current visual selection.
 Parameters ~
-{options} `(optional)` grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+{options} `(optional)` `(grug.far.OptionsOverride)` partial override of |grug_far.defaultOptions|
 Return ~
-grug.far.Instance instance
+`(grug.far.Instance)` instance
 See also ~
 Option types: |grug.far.Options| and |grug-far-instance-api|
 
@@ -73,9 +73,9 @@ if instQuery is nil, get any first instance we can get our hands on,
    with instance in the current tab page preferred
 if instQuery is non-nil, and no instance found, an error is emitted
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 Return ~
-grug.far.Instance `(optional)` instance, `(string?)` instanceName
+`(grug.far.Instance)` `(optional)` instance, string? instanceName
 
 See |grug-far-instance-api|
 
@@ -85,7 +85,7 @@ See |grug-far-instance-api|
 toggles visibility of grug-far instance with given instance name or current buffer instance
 options.instanceName can be used to identify a specific grug-far instance to toggle
 Parameters ~
-{options} grug.far.OptionsOverride partial override of |grug_far.defaultOptions|
+{options} `(grug.far.OptionsOverride)` partial override of |grug_far.defaultOptions|
 See also ~
 Option types: |grug.far.Options|
 
@@ -103,7 +103,7 @@ Return ~
                     `grug_far.is_instance_open`({instQuery})
 checks if grug-far instance is open
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 Return ~
 `(boolean)`
 
@@ -112,14 +112,14 @@ Return ~
                      `grug_far.kill_instance`({instQuery})
 closes grug-far instance
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 
 ------------------------------------------------------------------------------
                                                       *grug_far.hide_instance()*
                      `grug_far.hide_instance`({instQuery})
 hides grug-far instance
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 
 ------------------------------------------------------------------------------
                                                     *grug_far.spawn_cmd_async()*
@@ -148,7 +148,7 @@ gets last history entry if there is one
 Parameters ~
 {historyFile} `(optional)` `(string)` history file to read from, by default uses standard location
 Return ~
-grug.far.HistoryEntry `(optional)`
+`(grug.far.HistoryEntry)` `(optional)`
 
 ------------------------------------------------------------------------------
                                                        *grug_far.toggle_flags()*
@@ -170,7 +170,7 @@ Note: Deprecated! Use: grug_far.hide_instance(...)
 
 hides grug-far instance
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 
 ------------------------------------------------------------------------------
                                                       *grug_far.open_instance()*
@@ -181,7 +181,7 @@ Note: Deprecated! Use: grug_far.get_instance(...):open()
 opens grug-far instance with given name (or current buffer instance) if window closed
 otherwise focuses the window
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 
 ------------------------------------------------------------------------------
                                            *grug_far.update_instance_prefills()*
@@ -194,14 +194,14 @@ operates on grug-far instance with given instance name or current buffer instanc
 if clearOld=true is given, the old input values are ignored
 Parameters ~
 {instQuery} `(string?)`
-{prefills} {
-  search?: `(string,)`
+{prefills} `({
+  search?: string,
   rules?: string,
   replacement?: string,
   filesFilter?: string,
   flags?: string,
   paths?: string,
-}
+})`
 {clearOld} `(boolean)`
 
 ------------------------------------------------------------------------------
@@ -213,8 +213,8 @@ Note: Deprecated! Use: grug_far.get_instance(...):goto_input()
 moves cursor to the input with the given name
 operates on grug-far instance with given instance name or current buffer instance
 Parameters ~
-{inputName} "search" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
-{instQuery} `(string)` | number | nil
+{inputName} "`(search)`" | "rules" | "replacement" | "filesFilter" | "flags" | "paths"
+{instQuery} `(string | number | nil)`
 
 ------------------------------------------------------------------------------
                                                    *grug_far.goto_first_input()*
@@ -225,7 +225,7 @@ Note: Deprecated! Use: grug_far.get_instance(...):goto_first_input()
 moves cursor to the first input
 operates on grug-far instance with given instance name or current buffer instance
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 
 ------------------------------------------------------------------------------
                                                     *grug_far.goto_next_input()*
@@ -236,7 +236,7 @@ Note: Deprecated! Use: grug_far.get_instance(...):goto_next_input()
 moves cursor to the next input
 operates on grug-far instance with given instance name or current buffer instance
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 
 ------------------------------------------------------------------------------
                                                     *grug_far.goto_prev_input()*
@@ -247,7 +247,7 @@ Note: Deprecated! Use: grug_far.get_instance(...):goto_prev_input()
 moves cursor to the next input
 operates on grug-far instance with given instance name or current buffer instance
 Parameters ~
-{instQuery} `(string)` | number | nil
+{instQuery} `(string | number | nil)`
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
