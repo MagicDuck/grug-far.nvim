@@ -12,13 +12,13 @@
 11|  Paths:                                                                       
 12|                                                                                
 13|                                                                                
-14| STATUS_PROGRESS ⟪ ripgrep ⟫────────────────────────────────────────────────────
-15|                                                                                
+14| STATUS_SUCCESS ⟪ ripgrep ⟫─────────────────────────────────────────────────────
+15|   warnings!                                                                   
 16|                                                                                
 17|                                                                                
-18|                                                                                
-19|                                                                                
-20|                                                                                
+18|rg: No files were searched, which means ripgrep probably applied a filter you di
+19|      dn't expect.                                                              
+20|Running with --debug will show why files are being skipped.                     
 21|                                                                                
 22|                                                                                
 23|Grug FAR - 1: grug                                                           1,1

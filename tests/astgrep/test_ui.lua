@@ -46,11 +46,13 @@ T['respects default input value when switching engine to astgrep'] = function()
 
   -- to astgrep
   child.type_keys('<esc>' .. keymaps.swapEngine.n)
+  helpers.childWaitForFinishedStatus(child)
   helpers.childWaitForScreenshotText(child, 'astgrep')
   helpers.childExpectScreenshot(child)
 
   -- back to ripgrep
   child.type_keys('<esc>' .. keymaps.swapEngine.n)
+  helpers.childWaitForFinishedStatus(child)
   helpers.childWaitForScreenshotText(child, 'ripgrep')
   helpers.childExpectScreenshot(child)
 end
