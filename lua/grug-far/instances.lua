@@ -225,8 +225,10 @@ end
 
 --- perform search
 function inst:search()
-  self:ensure_open()
-  require('grug-far.actions.search')(self._params)
+  vim.schedule(function()
+    self:ensure_open()
+    require('grug-far.actions.search')(self._params)
+  end)
 end
 
 --- move cursor to <count>th match
@@ -419,6 +421,7 @@ end
 ---   engineType: string,
 ---   interpreterType?: string,
 ---   normalModeSearch: boolean,
+---   inputs: grug.far.Inputs
 --- }
 function inst:get_status_info()
   self:_ensure_valid()
@@ -430,6 +433,7 @@ function inst:get_status_info()
     engineType = context.engine.type,
     interpreterType = context.replacementInterpreter and context.replacementInterpreter.type or nil,
     normalModeSearch = context.state.normalModeSearch,
+    inputs = context.state.lastInputs,
   }
 end
 

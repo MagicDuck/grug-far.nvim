@@ -114,6 +114,13 @@ local function replace(params)
         history.addHistoryEntry(context, buf)
       end
       tasks.finishTask(context, task)
+
+      if context.options.hooks.on_after_replace_all then
+        vim.schedule(function()
+          local inst = require('grug-far').get_instance(buf) --[[@as grug.far.Instance]]
+          context.options.hooks.on_after_replace_all(inst)
+        end)
+      end
     end
   )
 
