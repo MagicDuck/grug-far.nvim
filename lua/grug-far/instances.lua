@@ -421,8 +421,7 @@ end
 ---   engineType: string,
 ---   interpreterType?: string,
 ---   normalModeSearch: boolean,
----   inputs: grug.far.Inputs
---- }
+---   inputs: grug.far.Inputs }
 function inst:get_status_info()
   self:_ensure_valid()
   local context = self._context
