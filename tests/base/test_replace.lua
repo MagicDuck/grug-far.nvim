@@ -392,4 +392,37 @@ T['can replace with within buffer range and run failed hooks.on_before_edit_file
   helpers.childExpectScreenshot(child)
 end
 
+T['can run hooks.on_after_replace_all on replace'] = function()
+  helpers.writeTestFiles({
+    { filename = 'file1.txt', content = [[ grug walks ]] },
+    {
+      filename = 'file2.doc',
+      content = [[ 
+      grug talks and grug drinks
+      then grug thinks
+    ]],
+    },
+  })
+
+  helpers.cdTempTestDir(child)
+  child.lua([[GrugFar.open({
+    prefills = { search = 'grug', replacement = 'curly' },
+    hooks = {
+      on_after_replace_all = function(inst)
+        local info = inst:get_status_info()
+        local inputs = info.inputs
+        inputs.search = inputs.replacement
+        inputs.replacement = 'curly from ON_AFER_REPLACE_ALL'
+        inst:update_input_values(inputs, true)
+        inst:search()
+      end,
+    }
+  })]])
+  helpers.childWaitForFinishedStatus(child)
+
+  child.type_keys('<esc>' .. keymaps.replace.n)
+  helpers.childWaitForScreenshotText(child, 'curly from ON_AFER_REPLACE_ALL')
+  helpers.childExpectScreenshot(child)
+end
+
 return T

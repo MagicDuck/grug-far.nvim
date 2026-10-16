@@ -597,6 +597,10 @@ grug_far.defaultOptions = {
     -- *NOTE:* `spawn_cmd_async` is provided as a convenience that also handles abort (it returns abort function),
     -- but you can implement your own logic of course.
     on_before_edit_file = nil,
+
+    -- if provided, function is called after successful replace all
+    -- param: grug far instance
+    on_after_replace_all = nil,
   },
 }
 
@@ -853,6 +857,7 @@ grug_far.defaultOptions = {
 
 ---@class grug.far.HooksTable
 ---@field on_before_edit_file? grug.far.AsyncJobOneParam<grug.far.EditFileDescriptor>
+---@field on_after_replace_all? fun(inst: grug.far.Instance)
 
 ---@alias FilterWindowFn fun(winid: number): boolean
 ---@alias WinPreferredLocation "prev" | "left" | "right" | "above" | "below"

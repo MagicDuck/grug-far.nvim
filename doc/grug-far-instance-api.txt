@@ -233,6 +233,7 @@ Return ~
   engineType: string,
   interpreterType?: string,
   normalModeSearch: boolean,
+  inputs: grug.far.Inputs
 }
 
 
