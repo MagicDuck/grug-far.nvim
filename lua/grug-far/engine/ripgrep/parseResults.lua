@@ -55,6 +55,17 @@ local M = {}
 ---@field mark_opts? any
 ---@field add_location_submatches? boolean
 
+local function calcLineRangeCol(matchCol, text, eol)
+  local offset = utils.strFindLast(text, eol)
+  if offset then
+    offset = offset + (#eol - 1)
+  else
+    offset = 0
+  end
+
+  return matchCol - offset + 1
+end
+
 --- adds result lines
 ---@param p grug.far.ripgprep.addResultLinesParams
 local function addResultLines(p)
@@ -218,7 +229,8 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
       last_context_line_number = nil
       stats.matches = stats.matches + #data.submatches
       local match_lines_text = utils.strip_trailing_newline(data.lines.text or '')
-      local match_lines = vim.split(match_lines_text, '\n')
+      local eol = utils.detect_eol(match_lines_text)
+      local match_lines = vim.split(match_lines_text, eol)
       last_line_number = data.line_number + #match_lines - 1
 
       -- add match lines
@@ -235,13 +247,15 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
             return {
               start = {
                 line = start_line,
-                column = submatch.start - (utils.strFindLast(text_to_submatch, '\n') or 0) + 1,
+                column = calcLineRangeCol(submatch.start, text_to_submatch, eol),
               },
               ['end'] = {
                 line = start_line + vim.fn.count(submatch.match.text, '\n'),
-                column = submatch['end']
-                  - (utils.strFindLast(text_to_submatch .. submatch.match.text, '\n') or 0)
-                  + 1,
+                column = calcLineRangeCol(
+                  submatch['end'],
+                  text_to_submatch .. submatch.match.text,
+                  eol
+                ),
               },
             }
           end)
@@ -292,16 +306,15 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
           table.insert(ranges, {
             start = {
               line = start_line,
-              column = #replaced_lines_text
-                - (utils.strFindLast(replaced_lines_text, '\n') or 0)
-                + 1,
+              column = calcLineRangeCol(#replaced_lines_text, replaced_lines_text, eol),
             },
             ['end'] = {
               line = start_line + vim.fn.count(submatch.replacement.text, '\n'),
-              column = #replaced_lines_text + #submatch.replacement.text - (utils.strFindLast(
+              column = calcLineRangeCol(
+                #replaced_lines_text + #submatch.replacement.text,
                 replaced_lines_text .. submatch.replacement.text,
-                '\n'
-              ) or 0) + 1,
+                eol
+              ),
             },
           })
 
@@ -312,7 +325,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
           replaced_lines_text = replaced_lines_text .. match_lines_text:sub(last_index + 1)
         end
 
-        local replaced_lines = vim.split(replaced_lines_text, '\n')
+        local replaced_lines = vim.split(replaced_lines_text, eol)
         local sign = showDiff and ResultSigns.Added or ResultSigns.Changed
         local matchHighlightType = showDiff and ResultHighlightType.MatchAdded
           or ResultHighlightType.Match
@@ -348,7 +361,8 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
       end
       last_context_line_number = match.data.line_number
       local context_lines_text = utils.strip_trailing_newline(data.lines.text or '')
-      local context_lines = vim.split(context_lines_text, '\n')
+      local eol = utils.detect_eol(context_lines_text)
+      local context_lines = vim.split(context_lines_text, eol)
       last_line_number = data.line_number + #context_lines - 1
 
       local ranges = {
