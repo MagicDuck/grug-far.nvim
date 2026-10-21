@@ -246,6 +246,9 @@ function M.detect_file_eol(path, callback)
       callback(err, nil)
       return
     end
+    if not fd then
+      return callback('could not open file ' .. path)
+    end
 
     local offset = 0
     local previous_byte
