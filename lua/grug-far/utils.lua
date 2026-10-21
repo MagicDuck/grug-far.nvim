@@ -238,6 +238,55 @@ function M.overwriteFileAsync(path, data, callback)
   end)
 end
 
+---@param path string
+---@param callback fun(err: string|nil, eol: "\r\n"|"\n"|nil)
+function M.detect_file_eol(path, callback)
+  uv.fs_open(path, 'r', 438, function(err, fd)
+    if err then
+      callback(err, nil)
+      return
+    end
+
+    local offset = 0
+    local previous_byte
+
+    local function finish(read_err, format)
+      uv.fs_close(fd, function(close_err)
+        callback(read_err or close_err, format)
+      end)
+    end
+
+    local function read_next()
+      uv.fs_read(fd, 4096, offset, function(read_err, data)
+        if read_err then
+          finish(read_err, nil)
+          return
+        end
+
+        data = data or ''
+        local newline = data:find('\n', 1, true)
+
+        if newline then
+          local before = newline > 1 and data:sub(newline - 1, newline - 1) or previous_byte
+          finish(nil, before == '\r' and '\r\n' or '\n')
+          return
+        end
+
+        if #data == 0 then
+          finish(nil, nil) -- no newline found
+          return
+        end
+
+        previous_byte = data:sub(-1)
+        offset = offset + #data
+        read_next()
+      end)
+    end
+
+    read_next()
+  end)
+end
+
 --- add a keymapping
 ---@param buf integer
 ---@param desc string

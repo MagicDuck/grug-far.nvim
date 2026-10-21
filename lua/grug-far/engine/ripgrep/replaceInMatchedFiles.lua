@@ -19,24 +19,56 @@ local async_job = require('grug-far.async_job')
 local function replaceInFile(params)
   local file = params.file
   local on_finish = params.on_finish
-  return fetchReplacedFileContent({
-    inputs = params.inputs,
-    options = params.options,
-    file = file,
-    on_finish = function(status, errorMessage, content)
-      if status == 'success' and content then
-        return utils.overwriteFileAsync(file, content, function(err)
-          if err then
-            return on_finish('error', 'Could not write: ' .. file .. '\n' .. err)
-          end
 
-          on_finish('success')
-        end)
+  local is_aborted = false
+  local abort
+  abort = function()
+    is_aborted = true
+  end
+
+  local inputs = vim.deepcopy(params.inputs)
+
+  local doReplace = function()
+    abort = fetchReplacedFileContent({
+      inputs = inputs,
+      options = params.options,
+      file = file,
+      on_finish = function(status, errorMessage, content)
+        if status == 'success' and content then
+          return utils.overwriteFileAsync(file, content, function(err)
+            if err then
+              return on_finish('error', 'Could not write: ' .. file .. '\n' .. err)
+            end
+
+            on_finish('success')
+          end)
+        end
+
+        return on_finish(status, errorMessage)
+      end,
+    })
+  end
+
+  local is_multiline_replace = inputs.replacement:find('\n', 1, true) ~= nil
+  if is_multiline_replace then
+    utils.detect_file_eol(file, function(err, eol)
+      if err then
+        on_finish('error', 'Error while determinining file EOL: ' .. file .. '\n' .. err)
+      end
+      if is_aborted then
+        return
       end
 
-      return on_finish(status, errorMessage)
-    end,
-  })
+      if eol then
+        inputs.replacement = inputs.replacement:gsub('\n', eol)
+      end
+      vim.schedule(doReplace)
+    end)
+  else
+    doReplace()
+  end
+
+  return abort
 end
 
 --- performs replacement in given file with eval
