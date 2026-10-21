@@ -81,8 +81,7 @@ local function getArgs(inputs, options, extraArgs, blacklistedFlags, forceReplac
 
   if #inputs.search > 0 then
     table.insert(args, '--regexp=' .. inputs.search)
-    -- if utils.is_win then
-    if true then
+    if utils.is_win then
       local searchWithCRLF = inputs.search:gsub('\n', '\r\n')
       if searchWithCRLF ~= inputs.search then
         table.insert(args, '--regexp=' .. searchWithCRLF)

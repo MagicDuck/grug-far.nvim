@@ -863,6 +863,9 @@ end
 ---@param str string
 ---@return string
 function M.strip_trailing_newline(str)
+  if vim.endswith(str, '\r\n') then
+    return str:sub(1, -3)
+  end
   if vim.endswith(str, '\n') then
     return str:sub(1, -2)
   end
