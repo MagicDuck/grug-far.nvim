@@ -306,14 +306,14 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
           table.insert(ranges, {
             start = {
               line = start_line,
-              column = calcLineRangeCol(#replaced_lines_text, replaced_lines_text, eol),
+              column = calcLineRangeCol(#replaced_lines_text, replaced_lines_text, '\n'),
             },
             ['end'] = {
               line = start_line + vim.fn.count(submatch.replacement.text, '\n'),
               column = calcLineRangeCol(
                 #replaced_lines_text + #submatch.replacement.text,
                 replaced_lines_text .. submatch.replacement.text,
-                eol
+                '\n'
               ),
             },
           })
@@ -325,7 +325,7 @@ function M.parseResults(matches, isSearchWithReplace, showDiff, bufrange, isFirs
           replaced_lines_text = replaced_lines_text .. match_lines_text:sub(last_index + 1)
         end
 
-        local replaced_lines = vim.split(replaced_lines_text, eol)
+        local replaced_lines = vim.split(replaced_lines_text, '\n')
         local sign = showDiff and ResultSigns.Added or ResultSigns.Changed
         local matchHighlightType = showDiff and ResultHighlightType.MatchAdded
           or ResultHighlightType.Match
