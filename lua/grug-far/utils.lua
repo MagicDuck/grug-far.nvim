@@ -780,6 +780,9 @@ function M.parse_buf_range_str(str)
     end_col = -1
   end
 
+  local fileformat = vim.api.nvim_get_option_value('fileformat', { buf = buf })
+  local eol = fileformat == 'dos' and '\r\n' or '\n'
+
   local bufrange = {
     file_name = file_name,
     lines = {},
@@ -787,6 +790,7 @@ function M.parse_buf_range_str(str)
     start_row = start_row,
     end_col = end_col,
     end_row = end_row,
+    eol = eol,
   } --[[@as grug.far.VisualSelectionInfo]]
   bufrange.lines = M.readFromBufrange(bufrange)
 
@@ -854,8 +858,6 @@ function M.detect_eol(contents)
     return '\n' -- unix and mac (post OSX)
   end
 end
-
-M.eol = M.is_win and '\r\n' or '\n'
 
 --- strips trailing newline from str if it's there
 ---@param str string
